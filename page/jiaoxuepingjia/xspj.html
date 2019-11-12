@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生评教</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-fluid">
+        <table class="layui-table" id="dataTable" lay-filter="dataTable"></table>
+        <script type="text/html" id="dataTable_bar">
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="kcpf"><i class="layui-icon layui-icon-edit"></i>课程评分</a>
+        </script>
+    </div>
+
+    <!-- 课程评分 -->
+    <div class="layui-container" id="kcpfContainer">
+        <fieldset class="layui-elem-field" style="margin-top: 10px;" >
+            <legend>对教师评价</legend>
+            <div class="layui-form" >
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="10">
+                        <col width="80">
+                        <col width="200">
+                        <col width="80">
+                        <col width="80">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>指标</th>
+                            <th>评价内容</th>
+                            <th>分值上限</th>
+                            <th>分值</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kcpf_teacher">
+
+                    </tbody>
+                </table>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="margin-left: 500px;">
+                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="kcpf_teacherForm">保存</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="layui-elem-field" style="margin-top: 10px;" >
+            <legend>自我学习评价</legend>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="10">
+                        <col width="80">
+                        <col width="200">
+                        <col width="160">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>指标</th>
+                        <th>评价内容</th>
+                        <th style="text-align: center">很不符合 ← → 很符合</th>
+                    </tr>
+                    </thead>
+                    <tbody id="kcpf_myself">
+
+                    </tbody>
+                </table>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="margin-left: 500px;">
+                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="kcpf_myselfForm">保存</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.3.1.js"></script>
+    <script src="../../js/jquery.cookie.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="xspj.js"></script>
+</body>
+</html>

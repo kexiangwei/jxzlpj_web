@@ -1,0 +1,49 @@
+﻿layui.use(['layer','form'], function() {
+    let $ = layui.$, layer = layui.layer, form = layui.form;
+
+    //获取图形验证码
+    let getCaptcha = function () {
+        $.ajax({
+            url:requestUrl+'/getCaptcha.do',
+            type:'get',
+            dataType:'json',
+            success:function(data) {
+                //
+                $("img").attr('src',requestUrl+"/"+data.data.imgPath);
+                //监听提交
+                form.on('submit(loginForm)', function(formData){
+                    // alert(JSON.stringify(formData));
+                    $.post(requestUrl+"/login.do" , {
+                        'userId': formData.field.userId,
+                        'password': formData.field.password,
+                        'token': data.data.token,
+                        'verityCode': formData.field.verityCode
+                    } ,  function(resultData){
+                        if(resultData.code==200){
+                            //保存用户信息
+                            let obj = resultData.data;
+                            $.cookie('userId', obj.userId, { path: '/' });
+                            $.cookie('userName', obj.userName, { path: '/' });
+                            $.cookie('password', obj.password, { path: '/' });
+                            $.cookie('accountType', obj.accountType, { path: '/' });
+                            $.cookie('accountStatus', obj.accountStatus, { path: '/' });
+                            $.cookie('headImg', obj.headImg, { path: '/' });
+                            $.cookie('phone', obj.phone, { path: '/' });
+                            $.cookie('remark', obj.remark, { path: '/' });
+                            //跳转到主页面
+                            window.location.href="index.html";
+                        }
+                    }, "json");
+                    return false;//这个必须有
+                });
+            },
+            error:function() {
+                layer.msg('获取图形验证码失败!', {time : 3000, offset: '100px'});
+            }
+        });
+    };
+    getCaptcha();
+    $("img").click(function(){
+        getCaptcha();
+    });
+});

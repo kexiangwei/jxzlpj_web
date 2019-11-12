@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>教学质量评价</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="layui-layout-body">
+    <div class="m-login-bg">
+        <div class="m-login">
+            <h3>教学质量评价系统</h3>
+            <div class="m-login-warp">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <input type="text" name="userId" required lay-verify="required" placeholder="账号" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <input type="text" name="verityCode" placeholder="验证码" autocomplete="off" class="layui-input" style="width: 168px;">
+                        </div>
+                        <div class="layui-inline">
+                            <img src="" alt="图形验证码"/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item m-login-btn">
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="loginForm">登录</button>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <p class="copyright">© 2019 jxtrpj_web.com MIT license</p>
+        </div>
+    </div>
+    <script src="layui/layui.js"></script>
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

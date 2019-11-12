@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>教学质量评价</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo" style="width: 320px;font-size: 26px;color: white; ">
+                <i class="layui-icon layui-icon-home"  style="font-size: 26px;"></i>&nbsp;&nbsp;教学质量评价系统
+            </div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img id="headImg" src="" class="layui-nav-img" style="margin-left: 50px;"></a>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                        <dd><a href="login.html" onclick="function f() {
+                           $.post(requestUrl+'/logout.do', {},function(data){
+                                layer.msg('已退出', {time : 3000, offset: '100px'});
+                            }, 'json');
+                        }">退出</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 导航栏 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree"  id="menuTree" lay-filter="menuTree"></ul>
+            </div>
+        </div>
+
+        <!-- 内容主体区域 -->
+        <div class="layui-body">
+            <div id="viewDiv" style="padding: 15px;"></div>
+        </div>
+
+        <!--tab标签-->
+        <div class="layui-tab" lay-filter="demo" lay-allowclose="true" style="margin-left: 200px;">
+            <ul class="layui-tab-title"></ul>
+            <div class="layui-tab-content"></div>
+        </div>
+
+        <!-- 底部固定区域 -->
+        <div class="layui-footer">
+            © 2019 jxtrpj_web.com MIT license
+        </div>
+    </div>
+
+    <script src="layui/layui.js"></script>
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/global.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

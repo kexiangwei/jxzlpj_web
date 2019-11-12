@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>系统设置-菜单管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-fluid">
+        <table class="layui-table" id="dataTable" lay-filter="dataTable"></table>
+        <script type="text/html" id="dataTable_toolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+            </div>
+        </script>
+        <script type="text/html" id="dataTable_bar">
+            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        </script>
+    </div>
+
+    <div class="layui-container" id="editContainer">
+        <div class="layui-row">
+            <div class="layui-col-md12" style="margin-top: 10px">
+                <div class="layui-btn-container" id="btnContainer"></div>
+            </div>
+            <div class="layui-col-md12">
+                <table class="layui-table" id="editDataTable" lay-filter="editDataTable"></table>
+                <script type="text/html" id="editDataTable_toolbar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增信息类属性</button>
+                    </div>
+                </script>
+                <script type="text/html" id="editDataTable_bar">
+                    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">修改</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增信息类 -->
+    <form class="layui-form layui-form-pane" id="tabForm">
+        <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item" >
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="menuName" value="" required  lay-verify="required" autocomplete="off" class="layui-input" style="width: 90%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标识名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="tabName" value="" required  lay-verify="required" autocomplete="off" class="layui-input" style="width: 90%;">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left: 500px;">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="tabForm">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 新增信息类属性 -->
+    <form class="layui-form layui-form-pane" autocomplete="off" id="editForm">
+        <!-- 声明一个隐藏域，信息编号是修改数据的依据-->
+        <input type="hidden" name="code"/>
+        <!-- -->
+        <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-inline" >
+                <label class="layui-form-label"><span style="color: red;">*</span>&nbsp;属性名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" value="" required  lay-verify="required" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span style="color: red;">*</span>&nbsp;字段名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="colName" value="" required  lay-verify="required" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><span style="color: red;">*</span>&nbsp;字段类型</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="dataType" value="" required  lay-verify="required" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label"><span style="color: red;">*</span>&nbsp;字段长度</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="dataLength" value="" required  lay-verify="required" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane="">
+            <div class="layui-inline">
+                <label class="layui-form-label">是否必填：</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="isNull" value="是" title="是">
+                    <input type="radio" name="isNull" value="否" title="否" checked>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">可编辑：</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="isEdit" value="是" title="是" checked>
+                    <input type="radio" name="isEdit" value="否" title="否">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane="">
+            <div class="layui-inline">
+                <label class="layui-form-label">可显示：</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="isShow" value="是" title="是" checked>
+                    <input type="radio" name="isShow" value="否" title="否">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">字段描述：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="comm" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-mid layui-word-aux" style="margin-left: 10px;">标记&nbsp;<span style="color: red;">*</span>&nbsp;为必填项</div>
+            <div class="layui-input-block" style="margin-left: 500px;">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn" id="editFormSubmitBtn">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.3.1.js"></script>
+    <script src="../../js/jquery.cookie.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="menu.js"></script>
+</body>
+</html>

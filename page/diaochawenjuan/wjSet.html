@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>调查问卷-问卷设置</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">问卷</li>
+            <li>题库</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-fluid">
+
+                    <table class="layui-table" id="dataTable" lay-filter="dataTable"></table>
+                    <script type="text/html" id="dataTable_toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="dataTable_bar">
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
+                        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                    </script>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-fluid">
+
+                    <table class="layui-table" id="question_dataTable" lay-filter="question_dataTable"></table>
+                    <script type="text/html" id="question_dataTable_toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="question_import"><i class="layui-icon">&#xe654;</i>导入</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="question_dataTable_bar">
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="question_detail"><i class="layui-icon layui-icon-read"></i>查看</a>
+                        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="question_update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="question_delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-container" id="question_detail_container">
+        <div id="questionInfo"></div>
+    </div>
+
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.3.1.js"></script>
+    <script src="../../js/jquery.cookie.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="wjSet.js"></script>
+</body>
+</html>
