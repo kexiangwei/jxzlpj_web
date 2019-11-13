@@ -1,8 +1,8 @@
 /*
 教学研究-教改论文
  */
-layui.use(['layer','element','table','form','laydate','upload'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,upload = layui.upload;
+layui.use(['layer','element','table','form','upload'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,upload = layui.upload;
 
     //验证用户是否拥有提交、审核权限
     $.ajax({
@@ -111,9 +111,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'lwTitle': $("input[name='lwTitle']").val()
-                                ,'qkName': $("input[ name='qkName']").val()
-                                ,'isSubmit': $("input[ name='isSubmit']").val()
+                                'lwTitle': $("input[name='myself_lwTitle']").val()
+                                ,'qkName': $("input[ name='myself_qkName']").val()
+                                ,'isSubmit': $("input[ name='myself_isSubmit']").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -174,7 +174,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                return $.cookie('userName');
                                            }
                                        },function(result_data){
-                                           if(result_data.code === 200){
+                                           if(result_data.code == 200){
                                                myself_table.reload();//重新加载表格数据
                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
                                            }else{
@@ -245,92 +245,54 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //执行编辑
                         operationType = "edit";
                         layer.open({
-                            title : data.peixunName + '-编辑'
+                            title : '教学研究-教改论文-编辑'
                             ,type : 1
                             ,area : [ '700px', '535px' ]
-                            // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                             ,offset : '10px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#editForm')
                             ,success: function(layero, index){
-                                //初始化laydate实例
-                                laydate.render({
-                                    elem: '#startDate' //指定元素
-                                });
-                                laydate.render({
-                                    elem: '#endDate' //指定元素
-                                });
-                                let peixunStyleArr = data.peixunStyle.split(',');
-                                let peixunStyle_xxxx=false,peixunStyle_xsxx=false;
-                                for (let i = 0; i < peixunStyleArr.length; i++) {
-                                    if(peixunStyleArr[i] == '线上学习'){
-                                        peixunStyle_xsxx = true;
-                                    }else if(peixunStyleArr[i] == '线下学习'){
-                                        peixunStyle_xxxx = true;
-                                    }
-                                }
                                 form.val("editForm",{
-                                    "code":data.code,
-                                    "peixunName":data.peixunName,
-                                    "peixunStyle_xsxx":peixunStyle_xsxx,
-                                    "peixunStyle_xxxx":peixunStyle_xxxx,
-                                    "peixunStartTime":data.peixunStartTime,
-                                    "peixunEndTime":data.peixunEndTime,
-                                    "peixunClassHour":data.peixunClassHour,
-                                    "peixunContent":data.peixunContent,
-                                    "peixunAddress":data.peixunAddress,
-                                    "peixunDept":data.peixunDept,
-                                    "userId":data.userId,
-                                    "userName":data.userName
+                                    "code":data.code
+                                    ,"lwTitle": data.lwTitle
+                                    ,"qkName" : data.qkName
+                                    ,"qkType" : data.qkType
+                                    ,"dyAuthorCode" : data.dyAuthorCode
+                                    ,"dyAuthorName" : data.dyAuthorName
+                                    ,"txAuthorCode" : data.txAuthorCode
+                                    ,"txAuthorName" : data.txAuthorName
+                                    ,"fbTime" : data.fbTime
+                                    ,"userId":data.userId
+                                    ,"userName":data.userName
                                 });
                                 //监听编辑页submit按钮提交
                                 form.on('submit(editFormSubmitBtn)', function(data){
-                                    let peixunStyleArr = new Array();
-                                    if(data.field.peixunStyle_xxxx == "on"){
-                                        peixunStyleArr.push('线下学习');
-                                    }
-                                    if(data.field.peixunStyle_xsxx == "on"){
-                                        peixunStyleArr.push('线上学习');
-                                    }
-                                    let peixunStyle = peixunStyleArr.join(',');
-                                    $.ajax({
-                                        type: "post",
-                                        url: requestUrl+'/jiXuJiaoYu/update.do',
-                                        data: {
-                                            "code" : data.field.code
-                                            ,"peixunName" : data.field.peixunName
-                                            ,"peixunStyle" : peixunStyle
-                                            ,"peixunStartTime" : data.field.peixunStartTime
-                                            ,"peixunEndTime" : data.field.peixunEndTime
-                                            ,"peixunClassHour" : data.field.peixunClassHour
-                                            ,"peixunContent" : data.field.peixunContent
-                                            ,"peixunAddress" : data.field.peixunAddress
-                                            ,"peixunDept" : data.field.peixunDept
-                                            ,"userId":function () {
-                                                return $.cookie('userId');
-                                            }
-                                            ,"userName":function () {
-                                                return $.cookie('userName');
-                                            }
-                                        },
-                                        dataType:'json'
-                                        ,success:function(data) {
-                                            if(data.code === 200){
-                                                myself_table.reload();//重新加载表格数据
-                                                layer.msg('修改成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('修改失败', {time : 3000, offset: '100px'});
-                                            }
+                                    $.post(requestUrl+'/jiaoGaiLunWen/update.do',{
+                                        "code":data.field.code
+                                        ,"lwTitle": data.field.lwTitle
+                                        ,"qkName" : data.field.qkName
+                                        ,"qkType" : data.field.qkType
+                                        ,"dyAuthorName" : data.field.dyAuthorName
+                                        ,"dyAuthorCode" : data.field.dyAuthorCode
+                                        ,"txAuthorName" : data.field.txAuthorName
+                                        ,"txAuthorCode" : data.field.txAuthorCode
+                                        ,"fbTime" : data.field.fbTime
+                                        ,"userId":function () {
+                                            return $.cookie('userId');
                                         }
-                                        ,error:function() {
-                                            layer.msg('网络连接失败', {time : 3000, offset: '100px'});
+                                        ,"userName":function () {
+                                            return $.cookie('userName');
                                         }
-                                    });
+                                    },function(result_data){
+                                        if(result_data.code == 200){
+                                            myself_table.reload();//重新加载表格数据
+                                            layer.msg('修改成功', {time : 3000, offset: '100px'});
+                                        }else{
+                                            layer.msg('修改失败', {time : 3000, offset: '100px'});
+                                        }
+                                    },'json');
                                 });
                             },end:function () {
-                                $("#demo1").empty();
-                                $("#demo2").empty();
-                                $("#demo3").empty();
                                 operationType=="";
                                 window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                             }
@@ -342,7 +304,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                             layer.close(index);
-                            $.post(requestUrl+'/jiXuJiaoYu/delete.do', { code: data.code},function(data){
+                            $.post(requestUrl+'/jiaoGaiLunWen/delete.do', { code: data.code},function(data){
                                 if(data.code === 200){
                                     myself_table.reload();//重新加载表格数据
                                     layer.msg('删除成功', {time : 3000, offset: '100px'});
@@ -425,11 +387,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     search: function(){
                         other_table.reload({
                             where: {
-                                'userId': $(" input[ name='userId' ] ").val()
-                                ,'userName': $(" input[ name='userName' ] ").val()
-                                , 'lwTitle': $("input[name='lwTitle']").val()
-                                ,'qkName': $("input[ name='qkName']").val()
-                                ,'shenheStatus': $(" input[ name='shenheStatus' ] ").val()
+                                'userId': $(" input[ name='other_search_userId' ] ").val()
+                                ,'userName': $(" input[ name='other_search_userName' ] ").val()
+                                , 'lwTitle': $("input[name='other_search_lwTitle']").val()
+                                ,'qkName': $("input[ name='other_search_qkName']").val()
+                                ,'shenheStatus': $(" input[ name='other_search_shenheStatus' ] ").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -474,7 +436,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 //添加审核意见
                                 layer.open({
-                                    title : '添加审核意见'
+                                    title : '教学研究-教改论文-审核'
                                     ,type : 1
                                     ,area : [ '700px', '450px' ]
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -494,7 +456,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         });
                                         //
                                         form.on('submit(shenHeFormSubmitBtn)', function(formData){
-                                            $.post(requestUrl+'/jiXuJiaoYu/toShenhe.do',{
+                                            $.post(requestUrl+'/jiaoGaiLunWen/toShenhe.do',{
                                                 "jsonStr":JSON.stringify(data)
                                                 ,"status":formData.field.status
                                                 ,"opinion":formData.field.opinion
@@ -546,7 +508,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 }
                 var isOpen = false;
                 layer.open({
-                    title : data.peixunName + '-详情'
+                    title : '教学研究-教改论文-查看详情'
                     ,type : 1
                     ,area : [ '700px', '535px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -557,14 +519,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         '        <tbody>\n' +
                         '            <tr><td style="width: 150px; text-align: center">工号</td><td>'+data.userId+'</td></tr>\n' +
                         '            <tr><td style="width: 150px; text-align: center">姓名</td><td>'+data.userName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训名称</td><td>'+data.peixunName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训形式</td><td>'+data.peixunStyle+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训开始时间</td><td>'+data.peixunStartTime+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训结束时间</td><td>'+data.peixunEndTime+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">学时</td><td>'+data.peixunClassHour+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训内容</td><td>'+data.peixunContent+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训地点</td><td>'+data.peixunAddress+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">培训组织机构</td><td>'+data.peixunDept+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">论文题目</td><td>'+data.lwTitle+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">期刊名称</td><td>'+data.qkName+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">期刊类别</td><td>'+data.qkType+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">第一作者工号</td><td>'+data.dyAuthorCode+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">第一作者姓名</td><td>'+data.dyAuthorName+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">通讯作者工号</td><td>'+data.txAuthorCode+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">通讯作者姓名</td><td>'+data.txAuthorName+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">发表时间</td><td>'+data.fbTime+'</td></tr>\n' +
                         '        </tbody>\n' +
                         '    </table>'
                     ,success: function(layero, index){
@@ -578,7 +540,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
             let detail_file = function (data) {
                 layer.open({
-                    title : '继续教育-附件'
+                    title : '教学研究-教改论文-查看附件'
                     ,type : 1
                     ,offset : '10px'
                     ,moveOut:true
@@ -595,127 +557,51 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 layer.msg('还没有上传文件哦', {time : 3000, offset: '100px'});
                                 return;
                             }
-                            let xdthNum=0,qtwjNum = 0;
-                            let viewFun = function(file){
-                                let suffix = file.fileName.substring(file.fileName.lastIndexOf(".")+1);
-                                switch (suffix) {
-                                    case 'jpg':
-                                    case 'png':
-                                        let idx = layer.open({
-                                            title: '继续教育-附件预览'
-                                            , type: 1
-                                            , offset: '10px'
-                                            , moveOut: true
-                                            , shadeClose: true //点击遮罩关闭
-                                            , area: ['700px', '535px']
-                                            , content: '<div class="layui-upload-list"><img src="'+requestUrl+file.filePath +'" alt="其他文件"></div>'
-                                            ,  success: function(layero, index){
-                                                // layer.msg('加载成功', {time : 3000, offset: '100px'});
-                                            }
-                                            ,end:function () {
-                                                layer.close(idx);
-                                            }
-                                        });
-                                        break;
-                                    case 'pdf':
-                                        window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
-                                        break;
-                                    default:
-                                        layer.msg('该文件类型暂未提供预览功能', {time : 3000, offset: '100px'});
-                                }
-                            };
+                            let len = 0;
                             $.each(data.data,function(index,file){
-                                switch (file.fileType) {
-                                    case "结业证书":
-                                        $('#file_jyzs').append('<img src="'+requestUrl+file.filePath +'" alt="结业证书" style="width: 150px; margin:5px;">');
-                                        break;
-                                    case "参会照片":
-                                        $('#file_chzp').append('<img src="'+requestUrl+file.filePath +'" alt="参会照片" style="width: 150px; margin:5px;">');
-                                        break;
-                                    case "心得体会":
-                                        xdthNum++;
-                                        let xdthtr = $(['<tr id="'+ file.code +'">'
-                                            ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
-                                            ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
-                                            ,'<td>'+ file.fileSize +'kb</td>'
-                                            ,'<td>'+ file.createDate +'</td>'
-                                            ,'<td>' +
-                                            '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
-                                            '<button class="layui-btn layui-btn-xs layui-btn-normal demo-download">下载</button>' +
-                                            '</td>'
-                                            ,'</tr>'].join(''));
-                                        //预览
-                                        xdthtr.find('a').on('click', function(){
-                                            viewFun(file);
-                                        });
-                                        xdthtr.find('.demo-view').on('click', function(){
-                                            viewFun(file);
-                                        });
-                                        xdthtr.find('.demo-download').on('click', function(){
-                                            let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
-                                            downloadForm.append("<input type='hidden' name='fileName' value='"+file.fileName+"'/>");
-                                            downloadForm.append("<input type='hidden' name='filePath' value='"+file.filePath+"'/>");
-                                            $(document.body).append(downloadForm);
-                                            // alert(downloadForm.serialize());
-                                            downloadForm.submit();
-                                            downloadForm.remove();
-                                        });
-                                        $('#file_xdth').append(xdthtr);
-                                        break;
-                                    case "其他文件":
-                                        qtwjNum++;
-                                        let qtwjtr = $(['<tr id="'+ file.code +'">'
-                                            ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
-                                            ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
-                                            ,'<td>'+ file.fileSize +'kb</td>'
-                                            ,'<td>'+ file.createDate +'</td>'
-                                            ,'<td>' +
-                                            '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
-                                            '<button class="layui-btn layui-btn-xs layui-btn-normal demo-download">下载</button>' +
-                                            '</td>'
-                                            ,'</tr>'].join(''));
-                                        //预览
-                                        qtwjtr.find('a').on('click', function(){
-                                            viewFun(file);
-                                        });
-                                        qtwjtr.find('.demo-view').on('click', function(){
-                                            viewFun(file);
-                                        });
-                                        qtwjtr.find('.demo-download').on('click', function(){
-                                            let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
-                                            downloadForm.append("<input type='hidden' name='fileName' value='"+file.fileName+"'/>");
-                                            downloadForm.append("<input type='hidden' name='filePath' value='"+file.filePath+"'/>");
-                                            $(document.body).append(downloadForm);
-                                            // alert(downloadForm.serialize());
-                                            downloadForm.submit();
-                                            downloadForm.remove();
-                                        });
-                                        $('#file_qtwj').append(qtwjtr);
-                                        break;
-                                }
+                                len++;
+                                let tr = $(['<tr id="'+ file.code +'">'
+                                    ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
+                                    ,'<td>'+ file.fileSize +'kb</td>'
+                                    ,'<td>'+ file.createDate +'</td>'
+                                    ,'<td>' +
+                                    '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
+                                    '<button class="layui-btn layui-btn-xs layui-btn-normal demo-download">下载</button>' +
+                                    '</td>'
+                                    ,'</tr>'].join(''));
+                                //预览
+                                tr.find('a').on('click', function(){
+                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
+                                });
+                                tr.find('.demo-view').on('click', function(){
+                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
+                                });
+                                tr.find('.demo-download').on('click', function(){
+                                    let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
+                                    downloadForm.append("<input type='hidden' name='fileName' value='"+file.fileName+"'/>");
+                                    downloadForm.append("<input type='hidden' name='filePath' value='"+file.filePath+"'/>");
+                                    $(document.body).append(downloadForm);
+                                    // alert(downloadForm.serialize());
+                                    downloadForm.submit();
+                                    downloadForm.remove();
+                                });
+                                $('#fileList').append(tr);
                             });
-                            if(xdthNum == 0){
-                                let tr = '<tr><td colspan="5" style="text-align: center;">无数据</td></tr>';
-                                $('#file_xdth').append(tr);
-                            }
-                            if(qtwjNum == 0){
-                                let tr = '<tr><td colspan="5" style="text-align: center;">无数据</td></tr>';
-                                $('#file_qtwj').append(tr);
+                            if(len == 0){
+                                let tr = '<tr><td colspan="4" style="text-align: center;">无数据</td></tr>';
+                                $('#fileList').append(tr);
                             }
                         }, "json");
                     }
                     ,end:function () {
-                        $('#file_jyzs').empty();
-                        $('#file_chzp').empty();
-                        $('#file_xdth').empty();
-                        $('#file_qtwj').empty();
+                        $('#fileList').empty();
                     }
                 });
             };
 
             let detail_shenheProcess = function (rowData) {
                 layer.open({
-                    title : rowData.peixunName + '-审核流程'
+                    title : '教学研究-教改论文-审核流程'
                     ,type : 1
                     ,area : [ '1175px', '535px' ]
                     ,offset : '10px' //只定义top坐标，水平保持居中
@@ -786,17 +672,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 });
             };
 
-            var operationType="" //操作类别
-                ,uploadTest1 //结业证书
-                ,uploadTest2 //参会照片
-                ,uploadTest3; //其他文件
+            let operationType="" //操作类别
+                ,uploadTest;
             $(document).on('click','#upload',function(data){
-                // alert(JSON.stringify(data));
                 layer.open({
-                    title : '继续教育-附件'
+                    title : '教学研究-教改论文-上传附件'
                     ,type : 1
                     ,area : [ '1175px', '535px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                     ,offset : '10px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
@@ -808,312 +690,27 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             } ,  function(data){
                                 if(data.data.length>0){
                                     $.each(data.data,function(index,file){
-                                        switch (file.fileType) {
-                                            case "结业证书":
-                                                $('#demo1').append('<img id="'+file.code+'" data-id="'+file.code+'" src="'+requestUrl+file.filePath +'" alt="结业证书" style="width: 150px;">');
-                                                break;
-                                            case "参会照片":
-                                                $('#demo2').append('<img id="'+file.code+'" data-id="'+file.code+'" src="'+requestUrl+file.filePath +'" alt="参会照片" style="width: 150px;">');
-                                                break;
-                                            case "心得体会":
-                                                var tr = $(['<tr id="'+ file.code +'">'
-                                                    ,'<td>'+ file.fileName +'</td>'
-                                                    ,'<td>'+ file.fileSize +'kb</td>'
-                                                    ,'<td>已上传</td>'
-                                                    ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
-                                                    ,'</tr>'].join(''));
-                                                $('#xdthList').append(tr);
-                                                //删除
-                                                tr.find('.demo-delete').on('click', function(){
-                                                    $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                        "code": tr.attr("id")
-                                                    } ,  function(data){
-                                                        tr.remove();
-                                                    }, "json");
-                                                });
-                                                break;
-                                            case "其他文件":
-                                                var tr = $(['<tr id="'+ file.code +'">'
-                                                    ,'<td>'+ file.fileName +'</td>'
-                                                    ,'<td>'+ file.fileSize +'kb</td>'
-                                                    ,'<td>已上传</td>'
-                                                    ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
-                                                    ,'</tr>'].join(''));
-                                                $('#demoList').append(tr);
-                                                //删除
-                                                tr.find('.demo-delete').on('click', function(){
-                                                    $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                        "code": tr.attr("id")
-                                                    } ,  function(data){
-                                                        tr.remove();
-                                                    }, "json");
-                                                });
-                                                break;
-                                        }
-                                        $("#"+file.code).dblclick(function() {
+                                        let tr = $(['<tr id="'+ file.code +'">'
+                                            ,'<td>'+ file.fileName +'</td>'
+                                            ,'<td>'+ file.fileSize +'kb</td>'
+                                            ,'<td>已上传</td>'
+                                            ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
+                                            ,'</tr>'].join(''));
+                                        $('#demoList').append(tr);
+                                        //删除
+                                        tr.find('.demo-delete').on('click', function(){
                                             $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                "code": file.code
+                                                "code": tr.attr("id")
                                             } ,  function(data){
-                                                layer.msg(data.msg);
+                                                tr.remove();
                                             }, "json");
-                                            $(this).remove();
                                         });
                                     });
                                 }
                             }, "json");
                         }
-//结业证书
-                        uploadTest1 = upload.render({
-                            elem: '#test1' //指向容器选择器，如：elem: '#id'。也可以是DOM对象
-                            ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                            ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                "relationCode":function () {
-                                    return $(" input[ name='code' ] ").val();
-                                }
-                                ,"fileCategory":"JXYJ_JXJY" // 固定值
-                                ,"fileType":"结业证书" // 固定值
-                                ,"userId":function () {
-                                    return $.cookie('userId');
-                                }
-                                ,"userName":function () {
-                                    return $.cookie('userName');
-                                }
-                            }
-                            ,field:"file" //设定文件域的字段名
-                            ,accept:"file" //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                            ,exts:'jpg|png|gif|bmp|jpeg|pdf'
-                            // ,auto:false
-                            // ,bindAction: '#dataFormSubmitBtn'
-                            ,before: function(obj){
-                                //预读本地文件示例，不支持ie8
-                                obj.preview(function(index, file, result){
-                                    if ($( "#demo1:has(img)" ).length>0) { //------有img子标记------
-                                        // alert('delete excute.');
-                                        $.post(requestUrl+"/deleteFileInfo.do" , {
-                                            "code": function () {
-                                                return $('#demo1').find('img').attr("data-id");
-                                            }
-                                        } ,  function(data){
-                                            layer.msg(data.msg);
-                                        }, "json");
-                                        //$('#demo1').empty();
-                                    }
-                                    // obj.resetFile(index, file, uuid()+'.jpg'); //重命名文件名，layui 2.3.0 开始新增
-                                    $('#demo1').empty().append('<img data-id="" id="'+ index +'" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width: 150px;">');
-                                });
-                            }
-                            ,done: function(res, index, upload){//执行上传请求后的回调。返回三个参数，分别为：res（服务端响应信息）、index（当前文件的索引）、upload（重新上传的方法，一般在文件上传失败后使用）
-                                $('#demo1').find('img').attr("data-id",res.data);
-                                $("#"+index).dblclick(function() {
-                                    var code = $(this).attr("data-id");
-                                    $.post(requestUrl+"/deleteFileInfo.do" , {
-                                        "code": code
-                                    } ,  function(data){
-                                        layer.msg(data.msg);
-                                    }, "json");
-                                    $(this).remove();
-                                });
-                                return layer.msg(res.msg);
-                            }
-                            ,error: function(){
-                            }
-                        });
-
-//参会照片
-                        var test2Files;
-                        uploadTest2=upload.render({
-                            elem: '#test2'
-                            ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                            ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                "relationCode":function () { return $(" input[ name='code' ] ").val();}
-                                ,"fileCategory":"JXYJ_JXJY" // 固定值
-                                ,"fileType":"参会照片" // 固定值
-                                ,"userId":function () {
-                                    return $.cookie('userId');
-                                }
-                                ,"userName":function () {
-                                    return $.cookie('userName');
-                                }
-                            }
-                            ,field:"file"
-                            ,multiple: true
-                            ,accept:"images"
-                            ,acceptMime: 'image/*' //（只显示图片文件）
-                            ,choose: function(obj){
-                                test2Files = obj.pushFile();
-                            }
-                            ,before: function(obj){
-                                layer.load();
-                                obj.preview(function(index, file, result){
-                                    $('#demo2').append('<img data-id="" id="'+ index +'" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width: 150px;">');
-                                });
-                            }
-                            ,done: function(res, index, upload){
-                                layer.closeAll('loading');
-                                $('#'+index).attr("data-id",res.data);
-                                $("#"+index).dblclick(function() {
-                                    var code = $(this).attr("data-id");
-                                    $.post(requestUrl+"/deleteFileInfo.do" , {
-                                        "code": code
-                                    } ,  function(data){
-                                        layer.msg(data.msg);
-                                    }, "json");
-                                    $(this).remove();
-                                });
-                            }
-                            ,allDone: function(obj){
-                                layer.closeAll('loading');
-                            }
-                            ,error: function(index, upload){
-                                layer.closeAll('loading');
-                            }
-                        });
-//其他文件
-                        /*                        var test3Files;
-                                                uploadTest3=upload.render({
-                                                    elem: '#test3'
-                                                    ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                                                    ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                                        "userId":function () {
-                                                            return $.cookie('userId');
-                                                        }
-                                                        ,"userName":function () {
-                                                            return $.cookie('userName');
-                                                        }
-                                                        ,"relationCode":function () {
-                                                            return $(" input[ name='code' ] ").val();
-                                                        }
-                                                        ,"fileCategory":"JiXuJiaoYu" // 固定值
-                                                        ,"fileType":"其他文件" // 固定值
-                                                    }
-                                                    ,field:"file" //设定文件域的字段名
-                                                    ,multiple: true // 	是否允许多文件上传
-                                                    // ,auto:false
-                                                    // ,bindAction: '#dataFormSubmitBtn'
-                                                    ,choose: function(obj){
-                                                        //将每次选择的文件追加到文件队列
-                                                        test3Files = obj.pushFile();
-
-                                                        //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
-                                                        obj.preview(function(index, file, result){
-                                                            // console.log(index); //得到文件索引
-                                                            // console.log(file); //得到文件对象
-                                                            // console.log(result); //得到文件base64编码，比如图片
-
-                                                            // obj.resetFile(index, file, '123.jpg'); //重命名文件名，layui 2.3.0 开始新增
-                                                            obj.resetFile(index, file, index+file.name.substr(file.name.lastIndexOf("."))); //重命名文件名，layui 2.3.0 开始新增
-
-                                                            //这里还可以做一些 append 文件列表 DOM 的操作
-
-                                                            //obj.upload(index, file); //对上传失败的单个文件重新上传，一般在某个事件中使用
-                                                            //delete files[index]; //删除列表中对应的文件，一般在某个事件中使用
-                                                        });
-                                                    }
-                                                    ,before: function(obj){
-                                                        layer.load(); //上传loading
-                                                        //预读本地文件示例，不支持ie8
-                                                        obj.preview(function(index, file, result){
-
-                                                            $('#demo3').append('<img id="'+ index +'" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width: 150px;">')
-                                                            $("#"+index).dblclick(function() {//双击某一行事件
-                                                                // delete files[index]; //layui delete files[index] 图片无法删除
-                                                                // alert(index);
-                                                                var code = $(this).attr("data-id");
-                                                                $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                                    "code": code
-                                                                } ,  function(data){
-                                                                    layer.msg(data.msg);
-                                                                }, "json");
-                                                                $(this).remove();
-                                                            });
-                                                        });
-
-                                                    }
-                                                    ,done: function(res, index, upload){ //每个文件提交一次触发一次。详见“请求成功的回调”
-                                                        layer.closeAll('loading'); //关闭loading
-                                                        $('#'+index).attr("data-id",res.data);
-                                                        // alert("teest"+index+JSON.stringify(res)); //得到总文件数
-                                                        return delete test3Files[index]; //删除文件队列已经上传成功的文件
-                                                    }
-                                                    ,allDone: function(obj){ //当文件全部被提交后，才触发
-                                                        layer.closeAll('loading'); //关闭loading
-                                                        // alert("你上传了"+obj.total+"张图片"); //得到总文件数
-                                                        // console.log(obj.successful); //请求成功的文件数
-                                                        // console.log(obj.aborted); //请求失败的文件数
-                                                    }
-                                                    ,error: function(index, upload){
-                                                        layer.closeAll('loading'); //关闭loading
-                                                    }
-                                                });*/
-
-                        //心得体会
-                        let xdthListView = $('#xdthList')
-                            ,upload_xdth = upload.render({
-                            elem: '#upload_xdth'
-                            ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                            ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                "relationCode":function () {
-                                    return $(" input[ name='code' ] ").val();
-                                }
-                                ,"fileCategory":"JXYJ_JXJY" // 固定值
-                                ,"fileType":"心得体会" // 固定值
-                                ,"userId":function () {
-                                    return $.cookie('userId');
-                                }
-                                ,"userName":function () {
-                                    return $.cookie('userName');
-                                }
-                            }
-                            ,field:"file" //设定文件域的字段名
-                            ,multiple: true // 	是否允许多文件上传
-                            ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                            ,exts:'jpg|png|gif|bmp|jpeg|pdf'
-                            ,choose: function(obj){
-                                let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                //读取本地文件
-                                obj.preview(function(index, file, result){
-                                    var tr = $(['<tr id="upload-'+ index +'">'
-                                        ,'<td>'+ file.name +'</td>'
-                                        ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
-                                        ,'<td>待上传</td>'
-                                        ,'<td>'
-                                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
-                                        ,'</td>'
-                                        ,'</tr>'].join(''));
-                                    xdthListView.append(tr);
-
-                                    //删除
-                                    tr.find('.demo-delete').on('click', function(){
-                                        $.post(requestUrl+"/deleteFileInfo.do" , {
-                                            "code": $('#upload-'+index).attr("data-id")
-                                        } ,  function(data){
-                                            delete files[index]; //删除对应的文件
-                                            tr.remove();
-                                            upload_xdth.config.elem.next()[0].value = '';
-                                        }, "json");
-                                    });
-                                });
-                            }
-                            ,done: function(res, index, upload){
-                                if(res.code == 200){ //上传成功
-                                    let tr = xdthListView.find('tr#upload-'+ index)
-                                        ,tds = tr.children();
-                                    tr.attr("data-id",res.data);//
-                                    tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
-                                    // tds.eq(3).html(''); //清空操作
-                                    return delete this.files[index]; //删除文件队列已经上传成功的文件
-                                }
-                                this.error(index, upload);
-                            }
-                            ,error: function(index, upload){
-                                let tr = xdthListView.find('tr#upload-'+ index)
-                                    ,tds = tr.children();
-                                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
-                                // tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
-                            }
-                        });
-                        //其他文件
-                        var demoListView = $('#demoList')
+                        //上传附件
+                        let demoListView = $('#demoList')
                             ,uploadListIns = upload.render({
                             elem: '#testList'
                             ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
@@ -1121,8 +718,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 "relationCode":function () {
                                     return $(" input[ name='code' ] ").val();
                                 }
-                                ,"fileCategory":"JXYJ_JXJY" // 固定值
-                                ,"fileType":"其他文件" // 固定值
+                                ,"fileCategory":"JXYJ_JGLW" // 固定值
+                                ,"fileType":"附件" // 固定值
                                 ,"userId":function () {
                                     return $.cookie('userId');
                                 }
@@ -1133,9 +730,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,field:"file" //设定文件域的字段名
                             ,multiple: true // 	是否允许多文件上传
                             ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                            ,exts:'jpg|png|gif|bmp|jpeg|pdf'
-                            // ,auto: false //是否选完文件后自动上传。如果设定 false，那么需要设置 bindAction 参数来指向一个其它按钮提交上传
-                            // ,bindAction: '#testListAction' //指向一个按钮触发上传，一般配合 auto: false 来使用。值为选择器或DOM对象，如：bindAction: '#btn'
+                            ,exts:'pdf'
                             ,choose: function(obj){
                                 var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
                                 //读取本地文件
@@ -1150,10 +745,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         ,'</td>'
                                         ,'</tr>'].join(''));
                                     demoListView.append(tr);
-                                    //单个重传
-                                    /*tr.find('.demo-reload').on('click', function(){
-                                        obj.upload(index, file);
-                                    });*/
 
                                     //删除
                                     tr.find('.demo-delete').on('click', function(){
@@ -1180,21 +771,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 this.error(index, upload);
                             }
                             ,error: function(index, upload){
-                                var tr = demoListView.find('tr#upload-'+ index)
+                                let tr = demoListView.find('tr#upload-'+ index)
                                     ,tds = tr.children();
                                 tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
-                                // tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
                             }
                         });
                     },end:function () {
-                        //重载所有上传实例
-                        // uploadTest1.reload();
-                        // uploadTest2.reload();
-                        // uploadTest3.reload();
+                        //重载上传实例
                         if(operationType=="edit"){
-                            $("#demo1").empty();
-                            $("#demo2").empty();
-                            $("#demo3").empty();
+                            $("#demoList").empty();
                         }
                     }
                 });

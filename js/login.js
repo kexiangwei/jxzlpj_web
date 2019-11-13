@@ -8,8 +8,8 @@
             type:'get',
             dataType:'json',
             success:function(data) {
-                //
-                $("img").attr('src',requestUrl+"/"+data.data.imgPath);
+                //图形验证码
+                $("#verCode").attr('src',data.data.image);
                 //监听提交
                 form.on('submit(loginForm)', function(formData){
                     // alert(JSON.stringify(formData));
