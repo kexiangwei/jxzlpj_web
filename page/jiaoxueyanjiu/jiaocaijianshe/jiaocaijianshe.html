@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>教学研究-教材建设</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
         .layui-form-label {
             width: 100px;
@@ -23,11 +23,11 @@
             <div class="layui-tab-item layui-show" id="myself_item">
                 <div class="layui-fluid">
                     <div class="myself_search">
-                        教材名称：
+                        名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="myself_name" autocomplete="off" style="width: 90%;">
                         </div>
-                        <!--教材类别：
+                        <!--类别：
                         <div class="layui-inline">
                             <input class="layui-input" name="myself_category" autocomplete="off" style="width: 90%;">
                         </div>-->
@@ -66,7 +66,7 @@
                         <div class="layui-inline">
                             <input class="layui-input" name="other_userName" autocomplete="off" style="width: 90%;">
                         </div>
-                        教材名称：
+                        名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_name" autocomplete="off" style="width: 90%;">
                         </div>
@@ -110,66 +110,79 @@
         <input type="hidden" name="code"/>
         <!-- -->
         <div class="layui-form-item" style="margin-top: 10px;">
-            <label class="layui-form-label">论文题目：</label>
-            <div class="layui-input-block">
-                <input type="text" name="lwTitle" value="" placeholder="" required  lay-verify="required" class="layui-input" style="width: 79%;">
-            </div>
-        </div>
-        <div class="layui-form-item">
             <div class="layui-inline" style="width: 300px;">
-                <label class="layui-form-label">期刊名称：</label>
+                <label class="layui-form-label">名称：</label>
                 <div class="layui-input-inline" style="width: 150px;">
-                    <input type="text" name="qkName" value="" placeholder="" required  lay-verify="required" class="layui-input">
+                    <input type="text" name="name" value="" placeholder="" required  lay-verify="required" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline" style="width: 300px;">
-                <label class="layui-form-label">期刊类别：</label>
+                <label class="layui-form-label">类别：</label>
                 <div class="layui-input-inline" style="width: 150px;">
-                    <select name="qkType" lay-filter="qkType">
-                        <option value="核心" selected="">核心</option>
-                        <option value="非核心">非核心</option>
+                    <select name="category" lay-filter="category">
+                        <option value="教材" selected>教材</option>
+                        <option value="专著（专著、译著、辞书）">专著（专著、译著、辞书）</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline" style="width: 300px;">
-                <label class="layui-form-label">第一作者姓名：</label>
+                <label class="layui-form-label">参与形式：</label>
                 <div class="layui-input-inline" style="width: 150px;">
-                    <input type="text" name="dyAuthorName" class="layui-input">
+                    <select name="participationType" lay-filter="participationType">
+                        <option value="主编" selected>主编</option>
+                        <option value="副主编">副主编</option>
+                        <option value="参编">参编</option>
+                    </select>
                 </div>
             </div>
             <div class="layui-inline" style="width: 300px;">
-                <label class="layui-form-label">第一作者工号：</label>
+                <label class="layui-form-label">ISBN：</label>
                 <div class="layui-input-inline" style="width: 150px;">
-                    <input type="text" name="dyAuthorCode" class="layui-input">
+                    <input type="text" name="isbn" value="" placeholder="" required  lay-verify="required" class="layui-input">
                 </div>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-inline" style="width: 300px;">
-                <label class="layui-form-label">通讯作者姓名：</label>
+                <label class="layui-form-label">出版社：</label>
                 <div class="layui-input-inline" style="width: 150px;">
-                    <input type="text" name="txAuthorName" class="layui-input">
+                    <input type="text" name="publishers" class="layui-input" id="startDate" placeholder="">
                 </div>
             </div>
             <div class="layui-inline" style="width: 300px;">
-                <label class="layui-form-label">通讯作者工号：</label>
+                <label class="layui-form-label">出版时间：</label>
                 <div class="layui-input-inline" style="width: 150px;">
-                    <input type="text" name="txAuthorCode"class="layui-input">
+                    <input type="text" name="publishingTime" class="layui-input" id="publishingTime" placeholder="yyyy-MM-dd">
                 </div>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">发表时间：</label>
+            <div class="layui-inline" style="width: 300px;">
+                <label class="layui-form-label">材料入选情况：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <select name="selected" lay-filter="selected">
+                        <option value="">请选择</option>
+                        <option value="国家规划教材">国家规划教材</option>
+                        <option value="省部级规划教材">省部级规划教材</option>
+                        <option value="国家级精品教材">国家级精品教材</option>
+                        <option value="省部级精品教材">省部级精品教材</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline" style="width: 300px;">
+                <label class="layui-form-label">入选时间：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="text" name="selectedTime" class="layui-input" id="selectedTime" placeholder="yyyy-MM-dd">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支撑材料上传：</label>
             <div class="layui-input-block">
-                <input type="text" name="fbTime" value=""  placeholder="" required  lay-verify="required" class="layui-input" style="width: 79%;">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">论文上传：</label>
-            <div class="layui-input-block">
-                <button type="button" class="layui-btn layui-btn-primary" id="upload">上传原文附件 pdf</button>
+                <button type="button" class="layui-btn layui-btn-primary" id="upload" style="width: 150px;">上传附件</button>
             </div>
         </div>
         <div class="layui-form-item">
@@ -213,7 +226,7 @@
     <div class="layui-container" id="uploadFileContainer">
         <div class="layui-upload" style="margin-top: 10px;">
             <button type="button" class="layui-btn layui-btn-normal" id="testList"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
-            <span style="color: #8D8D8D">上传论文相关材料，仅支持pdf文件格式</span>
+            <span style="color: #8D8D8D">上传封面封底、版权页、目录、编写人员、内容简介页，仅支持pdf文件格式</span>
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
@@ -244,11 +257,11 @@
         </fieldset>
     </div>
 
-    <script src="../../layui/layui.js"></script>
-    <script src="../../js/jquery-3.3.1.js"></script>
-    <script src="../../js/jquery.cookie.js"></script>
-    <script src="../../js/pdfjs/build/pdf.js"></script>
-    <script src="../../js/global.js"></script>
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/pdfjs/build/pdf.js"></script>
+    <script src="../../../js/global.js"></script>
     <script src="jiaocaijianshe.js"></script>
 
 </body>

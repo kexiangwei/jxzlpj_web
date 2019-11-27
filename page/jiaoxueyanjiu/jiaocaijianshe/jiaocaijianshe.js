@@ -1,8 +1,8 @@
 /*
 教学研究-教材建设
  */
-layui.use(['layer','element','table','form','upload'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,upload = layui.upload;
+layui.use(['layer','element','table','form','laydate','upload'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,upload = layui.upload;
 
     //验证用户是否拥有提交、审核权限
     $.ajax({
@@ -60,7 +60,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'name', title: '教材名称', width:120}
+                        ,{field: 'name', title: '名称', width:120}
                         ,{field: 'category', title: '类别', width:120}
                         ,{field: 'participationType', title: '参与形式', width:120}
                         ,{field: 'isbn', title: 'ISBN', width:120}
@@ -147,13 +147,22 @@ layui.use(['layer','element','table','form','upload'], function(){
                             $(" input[ name='code' ] ").val(new Date().getTime());
                             //
                             layer.open({
-                                title : '教学研究-教改论文-新增'
+                                title : '教学研究-教材建设-新增'
                                 ,type : 1
-                                ,offset : '10px'
+                                ,offset : '20px'
                                 // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                ,area : [ '700px', '535px' ]
+                                ,area : [ '700px', '435px' ]
                                 ,content : $('#editForm')
                                 ,success: function(layero, index){
+                                    //初始化laydate实例
+                                    laydate.render({
+                                        elem: '#publishingTime' //指定元素
+                                        ,showBottom: false
+                                    });
+                                    laydate.render({
+                                        elem: '#selectedTime' //指定元素
+                                        ,showBottom: false
+                                    });
                                     //监听表单提交
                                     form.on('submit(editFormSubmitBtn)', function(data){
                                         /* layer.alert(JSON.stringify(data.field), {
@@ -162,14 +171,14 @@ layui.use(['layer','element','table','form','upload'], function(){
                                          return false;*/
                                         $.post(requestUrl+'/jiaoCaiJianShe/insert.do',{
                                             "code":data.field.code
-                                            ,"lwTitle": data.field.lwTitle
-                                            ,"qkName" : data.field.qkName
-                                            ,"qkType" : data.field.qkType
-                                            ,"dyAuthorName" : data.field.dyAuthorName
-                                            ,"dyAuthorCode" : data.field.dyAuthorCode
-                                            ,"txAuthorName" : data.field.txAuthorName
-                                            ,"txAuthorCode" : data.field.txAuthorCode
-                                            ,"fbTime" : data.field.fbTime
+                                            ,"name": data.field.name
+                                            ,"category" : data.field.category
+                                            ,"participationType" : data.field.participationType
+                                            ,"isbn" : data.field.isbn
+                                            ,"publishers" : data.field.publishers
+                                            ,"publishingTime" : data.field.publishingTime
+                                            ,"selected" : data.field.selected
+                                            ,"selectedTime" : data.field.selectedTime
                                             ,"userId":function () {
                                                 return $.cookie('userId');
                                             }
@@ -248,23 +257,32 @@ layui.use(['layer','element','table','form','upload'], function(){
                         //执行编辑
                         operationType = "edit";
                         layer.open({
-                            title : '教学研究-教改论文-编辑'
+                            title : '教学研究-教材建设-编辑'
                             ,type : 1
                             ,area : [ '700px', '535px' ]
                             ,offset : '10px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#editForm')
                             ,success: function(layero, index){
+                                //初始化laydate实例
+                                laydate.render({
+                                    elem: '#publishingTime' //指定元素
+                                    ,showBottom: false
+                                });
+                                laydate.render({
+                                    elem: '#selectedTime' //指定元素
+                                    ,showBottom: false
+                                });
                                 form.val("editForm",{
                                     "code":data.code
-                                    ,"lwTitle": data.lwTitle
-                                    ,"qkName" : data.qkName
-                                    ,"qkType" : data.qkType
-                                    ,"dyAuthorCode" : data.dyAuthorCode
-                                    ,"dyAuthorName" : data.dyAuthorName
-                                    ,"txAuthorCode" : data.txAuthorCode
-                                    ,"txAuthorName" : data.txAuthorName
-                                    ,"fbTime" : data.fbTime
+                                    ,"name": data.name
+                                    ,"category" : data.category
+                                    ,"participationType" : data.participationType
+                                    ,"isbn" : data.isbn
+                                    ,"publishers" : data.publishers
+                                    ,"publishingTime" : data.publishingTime
+                                    ,"selected" : data.selected
+                                    ,"selectedTime" : data.selectedTime
                                     ,"userId":data.userId
                                     ,"userName":data.userName
                                 });
@@ -272,14 +290,14 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 form.on('submit(editFormSubmitBtn)', function(data){
                                     $.post(requestUrl+'/jiaoCaiJianShe/update.do',{
                                         "code":data.field.code
-                                        ,"lwTitle": data.field.lwTitle
-                                        ,"qkName" : data.field.qkName
-                                        ,"qkType" : data.field.qkType
-                                        ,"dyAuthorName" : data.field.dyAuthorName
-                                        ,"dyAuthorCode" : data.field.dyAuthorCode
-                                        ,"txAuthorName" : data.field.txAuthorName
-                                        ,"txAuthorCode" : data.field.txAuthorCode
-                                        ,"fbTime" : data.field.fbTime
+                                        ,"name": data.field.name
+                                        ,"category" : data.field.category
+                                        ,"participationType" : data.field.participationType
+                                        ,"isbn" : data.field.isbn
+                                        ,"publishers" : data.field.publishers
+                                        ,"publishingTime" : data.field.publishingTime
+                                        ,"selected" : data.field.selected
+                                        ,"selectedTime" : data.field.selectedTime
                                         ,"userId":function () {
                                             return $.cookie('userId');
                                         }
@@ -442,7 +460,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 }
                                 //添加审核意见
                                 layer.open({
-                                    title : '教学研究-教改论文-审核'
+                                    title : '教学研究-教材建设-审核'
                                     ,type : 1
                                     ,area : [ '700px', '450px' ]
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -514,7 +532,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                 }
                 var isOpen = false;
                 layer.open({
-                    title : '教学研究-教改论文-查看详情'
+                    title : '教学研究-教材建设-查看详情'
                     ,type : 1
                     ,area : [ '700px', '535px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -525,14 +543,14 @@ layui.use(['layer','element','table','form','upload'], function(){
                         '        <tbody>\n' +
                         '            <tr><td style="width: 150px; text-align: center">工号</td><td>'+data.userId+'</td></tr>\n' +
                         '            <tr><td style="width: 150px; text-align: center">姓名</td><td>'+data.userName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">论文题目</td><td>'+data.lwTitle+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">期刊名称</td><td>'+data.qkName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">期刊类别</td><td>'+data.qkType+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">第一作者工号</td><td>'+data.dyAuthorCode+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">第一作者姓名</td><td>'+data.dyAuthorName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">通讯作者工号</td><td>'+data.txAuthorCode+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">通讯作者姓名</td><td>'+data.txAuthorName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">发表时间</td><td>'+data.fbTime+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">教材名称</td><td>'+data.name+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">类别</td><td>'+data.category+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">参与形式</td><td>'+data.participationType+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">ISBN</td><td>'+data.isbn+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">出版社</td><td>'+data.publishers+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">出版时间</td><td>'+data.publishingTime+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">教材入选情况</td><td>'+data.selected+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">入选时间</td><td>'+data.selectedTime+'</td></tr>\n' +
                         '        </tbody>\n' +
                         '    </table>'
                     ,success: function(layero, index){
@@ -546,7 +564,7 @@ layui.use(['layer','element','table','form','upload'], function(){
 
             let detail_file = function (data) {
                 layer.open({
-                    title : '教学研究-教改论文-查看附件'
+                    title : '教学研究-教材建设-查看附件'
                     ,type : 1
                     ,offset : '10px'
                     ,moveOut:true
@@ -607,7 +625,7 @@ layui.use(['layer','element','table','form','upload'], function(){
 
             let detail_shenheProcess = function (rowData) {
                 layer.open({
-                    title : '教学研究-教改论文-审核流程'
+                    title : '教学研究-教材建设-审核流程'
                     ,type : 1
                     ,area : [ '1175px', '535px' ]
                     ,offset : '10px' //只定义top坐标，水平保持居中
@@ -682,7 +700,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                 ,uploadTest;
             $(document).on('click','#upload',function(data){
                 layer.open({
-                    title : '教学研究-教改论文-上传附件'
+                    title : '教学研究-教材建设-上传附件'
                     ,type : 1
                     ,area : [ '1175px', '535px' ]
                     ,offset : '10px'
@@ -724,7 +742,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 "relationCode":function () {
                                     return $(" input[ name='code' ] ").val();
                                 }
-                                ,"fileCategory":"JXYJ_JGLW" // 固定值
+                                ,"fileCategory":"JXYJ_JCJS" // 固定值
                                 ,"fileType":"附件" // 固定值
                                 ,"userId":function () {
                                     return $.cookie('userId');

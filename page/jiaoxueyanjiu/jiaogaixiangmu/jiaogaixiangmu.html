@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教学研究-教学团队</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this" id="myself">信息列表</li>
+            <li class="layui-this" id="other">审核列表<span class="layui-badge"></span></li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show" id="myself_item">
+                <div class="layui-fluid">
+                    <div class="myself_search">
+                        项目名称：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="myself_search_xmName" autocomplete="off" style="width: 90%;">
+                        </div>
+                        项目类型：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="myself_search_xmType" autocomplete="off" style="width: 90%;">
+                        </div>
+                        主持人：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="myself_search_leader" autocomplete="off" style="width: 90%;">
+                        </div>
+                        提交状态：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="myself_search_isSubmit" autocomplete="off" style="width: 90%;">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+                            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                        </div>
+                    </div>
+                    <!-- 数据表格 -->
+                    <table class="layui-table" id="myself_table" lay-filter="myself_table"></table>
+                    <script type="text/html" id="myself_toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>提交</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="myself_bar"></script>
+                </div>
+            </div>
+            <div class="layui-tab-item layui-show" id="other_item">
+                <div class="layui-fluid">
+                    <div class="other_search">
+                        工号：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_search_userId" autocomplete="off" style="width: 120px;">
+                        </div>
+                        姓名：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_search_userName" autocomplete="off" style="width: 120px;">
+                        </div>
+                        项目名称：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_search_xmName" autocomplete="off" style="width: 120px;">
+                        </div>
+                        项目类型：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_search_xmType" autocomplete="off" style="width: 120px;">
+                        </div>
+                        主持人：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_search_leader" autocomplete="off" style="width: 120px;">
+                        </div>
+                        审核状态：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_search_shenheStatus" autocomplete="off" style="width: 120px;">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+                            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                        </div>
+                    </div>
+                    <!-- 数据表格 -->
+                    <table class="layui-table" id="other_table" lay-filter="other_table"></table>
+                    <script type="text/html" id="other_toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>审核</button>
+                        </div>
+                    </script>
+                    <script type="text/html" id="other_bar">
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 响应新增，编辑按钮 -->
+    <form class="layui-form" id="editForm" lay-filter="editForm">
+        <!-- 声明一个隐藏域，信息编号是修改数据的依据-->
+        <input type="hidden" name="code"/>
+        <!-- -->
+        <div class="layui-container">
+            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+                <legend>一、项目基本信息</legend>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">项目名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="xmName" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">项目类型：</label>
+                    <div class="layui-input-block">
+                        <select name="xmType" lay-filter="xmType">
+                            <option value="重点" selected>重点</option>
+                            <option value="一般">一般</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+                <legend>二、项目主持人信息</legend>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">姓名：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="leader" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">工号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="leaderId" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">职称：</label>
+                    <div class="layui-input-block">
+                        <select name="title" lay-filter="title">
+                            <option value="">请选择</option>
+                            <option value="教授">教授</option>
+                            <option value="副教授">副教授</option>
+                            <option value="讲师">讲师</option>
+                            <option value="研究员">研究员</option>
+                            <option value="副研究员">副研究员</option>
+                            <option value="助理研究员">助理研究员</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">二级单位：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="collegeOrDept" required  lay-verify="required" autocomplete="off" placeholder="学院或部门" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">专业：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="major" required  lay-verify="required" autocomplete="off"  placeholder="若是职能部门，可以不填写" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">主要教学工作简历：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="mainTeachWork" name="mainTeachWork"></script>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">主要教育教学研究领域及成果：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="mainTeachAchievement" name="mainTeachAchievement"></script>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+                <legend>三、项目主要参加人员情况</legend>
+                <script type="text/html" id="dataTable_toolbar">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                    </div>
+                </script>
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                                <label class="layui-form-label">主要成员情况：</label>
+                            </td>
+                            <td width="100%;">
+                                <table class="layui-table" id="memberListDataTable" lay-filter="memberListDataTable"></table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <script type="text/html" id="dataTable_bar">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+                </script>
+            </fieldset>
+            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+                <legend>四、项目的研究背景与研究基础</legend>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">现状与背景分析（包括已有研究实践基础）：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="currentAndBackground" name="currentAndBackground"></script>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">研究内容、目标、要解决的问题和主要特色：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="questionAndTarget" name="questionAndTarget"></script>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+                <legend>五、项目的预期效果、具体成果和进度安排</legend>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">预期效果与具体成果：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="expectAndResult" name="expectAndResult"></script>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">具体安排及进度：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="planAndProcess" name="planAndProcess"></script>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+                <legend>六、项目经费预算</legend>
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                                <label class="layui-form-label">经费预算：</label>
+                            </td>
+                            <td width="100%;">
+                                <table class="layui-table" id="fundBudgetListDataTable" lay-filter="fundBudgetListDataTable"></table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="layui-form-item" style="margin-top: 10px;">
+                    <label class="layui-form-label">经费概算：</label>
+                    <div class="layui-input-block">
+                        <script type="text/plain" id="fundBudgetEstimate" name="fundBudgetEstimate"></script>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn" id="editFormSubmitBtn">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 查看详情 -->
+    <div class="layui-container" id="viewContainer"></div>
+
+    <!-- 填写审核意见 -->
+    <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
+        <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
+            <label class="layui-form-label">审核状态：</label>
+            <div class="layui-input-inline" style="width: 150px;">
+                <select name="status" lay-filter="status">
+                    <option value="">请选择</option>
+                    <option value="通过" selected="">通过</option>
+                    <option value="退回">退回</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">审核意见：</label>
+            <div class="layui-input-block">
+                <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 200px;">通过</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" align="center">
+                <button class="layui-btn" lay-submit="" lay-filter="shenHeFormSubmitBtn" id="shenHeFormSubmitBtn">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 查看审核流程 -->
+    <div class="layui-container" id="shenheProcessContainer"></div>
+
+    <script type="text/javascript" src="../../../js/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="../../../js/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" src="../../../js/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/pdfjs/build/pdf.js"></script>
+    <script src="../../../js/global.js"></script>
+    <script src="jiaogaixiangmu.js"></script>
+
+</body>
+</html>
