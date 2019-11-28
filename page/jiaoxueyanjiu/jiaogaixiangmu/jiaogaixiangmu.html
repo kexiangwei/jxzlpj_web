@@ -177,7 +177,8 @@
                 <legend>三、项目主要参加人员情况</legend>
                 <script type="text/html" id="dataTable_toolbar">
                     <div class="layui-btn-container">
-                        <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                        <!-- 设置type="button"，解决弹出框一闪而过的问题 -->
+                        <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
                     </div>
                 </script>
                 <div>
@@ -187,7 +188,7 @@
                                 <label class="layui-form-label">主要成员情况：</label>
                             </td>
                             <td width="100%;">
-                                <table class="layui-table" id="memberListDataTable" lay-filter="memberListDataTable"></table>
+                                <table class="layui-table" id="memberDataTable" lay-filter="memberDataTable"></table>
                             </td>
                         </tr>
                     </table>
@@ -235,7 +236,7 @@
                                 <label class="layui-form-label">经费预算：</label>
                             </td>
                             <td width="100%;">
-                                <table class="layui-table" id="fundBudgetListDataTable" lay-filter="fundBudgetListDataTable"></table>
+                                <table class="layui-table" id="fundBudgetDataTable" lay-filter="fundBudgetDataTable"></table>
                             </td>
                         </tr>
                     </table>
@@ -252,6 +253,59 @@
             <div class="layui-input-block" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn" id="editFormSubmitBtn">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 项目主要参加人员情况 -->
+    <form class="layui-form" id="memberForm" lay-filter="memberForm">
+        <div class="layui-container" style="width: 90%;">
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userName" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">工号：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userId" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">任务分工：</label>
+                <div class="layui-input-block">
+                    <textarea name="task" required  lay-verify="required" autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" align="right">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="memberFormSubmitBtn">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- 经费预算 -->
+    <form class="layui-form" id="fundBudgetForm" lay-filter="fundBudgetForm">
+        <div class="layui-container" style="width: 90%;">
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">科目：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="subject" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">预算金额（元）：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="budgetAmount" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" align="right">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="fundBudgetFormSubmitBtn">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
             </div>
         </div>
     </form>
