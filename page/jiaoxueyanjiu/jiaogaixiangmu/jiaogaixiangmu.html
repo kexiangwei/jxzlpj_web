@@ -316,6 +316,16 @@
     <!-- 填写审核意见 -->
     <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
         <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
+            <label class="layui-form-label">审核类别：</label>
+            <div class="layui-input-inline" style="width: 150px;">
+                <select name="status" lay-filter="status">
+                    <option value="">请选择</option>
+                    <option value="初审" selected="">初审</option>
+                    <option value="终审">终审</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
             <label class="layui-form-label">审核状态：</label>
             <div class="layui-input-inline" style="width: 150px;">
                 <select name="status" lay-filter="status">
@@ -328,7 +338,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">审核意见：</label>
             <div class="layui-input-block">
-                <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 200px;">通过</textarea>
+                <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 150px;">通过</textarea>
             </div>
         </div>
         <div class="layui-form-item">

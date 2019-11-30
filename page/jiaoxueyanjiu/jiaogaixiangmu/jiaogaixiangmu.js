@@ -73,7 +73,6 @@ layui.use(['layer','element','table','form'], function(){
                         ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120,hide:true}
                         ,{field: 'planAndProcess', title: '具体安排及进度', width:120,hide:true}
                         ,{field: 'fundBudgetEstimate', title: '经费概算', width:120,hide:true}
-                        ,{field: 'createDate', title: '创建时间', width:120,hide:true}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
@@ -108,7 +107,8 @@ layui.use(['layer','element','table','form'], function(){
                                 return '';
                             }
                         }
-                        ,{fixed: 'right', width:340, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
+                        ,{field: 'createDate', title: '创建时间', width:120,hide:true}
+                        ,{fixed: 'right', width:288, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                 });//table end.
 
@@ -257,7 +257,7 @@ layui.use(['layer','element','table','form'], function(){
                         if(rowData.isSubmit=='未提交'){
                             return;
                         }
-                        detail_shenheProcess(rowData);
+                        detail_shenheProcess('教学研究-教改项目-查看审核流程',rowData);
                     } else if (obj.event === 'update') {
                         if(rowData.isSubmit== '已提交' &&  rowData.status != '退回'){
                             return;
@@ -430,7 +430,6 @@ layui.use(['layer','element','table','form'], function(){
                         ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120,hide:true}
                         ,{field: 'planAndProcess', title: '具体安排及进度', width:120,hide:true}
                         ,{field: 'fundBudgetEstimate', title: '经费概算', width:120,hide:true}
-                        ,{field: 'createDate', title: '创建时间', width:120,hide:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -439,7 +438,8 @@ layui.use(['layer','element','table','form'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         } //【已审核 | 待审核 | 退回】
-                        ,{fixed: 'right', width:240, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
+                        ,{field: 'createDate', title: '创建时间', width:120,hide:true}
+                        ,{fixed: 'right', width:168, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
@@ -451,12 +451,12 @@ layui.use(['layer','element','table','form'], function(){
                     search: function(){
                         other_table.reload({
                             where: {
-                                'userId': $(" input[ name='other_search_userId' ] ").val()
-                                ,'userName': $(" input[ name='other_search_userName' ] ").val()
+                                'userId': $("input[ name='other_search_userId' ] ").val()
+                                ,'userName': $("input[ name='other_search_userName' ] ").val()
                                 , 'xmName': $("input[name='other_search_xmName']").val()
                                 ,'xmType': $("input[ name='other_search_xmType']").val()
                                 ,'leader': $("input[ name='other_search_leader']").val()
-                                ,'shenheStatus': $(" input[ name='other_search_shenheStatus' ] ").val()
+                                ,'shenheStatus': $("input[ name='other_search_shenheStatus']").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -503,11 +503,11 @@ layui.use(['layer','element','table','form'], function(){
                                 layer.open({
                                     title : '教学研究-教改项目-审核'
                                     ,type : 1
-                                    ,area : [ '700px', '450px' ]
+                                    ,area : [ '700px', '440px' ]
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '10px' //只定义top坐标，水平保持居中
+                                    ,offset : '20px' //只定义top坐标，水平保持居中
                                     ,shadeClose : true //点击遮罩关闭
-                                    ,btn : ['关闭']
+                                    // ,btn : ['关闭']
                                     ,content : $('#shenHeForm')
                                     ,success: function(layero, index){
                                         //
@@ -559,7 +559,7 @@ layui.use(['layer','element','table','form'], function(){
                     } else if (obj.event === 'detail-file') {
                         detail_file(data);
                     } else if (obj.event === 'detail-shenheProcess') {
-                        detail_shenheProcess(data);
+                        detail_shenheProcess('教学研究-教改项目-查看审核流程',data);
                     }
                 });
             } else{
@@ -808,13 +808,30 @@ layui.use(['layer','element','table','form'], function(){
                         htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
                             '       <legend>三、项目主要参加人员情况</legend>\n' +
                             '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">主要成员情况：</td><td>主要成员情况主要成员情况主要成员情况主要成员情况主要成员情况主要成员情况</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
+                            '           <tbody>' +
+                            '               <tr>\n' +
+                            '                      <th style="width: 100px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">主要成员情况：</th>' +
+                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
+                            '                      <th style="width: 150px; text-align: center">姓名</th>\n' +
+                            '                      <th style="width: 150px; text-align: center">工号</th>\n' +
+                            '                      <th style="text-align: center">任务分工</th>\n' +
+                            '                 </tr>';
+                            if(rowData.memberList.length>0){
+                                layui.each(rowData.memberList,function (idx,obj) {
+                                    htmlStr += '<tr><td style="text-align: center">'+(idx+1)
+                                        +'</td><td style="text-align: center">'+obj.userName
+                                        +'</td><td style="text-align: center">'+obj.userId
+                                        +'</td><td style="text-align: center">'+obj.task
+                                        +'</td></tr>\n';
+                                });
+                            }else{
+                                htmlStr += '<tr>' +
+                                    '      <td style="text-align: center" colspan="4">暂无相关数据</td>' +
+                                    '  </tr>\n';
+                            }
+                        htmlStr +='</tbody>\n' +
+                            '   </table>' +
+                            '</fieldset>';
                         htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
                             '       <legend>四、项目的研究背景与研究基础</legend>\n' +
                             '       <table class="layui-table">\n' +
@@ -843,11 +860,31 @@ layui.use(['layer','element','table','form'], function(){
                             '   </fieldset>';
                         htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
                             '       <legend>六、项目经费预算</legend>\n' +
+                            //经费预算
                             '       <table class="layui-table">\n' +
+                            '           <tbody>' +
+                            '               <tr>\n' +
+                            '                      <th style="width: 100px; text-align: right" rowspan="'+(rowData.fundBudgetList.length>0?rowData.fundBudgetList.length+1:2)+'">经费预算：</th>' +
+                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
+                            '                      <th style="text-align: center">科目</th>\n' +
+                            '                      <th style="width: 150px; text-align: center">预算金额（元）</th>\n' +
+                            '                 </tr>';
+                            if(rowData.fundBudgetList.length>0){
+                                layui.each(rowData.fundBudgetList,function (idx,obj) {
+                                    htmlStr += '<tr><td style="text-align: center">'+(idx+1)
+                                        +'</td><td style="text-align: center">'+obj.subject
+                                        +'</td><td style="text-align: center">'+obj.budgetAmount
+                                        +'</td></tr>\n';
+                                });
+                            }else{
+                                htmlStr += '<tr>' +
+                                    '      <td style="text-align: center" colspan="3">暂无相关数据</td>' +
+                                    '  </tr>\n';
+                            }
+                            htmlStr +='</tbody></table>';
+                            //经费概算
+                            htmlStr += '<table class="layui-table">\n' +
                             '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">经费预算：</td><td>经费预算经费预算经费预算经费预算经费预算经费预算</td>' +
-                            '               </tr>\n' +
                             '               <tr>' +
                             '                   <td style="width: 100px; text-align: right">经费概算：</td><td>'+rowData.fundBudgetEstimate+'</td>' +
                             '               </tr>\n' +
@@ -858,83 +895,6 @@ layui.use(['layer','element','table','form'], function(){
                     }
                     ,end:function () {
                         $("#viewContainer .layui-elem-field").empty();
-                    }
-                });
-            };
-
-            /**
-             *
-             * @param rowData
-             */
-            let detail_shenheProcess = function (rowData) {
-                layer.open({
-                    title : '教学研究-教改项目-查看审核流程'
-                    ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px' //只定义top坐标，水平保持居中
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
-                    ,content : $('#shenheProcessContainer')
-                    ,success: function(layero, index){
-                        $.get(requestUrl+"/getShenheProcess.do" , {
-                            "relationCode": function () {
-                                return rowData.code;
-                            }
-                        } ,  function(data){
-                            if(data.code == 200){
-                                var data = data.data;
-                                if(data.length>0){
-                                    var htmlStr = '';
-                                    for (var i = 0; i < data.length; i++) {
-                                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                                            '<legend>开始</legend>\n' +
-                                            '               <div>' +
-                                            '                   <table class="layui-table">\n' +
-                                            '                        <tbody>\n' +
-                                            '                            <tr>' +
-                                            '                           <td style="width: 80px; text-align: center">提交人员</td><td style="width: 120px; text-align: center">'+data[i].userName+'</td>' +
-                                            '                           <td style="width: 80px; text-align: center">提交时间</td><td style="width: 120px; text-align: center">'+data[i].createDate+'</td>' +
-                                            '                       </tr>\n' +
-                                            '                       </tbody>\n' +
-                                            '                  </table>\n' +
-                                            '               </div>';
-                                        if(data[i].shenHeItemList.length>0){
-                                            for (let j = 0; j < data[i].shenHeItemList.length; j++) {
-                                                let item = data[i].shenHeItemList[j];
-                                                htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
-                                                    '               <div>' +
-                                                    '                   <table class="layui-table">\n' +
-                                                    '                        <tbody>\n' +
-                                                    '                            <tr>' +
-                                                    '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
-                                                    '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
-                                                    '                       </tr>\n' +
-                                                    '                            <tr>' +
-                                                    '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
-                                                    +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
-                                                    '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center">'+item.opinion+'</td>' +
-                                                    '                       </tr>\n' +
-                                                    '                       </tbody>\n' +
-                                                    '                  </table>\n' +
-                                                    '               </div>';
-                                            }
-                                        }
-                                        htmlStr +=  '</fieldset>';
-                                    }
-                                    if(rowData.status =='通过'){
-                                        htmlStr +=  '<h2 style="margin-left: 30px;">结束</h2>';
-                                    }
-                                    $("#shenheProcessContainer").html(htmlStr);
-                                }else{
-                                    layer.msg('暂无审核数据', {time : 3000, offset: '100px'});
-                                }
-                            }else{
-                                layer.msg('获取数据出错', {time : 3000, offset: '100px'});
-                            }
-                        }, "json");
-                    }
-                    ,end:function () {
-                        $("#shenheProcessContainer .layui-elem-field").empty();
                     }
                 });
             };
