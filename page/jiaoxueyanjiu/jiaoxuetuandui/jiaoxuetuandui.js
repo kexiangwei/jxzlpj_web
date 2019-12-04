@@ -27,7 +27,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     elem : '#myself_table'
                     ,height : 440
                     ,id: "myself_table_id"
-                    ,url: requestUrl+'/jiaoCaiJianShe/getPageList.do'
+                    ,url: requestUrl+'/jiaoXueTuanDui/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
@@ -60,14 +60,19 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'name', title: '名称', width:120}
-                        ,{field: 'category', title: '类别', width:120}
-                        ,{field: 'participationType', title: '参与形式', width:120}
-                        ,{field: 'isbn', title: 'ISBN', width:120}
-                        ,{field: 'publishers', title: '出版社', width:120}
-                        ,{field: 'publishingTime', title: '出版时间', width:120,hide:true}
-                        ,{field: 'selected', title: '教材入选情况', width:120,hide:true}
-                        ,{field: 'selectedTime', title: '入选时间', width:120,hide:true}
+                        ,{field: 'code', title: '团队编号', width:120}
+                        ,{field: 'name', title: '团队名称', width:150}
+                        ,{field: 'createTime', title: '团队建立时间', width:150,hide:true}
+                        ,{field: 'teamLeader', title: '负责人', width:120}
+                        ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
+                        ,{field: 'memberNames', title: '团队成员', width:150}
+                        ,{field: 'memberIds', title: '团队成员工号', width:150,hide:true}
+                        ,{field: 'sbs', title: '申报书', width:120,hide:true}
+                        ,{field: 'middleReport', title: '中期报告', width:120,hide:true}
+                        ,{field: 'middleResult', title: '中期考核结果', width:120,hide:true}
+                        ,{field: 'finalReport', title: '总结报告', width:120,hide:true}
+                        ,{field: 'finalResult', title: '最终考核结果', width:120,hide:true}
+                        ,{field: 'createDate', title: '数据录入时间', width:120,hide:true}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
@@ -113,9 +118,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'name': $("input[name='myself_name']").val()
-                                // ,'category': $("input[ name='myself_category']").val()
-                                ,'publishers': $("input[ name='myself_publishers']").val()
+                                'code': $("input[name='myself_code']").val()
+                                ,'name': $("input[ name='myself_name']").val()
+                                ,'teamLeader': $("input[ name='myself_teamLeader']").val()
                                 ,'isSubmit': $("input[ name='myself_isSubmit']").val()
                             }
                             ,page: {
@@ -169,7 +174,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                              title: '最终的提交信息'
                                          });
                                          return false;*/
-                                        $.post(requestUrl+'/jiaoCaiJianShe/insert.do',{
+                                        $.post(requestUrl+'/jiaoXueTuanDui/insert.do',{
                                             "code":data.field.code
                                             ,"name": data.field.name
                                             ,"category" : data.field.category
@@ -221,7 +226,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                     layer.close(index);
-                                    $.post(requestUrl+'/jiaoCaiJianShe/toSubimt.do',{
+                                    $.post(requestUrl+'/jiaoXueTuanDui/toSubimt.do',{
                                         "menuId":$.cookie('currentMenuId'),
                                         "jsonStr":JSON.stringify(data)
                                     },function (result_data) {
@@ -288,7 +293,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 });
                                 //监听编辑页submit按钮提交
                                 form.on('submit(editFormSubmitBtn)', function(data){
-                                    $.post(requestUrl+'/jiaoCaiJianShe/update.do',{
+                                    $.post(requestUrl+'/jiaoXueTuanDui/update.do',{
                                         "code":data.field.code
                                         ,"name": data.field.name
                                         ,"category" : data.field.category
@@ -325,7 +330,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                             layer.close(index);
-                            $.post(requestUrl+'/jiaoCaiJianShe/delete.do', { code: data.code},function(data){
+                            $.post(requestUrl+'/jiaoXueTuanDui/delete.do', { code: data.code},function(data){
                                 if(data.code === 200){
                                     myself_table.reload();//重新加载表格数据
                                     layer.msg('删除成功', {time : 3000, offset: '100px'});
@@ -345,7 +350,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     elem : '#other_table'
                     ,height : 440
                     ,id: "other_table_id"
-                    ,url: requestUrl+'/jiaoCaiJianShe/getPageList.do'
+                    ,url: requestUrl+'/jiaoXueTuanDui/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -375,23 +380,25 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                     ,limit: 10
                     ,even: true
-                    ,totalRow: true
                     ,toolbar: '#other_toolbar'
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
-                        ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'userId', title: '工号', width:120, sort: true}
-                        ,{field: 'userName', title: '姓名', width:120}
-                        ,{field: 'name', title: '教材名称', width:120}
-                        ,{field: 'category', title: '类别', width:120}
-                        ,{field: 'participationType', title: '参与形式', width:120}
-                        ,{field: 'isbn', title: 'ISBN', width:120}
-                        ,{field: 'publishers', title: '出版社', width:120}
-                        ,{field: 'publishingTime', title: '出版时间', width:120,hide:true}
-                        ,{field: 'selected', title: '教材入选情况', width:120,hide:true}
-                        ,{field: 'selectedTime', title: '入选时间', width:120,hide:true}
+                        ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'code', title: '团队编号', width:120}
+                        ,{field: 'name', title: '团队名称', width:180}
+                        ,{field: 'createTime', title: '团队建立时间', width:160}
+                        ,{field: 'teamLeader', title: '负责人', width:120}
+                        ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
+                        ,{field: 'memberNames', title: '团队成员', width:180}
+                        ,{field: 'memberIds', title: '团队成员工号', width:180,hide:true}
+                        ,{field: 'sbs', title: '申报书', width:120,hide:true}
+                        ,{field: 'middleReport', title: '中期报告', width:120,hide:true}
+                        ,{field: 'middleResult', title: '中期考核结果', width:120,hide:true}
+                        ,{field: 'finalReport', title: '总结报告', width:120,hide:true}
+                        ,{field: 'finalResult', title: '最终考核结果', width:120,hide:true}
+                        ,{field: 'createDate', title: '数据录入时间', width:120,hide:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
-                                var val = data.shenheStatus;
+                                let val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
@@ -410,11 +417,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     search: function(){
                         other_table.reload({
                             where: {
-                                'userId': $(" input[ name='other_userId' ] ").val()
-                                ,'userName': $(" input[ name='other_userName' ] ").val()
-                                , 'name': $("input[name='other_name']").val()
-                                // ,'category': $("input[ name='other_category']").val()
-                                ,'publishers': $("input[ name='other_publishers']").val()
+                                'code': $("input[name='other_code']").val()
+                                ,'name': $("input[ name='other_name']").val()
+                                ,'teamLeader': $("input[ name='other_teamLeader']").val()
                                 ,'shenheStatus': $(" input[ name='other_shenheStatus' ] ").val()
                             }
                             ,page: {
@@ -480,7 +485,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         });
                                         //
                                         form.on('submit(shenHeFormSubmitBtn)', function(formData){
-                                            $.post(requestUrl+'/jiaoCaiJianShe/toShenhe.do',{
+                                            $.post(requestUrl+'/jiaoXueTuanDui/toShenhe.do',{
                                                 "jsonStr":JSON.stringify(data)
                                                 ,"status":formData.field.status
                                                 ,"opinion":formData.field.opinion

@@ -29,7 +29,7 @@
                         </div>
                         提交状态：
                         <div class="layui-inline">
-                            <input class="layui-input" name="myself_search_isSubmit" autocomplete="off" style="width: 90%;">
+                            <input class="layui-input" name="isSubmit" autocomplete="off" style="width: 90%;">
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
@@ -50,14 +50,14 @@
             <div class="layui-tab-item layui-show" id="other_item">
                 <div class="layui-fluid">
                     <div class="other_search">
-                        工号：
+                        <!--工号：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_search_userId" autocomplete="off" style="width: 120px;">
                         </div>
                         姓名：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_search_userName" autocomplete="off" style="width: 120px;">
-                        </div>
+                        </div>-->
                         项目名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_search_xmName" autocomplete="off" style="width: 120px;">
@@ -69,10 +69,6 @@
                         主持人：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_search_leader" autocomplete="off" style="width: 120px;">
-                        </div>
-                        审核状态：
-                        <div class="layui-inline">
-                            <input class="layui-input" name="other_search_shenheStatus" autocomplete="off" style="width: 120px;">
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
@@ -315,12 +311,12 @@
 
     <!-- 填写审核意见 -->
     <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
-        <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
+        <div class="layui-form-item" style="width: 320px; margin-top: 20px; display: none" id="shenheType">
             <label class="layui-form-label">审核类别：</label>
             <div class="layui-input-inline" style="width: 150px;">
-                <select name="status" lay-filter="status">
+                <select name="shenheType" disabled lay-filter="shenheType">
                     <option value="">请选择</option>
-                    <option value="初审" selected="">初审</option>
+                    <option value="初审">初审</option>
                     <option value="终审">终审</option>
                 </select>
             </div>
@@ -342,7 +338,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <div class="layui-input-block" align="center">
+            <div class="layui-input-block">
                 <button class="layui-btn" lay-submit="" lay-filter="shenHeFormSubmitBtn" id="shenHeFormSubmitBtn">提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
@@ -351,6 +347,8 @@
 
     <!-- 查看审核流程 -->
     <div class="layui-container" id="shenheProcessContainer"></div>
+    <!-- 查看专家审核意见 -->
+    <div class="layui-container" id="zjshContainer"></div>
 
     <script type="text/javascript" src="../../../js/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" src="../../../js/ueditor/ueditor.all.min.js"></script>

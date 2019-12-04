@@ -13,10 +13,14 @@ var randomChar = function(){
     });
 };
 
-//给String对象增加一个原型方法,用于匹配指定字符结尾的字符串
-String.prototype.endWith=function(endStr){
-    var d=this.length-endStr.length;
-    return (d>=0&&this.lastIndexOf(endStr)==d);
+var isEmpty = function(obj) {
+    for (var prop in obj) {
+        // Inlude null properties as empty.
+        if (obj[prop] !== null) {
+            return false;
+        }
+    }
+    return true;
 };
 
 /**

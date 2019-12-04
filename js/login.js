@@ -32,6 +32,8 @@
                             $.cookie('remark', obj.remark, { path: '/' });
                             //跳转到主页面
                             window.location.href="index.html";
+                        }else{
+                            layer.msg(resultData.msg, {time : 3000, offset: '100px'});
                         }
                     }, "json");
                     return false;//这个必须有

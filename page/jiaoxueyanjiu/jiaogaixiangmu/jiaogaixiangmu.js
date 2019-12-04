@@ -120,7 +120,7 @@ layui.use(['layer','element','table','form'], function(){
                                 'xmName': $("input[name='myself_search_xmName']").val()
                                 ,'xmType': $("input[ name='myself_search_xmType']").val()
                                 ,'leader': $("input[ name='myself_search_leader']").val()
-                                ,'isSubmit': $("input[ name='myself_search_isSubmit']").val()
+                                ,'isSubmit': $("input[ name='isSubmit']").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -375,7 +375,9 @@ layui.use(['layer','element','table','form'], function(){
                 $('#myself_item').remove();
             }
             if(data.isShenhe > 0){ //拥有审核权限
-                var other_table = table.render({//数据表格
+                var isJwcGly
+                    ,isZjshAccount
+                    ,other_table = table.render({//数据表格
                     elem : '#other_table'
                     ,height : 440
                     ,id: "other_table_id"
@@ -398,7 +400,9 @@ layui.use(['layer','element','table','form'], function(){
                             "msg": "",
                             "count": res.data.totalNum,
                             "data": res.data.pageList,
-                            "unShenHeNum": res.data.unShenHeNum
+                            "unShenHeNum": res.data.unShenHeNum,
+                            "isJwcGly": res.data.isJwcGly,
+                            "isZjshAccount": res.data.isZjshAccount
                         };
                     }
                     ,page: {
@@ -438,11 +442,76 @@ layui.use(['layer','element','table','form'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         } //【已审核 | 待审核 | 退回】
+                        ,{field: 'shenheStatusFirst', title: '初审状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                var val = data.shenheStatusFirst;
+                                if(val=='已审核'){
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                }
+                                return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                            }
+                        } //【已审核 | 待审核 | 退回】
+                        ,{field: 'shenheStatusFinal', title: '终审状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                var val = data.shenheStatusFinal;
+                                if(val=='已审核'){
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                }else if(val=='待审核'){
+                                    return '<span style="color: gray;font-weight: bold;">'+val+'</span>';
+                                }else{
+                                    return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                                }
+                            }
+                        } //【已审核 | 待审核 | 退回】
                         ,{field: 'createDate', title: '创建时间', width:120,hide:true}
-                        ,{fixed: 'right', width:168, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
+                        ,{field: 'isJwcGly_0',fixed: 'right', width:168, align:'center',templet: function(data){
+                                return '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>' +
+                                    '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>';
+                            }
+                        }
+                        ,{field: 'isJwcGly_1',fixed: 'right', width:288, align:'center',templet: function(data){
+                                let htmlStr = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>' +
+                                    '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>';
+                                if(data.zjshItemList.length>0){
+                                    htmlStr += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
+                                }else{
+                                    htmlStr += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
+                                }
+                                return htmlStr;
+                            }
+                        }
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
+                        isJwcGly = res.isJwcGly;
+                        isZjshAccount = res.isZjshAccount;
+                        let htmlStr='';
+                        if(isJwcGly==1){ //当前登录用户为教务处管理员
+                            $("[data-field='shenheStatus']").css('display','none'); //关键代码
+                            // $("[data-field='leaderId']").css('display','none'); //关键代码
+                            // $("[data-field='title']").css('display','none'); //关键代码
+                            $("[data-field='isJwcGly_0']").css('display','none'); //关键代码
+                            //
+                            htmlStr = '初审状态：\n' +
+                                '          <div class="layui-inline">\n' +
+                                '              <input class="layui-input" name="shenheStatusFirst" autocomplete="off" style="width: 120px;">\n' +
+                                '          </div>\n' +
+                                '          终审状态：\n' +
+                                '          <div class="layui-inline">\n' +
+                                '               <input class="layui-input" name="shenheStatusFinal" autocomplete="off" style="width: 120px;">\n' +
+                                '          </div>';
+
+                        }else{
+                            $("[data-field='shenheStatusFirst']").css('display','none'); //关键代码
+                            $("[data-field='shenheStatusFinal']").css('display','none'); //关键代码
+                            $("[data-field='isJwcGly_1']").css('display','none'); //关键代码
+                            //
+                            htmlStr = ' 审核状态：\n' +
+                                '           <div class="layui-inline">\n' +
+                                '               <input class="layui-input" name="shenheStatus" autocomplete="off" style="width: 120px;">\n' +
+                                '           </div>';
+                        }
+                        if($('.other_search div').length==4){
+                            $('.other_search div:last').before(htmlStr);
+                        }
                     }
                 });//table end.
 
@@ -451,12 +520,14 @@ layui.use(['layer','element','table','form'], function(){
                     search: function(){
                         other_table.reload({
                             where: {
-                                'userId': $("input[ name='other_search_userId' ] ").val()
-                                ,'userName': $("input[ name='other_search_userName' ] ").val()
-                                , 'xmName': $("input[name='other_search_xmName']").val()
+                                /*'userId': $("input[ name='other_search_userId' ] ").val()
+                                ,'userName': $("input[ name='other_search_userName' ] ").val()*/
+                                'xmName': $("input[name='other_search_xmName']").val()
                                 ,'xmType': $("input[ name='other_search_xmType']").val()
                                 ,'leader': $("input[ name='other_search_leader']").val()
-                                ,'shenheStatus': $("input[ name='other_search_shenheStatus']").val()
+                                ,'shenheStatus': $("input[ name='shenheStatus']").val()
+                                ,'shenheStatusFirst': $("input[ name='shenheStatusFirst']").val()
+                                ,'shenheStatusFinal': $("input[ name='shenheStatusFinal']").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -483,21 +554,41 @@ layui.use(['layer','element','table','form'], function(){
                                 layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
                                 return;
                             } else {
-                                if(data.length === 1&&data[0].shenheStatus == '已审核'){
-                                    layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                    return;
-                                }else{
-                                    let isSubmit = false;
-                                    $.each(data,function(index,item){
+                                let flag = false
+                                    ,msg=''
+                                    ,shenheStatusFirst = null;
+                                $.each(data,function(index,item){
+                                    if(isJwcGly==1){ //当前登录用户为教务处管理员
+                                        if(item.shenheStatusFirst== '已审核' && item.shenheStatusFinal== '已审核'){
+                                            flag = true;
+                                            msg = '您选择了已审核的信息！';
+                                            return false;//跳出循环
+                                        } if(isEmpty(item.zjshItemList)){
+                                            flag = true;
+                                            msg = '您选择了校外专家未审核的信息！';
+                                            return false;//跳出循环
+                                        } else{
+                                            if(index===0){
+                                                shenheStatusFirst = item.shenheStatusFirst;
+                                            }else{
+                                                if(shenheStatusFirst != item.shenheStatusFirst){
+                                                    flag = true;
+                                                    msg = '您选择了不同审核类别的信息！';
+                                                    return false;//跳出循环
+                                                }
+                                            }
+                                        }
+                                    } else{
                                         if(item.shenheStatus== '已审核'){
-                                            isSubmit = true;
+                                            flag = true;
+                                            msg = '您选择了已审核的信息！';
                                             return false;//跳出循环
                                         }
-                                    });
-                                    if(isSubmit){
-                                        layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                        return;
                                     }
+                                });
+                                if(flag){
+                                    layer.msg(msg, {time : 3000, offset: '100px'});
+                                    return;
                                 }
                                 //添加审核意见
                                 layer.open({
@@ -510,6 +601,12 @@ layui.use(['layer','element','table','form'], function(){
                                     // ,btn : ['关闭']
                                     ,content : $('#shenHeForm')
                                     ,success: function(layero, index){
+                                        if(isJwcGly==1){//当前登录用户为教务处管理员
+                                            $("#shenheType").css('display','block'); //关键代码
+                                            form.val("shenHeForm",{
+                                                "shenheType":shenheStatusFirst == '未审核'?'初审':'终审'
+                                            });
+                                        }
                                         //
                                         form.on('select(status)', function(data) {
                                             if(data.value == '通过'){
@@ -522,7 +619,9 @@ layui.use(['layer','element','table','form'], function(){
                                         //
                                         form.on('submit(shenHeFormSubmitBtn)', function(formData){
                                             $.post(requestUrl+'/jiaoGaiXiangMu/toShenhe.do',{
-                                                "jsonStr":JSON.stringify(data)
+                                                'isZjshAccount':isZjshAccount
+                                                ,"jsonStr":JSON.stringify(data)
+                                                ,"shenheType":isJwcGly==1?formData.field.shenheType:null
                                                 ,"status":formData.field.status
                                                 ,"opinion":formData.field.opinion
                                                 ,"userId":function () {
@@ -556,10 +655,10 @@ layui.use(['layer','element','table','form'], function(){
                     var data = obj.data;
                     if (obj.event === 'detail') {
                         detail(data);
-                    } else if (obj.event === 'detail-file') {
-                        detail_file(data);
                     } else if (obj.event === 'detail-shenheProcess') {
                         detail_shenheProcess('教学研究-教改项目-查看审核流程',data);
+                    } else if (obj.event === 'detail-zjsh') {
+                        detail_zjsh(data.zjshItemList);
                     }
                 });
             } else{
@@ -568,7 +667,7 @@ layui.use(['layer','element','table','form'], function(){
             }
 
             /**
-             * 初始化成员列表
+             * 初始化项目成员列表
              * @param xmCode 项目编号
              */
             let initMemberDataTable = function (xmCode) {
@@ -663,7 +762,7 @@ layui.use(['layer','element','table','form'], function(){
             };
 
             /**
-             * 初始化预算列表
+             * 初始化经费预算列表
              * @param xmCode 项目编号
              */
             let initFundBudgetDataTable = function (xmCode) {
@@ -756,7 +855,7 @@ layui.use(['layer','element','table','form'], function(){
             };
 
             /**
-             *
+             * 查看详情
              * @param data
              */
             let detail = function (rowData) {
@@ -895,6 +994,146 @@ layui.use(['layer','element','table','form'], function(){
                     }
                     ,end:function () {
                         $("#viewContainer .layui-elem-field").empty();
+                    }
+                });
+            };
+
+            /**
+             * 查看审核流程
+             * @param rowData
+             */
+            var detail_shenheProcess = function (title,rowData) {
+                layer.open({
+                    title : title
+                    ,type : 1
+                    ,area : [ '1175px', '535px' ]
+                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
+                    ,content : $('#shenheProcessContainer')
+                    ,success: function(layero, index){
+                        $.get(requestUrl+"/getShenheProcess.do" , {
+                            "relationCode": function () {
+                                return rowData.code;
+                            }
+                        } ,  function(data){
+                            if(data.code == 200){
+                                var data = data.data;
+                                if(data.length>0){
+                                    var htmlStr = '';
+                                    for (var i = 0; i < data.length; i++) {
+                                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                                            '<legend>开始</legend>\n' +
+                                            '               <div>' +
+                                            '                   <table class="layui-table">\n' +
+                                            '                        <tbody>\n' +
+                                            '                            <tr>' +
+                                            '                           <td style="width: 80px; text-align: center">提交人员</td><td style="width: 120px; text-align: center">'+data[i].userName+'</td>' +
+                                            '                           <td style="width: 80px; text-align: center">提交时间</td><td style="width: 120px; text-align: center">'+data[i].createDate+'</td>' +
+                                            '                       </tr>\n' +
+                                            '                       </tbody>\n' +
+                                            '                  </table>\n' +
+                                            '               </div>';
+                                        if(data[i].shenHeItemList.length>0){
+                                            for (let j = 0; j < data[i].shenHeItemList.length; j++) {
+                                                let item = data[i].shenHeItemList[j];
+                                                if(item.shenheType=='初审' || item.shenheType =='终审'){
+                                                    htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
+                                                        '               <div>' +
+                                                        '                   <table class="layui-table">\n' +
+                                                        '                        <tbody>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核类别</td><td style="width: 120px; text-align: center">'+item.shenheType+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
+                                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center" colspan="3">'+item.opinion+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                       </tbody>\n' +
+                                                        '                  </table>\n' +
+                                                        '               </div>';
+                                                }else{
+                                                    htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
+                                                        '               <div>' +
+                                                        '                   <table class="layui-table">\n' +
+                                                        '                        <tbody>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
+                                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center">'+item.opinion+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                       </tbody>\n' +
+                                                        '                  </table>\n' +
+                                                        '               </div>';
+                                                }
+                                            }
+                                        }
+                                        htmlStr +=  '</fieldset>';
+                                    }
+                                    if(rowData.status =='通过'){
+                                        htmlStr +=  '<h2 style="margin-left: 30px;">结束</h2>';
+                                    }
+                                    $("#shenheProcessContainer").html(htmlStr);
+                                }else{
+                                    layer.msg('暂无审核数据', {time : 3000, offset: '100px'});
+                                }
+                            }else{
+                                layer.msg('获取数据出错', {time : 3000, offset: '100px'});
+                            }
+                        }, "json");
+                    }
+                    ,end:function () {
+                        $("#shenheProcessContainer .layui-elem-field").empty();
+                    }
+                });
+            };
+
+            /**
+             * 查看专家审核意见
+             * @param rowData
+             */
+            let detail_zjsh = function (zjshItemList) {
+                if(isEmpty(zjshItemList)){
+                    return;
+                }
+                layer.open({
+                    title : '教学研究-教改项目-查看专家审核意见'
+                    ,type : 1
+                    ,area : [ '1175px', '535px' ]
+                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
+                    ,content : $('#zjshContainer')
+                    ,success: function(layero, index){
+                        let htmlStr = '';
+                        for (let i = 0; i < zjshItemList.length; i++) {
+                            htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                                '       <legend>'+zjshItemList[i].userName+'</legend>\n' +
+                                '               <div>' +
+                                '                   <table class="layui-table">\n' +
+                                '                        <tbody>\n' +
+                                '                            <tr>' +
+                                '                           <td style="width: 80px; text-align: center">审核状态：</td><td style="width: 120px; text-align: center">'+zjshItemList[i].status+'</td>' +
+                                '                           <td style="width: 80px; text-align: center">审核意见：</td><td style="width: 120px; text-align: center">'+zjshItemList[i].opinion+'</td>' +
+                                '                       </tr>\n' +
+                                '                       </tbody>\n' +
+                                '                  </table>\n' +
+                                '               </div>';
+                            htmlStr +=  '</fieldset>';
+                        }
+                        $("#zjshContainer").html(htmlStr);
+                    }
+                    ,end:function () {
+                        $("#zjshContainer .layui-elem-field").empty();
                     }
                 });
             };
