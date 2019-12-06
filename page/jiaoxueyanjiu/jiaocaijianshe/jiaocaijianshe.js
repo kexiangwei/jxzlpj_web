@@ -585,7 +585,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             $.each(data.data,function(index,file){
                                 len++;
                                 let tr = $(['<tr id="'+ file.code +'">'
-                                    ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
+                                    ,'<td>	<a href="'+requestUrl+file.filePath+'" target="_blank">'+ file.fileName +'</a></td>'
                                     ,'<td>'+ file.fileSize +'kb</td>'
                                     ,'<td>'+ file.createDate +'</td>'
                                     ,'<td>' +
@@ -595,10 +595,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     ,'</tr>'].join(''));
                                 //预览
                                 tr.find('a').on('click', function(){
-                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
+                                    window.open(requestUrl+file.filePath);
                                 });
                                 tr.find('.demo-view').on('click', function(){
-                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
+                                    window.open(requestUrl+file.filePath);
                                 });
                                 tr.find('.demo-download').on('click', function(){
                                     let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");

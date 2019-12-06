@@ -60,8 +60,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'code', title: '团队编号', width:120}
-                        ,{field: 'name', title: '团队名称', width:150}
+                        ,{field: 'teamCode', title: '团队编号', width:120}
+                        ,{field: 'teamName', title: '团队名称', width:150}
                         ,{field: 'createTime', title: '团队建立时间', width:150,hide:true}
                         ,{field: 'teamLeader', title: '负责人', width:120}
                         ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
@@ -118,8 +118,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'code': $("input[name='myself_code']").val()
-                                ,'name': $("input[ name='myself_name']").val()
+                                'teamCode': $("input[name='myself_teamCode']").val()
+                                ,'teamName': $("input[ name='myself_teamName']").val()
                                 ,'teamLeader': $("input[ name='myself_teamLeader']").val()
                                 ,'isSubmit': $("input[ name='myself_isSubmit']").val()
                             }
@@ -145,29 +145,26 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     switch(obj.event){
                         case 'insert':
                             //清空表单数据
-                            /*$('#editForm').reset();
-                            form.render();*/
                             document.getElementById("editForm").reset();
-                            //每次进入新增页面生成一个新的编号
-                            $(" input[ name='code' ] ").val(new Date().getTime());
-                            //
+                            //初始化弹窗
                             layer.open({
-                                title : '教学研究-教材建设-新增'
+                                title : '教学研究-教学团队-新增'
                                 ,type : 1
                                 ,offset : '20px'
                                 // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                ,area : [ '700px', '435px' ]
+                                ,area : [ '1175px', '535px' ]
                                 ,content : $('#editForm')
                                 ,success: function(layero, index){
+                                    //每次进入新增页面生成一个新的编号
+                                    let code = new Date().getTime();
+                                    $(" input[ name='code' ] ").val(code);
                                     //初始化laydate实例
                                     laydate.render({
-                                        elem: '#publishingTime' //指定元素
-                                        ,showBottom: false
+                                        elem: '#createTime' //指定元素
+                                        ,type: 'datetime'
                                     });
-                                    laydate.render({
-                                        elem: '#selectedTime' //指定元素
-                                        ,showBottom: false
-                                    });
+                                    //
+                                    initMemberDataTable(code);//主要成员情况
                                     //监听表单提交
                                     form.on('submit(editFormSubmitBtn)', function(data){
                                         /* layer.alert(JSON.stringify(data.field), {
@@ -176,14 +173,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                          return false;*/
                                         $.post(requestUrl+'/jiaoXueTuanDui/insert.do',{
                                             "code":data.field.code
-                                            ,"name": data.field.name
-                                            ,"category" : data.field.category
-                                            ,"participationType" : data.field.participationType
-                                            ,"isbn" : data.field.isbn
-                                            ,"publishers" : data.field.publishers
-                                            ,"publishingTime" : data.field.publishingTime
-                                            ,"selected" : data.field.selected
-                                            ,"selectedTime" : data.field.selectedTime
+                                            ,"teamCode": data.field.teamCode
+                                            ,"teamName": data.field.teamName
+                                            ,"createTime" : data.field.createTime
+                                            ,"teamLeader" : data.field.teamLeader
+                                            ,"teamLeaderId" : data.field.teamLeaderId
+                                            ,"sbs" : data.field.sbs
+                                            ,"middleReport" : data.field.middleReport
+                                            ,"finalReport" : data.field.finalReport
                                             ,"userId":function () {
                                                 return $.cookie('userId');
                                             }
@@ -262,32 +259,30 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //执行编辑
                         operationType = "edit";
                         layer.open({
-                            title : '教学研究-教材建设-编辑'
+                            title : '教学研究-教学团队-编辑'
                             ,type : 1
-                            ,area : [ '700px', '535px' ]
+                            ,area : [ '1175px', '535px' ]
                             ,offset : '10px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#editForm')
                             ,success: function(layero, index){
+                                //主要成员列表
+                                initMemberDataTable(data.code);
                                 //初始化laydate实例
                                 laydate.render({
-                                    elem: '#publishingTime' //指定元素
-                                    ,showBottom: false
-                                });
-                                laydate.render({
-                                    elem: '#selectedTime' //指定元素
-                                    ,showBottom: false
+                                    elem: '#createTime' //指定元素
+                                    ,type: 'datetime'
                                 });
                                 form.val("editForm",{
                                     "code":data.code
-                                    ,"name": data.name
-                                    ,"category" : data.category
-                                    ,"participationType" : data.participationType
-                                    ,"isbn" : data.isbn
-                                    ,"publishers" : data.publishers
-                                    ,"publishingTime" : data.publishingTime
-                                    ,"selected" : data.selected
-                                    ,"selectedTime" : data.selectedTime
+                                    ,"teamCode": data.teamCode
+                                    ,"teamName": data.teamName
+                                    ,"createTime" : data.createTime
+                                    ,"teamLeader" : data.teamLeader
+                                    ,"teamLeaderId" : data.teamLeaderId
+                                    ,"sbs" : data.sbs
+                                    ,"middleReport" : data.middleReport
+                                    ,"finalReport" : data.finalReport
                                     ,"userId":data.userId
                                     ,"userName":data.userName
                                 });
@@ -295,14 +290,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 form.on('submit(editFormSubmitBtn)', function(data){
                                     $.post(requestUrl+'/jiaoXueTuanDui/update.do',{
                                         "code":data.field.code
-                                        ,"name": data.field.name
-                                        ,"category" : data.field.category
-                                        ,"participationType" : data.field.participationType
-                                        ,"isbn" : data.field.isbn
-                                        ,"publishers" : data.field.publishers
-                                        ,"publishingTime" : data.field.publishingTime
-                                        ,"selected" : data.field.selected
-                                        ,"selectedTime" : data.field.selectedTime
+                                        ,"teamCode": data.field.teamCode
+                                        ,"teamName": data.field.teamName
+                                        ,"createTime" : data.field.createTime
+                                        ,"teamLeader" : data.field.teamLeader
+                                        ,"teamLeaderId" : data.field.teamLeaderId
+                                        ,"sbs" : data.field.sbs
+                                        ,"middleReport" : data.field.middleReport
+                                        ,"finalReport" : data.field.finalReport
                                         ,"userId":function () {
                                             return $.cookie('userId');
                                         }
@@ -384,8 +379,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'code', title: '团队编号', width:120}
-                        ,{field: 'name', title: '团队名称', width:180}
+                        ,{field: 'teamCode', title: '团队编号', width:120}
+                        ,{field: 'teamName', title: '团队名称', width:180}
                         ,{field: 'createTime', title: '团队建立时间', width:160}
                         ,{field: 'teamLeader', title: '负责人', width:120}
                         ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
@@ -417,8 +412,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     search: function(){
                         other_table.reload({
                             where: {
-                                'code': $("input[name='other_code']").val()
-                                ,'name': $("input[ name='other_name']").val()
+                                'teamCode': $("input[name='other_teamCode']").val()
+                                ,'teamName': $("input[ name='other_teamName']").val()
                                 ,'teamLeader': $("input[ name='other_teamLeader']").val()
                                 ,'shenheStatus': $(" input[ name='other_shenheStatus' ] ").val()
                             }
@@ -465,7 +460,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 //添加审核意见
                                 layer.open({
-                                    title : '教学研究-教材建设-审核'
+                                    title : '教学研究-教学团队-审核'
                                     ,type : 1
                                     ,area : [ '700px', '450px' ]
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -531,45 +526,113 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other_item').remove();
             }
 
-            let detail = function (data) {
-                if(isOpen){
-                    return;
-                }
-                var isOpen = false;
+            /**
+             * 查看详情
+             * @param data
+             */
+            let detail = function (rowData) {
                 layer.open({
-                    title : '教学研究-教材建设-查看详情'
+                    title : '教学研究-教改项目-查看详情'
                     ,type : 1
-                    ,area : [ '700px', '535px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                    ,area : [ '1175px', '535px' ]
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content : '<table class="layui-table">\n' +
-                        '        <tbody>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">工号</td><td>'+data.userId+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">姓名</td><td>'+data.userName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">教材名称</td><td>'+data.name+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">类别</td><td>'+data.category+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">参与形式</td><td>'+data.participationType+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">ISBN</td><td>'+data.isbn+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">出版社</td><td>'+data.publishers+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">出版时间</td><td>'+data.publishingTime+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">教材入选情况</td><td>'+data.selected+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">入选时间</td><td>'+data.selectedTime+'</td></tr>\n' +
-                        '        </tbody>\n' +
-                        '    </table>'
+                    ,content : $('#viewContainer')
                     ,success: function(layero, index){
-                        isOpen = true;
+                        let htmlStr = '';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>团队基本信息</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 100px; text-align: right">团队名称：</td><td>'+rowData.teamCode+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                    <td style="width: 100px; text-align: right">团队编号：</td><td>'+rowData.teamName+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                    <td style="width: 100px; text-align: right">建立时间：</td><td>'+rowData.createTime+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>团队负责人信息</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 100px; text-align: right">工号：</td><td>'+rowData.teamLeaderId+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 100px; text-align: right">姓名：</td><td>'+rowData.teamLeader+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>团队成员信息</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>' +
+                            '               <tr>\n' +
+                            '                      <th style="width: 100px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">成员信息：</th>' +
+                            '                      <th style="width: 250px; text-align: center">序号</th>\n' +
+                            '                      <th style="width: 350px; text-align: center">工号</th>\n' +
+                            '                      <th style="width: 350px; text-align: center">姓名</th>\n' +
+                            '                 </tr>';
+                        if(rowData.memberList.length>0){
+                            layui.each(rowData.memberList,function (idx,obj) {
+                                htmlStr += '<tr><td style="text-align: center">'+(idx+1)
+                                    +'</td><td style="text-align: center">'+obj.USER_ID
+                                    +'</td><td style="text-align: center">'+obj.USER_NAME
+                                    +'</td></tr>\n';
+                            });
+                        }else{
+                            htmlStr += '<tr>' +
+                                '      <td style="text-align: center" colspan="4">暂无相关数据</td>' +
+                                '  </tr>\n';
+                        }
+                        htmlStr +='</tbody>\n' +
+                            '   </table>' +
+                            '</fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 100px; text-align: right">申报书：</td><td>'+rowData.sbs+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 100px; text-align: right">中期报告：</td><td>'+rowData.middleReport+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 100px; text-align: right">总结报告：</td><td>'+rowData.finalReport+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        $("#viewContainer").html(htmlStr);
                     }
                     ,end:function () {
-                        isOpen = false;
+                        $("#viewContainer .layui-elem-field").empty();
                     }
                 });
             };
 
             let detail_file = function (data) {
                 layer.open({
-                    title : '教学研究-教材建设-查看附件'
+                    title : '教学研究-教学团队-查看附件'
                     ,type : 1
                     ,offset : '10px'
                     ,moveOut:true
@@ -590,7 +653,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             $.each(data.data,function(index,file){
                                 len++;
                                 let tr = $(['<tr id="'+ file.code +'">'
-                                    ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
+                                    ,'<td>	<a href="'+requestUrl+file.filePath+'" target="_blank">'+ file.fileName +'</a></td>'
                                     ,'<td>'+ file.fileSize +'kb</td>'
                                     ,'<td>'+ file.createDate +'</td>'
                                     ,'<td>' +
@@ -599,11 +662,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     '</td>'
                                     ,'</tr>'].join(''));
                                 //预览
-                                tr.find('a').on('click', function(){
-                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
-                                });
                                 tr.find('.demo-view').on('click', function(){
-                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
+                                    window.open(requestUrl+file.filePath);
                                 });
                                 tr.find('.demo-download').on('click', function(){
                                     let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
@@ -628,11 +688,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 });
             };
 
-            let operationType="" //操作类别
-                ,uploadTest;
+            let operationType=""; //操作类别
             $(document).on('click','#upload',function(data){
                 layer.open({
-                    title : '教学研究-教材建设-上传附件'
+                    title : '教学研究-教学团队-上传附件'
                     ,type : 1
                     ,area : [ '1175px', '535px' ]
                     ,offset : '10px'
@@ -674,8 +733,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 "relationCode":function () {
                                     return $(" input[ name='code' ] ").val();
                                 }
-                                ,"fileCategory":"JXYJ_JCJS" // 固定值
-                                ,"fileType":"附件" // 固定值
+                                ,"fileCategory":"JXYJ_JXTD" // 固定值
+                                ,"fileType":"申报书" // 固定值
                                 ,"userId":function () {
                                     return $.cookie('userId');
                                 }
@@ -740,6 +799,100 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                 });
             });
+
+            /**
+             * 初始化项目成员列表
+             * @param xmCode 项目编号
+             */
+            let initMemberDataTable = function (relationCode) {
+                let memberDataTable = table.render({
+                    elem : '#memberDataTable'
+                    ,url: requestUrl+'/jiaoXueTuanDui/getMemberList.do'
+                    ,where: {
+                        "relationCode":relationCode
+                    }
+                    ,response: {
+                        statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": "", //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
+                    ,defaultToolbar:[]
+                    ,cols : [[ //表头
+                        {type:'numbers', title:'序号', width:100, fixed: 'left'}
+                        // ,{field: 'RELATION_CODE', title: '工号', align:'center'}
+                        ,{field: 'USER_ID', title: '工号', align:'center'}
+                        ,{field: 'USER_NAME', title: '姓名', align:'center'}
+                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
+                    ]]
+                    ,text: {
+                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    }
+                    ,even: true //隔行背景
+                    ,done : function(res, curr, count) {
+
+                        //监听头工具栏事件
+                        table.on('toolbar(memberDataTable)', function(obj){
+                            let memberFormCntainer = layer.open({
+                                title : '教学研究-教学团队-团队成员信息录入'
+                                ,type : 1
+                                ,area : [ '700px', '230px' ] //宽高
+                                ,offset : '30px'
+                                ,content : $('#memberForm')
+                                ,success: function(layero, index){
+                                    //监听表单提交
+                                    form.on('submit(memberFormSubmitBtn)', function(data){
+                                        let formData = data.field;
+                                        $.post(requestUrl+'/jiaoXueTuanDui/insertMember.do',{
+                                            "relationCode":relationCode,
+                                            "userName":formData.userName,
+                                            "userId":formData.userId,
+                                            "task":formData.task
+                                        },function (resultData) {
+                                            if(resultData.code == 200){
+                                                memberDataTable.reload();//重新加载数据
+                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
+                                            }else{
+                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
+                                            }
+                                        },'json');
+                                        layer.close(memberFormCntainer);
+                                        return false;
+                                    });
+                                },end:function () {
+                                    document.getElementById("memberForm").reset(); //清空表单数据
+                                }
+                            });
+                        });
+
+                        //监听右侧工具条
+                        table.on('tool(memberDataTable)', function(obj){
+                            let rowData = obj.data;
+                            if (obj.event === 'delete') {
+                                //执行删除
+                                $.post(requestUrl+'/jiaoXueTuanDui/deleteMember.do'
+                                    , {
+                                        "relationCode": rowData.RELATION_CODE
+                                        ,"userId": rowData.USER_ID
+                                    }
+                                    ,function(resultData){
+                                        if(resultData.code === 200){
+                                            memberDataTable.reload();//重新加载表格数据
+                                            layer.msg('删除成功', {time : 3000, offset: '100px'});
+                                        }else{
+                                            layer.msg('删除失败', {time : 3000, offset: '100px'});
+                                        }
+                                    }, "json");
+                            }
+                        });
+                    }
+                });
+            };
         }
         ,error:function() {
             layer.msg('网络连接失败', {icon:7, time : 3000, offset: '100px'});

@@ -591,7 +591,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                     layer.msg('该文件类型暂未提供预览功能', {time : 3000, offset: '100px'});
                                                     break;
                                                 case 'pdf':
-                                                    window.open('../../js/pdfjs/web/viewer.html?'+requestUrl+file.filePath);
+                                                    window.open(requestUrl+file.filePath);
                                                     break;
                                                 default:
                                                     layer.msg('该文件类型暂未提供预览功能', {time : 3000, offset: '100px'});
