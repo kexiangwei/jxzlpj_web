@@ -67,12 +67,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
                         ,{field: 'memberNames', title: '团队成员', width:150}
                         ,{field: 'memberIds', title: '团队成员工号', width:150,hide:true}
-                        ,{field: 'sbs', title: '申报书', width:120,hide:true}
-                        ,{field: 'middleReport', title: '中期报告', width:120,hide:true}
-                        ,{field: 'middleResult', title: '中期考核结果', width:120,hide:true}
-                        ,{field: 'finalReport', title: '总结报告', width:120,hide:true}
-                        ,{field: 'finalResult', title: '最终考核结果', width:120,hide:true}
-                        ,{field: 'createDate', title: '数据录入时间', width:120,hide:true}
+                        ,{field: 'sbs', title: '申报书', width:200}
+                        ,{field: 'middleReport', title: '中期报告', width:200}
+                        ,{field: 'middleResult', title: '中期考核结果', width:120, event: 'middleResult',style:"font-weight: bold; cursor: pointer;"}
+                        ,{field: 'finalReport', title: '总结报告', width:200}
+                        ,{field: 'finalResult', title: '最终考核结果', width:120, event: 'finalResult',style:"font-weight: bold; cursor: pointer;"}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
@@ -109,6 +108,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 return '';
                             }
                         }
+                        ,{field: 'createDate', title: '数据录入时间', width:120,hide:true}
                         ,{fixed: 'right', width:340, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                 });//table end.
@@ -334,6 +334,30 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                             }, "json");
                         });
+                    } else if (obj.event === 'middleResult') {
+                        layer.open({
+                            title : '教学研究-教学团队-中期考核结果'
+                            ,type : 1
+                            ,offset : '20px'
+                            ,shadeClose : true
+                            ,area : [ '1175px', '500px' ]
+                            ,content : $('#middleResultContainer')
+                            ,success: function(layero, index){
+
+                            }
+                        });
+                    } else if (obj.event === 'finalResult') {
+                        layer.open({
+                            title : '教学研究-教学团队-最终考核结果'
+                            ,type : 1
+                            ,offset : '20px'
+                            ,shadeClose : true
+                            ,area : [ '1175px', '500px' ]
+                            ,content : $('#finalResultContainer')
+                            ,success: function(layero, index){
+
+                            }
+                        });
                     }
                 });
             } else{
@@ -364,7 +388,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             "msg": "",
                             "count": res.data.totalNum,
                             "data": res.data.pageList,
-                            "unShenHeNum": res.data.unShenHeNum
+                            "unShenHeNum": res.data.unShenHeNum,
+                            'isPsAccount':res.data.isPsAccount
                         };
                     }
                     ,page: {
@@ -380,18 +405,17 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'teamCode', title: '团队编号', width:120}
-                        ,{field: 'teamName', title: '团队名称', width:180}
-                        ,{field: 'createTime', title: '团队建立时间', width:160}
+                        ,{field: 'teamName', title: '团队名称', width:150}
+                        ,{field: 'createTime', title: '团队建立时间', width:150,hide:true}
                         ,{field: 'teamLeader', title: '负责人', width:120}
                         ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
-                        ,{field: 'memberNames', title: '团队成员', width:180}
-                        ,{field: 'memberIds', title: '团队成员工号', width:180,hide:true}
-                        ,{field: 'sbs', title: '申报书', width:120,hide:true}
-                        ,{field: 'middleReport', title: '中期报告', width:120,hide:true}
-                        ,{field: 'middleResult', title: '中期考核结果', width:120,hide:true}
-                        ,{field: 'finalReport', title: '总结报告', width:120,hide:true}
-                        ,{field: 'finalResult', title: '最终考核结果', width:120,hide:true}
-                        ,{field: 'createDate', title: '数据录入时间', width:120,hide:true}
+                        ,{field: 'memberNames', title: '团队成员', width:150}
+                        ,{field: 'memberIds', title: '团队成员工号', width:150,hide:true}
+                        ,{field: 'sbs', title: '申报书', width:200}
+                        ,{field: 'middleReport', title: '中期报告', width:200}
+                        ,{field: 'middleResult', title: '中期考核结果', width:120, event: 'middleResult',style:"font-weight: bold; cursor: pointer;"}
+                        ,{field: 'finalReport', title: '总结报告', width:200}
+                        ,{field: 'finalResult', title: '最终考核结果', width:120, event: 'finalResult',style:"font-weight: bold; cursor: pointer;"}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 let val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -400,6 +424,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         } //【已审核 | 待审核 | 退回】
+                        ,{field: 'createDate', title: '数据录入时间', width:120,hide:true}
                         ,{fixed: 'right', width:240, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
@@ -442,71 +467,72 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
                                 return;
                             } else {
-                                if(data.length === 1&&data[0].shenheStatus == '已审核'){
-                                    layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                    return;
-                                }else{
-                                    let isSubmit = false;
-                                    $.each(data,function(index,item){
-                                        if(item.shenheStatus== '已审核'){
-                                            isSubmit = true;
-                                            return false;//跳出循环
-                                        }
-                                    });
-                                    if(isSubmit){
-                                        layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                        return;
-                                    }
-                                }
-                                //添加审核意见
-                                layer.open({
-                                    title : '教学研究-教学团队-审核'
-                                    ,type : 1
-                                    ,area : [ '700px', '450px' ]
-                                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '10px' //只定义top坐标，水平保持居中
-                                    ,shadeClose : true //点击遮罩关闭
-                                    ,btn : ['关闭']
-                                    ,content : $('#shenHeForm')
-                                    ,success: function(layero, index){
-                                        //
-                                        form.on('select(status)', function(data) {
-                                            if(data.value == '通过'){
-                                                $('#opinion').html('通过');
-                                            }
-                                            if(data.value == '退回'){
-                                                $('#opinion').empty();
-                                            }
-                                        });
-                                        //
-                                        form.on('submit(shenHeFormSubmitBtn)', function(formData){
-                                            $.post(requestUrl+'/jiaoXueTuanDui/toShenhe.do',{
-                                                "jsonStr":JSON.stringify(data)
-                                                ,"status":formData.field.status
-                                                ,"opinion":formData.field.opinion
-                                                ,"userId":function () {
-                                                    return $.cookie('userId');
-                                                }
-                                                ,"userName":function () {
-                                                    return $.cookie('userName');
-                                                }
-                                            },function (data) {
-                                                if(data.code === 200){
-                                                    other_table.reload();//重新加载表格数据
-                                                    // window.location.reload();//刷新页面，审核后页面状态未改变
-                                                    layer.msg('审核成功', {time : 3000, offset: '100px'});
-                                                }else{
-                                                    layer.msg('审核失败', {time : 3000, offset: '100px'});
-                                                }
-                                            },'json');
-                                        });
-                                    }
-                                    ,end:function () {
-
+                                let flag = false
+                                    ,msg='';
+                                $.each(data,function(idx,obj){
+                                    if(obj.middleResult == '未填写' || obj.finalResult == '未填写'){
+                                        flag = true;
+                                        msg = '您选择了未评审的信息！';
+                                        return false;
+                                    } else if(obj.shenheStatus == '已审核'){
+                                        flag = true;
+                                        msg = '您选择了已审核的信息！';
+                                        return false;//跳出循环
                                     }
                                 });
+                                if(flag){
+                                    layer.msg(msg, {time : 3000, offset: '100px'});
+                                    return;
+                                }
                             }
-                            break;
+                            //添加审核意见
+                            layer.open({
+                                title : '教学研究-教学团队-审核'
+                                ,type : 1
+                                ,area : [ '700px', '450px' ]
+                                // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                                ,offset : '10px' //只定义top坐标，水平保持居中
+                                ,shadeClose : true //点击遮罩关闭
+                                ,btn : ['关闭']
+                                ,content : $('#shenHeForm')
+                                ,success: function(layero, index){
+                                    //
+                                    form.on('select(status)', function(data) {
+                                        if(data.value == '通过'){
+                                            $('#opinion').html('通过');
+                                        }
+                                        if(data.value == '退回'){
+                                            $('#opinion').empty();
+                                        }
+                                    });
+                                    //
+                                    form.on('submit(shenHeFormSubmitBtn)', function(formData){
+                                        $.post(requestUrl+'/jiaoXueTuanDui/toShenhe.do',{
+                                            "jsonStr":JSON.stringify(data)
+                                            ,"status":formData.field.status
+                                            ,"opinion":formData.field.opinion
+                                            ,"userId":function () {
+                                                return $.cookie('userId');
+                                            }
+                                            ,"userName":function () {
+                                                return $.cookie('userName');
+                                            }
+                                        },function (data) {
+                                            if(data.code === 200){
+                                                other_table.reload();//重新加载表格数据
+                                                // window.location.reload();//刷新页面，审核后页面状态未改变
+                                                layer.msg('审核成功', {time : 3000, offset: '100px'});
+                                            }else{
+                                                layer.msg('审核失败', {time : 3000, offset: '100px'});
+                                            }
+                                        },'json');
+                                    });
+                                }
+                                ,end:function () {
+
+                                }
+                            });
+                        break;
                     }
                 });
 
@@ -519,6 +545,30 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         detail_file(data);
                     } else if (obj.event === 'detail-shenheProcess') {
                         detail_shenheProcess('教学研究-教学团队-查看审核流程',data);
+                    }  else if (obj.event === 'middleResult') {
+                        layer.open({
+                            title : '教学研究-教学团队-中期考核'
+                            ,type : 1
+                            ,offset : '20px'
+                            ,shadeClose : true
+                            ,area : [ '1175px', '500px' ]
+                            ,content : $('#middlePingshenContainer')
+                            ,success: function(layero, index){
+
+                            }
+                        });
+                    } else if (obj.event === 'finalResult') {
+                        layer.open({
+                            title : '教学研究-教学团队-最终考核'
+                            ,type : 1
+                            ,offset : '20px'
+                            ,shadeClose : true
+                            ,area : [ '1175px', '500px' ]
+                            ,content : $('#finalPingshenContainer')
+                            ,success: function(layero, index){
+
+                            }
+                        });
                     }
                 });
             } else{
