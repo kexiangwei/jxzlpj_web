@@ -69,9 +69,21 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'memberIds', title: '团队成员工号', width:150,hide:true}
                         ,{field: 'sbs', title: '申报书', width:200}
                         ,{field: 'middleReport', title: '中期报告', width:200}
-                        ,{field: 'middleResult', title: '中期考核结果', width:120, event: 'middleResult',style:"font-weight: bold; cursor: pointer;"}
+                        ,{field: 'middleResult', title: '中期考核结果', width:120, event: 'middleResult',templet: function(data){
+                                if(data.middleResult == '已评审'){
+                                    return '<span style="font-weight: bold; cursor: pointer;">已评审</span>';
+                                }
+                                return '<span style="font-weight: bold;">未评审</span>';
+                            }
+                        }
                         ,{field: 'finalReport', title: '总结报告', width:200}
-                        ,{field: 'finalResult', title: '最终考核结果', width:120, event: 'finalResult',style:"font-weight: bold; cursor: pointer;"}
+                        ,{field: 'finalResult', title: '最终考核结果', width:120, event: 'finalResult',templet: function(data){
+                                if(data.finalResult == '已评审'){
+                                    return '<span style="font-weight: bold; cursor: pointer;">已评审</span>';
+                                }
+                                return '<span style="font-weight: bold;">未评审</span>';
+                            }
+                        }
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
@@ -335,29 +347,37 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             }, "json");
                         });
                     } else if (obj.event === 'middleResult') {
-                        layer.open({
-                            title : '教学研究-教学团队-中期考核结果'
-                            ,type : 1
-                            ,offset : '20px'
-                            ,shadeClose : true
-                            ,area : [ '1175px', '500px' ]
-                            ,content : $('#middleResultContainer')
-                            ,success: function(layero, index){
+                        if(data.middleResult == '未评审'){
+                            return;
+                        } else {
+                            layer.open({
+                                title : '教学研究-教学团队-中期考核结果'
+                                ,type : 1
+                                ,offset : '20px'
+                                ,shadeClose : true
+                                ,area : [ '1175px', '500px' ]
+                                ,content : $('#middleResultContainer')
+                                ,success: function(layero, index){
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     } else if (obj.event === 'finalResult') {
-                        layer.open({
-                            title : '教学研究-教学团队-最终考核结果'
-                            ,type : 1
-                            ,offset : '20px'
-                            ,shadeClose : true
-                            ,area : [ '1175px', '500px' ]
-                            ,content : $('#finalResultContainer')
-                            ,success: function(layero, index){
+                        if(data.middleResult == '未评审'){
+                            return;
+                        } else {
+                            layer.open({
+                                title : '教学研究-教学团队-最终考核结果'
+                                ,type : 1
+                                ,offset : '20px'
+                                ,shadeClose : true
+                                ,area : [ '1175px', '500px' ]
+                                ,content : $('#finalResultContainer')
+                                ,success: function(layero, index){
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 });
             } else{
@@ -413,9 +433,21 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'memberIds', title: '团队成员工号', width:150,hide:true}
                         ,{field: 'sbs', title: '申报书', width:200}
                         ,{field: 'middleReport', title: '中期报告', width:200}
-                        ,{field: 'middleResult', title: '中期考核结果', width:120, event: 'middleResult',style:"font-weight: bold; cursor: pointer;"}
+                        ,{field: 'middleResult', title: '中期考核结果', width:120, event: 'middleResult',templet: function(data){
+                                if(data.middleResult == '未评审'){
+                                    return '<span style="font-weight: bold;">'+data.middleResult+'</span>';
+                                }
+                                return '<span style="font-weight: bold; cursor: pointer;">'+data.middleResult+'</span>';
+                            }
+                        }
                         ,{field: 'finalReport', title: '总结报告', width:200}
-                        ,{field: 'finalResult', title: '最终考核结果', width:120, event: 'finalResult',style:"font-weight: bold; cursor: pointer;"}
+                        ,{field: 'finalResult', title: '最终考核结果', width:120, event: 'finalResult',templet: function(data){
+                                if(data.finalResult == '未评审'){
+                                    return '<span style="font-weight: bold;">'+data.finalResult+'</span>';
+                                }
+                                return '<span style="font-weight: bold; cursor: pointer;">'+data.finalResult+'</span>';
+                            }
+                        }
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 let val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -470,7 +502,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 let flag = false
                                     ,msg='';
                                 $.each(data,function(idx,obj){
-                                    if(obj.middleResult == '未填写' || obj.finalResult == '未填写'){
+                                    if(obj.middleResult == '未填写' || obj.finalResult == '未填写' || obj.middleResult == '未评审' || obj.finalResult == '未评审'){
                                         flag = true;
                                         msg = '您选择了未评审的信息！';
                                         return false;
@@ -546,29 +578,37 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     } else if (obj.event === 'detail-shenheProcess') {
                         detail_shenheProcess('教学研究-教学团队-查看审核流程',data);
                     }  else if (obj.event === 'middleResult') {
-                        layer.open({
-                            title : '教学研究-教学团队-中期考核'
-                            ,type : 1
-                            ,offset : '20px'
-                            ,shadeClose : true
-                            ,area : [ '1175px', '500px' ]
-                            ,content : $('#middlePingshenContainer')
-                            ,success: function(layero, index){
+                        if(data.middleResult == '未评审'){
+                            return;
+                        } else {
+                            layer.open({
+                                title : '教学研究-教学团队-中期考核'
+                                ,type : 1
+                                ,offset : '20px'
+                                ,shadeClose : true
+                                ,area : [ '1175px', '500px' ]
+                                ,content : $('#middlePingshenContainer')
+                                ,success: function(layero, index){
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     } else if (obj.event === 'finalResult') {
-                        layer.open({
-                            title : '教学研究-教学团队-最终考核'
-                            ,type : 1
-                            ,offset : '20px'
-                            ,shadeClose : true
-                            ,area : [ '1175px', '500px' ]
-                            ,content : $('#finalPingshenContainer')
-                            ,success: function(layero, index){
+                        if(data.middleResult == '未评审'){
+                            return;
+                        } else {
+                            layer.open({
+                                title : '教学研究-教学团队-最终考核'
+                                ,type : 1
+                                ,offset : '20px'
+                                ,shadeClose : true
+                                ,area : [ '1175px', '500px' ]
+                                ,content : $('#finalPingshenContainer')
+                                ,success: function(layero, index){
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 });
             } else{
