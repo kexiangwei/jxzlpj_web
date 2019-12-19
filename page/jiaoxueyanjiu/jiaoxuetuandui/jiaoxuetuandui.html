@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <title>教学研究-教学团队</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <style type="text/css">
+        .score{
+
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
     <div class="layui-tab">
@@ -217,6 +222,23 @@
         </div>
     </form>
 
+    <!-- 查看附件 -->
+    <div class="layui-container" id="viewFileContainer">
+        <fieldset class="layui-elem-field" style="margin-top: 10px;">
+            <legend>附件</legend>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th>文件名</th>
+                        <th style="width: 150px;">文件大小</th>
+                        <th style="width: 150px;">上传日期</th>
+                        <th style="width: 150px;">操作</th>
+                    </tr></thead>
+                    <tbody id="fileList"></tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+
     <!-- 上传附件 -->
     <div class="layui-container" id="uploadFileContainer">
         <div class="layui-upload" style="margin-top: 10px;">
@@ -235,34 +257,59 @@
         </div>
     </div>
 
-    <!-- 查看附件 -->
-    <div class="layui-container" id="viewFileContainer">
-        <fieldset class="layui-elem-field" style="margin-top: 10px;">
-            <legend>附件</legend>
-            <div class="layui-upload-list">
-                <table class="layui-table">
-                    <thead><tr><th>文件名</th>
-                        <th style="width: 150px;">文件大小</th>
-                        <th style="width: 150px;">上传日期</th>
-                        <th style="width: 150px;">操作</th>
-                    </tr></thead>
-                    <tbody id="fileList"></tbody>
-                </table>
-            </div>
-        </fieldset>
+    <!-- 查看团队负责人在本系统关联的业务信息 -->
+    <div class="layui-container" id="teamLeaderContainer">暂未开发</div>
+    <!-- 查看考核结果 -->
+    <div class="layui-container" id="resultContainer">
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th style="text-align: center">评委</th>
+                    <th style="text-align: center">团队建设规划</th>
+                    <th style="text-align: center">团队及组成</th>
+                    <th style="text-align: center">团队负责人</th>
+                    <th style="text-align: center">教学工作</th>
+                    <th style="text-align: center">教学研究</th>
+                    <th style="text-align: center">创新创业</th>
+                    <th style="text-align: center">教师培养</th>
+                    <th style="text-align: center">总分</th>
+                    <th style="text-align: center">评审意见</th>
+                </tr>
+            </thead>
+            <tbody id="pingshenResult">
+
+            </tbody>
+        </table>
     </div>
 
-    <!-- 查看中期考核结果 -->
-    <div class="layui-container" id="middleResultContainer">中期考核结果</div>
+    <!-- 考核 -->
+    <div class="layui-container" id="pingshenContainer">
+        <form class="layui-form" lay-filter="pingshenForm">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="width:100px;text-align: center;">指标</th>
+                    <th style="width:100px;text-align: center;">评审要素</th>
+                    <th style="width:auto;text-align: center;">评审标准</th>
+                    <th style="width:80px;text-align: center;">分值</th>
+                    <th style="width:80px;text-align: center;">得分</th>
+                </tr>
+                </thead>
+                <tbody id="pingshenContent">
 
-    <!-- 中期考核 -->
-    <div class="layui-container" id="middlePingshenContainer">中期考核</div>
+                </tbody>
+            </table>
+            <div class="layui-form-item">
+                <div class="layui-input-block" align="center">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="pingshenFormSubmitBtn">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <!-- 查看最终考核结果 -->
-    <div class="layui-container" id="finalResultContainer">最终考核结果</div>
-
-    <!-- 最终考核 -->
-    <div class="layui-container" id="finalPingshenContainer">最终考核</div>
+    <!-- 查看审核流程 -->
+    <div class="layui-container" id="shenheProcessContainer"></div>
 
     <!-- 填写审核意见 -->
     <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
@@ -289,9 +336,6 @@
             </div>
         </div>
     </form>
-
-    <!-- 查看审核流程 -->
-    <div class="layui-container" id="shenheProcessContainer"></div>
 
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>

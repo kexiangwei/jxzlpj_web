@@ -356,9 +356,39 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 ,offset : '20px'
                                 ,shadeClose : true
                                 ,area : [ '1175px', '500px' ]
-                                ,content : $('#middleResultContainer')
+                                ,content : $('#resultContainer')
                                 ,success: function(layero, index){
-
+                                    $.get(requestUrl+'/jiaoXueTuanDui/getPingShenInfo.do',{
+                                        'relationCode':data.code
+                                        ,'batchNum':data.batchNum
+                                        ,'pingshenType':'中期考核'
+                                    },function (resultData) {
+                                        if(resultData.code == 200){
+                                            // layer.alert(JSON.stringify(resultData.data));
+                                            if(resultData.data.length>0){
+                                                let htmlStr = '';
+                                                $.each(resultData.data,function (idx,obj) {
+                                                    if(data.userId == $.cookie('userId')){
+                                                        htmlStr += '<tr><td style="text-align: center">'+(idx+1)+'&nbsp;号评委</td>';
+                                                    }else{
+                                                        htmlStr += '<tr><td style="text-align: center">'+obj.userName+'</td>';
+                                                    }
+                                                    htmlStr += '<td style="text-align: center">'+obj.targetTeamBuildingPlan+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeamCompose+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeamLeader+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeachingWork+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeachingResearch+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetInnovationAndEntrepre+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeacherTraining+'</td>' +
+                                                        '<td style="text-align: center">'+obj.totalScore+'</td>' +
+                                                        '<td style="text-align: center">'+obj.pingshenOpinion+'</td></tr>\n';
+                                                });
+                                                $("#pingshenResult").html(htmlStr);
+                                            }
+                                        }
+                                    },'json');
+                                },end:function () {
+                                    $("#pingshenResult").empty();
                                 }
                             });
                         }
@@ -372,9 +402,39 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 ,offset : '20px'
                                 ,shadeClose : true
                                 ,area : [ '1175px', '500px' ]
-                                ,content : $('#finalResultContainer')
+                                ,content : $('#resultContainer')
                                 ,success: function(layero, index){
-
+                                    $.get(requestUrl+'/jiaoXueTuanDui/getPingShenInfo.do',{
+                                        'relationCode':data.code
+                                        ,'batchNum':data.batchNum
+                                        ,'pingshenType':'最终考核'
+                                    },function (resultData) {
+                                        if(resultData.code == 200){
+                                            // layer.alert(JSON.stringify(resultData.data));
+                                            if(resultData.data.length>0){
+                                                let htmlStr = '';
+                                                $.each(resultData.data,function (idx,obj) {
+                                                    if(data.userId == $.cookie('userId')){
+                                                        htmlStr += '<tr><td style="text-align: center">'+(idx+1)+'&nbsp;号评委</td>';
+                                                    }else{
+                                                        htmlStr += '<tr><td style="text-align: center">'+obj.userName+'</td>';
+                                                    }
+                                                    htmlStr += '<td style="text-align: center">'+obj.targetTeamBuildingPlan+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeamCompose+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeamLeader+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeachingWork+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeachingResearch+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetInnovationAndEntrepre+'</td>' +
+                                                        '<td style="text-align: center">'+obj.targetTeacherTraining+'</td>' +
+                                                        '<td style="text-align: center">'+obj.totalScore+'</td>' +
+                                                        '<td style="text-align: center">'+obj.pingshenOpinion+'</td></tr>\n';
+                                                });
+                                                $("#pingshenResult").html(htmlStr);
+                                            }
+                                        }
+                                    },'json');
+                                },end:function () {
+                                    $("#pingshenResult").empty();
                                 }
                             });
                         }
@@ -385,7 +445,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#myself_item').remove();
             }
             if(data.isShenhe > 0){ //拥有审核权限
-                var other_table = table.render({//数据表格
+                let isPsAccount
+                    , other_table = table.render({//数据表格
                     elem : '#other_table'
                     ,height : 440
                     ,id: "other_table_id"
@@ -427,7 +488,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'teamCode', title: '团队编号', width:120}
                         ,{field: 'teamName', title: '团队名称', width:150}
                         ,{field: 'createTime', title: '团队建立时间', width:150,hide:true}
-                        ,{field: 'teamLeader', title: '负责人', width:120}
+                        ,{field: 'teamLeader', title: '负责人', width:120, event: 'teamLeader',style:'font-weight: bold; cursor: pointer;'}
                         ,{field: 'teamLeaderId', title: '负责人工号', width:120,hide:true}
                         ,{field: 'memberNames', title: '团队成员', width:150}
                         ,{field: 'memberIds', title: '团队成员工号', width:150,hide:true}
@@ -460,6 +521,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{fixed: 'right', width:240, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
+                        isPsAccount = res.isPsAccount;
                         $('#other').find('span').html(res.unShenHeNum);
                     }
                 });//table end.
@@ -577,37 +639,120 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         detail_file(data);
                     } else if (obj.event === 'detail-shenheProcess') {
                         detail_shenheProcess('教学研究-教学团队-查看审核流程',data);
-                    }  else if (obj.event === 'middleResult') {
+                    }  else if (obj.event === 'teamLeader') {
+                        layer.open({
+                            title : '教学研究-教学团队-团队负责人'
+                            ,type : 1
+                            ,offset : '20px'
+                            ,shadeClose : true
+                            ,area : [ '1175px', '500px' ]
+                            ,content : $('#teamLeaderContainer')
+                            ,success: function(layero, index){
+
+                            }
+                        });
+                    } else if (obj.event === 'middleResult') {
                         if(data.middleResult == '未评审'){
                             return;
                         } else {
-                            layer.open({
-                                title : '教学研究-教学团队-中期考核'
-                                ,type : 1
-                                ,offset : '20px'
-                                ,shadeClose : true
-                                ,area : [ '1175px', '500px' ]
-                                ,content : $('#middlePingshenContainer')
-                                ,success: function(layero, index){
+                            if(isPsAccount == 1){
+                                data.pingshenType = '中期考核';
+                                pingshen('教学研究-教学团队-中期考核',data);
+                            }else{
+                                layer.open({
+                                    title : '教学研究-教学团队-中期考核结果'
+                                    ,type : 1
+                                    ,offset : '20px'
+                                    ,shadeClose : true
+                                    ,area : [ '1175px', '500px' ]
+                                    ,content : $('#resultContainer')
+                                    ,success: function(layero, index){
+                                        $.get(requestUrl+'/jiaoXueTuanDui/getPingShenInfo.do',{
+                                            'relationCode':data.code
+                                            ,'batchNum':data.batchNum
+                                            ,'pingshenType':'中期考核'
+                                        },function (resultData) {
+                                            if(resultData.code == 200){
+                                                // layer.alert(JSON.stringify(resultData.data));
+                                                if(resultData.data.length>0){
+                                                    let htmlStr = '';
+                                                    $.each(resultData.data,function (idx,obj) {
+                                                        if(data.userId == $.cookie('userId')){
+                                                            htmlStr += '<tr><td style="text-align: center">'+(idx+1)+'&nbsp;号评委</td>';
+                                                        }else{
+                                                            htmlStr += '<tr><td style="text-align: center">'+obj.userName+'</td>';
+                                                        }
+                                                        htmlStr += '<td style="text-align: center">'+obj.targetTeamBuildingPlan+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeamCompose+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeamLeader+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeachingWork+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeachingResearch+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetInnovationAndEntrepre+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeacherTraining+'</td>' +
+                                                            '<td style="text-align: center">'+obj.totalScore+'</td>' +
+                                                            '<td style="text-align: center">'+obj.pingshenOpinion+'</td></tr>\n';
+                                                    });
+                                                    $("#pingshenResult").html(htmlStr);
+                                                }
+                                            }
+                                        },'json');
+                                    },end:function () {
+                                        $("#pingshenResult").empty();
+                                    }
+                                });
+                            }
 
-                                }
-                            });
                         }
                     } else if (obj.event === 'finalResult') {
                         if(data.middleResult == '未评审'){
                             return;
                         } else {
-                            layer.open({
-                                title : '教学研究-教学团队-最终考核'
-                                ,type : 1
-                                ,offset : '20px'
-                                ,shadeClose : true
-                                ,area : [ '1175px', '500px' ]
-                                ,content : $('#finalPingshenContainer')
-                                ,success: function(layero, index){
-
-                                }
-                            });
+                            if(isPsAccount == 1){
+                                data.pingshenType = '最终考核';
+                                pingshen('教学研究-教学团队-最终考核',data);
+                            }else{
+                                layer.open({
+                                    title : '教学研究-教学团队-最终考核结果'
+                                    ,type : 1
+                                    ,offset : '20px'
+                                    ,shadeClose : true
+                                    ,area : [ '1175px', '500px' ]
+                                    ,content : $('#resultContainer')
+                                    ,success: function(layero, index){
+                                        $.get(requestUrl+'/jiaoXueTuanDui/getPingShenInfo.do',{
+                                            'relationCode':data.code
+                                            ,'batchNum':data.batchNum
+                                            ,'pingshenType':'最终考核'
+                                        },function (resultData) {
+                                            if(resultData.code == 200){
+                                                // layer.alert(JSON.stringify(resultData.data));
+                                                if(resultData.data.length>0){
+                                                    let htmlStr = '';
+                                                    $.each(resultData.data,function (idx,obj) {
+                                                        if(data.userId == $.cookie('userId')){
+                                                            htmlStr += '<tr><td style="text-align: center">'+(idx+1)+'&nbsp;号评委</td>';
+                                                        }else{
+                                                            htmlStr += '<tr><td style="text-align: center">'+obj.userName+'</td>';
+                                                        }
+                                                        htmlStr += '<td style="text-align: center">'+obj.targetTeamBuildingPlan+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeamCompose+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeamLeader+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeachingWork+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeachingResearch+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetInnovationAndEntrepre+'</td>' +
+                                                            '<td style="text-align: center">'+obj.targetTeacherTraining+'</td>' +
+                                                            '<td style="text-align: center">'+obj.totalScore+'</td>' +
+                                                            '<td style="text-align: center">'+obj.pingshenOpinion+'</td></tr>\n';
+                                                    });
+                                                    $("#pingshenResult").html(htmlStr);
+                                                }
+                                            }
+                                        },'json');
+                                    },end:function () {
+                                        $("#pingshenResult").empty();
+                                    }
+                                });
+                            }
                         }
                     }
                 });
@@ -983,6 +1128,115 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                 });
             };
+
+            let pingshen = function (title,row_data) {
+                layer.open({
+                    title : title
+                    ,type : 1
+                    ,offset : '20px'
+                    ,shadeClose : true
+                    ,area : [ '1175px', '500px' ]
+                    ,content : $('#pingshenContainer')
+                    ,success: function(layero, index){
+                        $.get(requestUrl+'/jiaoXueTuanDui/getPingShenTemplate.do',{},function (resultData) {
+                            if(resultData.code == 200){
+                                //
+                                let htmlStr = '';
+                                $.each(resultData.data,function (idx,obj) {
+                                    htmlStr += '<tr><td style="text-align: center">'+obj.targetName+'</td>' +
+                                        '       <td style="text-align: center">'+obj.targetElement+'</td>' +
+                                        '       <td>'+obj.targetContent+'</td>' +
+                                        '       <td style="text-align: center">'+obj.targetScore+'</td>' +
+                                        '       <td style="text-align: center"><input type="text" name="'+obj.target+'" required  lay-verify="required" autocomplete="off" class="layui-input score"></td></tr>\n';
+                                });
+                                htmlStr += '<tr><td colspan="3">总分</td>' +
+                                    '<td style="text-align: center">100</td>' +
+                                    '<td style="text-align: center"><input type="text" name="totalScore" class="layui-input" style="cursor:not-allowed" disabled></td></tr>';
+                                htmlStr += '<tr><td colspan="5"><textarea name="pingshenOpinion" placeholder="评审意见：（不少于100字）" class="layui-textarea"></textarea></td></tr>';
+                                $('#pingshenContent').html(htmlStr);
+                                //
+                                if(row_data.middleResult == '已填写'){
+                                    $.get(requestUrl+'/jiaoXueTuanDui/getPingShenInfo.do',{
+                                        'relationCode':row_data.code
+                                        ,'batchNum':row_data.batchNum
+                                        ,'pingshenType':row_data.pingshenType
+                                        ,"userId":function () {
+                                            return $.cookie('userId');
+                                        }
+                                    },function (resultData) {
+                                        if(resultData.code == 200){
+                                            let pingshenObj = resultData.data[0];
+                                            form.val("pingshenForm",{
+                                                "targetTeamBuildingPlan" : pingshenObj.targetTeamBuildingPlan
+                                                ,"targetTeamCompose" : pingshenObj.targetTeamCompose
+                                                ,"targetTeamLeader" : pingshenObj.targetTeamLeader
+                                                ,"targetTeachingWork" : pingshenObj.targetTeachingWork
+                                                ,"targetTeachingResearch" : pingshenObj.targetTeachingResearch
+                                                ,"targetInnovationAndEntrepre" : pingshenObj.targetInnovationAndEntrepre
+                                                ,"targetTeacherTraining" : pingshenObj.targetTeacherTraining
+                                                ,"totalScore" : pingshenObj.totalScore
+                                                ,"pingshenOpinion" : pingshenObj.pingshenOpinion
+                                            });
+                                        }
+                                    },'json');
+                                }
+                                //
+                                /* $("input[name='targetTeacherTraining']").keyup(function() {
+                                     $("input[name='totalScore']").val($(this).val());
+                                 });*/
+                                let $inputs = $('.score');
+                                $inputs.keyup(function() {
+                                    let totalScore = 0;
+                                    $inputs.each(function(){
+                                        totalScore += (1*$(this).val());
+                                        $("input[name='totalScore']").val(totalScore);
+                                    });
+                                });
+                                //
+                                //监听表单提交
+                                form.on('submit(pingshenFormSubmitBtn)', function(form_data){
+                                    /*layer.alert(JSON.stringify(data.field), {
+                                        title: '最终的提交信息'
+                                    });
+                                    return false;*/
+                                    $.post(requestUrl+'/jiaoXueTuanDui/insertPingShenInfo.do',{
+                                        "relationCode":row_data.code
+                                        ,"batchNum": row_data.batchNum
+                                        ,"pingshenType" : row_data.pingshenType
+                                        ,"teamCode" : row_data.teamCode
+                                        ,"teamName" : row_data.teamName
+                                        ,"teamLeader" : row_data.teamLeader
+                                        ,"teamLeaderId" : row_data.teamLeaderId
+                                        ,"targetTeamBuildingPlan" : form_data.field.targetTeamBuildingPlan
+                                        ,"targetTeamCompose" : form_data.field.targetTeamCompose
+                                        ,"targetTeamLeader" : form_data.field.targetTeamLeader
+                                        ,"targetTeachingWork" : form_data.field.targetTeachingWork
+                                        ,"targetTeachingResearch" : form_data.field.targetTeachingResearch
+                                        ,"targetInnovationAndEntrepre" : form_data.field.targetInnovationAndEntrepre
+                                        ,"targetTeacherTraining" : form_data.field.targetTeacherTraining
+                                        ,"totalScore" : form_data.field.totalScore
+                                        ,"pingshenOpinion" : form_data.field.pingshenOpinion
+                                        ,"userId":function () {
+                                            return $.cookie('userId');
+                                        }
+                                        ,"userName":function () {
+                                            return $.cookie('userName');
+                                        }
+                                    },function(result_data){
+                                        if(result_data.code == 200){
+                                            layer.msg('保存成功', {time : 3000, offset: '100px'});
+                                        }else{
+                                            layer.msg('保存失败', {time : 3000, offset: '100px'});
+                                        }
+                                    },'json');
+                                });
+                            }
+                        },'json');
+                    },end:function () {
+                        $("#pingshenContent").empty();
+                    }
+                });
+            }
         }
         ,error:function() {
             layer.msg('网络连接失败', {icon:7, time : 3000, offset: '100px'});
