@@ -1,15 +1,15 @@
 /**
- *学生评教设置
+ *教学评价-评教设置
  */
-layui.use(['layer','table','form','rate','element'], function(){
-    let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,rate = layui.rate,element = layui.element;
+layui.use(['layer','element','table','form'], function(){
+    let $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
 
     //评教设置
-    let dataTable = table.render({
-        id: "dataTable_id"
-        ,elem : '#dataTable'
+    let pjSet_dataTable = table.render({
+        id: "pjSet_dataTable"
+        ,elem : '#pjSet_dataTable'
         ,height : 470
-        ,url: requestUrl+'/getXspjSetList.do'
+        ,url: requestUrl+'/getPjSetList.do'
         ,where:{
         }
         ,request: {
@@ -28,19 +28,17 @@ layui.use(['layer','table','form','rate','element'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#dataTable_toolbar'
+        ,toolbar: '#pjSet_dataTable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '编号', width:120, sort: true}
-            ,{field: 'name', title: '名称', width:200}
-            ,{field: 'startDate', title: '开始日期', width:120}
-            ,{field: 'endDate', title: '结束日期', width:120}
+            ,{field: 'code', title: '编号', width:150}
+            ,{field: 'name', title: '名称', width:178}
+            ,{field: 'startDate', title: '开始日期', width:150}
+            ,{field: 'endDate', title: '结束日期', width:150}
             // ,{field: 'templateCode', title: '模板编号', width:120}
-            ,{field: 'templateName', title: '模板名称', width:120}
-            ,{field: 'createDate', title: '创建日期', width:120}
-            ,{field: 'lastModifyDate', title: '修改日期', width:120}
-            ,{field: 'remark', title: '备注'}
-            ,{fixed: 'right', width:220, align:'center', toolbar: '#dataTable_bar'}
+            ,{field: 'templateName', title: '模板名称', width:178}
+            ,{field: 'createDate', title: '创建日期', width:150}
+            ,{fixed: 'right', width:220, align:'center', toolbar: '#pjSet_dataTable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -54,10 +52,10 @@ layui.use(['layer','table','form','rate','element'], function(){
 
     //模板设置
     let template_dataTable = table.render({
-        id: "template_dataTable_id"
+        id: "template_dataTable"
         ,elem : '#template_dataTable'
         ,height : 470
-        ,url: requestUrl+'/getXspjTemplateList.do'
+        ,url: requestUrl+'/getPjSetTemplateList.do'
         ,where:{
         }
         ,request: {
@@ -79,8 +77,9 @@ layui.use(['layer','table','form','rate','element'], function(){
         ,toolbar: '#template_dataTable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'CODE', title: '模板编号', width:120, sort: true}
-            ,{field: 'NAME', title: '模板名称', width:841}
+            ,{field: 'templateCode', title: '模板编号', width:150}
+            ,{field: 'templateName', title: '模板名称', width:150}
+            ,{field: 'templateDesc', title: '模板描述', width:660}
             ,{fixed: 'right', width:220, align:'center', toolbar: '#template_dataTable_bar'}
         ]]
         ,even: true //隔行背景
@@ -95,10 +94,10 @@ layui.use(['layer','table','form','rate','element'], function(){
 
     //指标设置
     let target_dataTable = table.render({
-        id: "target_dataTable_id"
+        id: "target_dataTable"
         ,elem : '#target_dataTable'
         ,height : 470
-        ,url: requestUrl+'/getXspjTargetList.do'
+        ,url: requestUrl+'/getPjSetTargetList.do'
         ,response: {
             statusCode: 200 //规定成功的状态码，默认：0
         }
@@ -113,34 +112,34 @@ layui.use(['layer','table','form','rate','element'], function(){
         ,toolbar: '#target_dataTable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '指标编号', width:120, sort: true}
-            ,{field: 'name', title: '指标名称', width:200, edit: 'text'}
-            ,{field: 'type', title: '指标类别', width:200,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
-                    if(data.type=='teacher'){
+            ,{field: 'targetCode', title: '指标编号', width:150}
+            ,{field: 'targetCategory', title: '类别', width:150}
+            ,{field: 'targetType', title: '类型', width:150,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                    if(data.targetType=='teacher'){
                         return '对教师评价';
-                    }
-                    if(data.type=='myself'){
+                    }else if(data.targetType=='student'){
                         return '自我学习评价';
                     }
                     return '';
                 }
             }
-            ,{field: 'content', title: '评价内容', width:523, edit: 'text'}
-            ,{field: 'score', title: '指标分值', width:120, edit: 'text'}
+            ,{field: 'targetName', title: '指标名称', width:150, edit: 'text'}
+            ,{field: 'targetContent', title: '评价内容', width:450, edit: 'text'}
+            ,{field: 'targetScore', title: '指标分值', width:120, edit: 'text', sort: true}
         ]]
         ,done : function(res, curr, count) {
             //监听头工具栏事件
             table.on('toolbar(target_dataTable)', function(obj){
                 layer.open({
-                    title : '您当前位置 》指标设置 》新增页面'
+                    title : '教学评价-评教设置-指标'
                     ,type : 1
                     ,area : [ '700px', '500px' ]
                     ,offset : '30px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,content : $('#target_insert_form')
+                    ,content : $('#targetContainer')
                     ,success: function(layero, index){
                         //监听提交
-                        form.on('submit(target_insert_form)', function(data){
+                        form.on('submit(target_editForm)', function(data){
                             layer.msg(JSON.stringify(data.field));
                             return false;
                         });

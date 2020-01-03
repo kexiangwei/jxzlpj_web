@@ -1,12 +1,12 @@
 /**
- *学生评教
+ *教学评价-学生评教
  */
 layui.use(['layer','table','form','rate'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,rate = layui.rate;
 
     //数据表格
     let dataTable = table.render({
-        id: "dataTable_id"
+        id: "dataTable"
         ,elem : '#dataTable'
         ,height : 540
         ,url: requestUrl+'/getXspjCourseList.do'
@@ -32,12 +32,12 @@ layui.use(['layer','table','form','rate'], function(){
         }
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '课程编号', width:120, sort: true}
+            ,{field: 'code', title: '课程编号', width:120}
             ,{field: 'nameZh', title: '课程中文名称'}
             ,{field: 'nameEn', title: '课程英文名称'}
-            ,{field: 'type', title: '课程类别', width:120}
             ,{field: 'score', title: '学分', width:120, sort: true}
             ,{field: 'stuHour', title: '学时', width:120, sort: true}
+            ,{field: 'type', title: '课程类别', width:120}
             ,{field: 'collegeName', title: '开课部门'}
             ,{fixed: 'right', width:120, align:'center', toolbar: '#dataTable_bar'}
         ]]
@@ -53,7 +53,7 @@ layui.use(['layer','table','form','rate'], function(){
             table.on('tool(dataTable)', function(obj){
                 let rowData = obj.data;
                 layer.open({
-                    title : '您当前位置 》学生评教 》课程评分'
+                    title : '教学评价-学生评教-课程评分'
                     ,type : 1
                     ,area : [ '1175px', '535px' ]
                     ,offset : '10px'
@@ -62,40 +62,48 @@ layui.use(['layer','table','form','rate'], function(){
                     ,content : $('#kcpfContainer')
                     ,success: function(layero, index){
 
-                        $.get(requestUrl+"/getXspjTemplate.do" , {} ,  function(resultData){
+                        $.get(requestUrl+"/getXspjTemplate.do", {}
+                        ,  function(resultData){
                             if(resultData.code == 200){
                                 let data = resultData.data;
                                 let htmlStr = '';
                                 //对教师评价
                                 for (let i = 0; i < data.teacherTargets.length; i++) {
                                     htmlStr += '<tr>' +
-                                        '   <td>'+data.teacherTargets[i].idx+'</td>' +
-                                        '   <td>'+data.teacherTargets[i].name+'</td>' +
-                                        '   <td>'+data.teacherTargets[i].content+'</td>' +
-                                        '   <td>'+data.teacherTargets[i].score+'</td>' +
+                                        '   <td>'+(i*1+1)+'</td>' +
+                                        '   <td>'+data.teacherTargets[i].targetName+'</td>' +
+                                        '   <td>'+data.teacherTargets[i].targetContent+'</td>' +
+                                        '   <td>'+data.teacherTargets[i].targetScore+'</td>' +
                                         '   <td><div class="layui-form-item">' +
-                                        '           <input type="text" name="kcpf_teacher_'+data.teacherTargets[i].idx+'" value="" required  lay-verify="required" autocomplete="off" class="layui-input">' +
+                                        '           <input type="text" name="'+data.teacherTargets[i].targetCode+'" value="" required  lay-verify="required" autocomplete="off" class="layui-input">' +
                                         '       </div>' +
                                         '   </td>' +
                                         '</tr>';
                                 }
                                 $("#kcpf_teacher").html(htmlStr);
+                                //监听表单提交
+                                form.on('submit(kcpf_teacherForm)', function(data){
+                                    layer.msg(JSON.stringify(data.field));
+                                    return false;
+                                });
+
                                 //自我学习评价
                                 htmlStr = '';
-                                for (let i = 0; i < data.myselfTargets.length; i++) {
+                                for (let i = 0; i < data.studentTargets.length; i++) {
                                     htmlStr += '<tr>' +
-                                        '   <td>'+data.myselfTargets[i].idx+'</td>' +
-                                        '   <td>'+data.myselfTargets[i].name+'</td>' +
-                                        '   <td>'+data.myselfTargets[i].content+'</td>' +
+                                        '   <td>'+(i*1+1)+'</td>' +
+                                        '   <td>'+data.studentTargets[i].targetName+'</td>' +
+                                        '   <td>'+data.studentTargets[i].targetContent+'</td>' +
                                         '   <td style="text-align: center">' +
-                                        '       <div id="kcpf_myself_'+data.myselfTargets[i].idx+'"></div>' +
+                                        '       <div id="'+data.studentTargets[i].targetCode+'"></div>' +
                                         '   </td>' +
                                         '</tr>';
                                 }
-                                $("#kcpf_myself").html(htmlStr);
-                                for (let i = 0; i < data.myselfTargets.length; i++) {
+                                $("#kcpf_student").html(htmlStr);
+                                //
+                                for (let i = 0; i < data.studentTargets.length; i++) {
                                     rate.render({
-                                        elem: '#kcpf_myself_'+data.myselfTargets[i].idx
+                                        elem: "#"+data.studentTargets[i].targetCode
                                         // ,value: 3
                                         ,text: true //开启文本
                                         ,setText: function(value){ //自定义文本的回调
@@ -111,17 +119,10 @@ layui.use(['layer','table','form','rate'], function(){
                                     });
                                 }
                                 //监听表单提交
-                                form.on('submit(kcpf_teacherForm)', function(data){
-                                    layer.msg(JSON.stringify(data.field));
-                                    return false;
-
-                                });
-                                //监听表单提交
-                                form.on('submit(kcpf_myselfForm)', function(data){
-                                    let starNum = $('#kcpf_myself_1 .layui-icon-rate-solid').length;//获取相同class的个数
+                                form.on('submit(kcpf_studentForm)', function(data){
+                                    let starNum = $('#2524638544218333 .layui-icon-rate-solid').length;//获取相同class的个数
                                     layer.msg(JSON.stringify(starNum));
                                     return false;
-
                                 });
                             }
                         }, "json");

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>学生评教</title>
+    <title>教学评价-学生评教</title>
     <link rel="stylesheet" href="../../layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
@@ -17,7 +17,7 @@
     <div class="layui-container" id="kcpfContainer">
         <fieldset class="layui-elem-field" style="margin-top: 10px;" >
             <legend>对教师评价</legend>
-            <div class="layui-form" >
+            <div class="layui-form">
                 <table class="layui-table">
                     <colgroup>
                         <col width="10">
@@ -65,13 +65,13 @@
                         <th style="text-align: center">很不符合 ← → 很符合</th>
                     </tr>
                     </thead>
-                    <tbody id="kcpf_myself">
+                    <tbody id="kcpf_student">
 
                     </tbody>
                 </table>
                 <div class="layui-form-item">
                     <div class="layui-input-block" style="margin-left: 500px;">
-                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="kcpf_myselfForm">保存</button>
+                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="kcpf_studentForm">保存</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
