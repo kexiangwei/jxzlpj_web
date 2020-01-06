@@ -1,13 +1,13 @@
 /**
  * 调查问卷-问卷设置
  */
-layui.use(['layer','table','form','element'], function(){
-    let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,element = layui.element;
+layui.use(['layer','element','table','form'], function(){
+    let $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
 
     //问卷
-    let dataTable = table.render({
-        id: "dataTable_id"
-        ,elem : '#dataTable'
+    let wj_datatable = table.render({
+        id: "wj_datatable"
+        ,elem : '#wj_datatable'
         ,height : 470
         ,url: requestUrl+'/getWjSetPageList.do'
         ,where:{
@@ -28,16 +28,14 @@ layui.use(['layer','table','form','element'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#dataTable_toolbar'
+        ,toolbar: '#wj_datatable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '编号', width:120, sort: true}
-            ,{field: 'name', title: '名称', width:200}
-            ,{field: 'desc', title: '描述',width:200}
-            ,{field: 'createDate', title: '创建日期', width:160}
-            ,{field: 'lastModifyDate', title: '最后修改日期', width:160}
-            ,{field: 'remark', title: '备注'}
-            ,{fixed: 'right', width:220, align:'center', toolbar: '#dataTable_bar'}
+            ,{field: 'wjCode', title: '编号', width:120}
+            ,{field: 'wjName', title: '名称', width:200}
+            ,{field: 'wjDesc', title: '描述'}
+            ,{field: 'createDate', title: '创建日期', width:120}
+            ,{fixed: 'right', width:220, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -46,15 +44,41 @@ layui.use(['layer','table','form','element'], function(){
             ,limits: [10,20,50,100]
         }
         ,done : function(res, curr, count) {
+
+            //监听右侧工具条
+            table.on('tool(wj_datatable)', function(obj){
+                let row_data = obj.data;
+                if (obj.event === 'detail') {
+                    layer.open({
+                        title : row_data.wjName + '-预览'
+                        ,type : 1
+                        ,area : [ '700px', '535px' ]
+                        ,offset : '10px' //只定义top坐标，水平保持居中
+                        ,shadeClose : true //点击遮罩关闭
+                        ,btn : ['关闭']
+                        ,content : ''
+                        ,success: function(layero, index){
+
+                        }
+                        ,end:function () {
+
+                        }
+                    });
+                } else if (obj.event === 'update') {
+                    layer.msg('编辑', {time : 3000, offset: '100px'});
+                } else if (obj.event === 'delete') {
+                    layer.msg('删除', {time : 3000, offset: '100px'});
+                }
+            });
         }
     });
 
     //题库
-    let question_dataTable = table.render({
-        id: "question_dataTable_id"
-        ,elem : '#question_dataTable'
+    let question_datatable = table.render({
+        id: "question_datatable"
+        ,elem : '#question_datatable'
         ,height : 470
-        ,url: requestUrl+'/getQuestionPageList.do'
+        ,url: requestUrl+'/getWjQuestionPageList.do'
         ,where:{
         }
         ,request: {
@@ -73,14 +97,17 @@ layui.use(['layer','table','form','element'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#question_dataTable_toolbar'
+        ,toolbar: '#question_datatable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '编号', width:120, sort: true}
-            ,{field: 'contentType', title: '类别', width:120}
-            ,{field: 'content', title: '内容', width:600}
-            ,{field: 'type', title: '题型', width:120}
-            ,{fixed: 'right', width:220, align:'center', toolbar: '#question_dataTable_bar'}
+            ,{field: 'qcode', title: '问题编号', width:120}
+            ,{field: 'qcontent', title: '问题内容', width:205}
+            ,{field: 'optA', title: '选项A', width:120}
+            ,{field: 'optB', title: '选项B', width:120}
+            ,{field: 'optC', title: '选项C', width:120}
+            ,{field: 'optD', title: '选项D', width:120}
+            ,{field: 'wjName', title: '所属问卷', width:150}
+            ,{fixed: 'right', width:220, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -91,34 +118,13 @@ layui.use(['layer','table','form','element'], function(){
         ,done : function(res, curr, count) {
 
             //监听右侧工具条
-            table.on('tool(question_dataTable)', function(obj){
-                var rowData = obj.data;
-                if (obj.event === 'question_detail') {
-                    layer.open({
-                        title : '当前位置 》调查问卷 》问卷设置 》题库 》详情页面'
-                        ,type : 1
-                        ,area : [ '700px', '335px' ] //宽高
-                        ,offset : '30px'
-                        ,content : $('#questionInfo')
-                        ,success: function(layero, index){
-                            $.get(requestUrl+'/getOption.do',{'qCode':rowData.code },function (resultData) {
-                                if(resultData.code == 200){
-                                    let htmlStr ='<h3 style="margin-left:20px;margin-top: 20px;">'+rowData.content+'</h3><br/>';
-                                    $.each(resultData.data,function(idx,obj){
-                                        if(rowData.type == '单选'){
-                                            htmlStr += '<input type="radio" value=" obj.CONTENT" style="margin-left:20px;margin-top: 10px;">&nbsp;&nbsp;'+obj.CONTENT+'</input><br/>';
-                                        }else if(rowData.type == '多选'){
-                                            htmlStr += '<input type="checkbox" style="margin-left:20px;margin-top: 10px;">&nbsp;&nbsp;'+obj.CONTENT+'</input><br/>';
-                                        }
-                                    });
-                                    $('#questionInfo').html(htmlStr);
-                                }
-                            },'json');
-                        }
-                    });
-                } else if (obj.event === 'question_update') {
+            table.on('tool(question_datatable)', function(obj){
+                let row_data = obj.data;
+                if (obj.event === 'detail') {
+                    layer.msg('查看', {time : 3000, offset: '100px'});
+                } else if (obj.event === 'update') {
                     layer.msg('编辑', {time : 3000, offset: '100px'});
-                } else if (obj.event === 'question_delete') {
+                } else if (obj.event === 'delete') {
                     layer.msg('删除', {time : 3000, offset: '100px'});
                 }
             });

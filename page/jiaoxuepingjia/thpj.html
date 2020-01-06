@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>同行评教</title>
+    <meta charset="utf-8">
+    <title>教学评价-同行评教</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
 </head>
-<body>
+<body class="layui-layout-body">
 
+    <div class="layui-fluid">
+        <!-- 查询参数 -->
+        <div class="layui-search">
+            学院：
+            <div class="layui-inline">
+                <input class="layui-input" name="college" autocomplete="off">
+            </div>
+            老师：
+            <div class="layui-inline">
+                <input class="layui-input" name="teacher" autocomplete="off">
+            </div>
+            课程：
+            <div class="layui-inline">
+                <input class="layui-input" name="courseName" autocomplete="off">
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn" data-type="search">搜索</button>
+                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+            </div>
+        </div>
+        <!-- 数据表格 -->
+        <table class="layui-table" id="datatable" lay-filter="datatable"></table>
+        <script type="text/html" id="datatable_bar">
+            <a class="layui-btn layui-btn-xs" lay-event="kcpf"><i class="layui-icon layui-icon-edit"></i>课程评分</a>
+        </script>
+    </div>
+
+    <script src="../../layui/layui.js"></script>
+    <script src="../../js/jquery-3.3.1.js"></script>
+    <script src="../../js/jquery.cookie.js"></script>
+    <script src="../../js/global.js"></script>
+    <script src="thpj.js"></script>
 </body>
 </html>
