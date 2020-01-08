@@ -690,7 +690,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 if(res.code == 200){ //上传成功
                                     var tr = demoListView.find('tr#upload-'+ index)
                                         ,tds = tr.children();
-                                    tr.attr("data-id",res.data);//
+                                    tr.attr("data-id",res.data.code);//
                                     tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
                                     // tds.eq(3).html(''); //清空操作
                                     return delete this.files[index]; //删除文件队列已经上传成功的文件

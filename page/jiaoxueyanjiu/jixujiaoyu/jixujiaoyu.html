@@ -16,6 +16,18 @@
             width: 90%;
             padding-left: 10px;
         }
+        .imgDiv {
+            display: inline-block;
+            position: relative;
+        }
+        .imgDiv .delete {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 20px;
+            height: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
@@ -173,11 +185,9 @@
                 <button type="button" class="layui-btn layui-btn-primary" id="upload">上传附件</button>
             </div>
         </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn" id="editFormSubmitBtn">保存</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
+        <div class="layui-btn-container" align="center">
+            <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn" id="editFormSubmitBtn">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </form>
 
@@ -222,7 +232,7 @@
         </div>
         <div class="layui-upload">
             <button type="button" class="layui-btn layui-btn-normal" id="upload_xdth"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;心得体会</button>
-            <span style="color: #8D8D8D">调研或参会心得体会</span>
+            <span style="color: #8D8D8D">调研或参会心得体会（请选择图片或PDF格式的文件）</span>
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
@@ -236,6 +246,7 @@
         </div>
         <div class="layui-upload">
             <button type="button" class="layui-btn layui-btn-normal" id="testList"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;其他文件</button>
+            <span style="color: #8D8D8D">请选择图片或PDF格式的文件</span>
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
