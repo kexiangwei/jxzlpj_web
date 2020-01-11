@@ -91,6 +91,8 @@
         </div>
     </div>
 
+    <!-- 查看详情 -->
+    <div class="layui-container" id="viewContainer"></div>
     <!-- 响应新增，编辑按钮 -->
     <form class="layui-form" id="editForm" lay-filter="editForm">
         <!-- 声明一个隐藏域，信息编号是修改数据的依据-->
@@ -109,7 +111,8 @@
                     <label class="layui-form-label">项目类型：</label>
                     <div class="layui-input-block">
                         <select name="xmType" lay-filter="xmType">
-                            <option value="重点" selected>重点</option>
+                            <option value="">请选择</option>
+                            <option value="重点">重点</option>
                             <option value="一般">一般</option>
                         </select>
                     </div>
@@ -120,19 +123,19 @@
                 <div class="layui-form-item" style="margin-top: 10px;">
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="leader" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="leader" readonly class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item" style="margin-top: 10px;">
                     <label class="layui-form-label">工号：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="leaderId" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="leaderId" readonly class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">职称：</label>
                     <div class="layui-input-block">
-                        <select name="title" lay-filter="title">
+                        <select name="title" disabled="" lay-filter="title">
                             <option value="">请选择</option>
                             <option value="教授">教授</option>
                             <option value="副教授">副教授</option>
@@ -147,13 +150,13 @@
                 <div class="layui-form-item" style="margin-top: 10px;">
                     <label class="layui-form-label">二级单位：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="collegeOrDept" required  lay-verify="required" autocomplete="off" placeholder="学院或部门" class="layui-input">
+                        <input type="text" name="collegeOrDept" readonly class="layui-input"><!-- placeholder="学院或部门" -->
                     </div>
                 </div>
                 <div class="layui-form-item" style="margin-top: 10px;">
                     <label class="layui-form-label">专业：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="major" required  lay-verify="required" autocomplete="off"  placeholder="若是职能部门，可以不填写" class="layui-input">
+                        <input type="text" name="major" readonly class="layui-input"><!-- placeholder="若是职能部门，可以不填写" -->
                     </div>
                 </div>
                 <div class="layui-form-item" style="margin-top: 10px;">
@@ -237,12 +240,6 @@
                         </tr>
                     </table>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
-                    <label class="layui-form-label">经费概算：</label>
-                    <div class="layui-input-block">
-                        <script type="text/plain" id="fundBudgetEstimate" name="fundBudgetEstimate"></script>
-                    </div>
-                </div>
             </fieldset>
         </div>
         <div class="layui-form-item">
@@ -252,7 +249,6 @@
             </div>
         </div>
     </form>
-
     <!-- 项目主要参加人员情况 -->
     <form class="layui-form" id="memberForm" lay-filter="memberForm">
         <div class="layui-container" style="width: 90%;">
@@ -306,9 +302,10 @@
         </div>
     </form>
 
-    <!-- 查看详情 -->
-    <div class="layui-container" id="viewContainer"></div>
-
+    <!-- 查看审核流程 -->
+    <div class="layui-container" id="shenheProcessContainer"></div>
+    <!-- 查看专家审核意见 -->
+    <div class="layui-container" id="zjshContainer"></div>
     <!-- 填写审核意见 -->
     <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
         <div class="layui-form-item" style="width: 320px; margin-top: 20px; display: none" id="shenheType">
@@ -345,10 +342,6 @@
         </div>
     </form>
 
-    <!-- 查看审核流程 -->
-    <div class="layui-container" id="shenheProcessContainer"></div>
-    <!-- 查看专家审核意见 -->
-    <div class="layui-container" id="zjshContainer"></div>
 
     <script type="text/javascript" src="../../../js/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" src="../../../js/ueditor/ueditor.all.min.js"></script>
@@ -356,7 +349,7 @@
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
-    <script src="../../../js/pdfjs/build/pdf.js"></script>
+    <script src="../../../js/JsonExportExcel.min.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="jiaogaixiangmu.js"></script>
 

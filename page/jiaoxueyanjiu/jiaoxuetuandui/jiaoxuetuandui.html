@@ -5,8 +5,13 @@
     <title>教学研究-教学团队</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
-        .score{
-
+        .confirm-btn-skin .layui-layer-btn a {
+            background-color: #84c101;
+            border: 1px solid #84c101;
+            color: #FFF;
+        }
+        .confirm-btn-skin .layui-layer-btn .layui-layer-btn3 {
+            background:#999;
         }
     </style>
 </head>
@@ -164,7 +169,7 @@
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
                 </script>
             </fieldset>
-            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+            <fieldset class="layui-elem-field" style="margin-top: 10px; display: none;" id="shenbao">
                 <div class="layui-form-item"  style="margin-top: 10px;">
                     <label class="layui-form-label">申报书：</label>
                     <div class="layui-input-block">
@@ -173,7 +178,7 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+            <fieldset class="layui-elem-field" style="margin-top: 10px; display: none;" id="zqbg">
                 <div class="layui-form-item"  style="margin-top: 10px;">
                     <label class="layui-form-label">中期报告：</label>
                     <div class="layui-input-block">
@@ -181,7 +186,7 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="layui-elem-field" style="margin-top: 10px;">
+            <fieldset class="layui-elem-field" style="margin-top: 10px; display: none;" id="zjbg">
                 <div class="layui-form-item"  style="margin-top: 10px;">
                     <label class="layui-form-label">总结报告：</label>
                     <div class="layui-input-block">

@@ -71,8 +71,7 @@ layui.use(['layer','element','table','form'], function(){
                         ,{field: 'currentAndBackground', title: '现状与背景分析（包括已有研究实践基础）', width:120,hide:true}
                         ,{field: 'questionAndTarget', title: '研究内容、目标、要解决的问题和主要特色', width:120,hide:true}
                         ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120,hide:true}
-                        ,{field: 'planAndProcess', title: '具体安排及进度', width:120,hide:true}
-                        ,{field: 'fundBudgetEstimate', title: '经费概算', width:120,hide:true}
+                        ,{field: 'planAndProcess', title: '进度安排', width:120,hide:true}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
@@ -162,12 +161,24 @@ layui.use(['layer','element','table','form'], function(){
                                         ,ue_currentAndBackground = UE.getEditor("currentAndBackground") //现状与背景分析（包括已有研究实践基础）
                                         ,ue_questionAndTarget = UE.getEditor("questionAndTarget") //研究内容、目标、要解决的问题和主要特色
                                         ,ue_expectAndResult = UE.getEditor("expectAndResult") //预期效果与具体成果
-                                        ,ue_planAndProcess = UE.getEditor("planAndProcess") //具体安排及进度
-                                        ,ue_fundBudgetEstimate = UE.getEditor("fundBudgetEstimate"); //经费概算
+                                        ,ue_planAndProcess = UE.getEditor("planAndProcess"); //具体安排及进度
                                     initMemberDataTable(xmCode);//主要成员情况
                                     initFundBudgetDataTable(xmCode);//经费预算
+
+                                    //填充表单数据,项目主持人信息：姓名、工号、职称、二级单位、专业默认为填报人信息
+                                    form.val("editForm",{
+                                        "leader" :function () {return $.cookie('userName');}
+                                        ,"leaderId" : function () {return $.cookie('userId');}
+                                        ,"title" : '副教授'
+                                        ,"collegeOrDept" : '中科院'
+                                        ,"major" : '农业农村发展'
+                                    });
                                     //监听表单提交
                                     form.on('submit(editFormSubmitBtn)', function(data){
+                                        /*layer.alert(JSON.stringify(data.field), {
+                                            title: '最终的提交信息'
+                                        });
+                                        return false;*/
                                         $.post(requestUrl+'/jiaoGaiXiangMu/insert.do',{
                                             "code":data.field.code
                                             ,"xmName": data.field.xmName
@@ -183,7 +194,6 @@ layui.use(['layer','element','table','form'], function(){
                                             ,"questionAndTarget" : data.field.questionAndTarget
                                             ,"expectAndResult" : data.field.expectAndResult
                                             ,"planAndProcess" : data.field.planAndProcess
-                                            ,"fundBudgetEstimate" : data.field.fundBudgetEstimate
                                             ,"userId":function () {
                                                 return $.cookie('userId');
                                             }
@@ -276,8 +286,7 @@ layui.use(['layer','element','table','form'], function(){
                                     ,ue_currentAndBackground = UE.getEditor("currentAndBackground") //现状与背景分析（包括已有研究实践基础）
                                     ,ue_questionAndTarget = UE.getEditor("questionAndTarget") //研究内容、目标、要解决的问题和主要特色
                                     ,ue_expectAndResult = UE.getEditor("expectAndResult") //预期效果与具体成果
-                                    ,ue_planAndProcess = UE.getEditor("planAndProcess") //具体安排及进度
-                                    ,ue_fundBudgetEstimate = UE.getEditor("fundBudgetEstimate"); //经费概算
+                                    ,ue_planAndProcess = UE.getEditor("planAndProcess"); //具体安排及进度
                                 //填充数据
                                 ue_mainTeachWork.ready(function () {
                                     ue_mainTeachWork.setContent(rowData.mainTeachWork);
@@ -296,9 +305,6 @@ layui.use(['layer','element','table','form'], function(){
                                 });
                                 ue_planAndProcess.ready(function () {
                                     ue_planAndProcess.setContent(rowData.planAndProcess);
-                                });
-                                ue_fundBudgetEstimate.ready(function () {
-                                    ue_fundBudgetEstimate.setContent(rowData.fundBudgetEstimate);
                                 });
                                 //
                                 initMemberDataTable(rowData.code);//主要成员情况
@@ -333,7 +339,6 @@ layui.use(['layer','element','table','form'], function(){
                                         ,"questionAndTarget" : data.field.questionAndTarget
                                         ,"expectAndResult" : data.field.expectAndResult
                                         ,"planAndProcess" : data.field.planAndProcess
-                                        ,"fundBudgetEstimate" : data.field.fundBudgetEstimate
                                         ,"userId":function () {
                                             return $.cookie('userId');
                                         }
@@ -432,8 +437,7 @@ layui.use(['layer','element','table','form'], function(){
                         ,{field: 'currentAndBackground', title: '现状与背景分析（包括已有研究实践基础）', width:120,hide:true}
                         ,{field: 'questionAndTarget', title: '研究内容、目标、要解决的问题和主要特色', width:120,hide:true}
                         ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120,hide:true}
-                        ,{field: 'planAndProcess', title: '具体安排及进度', width:120,hide:true}
-                        ,{field: 'fundBudgetEstimate', title: '经费概算', width:120,hide:true}
+                        ,{field: 'planAndProcess', title: '进度安排', width:120,hide:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -658,7 +662,7 @@ layui.use(['layer','element','table','form'], function(){
                     } else if (obj.event === 'detail-shenheProcess') {
                         detail_shenheProcess('教学研究-教改项目-查看审核流程',data);
                     } else if (obj.event === 'detail-zjsh') {
-                        detail_zjsh(data.zjshItemList);
+                        detail_zjsh(data);
                     }
                 });
             } else{
@@ -782,13 +786,14 @@ layui.use(['layer','element','table','form'], function(){
                             "data": res.data //解析数据列表
                         };
                     }
+                    ,totalRow: true
                     ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
                     ,defaultToolbar:[]
                     ,cols : [[ //表头
-                        {type:'numbers', title:'序号', width:100, fixed: 'left'}
+                        {type:'numbers', title:'序号', width:100, fixed: 'left', totalRowText: '合计'}
                         // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
                         ,{field: 'subject', title: '科目', align:'center'}
-                        ,{field: 'budgetAmount', title: '预算金额（元）', width:200, align:'center'}
+                        ,{field: 'budgetAmount', title: '预算金额（元）', sort: true, totalRow: true, width:200, align:'center'}
                         ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
                     ]]
                     ,text: {
@@ -874,8 +879,8 @@ layui.use(['layer','element','table','form'], function(){
                                 '       <table class="layui-table">\n' +
                                 '           <tbody>\n' +
                                 '               <tr>' +
-                                '                   <td style="width: 100px; text-align: right">项目名称：</td><td style="width: 436px;">'+rowData.xmName+'</td>' +
-                                '                    <td style="width: 100px; text-align: right">项目类型：</td><td style="width: 436px;">'+rowData.xmType+'</td>' +
+                                '                   <td style="width: 120px; text-align: right">项目名称：</td><td style="width: 416px;">'+rowData.xmName+'</td>' +
+                                '                    <td style="width: 120px; text-align: right">项目类型：</td><td style="width: 416px;">'+rowData.xmType+'</td>' +
                                 '               </tr>\n' +
                                 '           </tbody>\n' +
                                 '       </table>' +
@@ -885,21 +890,21 @@ layui.use(['layer','element','table','form'], function(){
                             '       <table class="layui-table">\n' +
                             '           <tbody>\n' +
                             '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">姓名：</td><td style="width: 436px;">'+rowData.leader+'</td>' +
-                            '                   <td style="width: 100px; text-align: right">工号：</td><td style="width: 436px;">'+rowData.leaderId+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">姓名：</td><td style="width: 416px;">'+rowData.leader+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">工号：</td><td style="width: 416px;">'+rowData.leaderId+'</td>' +
                             '               </tr>\n' +
                             '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">二级单位：</td><td style="width: 436px;">'+rowData.collegeOrDept+'</td>' +
-                            '                    <td style="width: 100px; text-align: right">专业：</td><td style="width: 436px;">'+rowData.major+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">二级单位：</td><td style="width: 416px;">'+rowData.collegeOrDept+'</td>' +
+                            '                    <td style="width: 120px; text-align: right">专业：</td><td style="width: 416px;">'+rowData.major+'</td>' +
                             '               </tr>\n' +
                             '               <tr>' +
-                            '                    <td style="width: 100px; text-align: right">职称：</td><td colspan="3">'+rowData.title+'</td>' +
+                            '                    <td style="width: 120px; text-align: right">职称：</td><td colspan="3">'+rowData.title+'</td>' +
                             '               </tr>\n' +
                             '               <tr>' +
-                            '                    <td style="width: 100px; text-align: right">主要教学工作简历：</td><td colspan="3">'+rowData.mainTeachWork+'</td>' +
+                            '                    <td style="width: 120px; text-align: right">主要教学工作简历：</td><td colspan="3">'+rowData.mainTeachWork+'</td>' +
                             '               </tr>\n' +
                             '               <tr>' +
-                            '                    <td style="width: 100px; text-align: right">主要教育教学研究领域及成果：</td><td colspan="3">'+rowData.mainTeachAchievement+'</td>' +
+                            '                    <td style="width: 120px; text-align: right">主要教育教学研究领域及成果：</td><td colspan="3">'+rowData.mainTeachAchievement+'</td>' +
                             '               </tr>\n' +
                             '           </tbody>\n' +
                             '       </table>' +
@@ -909,7 +914,7 @@ layui.use(['layer','element','table','form'], function(){
                             '       <table class="layui-table">\n' +
                             '           <tbody>' +
                             '               <tr>\n' +
-                            '                      <th style="width: 100px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">主要成员情况：</th>' +
+                            '                      <th style="width: 120px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">主要成员情况：</th>' +
                             '                      <th style="width: 100px; text-align: center">序号</th>\n' +
                             '                      <th style="width: 150px; text-align: center">姓名</th>\n' +
                             '                      <th style="width: 150px; text-align: center">工号</th>\n' +
@@ -936,10 +941,10 @@ layui.use(['layer','element','table','form'], function(){
                             '       <table class="layui-table">\n' +
                             '           <tbody>\n' +
                             '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">现状与背景分析（包括已有研究实践基础）：</td><td>'+rowData.currentAndBackground+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">现状与背景分析（包括已有研究实践基础）：</td><td>'+rowData.currentAndBackground+'</td>' +
                             '               </tr>\n' +
                             '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">研究内容、目标、要解决的问题和主要特色：</td><td>'+rowData.questionAndTarget+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">研究内容、目标、要解决的问题和主要特色：</td><td>'+rowData.questionAndTarget+'</td>' +
                             '               </tr>\n' +
                             '           </tbody>\n' +
                             '       </table>' +
@@ -949,10 +954,10 @@ layui.use(['layer','element','table','form'], function(){
                             '       <table class="layui-table">\n' +
                             '           <tbody>\n' +
                             '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">预期效果与具体成果：</td><td>'+rowData.expectAndResult+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">预期效果与具体成果：</td><td>'+rowData.expectAndResult+'</td>' +
                             '               </tr>\n' +
                             '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">具体安排及进度：</td><td>'+rowData.planAndProcess+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">具体安排及进度：</td><td>'+rowData.planAndProcess+'</td>' +
                             '               </tr>\n' +
                             '           </tbody>\n' +
                             '       </table>' +
@@ -963,33 +968,27 @@ layui.use(['layer','element','table','form'], function(){
                             '       <table class="layui-table">\n' +
                             '           <tbody>' +
                             '               <tr>\n' +
-                            '                      <th style="width: 100px; text-align: right" rowspan="'+(rowData.fundBudgetList.length>0?rowData.fundBudgetList.length+1:2)+'">经费预算：</th>' +
+                            '                      <th style="width: 120px; text-align: right" rowspan="'+rowData.fundBudgetList.length+2+'">经费预算：</th>' +
                             '                      <th style="width: 100px; text-align: center">序号</th>\n' +
                             '                      <th style="text-align: center">科目</th>\n' +
                             '                      <th style="width: 150px; text-align: center">预算金额（元）</th>\n' +
                             '                 </tr>';
                             if(rowData.fundBudgetList.length>0){
+                                let totalBudgetAmount =0;
                                 layui.each(rowData.fundBudgetList,function (idx,obj) {
+                                    totalBudgetAmount += parseInt(obj.budgetAmount);
                                     htmlStr += '<tr><td style="text-align: center">'+(idx+1)
                                         +'</td><td style="text-align: center">'+obj.subject
                                         +'</td><td style="text-align: center">'+obj.budgetAmount
                                         +'</td></tr>\n';
                                 });
+                                htmlStr += '<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计</td><td style="text-align: center">'+totalBudgetAmount+'</td></tr>';
                             }else{
                                 htmlStr += '<tr>' +
                                     '      <td style="text-align: center" colspan="3">暂无相关数据</td>' +
                                     '  </tr>\n';
                             }
-                            htmlStr +='</tbody></table>';
-                            //经费概算
-                            htmlStr += '<table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 100px; text-align: right">经费概算：</td><td>'+rowData.fundBudgetEstimate+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
+                            htmlStr +='</tbody></table></fieldset>';
                         $("#viewContainer").html(htmlStr);
                     }
                     ,end:function () {
@@ -1101,7 +1100,8 @@ layui.use(['layer','element','table','form'], function(){
              * 查看专家审核意见
              * @param rowData
              */
-            let detail_zjsh = function (zjshItemList) {
+            let detail_zjsh = function (row_data) {
+                let zjshItemList = row_data.zjshItemList;
                 if(isEmpty(zjshItemList)){
                     return;
                 }
@@ -1111,7 +1111,35 @@ layui.use(['layer','element','table','form'], function(){
                     ,area : [ '1175px', '535px' ]
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
+                    ,btn : ['导出专家评审结果','关闭']
+                    ,yes: function(){
+                        // alert(JSON.stringify(row_data));
+                        let sheetData = new Array();
+                        $.each(zjshItemList,function (idx,obj) {
+                            let item = {
+                                xmName : row_data.xmName,
+                                leader : row_data.leader,
+                                userName : obj.userName,
+                                status : obj.status,
+                                opinion : obj.opinion,
+                                createDate : obj.createDate
+                            };
+                            sheetData[idx] = item;
+                        });
+                        let option={};
+                        option.fileName = row_data.xmName+'校外专家审核意见';
+                        option.datas=[
+                            {
+                                sheetHeader:['项目名称','主持人','专家','评审结果','评审意见','评审时间'],
+                                sheetData:sheetData
+                            }
+                        ];
+                        let toExcel=new ExportJsonExcel(option);
+                        toExcel.saveExcel();
+                    }
+                    ,btn2: function(){
+                        layer.closeAll();
+                    }
                     ,content : $('#zjshContainer')
                     ,success: function(layero, index){
                         let htmlStr = '';

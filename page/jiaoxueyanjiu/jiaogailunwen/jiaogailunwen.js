@@ -1,8 +1,8 @@
 /*
 教学研究-教改论文
  */
-layui.use(['layer','element','table','form','upload'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,upload = layui.upload;
+layui.use(['layer','element','table','form','laydate','upload'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,upload = layui.upload;
 
     //验证用户是否拥有提交、审核权限
     $.ajax({
@@ -151,6 +151,11 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 ,area : [ '700px', '535px' ]
                                 ,content : $('#editForm')
                                 ,success: function(layero, index){
+                                    /*//发表日期XXXX年XX月
+                                    laydate.render({
+                                        elem: '#fbTime'
+                                        ,type: 'month' //年月选择器
+                                    });*/
                                     //监听表单提交
                                     form.on('submit(editFormSubmitBtn)', function(data){
                                        /* layer.alert(JSON.stringify(data.field), {

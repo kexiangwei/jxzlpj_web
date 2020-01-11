@@ -156,62 +156,24 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,data = checkStatus.data; //获取选中的数据
                     switch(obj.event){
                         case 'insert':
-                            //清空表单数据
-                            document.getElementById("editForm").reset();
-                            //初始化弹窗
-                            layer.open({
-                                title : '教学研究-教学团队-新增'
-                                ,type : 1
-                                ,offset : '20px'
-                                // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                ,area : [ '1175px', '535px' ]
-                                ,content : $('#editForm')
-                                ,success: function(layero, index){
-                                    //每次进入新增页面生成一个新的编号
-                                    let code = new Date().getTime();
-                                    $(" input[ name='code' ] ").val(code);
-                                    //初始化laydate实例
-                                    laydate.render({
-                                        elem: '#createTime' //指定元素
-                                        ,type: 'datetime'
-                                    });
-                                    //
-                                    initMemberDataTable(code);//主要成员情况
-                                    //监听表单提交
-                                    form.on('submit(editFormSubmitBtn)', function(data){
-                                        /* layer.alert(JSON.stringify(data.field), {
-                                             title: '最终的提交信息'
-                                         });
-                                         return false;*/
-                                        $.post(requestUrl+'/jiaoXueTuanDui/insert.do',{
-                                            "code":data.field.code
-                                            ,"teamCode": data.field.teamCode
-                                            ,"teamName": data.field.teamName
-                                            ,"createTime" : data.field.createTime
-                                            ,"teamLeader" : data.field.teamLeader
-                                            ,"teamLeaderId" : data.field.teamLeaderId
-                                            ,"sbs" : data.field.sbs
-                                            ,"middleReport" : data.field.middleReport
-                                            ,"finalReport" : data.field.finalReport
-                                            ,"userId":function () {
-                                                return $.cookie('userId');
-                                            }
-                                            ,"userName":function () {
-                                                return $.cookie('userName');
-                                            }
-                                        },function(result_data){
-                                            if(result_data.code == 200){
-                                                myself_table.reload();//重新加载表格数据
-                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
-                                            }
-                                        },'json');
-                                    });
-                                },end:function () {
-                                    window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
+                            let idx = layer.confirm('请选择提交的材料?',{
+                                skin: 'confirm-btn-skin'
+                                ,btn: ['申报','中期',"总结"]
+                                , btn1:function(){
+                                    $('#shenbao').css('display','block');
+                                    initEditForm();
+                                    layer.close(idx);
+                                }, btn2:function(){
+                                    $('#zqbg').css('display','block');
+                                    initEditForm();
+                                    layer.close(idx);
+                                }, btn3:function(){
+                                    $('#zjbg').css('display','block');
+                                    initEditForm();
+                                    layer.close(idx);
                                 }
                             });
+
                             break;
                         case 'submit':
                             if(data.length === 0){
@@ -861,6 +823,65 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                     ,end:function () {
                         $("#viewContainer .layui-elem-field").empty();
+                    }
+                });
+            };
+
+            let initEditForm = function(){
+                //清空表单数据
+                document.getElementById("editForm").reset();
+                //初始化弹窗
+                layer.open({
+                    title : '教学研究-教学团队-新增'
+                    ,type : 1
+                    ,offset : '20px'
+                    // ,shadeClose : true //禁用点击遮罩关闭弹窗
+                    ,area : [ '1175px', '535px' ]
+                    ,content : $('#editForm')
+                    ,success: function(layero, index){
+                        //每次进入新增页面生成一个新的编号
+                        let code = new Date().getTime();
+                        $(" input[ name='code' ] ").val(code);
+                        //初始化laydate实例
+                        laydate.render({
+                            elem: '#createTime' //指定元素
+                            ,type: 'datetime'
+                        });
+                        //
+                        initMemberDataTable(code);//主要成员情况
+                        //监听表单提交
+                        form.on('submit(editFormSubmitBtn)', function(data){
+                            /* layer.alert(JSON.stringify(data.field), {
+                                 title: '最终的提交信息'
+                             });
+                             return false;*/
+                            $.post(requestUrl+'/jiaoXueTuanDui/insert.do',{
+                                "code":data.field.code
+                                ,"teamCode": data.field.teamCode
+                                ,"teamName": data.field.teamName
+                                ,"createTime" : data.field.createTime
+                                ,"teamLeader" : data.field.teamLeader
+                                ,"teamLeaderId" : data.field.teamLeaderId
+                                ,"sbs" : data.field.sbs
+                                ,"middleReport" : data.field.middleReport
+                                ,"finalReport" : data.field.finalReport
+                                ,"userId":function () {
+                                    return $.cookie('userId');
+                                }
+                                ,"userName":function () {
+                                    return $.cookie('userName');
+                                }
+                            },function(result_data){
+                                if(result_data.code == 200){
+                                    myself_table.reload();//重新加载表格数据
+                                    layer.msg('添加成功', {time : 3000, offset: '100px'});
+                                }else{
+                                    layer.msg('添加失败', {time : 3000, offset: '100px'});
+                                }
+                            },'json');
+                        });
+                    },end:function () {
+                        window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                     }
                 });
             };
