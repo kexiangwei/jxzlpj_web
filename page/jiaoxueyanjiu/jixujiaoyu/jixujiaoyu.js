@@ -392,7 +392,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#myself_item').remove();
             }
             if(data.isShenhe > 0){ //拥有审核权限
-                var other_table = table.render({//数据表格
+                var other_table = table.render({ //数据表格
                     elem : '#other_table'
                     ,height : 440
                     ,id: "other_table_id"
@@ -630,16 +630,25 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         } ,  function(data){
                             if(data.data.length==0){
                                 layer.msg('还没有上传文件哦', {time : 3000, offset: '100px'});
+                                let tr = '<tr><td colspan="5" style="text-align: center;">无数据</td></tr>';
+                                $('#file_xdth').append(tr);
+                                $('#file_qtwj').append(tr);
                                 return;
                             }
                             let xdthNum=0,qtwjNum = 0;
                             $.each(data.data,function(index,file){
                                 switch (file.fileType) {
                                     case "jyzs":
-                                        $('#file_jyzs').append('<img src="'+requestUrl+file.filePath +'" alt="结业证书" style="width: 150px; margin:5px;">');
+                                        $('#file_jyzs').append('<img id="'+file.code+'" src="'+requestUrl+file.filePath +'" alt="结业证书" style="width: 150px; margin:5px; cursor: pointer;">');
+                                        $("#"+file.code).dblclick(function() {
+                                            preview_fileInfo(file);
+                                        });
                                         break;
                                     case "chzp":
-                                        $('#file_chzp').append('<img src="'+requestUrl+file.filePath +'" alt="参会照片" style="width: 150px; margin:5px;">');
+                                        $('#file_chzp').append('<img id="'+file.code+'" src="'+requestUrl+file.filePath +'" alt="参会照片" style="width: 150px; margin:5px; cursor: pointer;">');
+                                        $("#"+file.code).dblclick(function() {
+                                            preview_fileInfo(file);
+                                        });
                                         break;
                                     case "xdth":
                                         xdthNum++;
@@ -841,50 +850,47 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             elem: '#test1' //指向容器选择器，如：elem: '#id'。也可以是DOM对象
                             ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                             ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                "relationCode":function () {
-                                    return $(" input[ name='code' ] ").val();
-                                }
+                                "relationCode":function () {return $(" input[ name='code' ] ").val();}
                                 ,"fileCategory":"JXYJ_JXJY" // 固定值
                                 ,"fileType":"jyzs" // 固定值
-                                ,"userId":function () {
-                                    return $.cookie('userId');
-                                }
-                                ,"userName":function () {
-                                    return $.cookie('userName');
-                                }
+                                ,"userId":function () {return $.cookie('userId');}
+                                ,"userName":function () {return $.cookie('userName');}
                             }
                             ,field:"file" //设定文件域的字段名
                             ,accept:"file" //指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
                             ,exts:'jpg|png|gif|bmp|jpeg|pdf'
                             ,before: function(obj){
-                                //预读本地文件示例，不支持ie8
                                 obj.preview(function(index, file, result){
-                                    if ($( "#demo1:has(img)" ).length>0) { //------有img子标记------
-                                        // alert('delete excute.');
-                                        $.post(requestUrl+"/deleteFileInfo.do" , {
-                                            "code": function () {
-                                                return $('#demo1').find('img').attr("data-id");
-                                            }
-                                        } ,  function(data){
-                                            layer.msg(data.msg);
-                                        }, "json");
-                                        //$('#demo1').empty();
-                                    }
-                                    // obj.resetFile(index, file, uuid()+'.jpg'); //重命名文件名，layui 2.3.0 开始新增
-                                    $('#demo1').empty().append('<img data-id="" id="'+ index +'" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img" style="width: 150px;">');
+                                    let imgDiv = '<div id="imgDiv_'+index+'" class="imgDiv">' +
+                                        '              <a href="javascript:void(0)"><img src="../../../layui/images/icon/delete.jpg" class="delete" /></a>\n' +
+                                        '              <img src="'+result+'" style="width: 150px; margin:5px;">\n' +
+                                        '         </div>';
+                                    $('#demo1').append(imgDiv);
                                 });
                             }
                             ,done: function(res, index, upload){ //执行上传请求后的回调。返回三个参数，分别为：res（服务端响应信息）、index（当前文件的索引）、upload（重新上传的方法，一般在文件上传失败后使用）
-                                $('#demo1').find('img').attr("data-id",res.data.code);
-                                $("#"+index).dblclick(function() {
-                                    var code = $(this).attr("data-id");
-                                    $.post(requestUrl+"/deleteFileInfo.do" , {
-                                        "code": code
-                                    } ,  function(data){
-                                        layer.msg(data.msg);
-                                    }, "json");
-                                    $(this).remove();
+                                //
+                                $("#imgDiv_"+index).mouseenter(function () {
+                                    $(this).find(".delete").show();
                                 });
+                                //
+                                $("#imgDiv_"+index).mouseleave(function () {
+                                    $(this).find(".delete").hide();
+                                });
+                                //
+                                $("#imgDiv_"+index).find("a").click(function (event) {
+                                    $.post(requestUrl+"/deleteFileInfo.do" , {
+                                        "code": res.data.code
+                                    } ,  function(result_data){
+                                        layer.msg(result_data.msg);
+                                    }, "json");
+                                    $(this).parent().remove();
+                                });
+                                //
+                                $("#imgDiv_"+index).dblclick(function() {
+                                    preview_fileInfo(res.data);
+                                });
+                                //
                                 return layer.msg(res.msg);
                             }
                             ,error: function(){

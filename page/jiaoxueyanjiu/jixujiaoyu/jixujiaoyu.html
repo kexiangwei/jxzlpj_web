@@ -191,6 +191,9 @@
         </div>
     </form>
 
+    <!-- 查看审核流程 -->
+    <div class="layui-container" id="shenheProcessContainer"></div>
+
     <!-- 填写审核意见 -->
     <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
         <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
@@ -216,49 +219,6 @@
             </div>
         </div>
     </form>
-
-    <!-- 查看审核流程 -->
-    <div class="layui-container" id="shenheProcessContainer"></div>
-
-    <!-- 上传附件 -->
-    <div class="layui-container" id="uploadFileContainer">
-        <div class="layui-upload">
-            <button type="button" class="layui-btn layui-btn-normal" id="test1"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;结业证书</button>
-            <div class="layui-upload-list" id="demo1"></div>
-        </div>
-        <div class="layui-upload">
-            <button type="button" class="layui-btn layui-btn-normal" id="test2"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;参会照片</button>
-            <div class="layui-upload-list" id="demo2"></div>
-        </div>
-        <div class="layui-upload">
-            <button type="button" class="layui-btn layui-btn-normal" id="upload_xdth"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;心得体会</button>
-            <span style="color: #8D8D8D">调研或参会心得体会（请选择图片或PDF格式的文件）</span>
-            <div class="layui-upload-list">
-                <table class="layui-table">
-                    <thead><tr><th>文件名</th>
-                        <th style="width: 150px;">大小</th>
-                        <th style="width: 150px;">状态</th>
-                        <th style="width: 150px;">操作</th>
-                    </tr></thead>
-                    <tbody id="xdthList"></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="layui-upload">
-            <button type="button" class="layui-btn layui-btn-normal" id="testList"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;其他文件</button>
-            <span style="color: #8D8D8D">请选择图片或PDF格式的文件</span>
-            <div class="layui-upload-list">
-                <table class="layui-table">
-                    <thead><tr><th>文件名</th>
-                        <th style="width: 150px;">大小</th>
-                        <th style="width: 150px;">状态</th>
-                        <th style="width: 150px;">操作</th>
-                    </tr></thead>
-                    <tbody id="demoList"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
     <!-- 查看附件 -->
     <div class="layui-container" id="viewFileContainer">
@@ -300,10 +260,49 @@
         </fieldset>
     </div>
 
+    <!-- 上传附件 -->
+    <div class="layui-container" id="uploadFileContainer">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-normal" id="test1"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;结业证书</button>
+            <div class="layui-upload-list" id="demo1"></div>
+        </div>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-normal" id="test2"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;参会照片</button>
+            <div class="layui-upload-list" id="demo2"></div>
+        </div>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-normal" id="upload_xdth"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;心得体会</button>
+            <span style="color: #8D8D8D">调研或参会心得体会（请选择图片或PDF格式的文件）</span>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th>文件名</th>
+                        <th style="width: 150px;">大小</th>
+                        <th style="width: 150px;">状态</th>
+                        <th style="width: 150px;">操作</th>
+                    </tr></thead>
+                    <tbody id="xdthList"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-normal" id="testList"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;其他文件</button>
+            <span style="color: #8D8D8D">请选择图片或PDF格式的文件</span>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th>文件名</th>
+                        <th style="width: 150px;">大小</th>
+                        <th style="width: 150px;">状态</th>
+                        <th style="width: 150px;">操作</th>
+                    </tr></thead>
+                    <tbody id="demoList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
-    <script src="../../../js/pdfjs/build/pdf.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="jixujiaoyu.js"></script>
 
