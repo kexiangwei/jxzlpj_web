@@ -567,9 +567,13 @@ layui.use(['layer','element','table','form'], function(){
                                             flag = true;
                                             msg = '您选择了已审核的信息！';
                                             return false;//跳出循环
-                                        } if(isEmpty(item.zjshItemList)){
+                                        } else if(item.shenheStatusFirst== '已审核' && isEmpty(item.zjshItemList)){
                                             flag = true;
                                             msg = '您选择了校外专家未审核的信息！';
+                                            return false;//跳出循环
+                                        } else if(item.shenheStatusFirst== '已审核' && item.isZjshAll !=1){
+                                            flag = true;
+                                            msg = '您选择了校外专家未审核的信息！！！';
                                             return false;//跳出循环
                                         } else{
                                             if(index===0){
