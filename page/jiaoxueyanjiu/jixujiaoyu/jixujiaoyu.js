@@ -96,7 +96,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 return '<span style="font-weight: bold;">'+val+'</span>';
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'status', title: '审核状态', width:120, sort: true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
                                 if(val=='审核中' || val=='通过'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';

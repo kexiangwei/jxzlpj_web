@@ -70,7 +70,7 @@ var detail_shenheProcess = function (title,rowData) {
         ,offset : '10px' //只定义top坐标，水平保持居中
         ,shadeClose : true //点击遮罩关闭
         ,btn : ['关闭']
-        ,content : $('#shenheProcessContainer')
+        ,content : $('#detail_shenheProcess_container')
         ,success: function(layero, index){
             $.get(requestUrl+"/getShenheProcess.do" , {
                 "relationCode": function () {
@@ -107,7 +107,7 @@ var detail_shenheProcess = function (title,rowData) {
                                         '                       </tr>\n' +
                                         '                            <tr>' +
                                         '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
-                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
+                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">'+item.status+'</span>':'<span style="color: red;font-weight: bold;">'+item.status+'</span>')+'</td>' +
                                         '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center">'+item.opinion+'</td>' +
                                         '                       </tr>\n' +
                                         '                       </tbody>\n' +
@@ -117,10 +117,10 @@ var detail_shenheProcess = function (title,rowData) {
                             }
                             htmlStr +=  '</fieldset>';
                         }
-                        if(rowData.status =='通过'){
+                        if(rowData.status =='通过' || rowData.status =='未通过'){
                             htmlStr +=  '<h2 style="margin-left: 30px;">结束</h2>';
                         }
-                        $("#shenheProcessContainer").html(htmlStr);
+                        $("#detail_shenheProcess_container").html(htmlStr);
                     }else{
                         layer.msg('暂无审核数据', {time : 3000, offset: '100px'});
                     }
@@ -130,7 +130,7 @@ var detail_shenheProcess = function (title,rowData) {
             }, "json");
         }
         ,end:function () {
-            $("#shenheProcessContainer .layui-elem-field").empty();
+            $("#detail_shenheProcess_container .layui-elem-field").empty();
         }
     });
 };
