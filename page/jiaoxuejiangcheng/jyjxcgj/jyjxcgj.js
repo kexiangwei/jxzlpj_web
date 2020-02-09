@@ -140,7 +140,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     //清空表单数据
                                     document.getElementById("editForm").reset();
                                     //业务数据编号
-                                    $("#editForm input[ name='code' ] ").val(new Date().getTime());
+                                    let code = new Date().getTime();
+                                    $("#editForm input[ name='code' ] ").val(code);
                                     //
                                     layer.open({
                                         title : '教学奖惩-教育教学成果奖-新增'
@@ -192,7 +193,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                     layer.msg(result_data.msg, {time : 3000, offset: '100px'});
                                                 },'json');
                                             });
-                                        },end:function () {
+                                        }
+                                        ,cancel: function(index, layero){
+                                            layer.confirm('填写的信息将会清空，确定要关闭吗？', {icon: 3, title:'提示', offset: '100px'}, function() {
+                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": code});
+                                                layer.close(index);
+                                            });
+                                            return false;
+                                        }
+                                        ,end:function () {
                                             window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                                         }
                                     });
@@ -225,7 +234,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             if (obj.event === 'detail_dataInfo') {
                                 detail_dataInfo(data,true);
                             } else if (obj.event === 'detail_shenheProcess') {
-                                if(data.isSubmit=='未提交'){
+                                if(data.isSubmit=='未提交' && data.status !='退回'){
                                     return;
                                 }
                                 detail_shenheProcess('教学奖惩-教育教学成果奖-查看审核流程',data);
@@ -467,13 +476,23 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 "relationCode": $("#editForm input[ name='code' ] ").val()
                             } ,  function(data){
                                 if(data.data.length>0){
-                                    $.each(data.data,function(index,file){
-                                        let tr = $(['<tr id="'+ file.code +'">'
-                                            ,'<td style="text-align: center;">'+ file.fileName +'</td>'
+                                    $.each(data.data,function(index,fileInfo){
+                                        let tr = $(['<tr id="'+ fileInfo.code +'">'
+                                            ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
                                             ,'<td style="text-align: center;">已上传</td>'
-                                            ,'<td style="text-align: center;"><button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button></td>'
+                                            ,'<td style="text-align: center;">' +
+                                            '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                            '   <button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>' +
+                                            '</td>'
                                             ,'</tr>'].join(''));
                                         $('#upfileList').append(tr);
+                                        //预览
+                                        tr.find('a').on('click', function(){//点击文件名
+                                            preview_fileInfo(fileInfo);
+                                        });
+                                        tr.find('.upfile_preview').on('click', function(){//点击预览按钮
+                                            preview_fileInfo(fileInfo);
+                                        });
                                         //删除
                                         tr.find('.upfile_delete').on('click', function(){
                                             $.post(requestUrl+"/deleteFileInfo.do" , {
@@ -513,11 +532,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                     //读取本地文件
                                                     obj.preview(function(index, file, result){
                                                         let tr = $(['<tr id="upfile_'+ index +'">'
-                                                            ,'<td style="text-align: center;">'+ file.name +'</td>'
+                                                            ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ file.name +'</a></td>'
                                                             ,'<td style="text-align: center;">正在上传</td>'
                                                             ,'<td style="text-align: center;">'
                                                             // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-                                                            ,'<button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>'
+                                                            ,'<button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                                            '<button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>'
                                                             ,'</td>'
                                                             ,'</tr>'].join(''));
                                                         upfileList.append(tr);
@@ -542,6 +562,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                         tr.attr("data-id",res.data.code);//
                                                         tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
                                                         // tds.eq(2).html(''); //清空操作
+
+                                                        //预览
+                                                        let fileInfo = res.data;
+                                                        tr.find('a').on('click', function(){//点击文件名
+                                                            preview_fileInfo(fileInfo);
+                                                        });
+                                                        tr.find('.upfile_preview').on('click', function(){//点击预览按钮
+                                                            preview_fileInfo(fileInfo);
+                                                        });
+                                                        //
                                                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                                                     }
                                                     this.error(index, upload);
@@ -627,18 +657,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
                                         ,'<td style="text-align: center;">'+ fileInfo.createDate +'</td>'
                                         ,'<td style="text-align: center;">' +
-                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal file_preview">预览</button>' +
-                                        '   <button class="layui-btn layui-btn-xs layui-btn-primary file_download">下载</button>' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-primary upfile_download">下载</button>' +
                                         '</td>'
                                         ,'</tr>'].join(''));
                                     //预览
                                     tr.find('a').on('click', function(){
                                         preview_fileInfo(fileInfo);
                                     });
-                                    tr.find('.file_preview').on('click', function(){
+                                    tr.find('.upfile_preview').on('click', function(){
                                         preview_fileInfo(fileInfo);
                                     });
-                                    tr.find('.file_download').on('click', function(){
+                                    tr.find('.upfile_download').on('click', function(){
                                         let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
                                         downloadForm.append("<input type='hidden' name='fileName' value='"+fileInfo.fileName+"'/>");
                                         downloadForm.append("<input type='hidden' name='filePath' value='"+fileInfo.filePath+"'/>");
@@ -708,10 +738,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         form.on('select(status)', function(data) {
                             if(data.value == '通过'){
                                 $('#opinion').html('通过');
-                            }
-                            if(data.value == '退回'){
+                            }else{
                                 $('#opinion').empty();
                             }
+
                         });
                         //
                         form.on('submit(shenHeFormSubmitBtn)', function(formData){
