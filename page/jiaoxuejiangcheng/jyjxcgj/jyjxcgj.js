@@ -119,7 +119,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 myself_table.reload({
                                     where: {
                                         'objName': $(".myself_search input[name='objName']").val()
-                                        ,'isSubmit': $(".myself_search input[ name='isSubmit']").val()
+                                        ,'isSubmit': $("#isSubmit option:selected").val() //获取选中的值
+                                        ,'status': $("#status option:selected").val() //获取选中的值
                                     }
                                     ,page: {
                                         curr: 1 //重新从第 1 页开始
@@ -128,6 +129,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             }
                             ,reset: function () {
                                 $(".myself_search input").val('');
+                                //清除选中状态
+                                $("#isSubmit").val("");
+                                $("#status").val("");
+                                form.render("select");
                             }
                         };
 
@@ -154,7 +159,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             //初始化laydate实例
                                             laydate.render({
                                                 elem: '#prizeTime' //指定元素
-                                                ,type: 'datetime'
+                                                // ,type: 'datetime'
                                                 // ,showBottom: false
                                             });
 
@@ -165,6 +170,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 }
                                                 ,"userName":function () {
                                                     return $.cookie('userName');
+                                                }
+                                            });
+
+                                            //自定义验证规则
+                                            form.verify({
+                                                objName: function(value){
+                                                    if(value.length > 64){
+                                                        return '当前字符长度'+value.length+'（最大值64）';
+                                                    }
                                                 }
                                             });
 

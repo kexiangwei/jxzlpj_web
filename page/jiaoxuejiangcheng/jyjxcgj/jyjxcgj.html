@@ -21,14 +21,29 @@
                 <div class="layui-fluid">
 
                     <!-- 查询条件 -->
-                    <div class="myself_search">
+                    <div class="layui-form myself_search">
                         成果名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="objName">
                         </div>
                         &nbsp;&nbsp;提交状态：
                         <div class="layui-inline">
-                            <input class="layui-input" name="isSubmit">
+                            <select name="isSubmit" id="isSubmit">
+                                <option value="">请选择</option>
+                                <option value="已提交">已提交</option>
+                                <option value="未提交">未提交</option>
+                            </select>
+                        </div>
+                        &nbsp;&nbsp;审核状态：
+                        <div class="layui-inline">
+                            <select name="status" id="status">
+                                <option value="">请选择</option>
+                                <option value="待审核">待审核</option>
+                                <option value="审核中">审核中</option>
+                                <option value="通过">通过</option>
+                                <option value="未通过">未通过</option>
+                                <option value="退回">退回</option>
+                            </select>
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
@@ -136,7 +151,7 @@
             <div class="layui-form-item" style="margin-top: 10px;">
                 <label class="layui-form-label">成果名称：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="objName" class="layui-input" style="width: 80%;">
+                    <input type="text" name="objName" lay-verify="required|objName" autocomplete="off" class="layui-input" style="width: 80%;">
                 </div>
             </div>
 
@@ -183,7 +198,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">获奖时间：</label>
                 <div class="layui-input-block">
-                    <input type="text" id="prizeTime" name="prizeTime" placeholder="yyyy-MM-dd HH:mm:ss" class="layui-input" style="width: 80%;">
+                    <input type="text" id="prizeTime" name="prizeTime" placeholder="年-月-日"  autocomplete="off" class="layui-input" style="width: 80%;">
                 </div>
             </div>
             <div class="layui-form-item" style="margin-top: 10px;">
