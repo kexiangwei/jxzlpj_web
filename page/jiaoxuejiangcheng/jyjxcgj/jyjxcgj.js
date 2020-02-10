@@ -394,11 +394,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
-                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                    return '<span style="color: #009688;font-weight: bold;">'+val+'</span>';
                                 }
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
-                        } //【已审核 | 待审核 | 退回】
+                        }
                         ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
@@ -416,7 +416,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         'userId': $(".other_search input[name='userId']").val()
                                         ,'userName': $(".other_search input[name='userName']").val()
                                         ,'objName': $(".other_search input[name='objName']").val()
-                                        ,'shenheStatus': $(".other_search input[ name='shenheStatus' ] ").val()
+                                        ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
                                         curr: 1 //重新从第 1 页开始
@@ -424,7 +424,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 });
                             }
                             ,reset: function () {
-                                $(".other_search input").val('');
+                                $(".other_search input").val("");
+                                //清除选中状态
+                                $("#shenheStatus").val("");
+                                form.render("select");
                             }
                         };
 
