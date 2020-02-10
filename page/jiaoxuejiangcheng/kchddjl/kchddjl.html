@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教学奖惩-教育教学成果奖</title>
+    <title>教学奖惩-课程获得的奖励</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
         .layui-form-label {
@@ -22,7 +22,7 @@
 
                     <!-- 查询条件 -->
                     <div class="layui-form myself_search">
-                        成果名称：
+                        奖项名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="objName">
                         </div>
@@ -75,7 +75,7 @@
                         <div class="layui-inline">
                             <input class="layui-input" name="userName">
                         </div>
-                        &nbsp;&nbsp;成果名称：
+                        &nbsp;&nbsp;奖项名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="objName">
                         </div>
@@ -151,31 +151,15 @@
                     </div>
                 </div>
             </div>
-
             <div class="layui-form-item" style="margin-top: 10px;">
-                <label class="layui-form-label">成果名称：</label>
+                <label class="layui-form-label">奖项名称：</label>
                 <div class="layui-input-block">
                     <input type="text" name="objName" lay-verify="required|objName" autocomplete="off" class="layui-input" style="width: 80%;">
                 </div>
             </div>
-
-            <div class="layui-form-item" style="margin-top: 10px;">
-                <label class="layui-form-label">本人排名：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="personRank" class="layui-input" style="width: 80%;">
-                </div>
-            </div>
-
-            <div class="layui-form-item" style="margin-top: 10px;">
-                <label class="layui-form-label">完成单位排名：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="unitRank" class="layui-input" style="width: 80%;">
-                </div>
-            </div>
-
             <div class="layui-form-item" style="margin-top: 10px;">
                 <div class="layui-inline">
-                    <label class="layui-form-label">级别：</label>
+                    <label class="layui-form-label">奖励级别：</label>
                     <div class="layui-input-inline" style="width: 185px;">
                         <select name="level_1" lay-filter="level_1">
                             <option value="">请选择</option>
@@ -186,45 +170,36 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">奖项：</label>
+                    <label class="layui-form-label">获得奖项：</label>
                     <div class="layui-input-inline" style="width: 185px;">
                         <select name="level_2" lay-filter="level_2">
                             <option value="">请选择</option>
-                            <option value="特等奖">特等奖</option>
                             <option value="一等奖">一等奖</option>
                             <option value="二等奖">二等奖</option>
                             <option value="三等奖">三等奖</option>
+                            <option value="其他">其他</option>
                         </select>
                     </div>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">获奖时间：</label>
-                <div class="layui-input-block">
-                    <input type="text" id="prizeTime" name="prizeTime" placeholder="年-月-日"  autocomplete="off" class="layui-input" style="width: 80%;">
-                </div>
-            </div>
             <div class="layui-form-item" style="margin-top: 10px;">
-                <label class="layui-form-label">获奖证书编号：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="certificateCode" class="layui-input" style="width: 80%;">
-                </div>
-            </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
-                <label class="layui-form-label">授予单位：</label>
+                <label class="layui-form-label">证书授予机构：</label>
                 <div class="layui-input-block">
                     <input type="text" name="grantUnit" class="layui-input" style="width: 80%;">
                 </div>
             </div>
-
             <div class="layui-form-item">
-                <label class="layui-form-label">获奖证书：</label>
+                <label class="layui-form-label">获奖日期：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="awardDate" name="awardDate" placeholder="年-月-日"  autocomplete="off" class="layui-input" style="width: 80%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">相关证明：</label>
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn layui-btn-primary" id="upfile">上传附件（PDF 格式）</button>
                 </div>
             </div>
-
             <div class="layui-btn-container" align="center" style="margin-top: 50px;">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -283,7 +258,7 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="jyjxcgj.js"></script>
+    <script src="kchddjl.js"></script>
 
 </body>
 </html>
