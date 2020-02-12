@@ -261,6 +261,24 @@
     <script src="../../../js/global.js"></script>
     <script src="../../common/common_shenheProcess.js"></script>
     <script src="jyjxcgj.js"></script>
+    <script type="text/javascript">
+        layui.use(['layer','form','laydate'], function(){
+            let $ = layui.$,layer = layui.layer,form = layui.form,laydate = layui.laydate;
+            //初始化laydate实例
+            laydate.render({
+                elem: "#prizeTime" //指定元素
+                ,trigger: 'click' //解决layDate 时间控件一闪而过问题
+            });
 
+            //自定义验证规则
+            form.verify({
+                objName: function(value){
+                    if(value.length > 64){
+                        return '当前字符长度'+value.length+'（最大值64）';
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

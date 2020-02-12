@@ -14,7 +14,7 @@
     <div class="layui-tab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
-            <li class="layui-this" id="other">审核列表<span class="layui-badge"></span></li>
+            <li id="other">审核列表<span class="layui-badge"></span></li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" id="myself_item">
@@ -62,7 +62,7 @@
                     <script type="text/html" id="myself_bar"></script>
                 </div>
             </div>
-            <div class="layui-tab-item layui-show" id="other_item">
+            <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
 
                     <!-- 查询条件 -->
@@ -109,29 +109,6 @@
         </div>
     </div>
 
-    <!-- 查看信息 -->
-    <div class="layui-container" style="width: 90%;" id="detail_dataInfo_container">
-        <fieldset class="layui-elem-field" style="margin-top: 10px;">
-            <legend>基础信息</legend>
-            <div id="baseInfo"></div>
-        </fieldset>
-        <fieldset class="layui-elem-field" style="margin-top: 10px;">
-            <legend>附件列表</legend>
-            <div class="layui-upload-list">
-                <table class="layui-table">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center;">文件名</th>
-                            <th style="width: 150px; text-align: center;">上传日期</th>
-                            <th style="width: 150px; text-align: center;">操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="fileList"></tbody>
-                </table>
-            </div>
-        </fieldset>
-    </div>
-    <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" style="width: 90%;" id="insertOrUpdate_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
@@ -141,13 +118,13 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="userName" readonly class="layui-input" style="width: 95%;">
+                        <input type="text" name="userName" readonly class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">工号：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="userId" readonly class="layui-input" style="width: 95%;">
+                        <input type="text" name="userId" readonly class="layui-input">
                     </div>
                 </div>
             </div>
@@ -160,7 +137,7 @@
             <div class="layui-form-item" style="margin-top: 10px;">
                 <div class="layui-inline">
                     <label class="layui-form-label">奖励级别：</label>
-                    <div class="layui-input-inline" style="width: 185px;">
+                    <div class="layui-input-inline" style="width: 190px;">
                         <select name="level_1" lay-filter="level_1">
                             <option value="">请选择</option>
                             <option value="国家级">国家级</option>
@@ -171,7 +148,7 @@
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">获得奖项：</label>
-                    <div class="layui-input-inline" style="width: 185px;">
+                    <div class="layui-input-inline" style="width: 190px;">
                         <select name="level_2" lay-filter="level_2">
                             <option value="">请选择</option>
                             <option value="一等奖">一等奖</option>
@@ -206,7 +183,7 @@
             </div>
         </form>
     </div>
-    <!-- 上传附件 -->
+    <!-- 上传附件
     <div class="layui-container" style="width: 90%;" id="uploadFile_container">
         <div class="layui-upload" style="margin-top: 10px;">
             <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
@@ -222,11 +199,9 @@
             </div>
         </div>
     </div>
-
-    <!-- 查看审核流程 -->
-    <div class="layui-container" id="detail_shenheProcess_container"></div>
+    -->
     <!-- 填写审核意见 -->
-    <div class="layui-container" id="shenHe_container">
+    <div class="layui-container" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
             <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
                 <label class="layui-form-label">审核状态：</label>
@@ -258,7 +233,26 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
+    <script src="../../common/common_shenheProcess.js"></script>
     <script src="kchddjl.js"></script>
+    <script type="text/javascript">
+        layui.use(['layer','form','laydate'], function(){
+            let $ = layui.$,layer = layui.layer,form = layui.form,laydate = layui.laydate;
+            //初始化laydate实例
+            laydate.render({
+                elem: "#awardDate" //指定元素
+                ,trigger: 'click' //解决layDate 时间控件一闪而过问题
+            });
 
+            //自定义验证规则
+            form.verify({
+                objName: function(value){
+                    if(value.length > 64){
+                        return '当前字符长度'+value.length+'（最大值64）';
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

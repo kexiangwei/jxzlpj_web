@@ -20,9 +20,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
             if(data.isSubmit > 0){ //拥有提交权限
-                $('#other').removeClass();
-                $('#other_item').css('class','layui-tab-item');
-
                 //数据表格
                 var myself_table = table.render({
                     id: "myself_table"
@@ -139,26 +136,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 ,data = checkStatus.data; //获取选中的数据
                             switch(obj.event){
                                 case 'insert':
-                                    //清空表单数据
-                                    document.getElementById("editForm").reset();
-                                    //业务数据编号
-                                    let code = new Date().getTime();
-                                    $("#editForm input[ name='code' ] ").val(code);
-                                    //
-                                    layer.open({
+                                    let objCode = new Date().getTime(); //业务数据编号
+                                    let layerIndex = layer.open({
                                         title : '教学奖惩-课程获得的奖励-新增'
                                         ,type : 1
                                         ,offset : '20px'
-                                        // ,shadeClose : true //禁用点击遮罩关闭弹窗
                                         ,area : [ '900px', '500px' ]
-                                        ,content : $('#insertOrUpdate_container')
+                                        ,content : $("#insertOrUpdate_container")
                                         ,success: function(layero, index){
-                                            //初始化laydate实例
-                                            laydate.render({
-                                                elem: '#awardDate' //指定元素
-                                                // ,type: 'datetime'
-                                                // ,showBottom: false
-                                            });
+                                            //清空表单数据
+                                            // document.getElementById("editForm").reset();
+                                            //业务数据编号
+                                            $("#editForm input[ name='code' ] ").val(objCode);
 
                                             //表单赋值
                                             form.val('editForm', {
@@ -167,15 +156,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 }
                                                 ,"userName":function () {
                                                     return $.cookie('userName');
-                                                }
-                                            });
-
-                                            //自定义验证规则
-                                            form.verify({
-                                                objName: function(value){
-                                                    if(value.length > 64){
-                                                        return '当前字符长度'+value.length+'（最大值64）';
-                                                    }
                                                 }
                                             });
 
@@ -204,13 +184,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         }
                                         ,cancel: function(index, layero){
                                             layer.confirm('填写的信息将会清空，确定要关闭吗？', {icon: 3, title:'提示', offset: '100px'}, function() {
-                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": code});
+                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
                                                 layer.close(index);
                                             });
                                             return false;
                                         }
                                         ,end:function () {
-                                            window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
+                                            // window.location.reload();//刷新页面，清空上传的文件内容
                                         }
                                     });
                                     break;
@@ -253,7 +233,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 //执行编辑
                                 operationType = "update";
-                                let editForm_idx = layer.open({
+                                let layerIndex = layer.open({
                                     title : '教学奖惩-课程获得的奖励-编辑'
                                     ,type : 1
                                     ,area : [ '900px', '500px' ]
@@ -266,15 +246,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         $("#editForm .layui-btn-container").append(cancelBtn);
                                         cancelBtn.click(function (event) {
                                             // event.preventDefault();
-                                            layer.close(editForm_idx);
+                                            layer.close(layerIndex);
                                         });
 
-                                        //初始化laydate实例
-                                        laydate.render({
-                                            elem: '#awardDate' //指定元素
-                                            // ,type: 'datetime'
-                                            // ,showBottom: false
-                                        });
                                         //表单赋值
                                         form.val("editForm",{
                                             "code":data.code
@@ -286,6 +260,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             ,"grantUnit" : data.grantUnit
                                             ,"awardDate" : data.awardDate
                                         });
+
                                         //监听表单提交
                                         form.on('submit(editFormSubmitBtn)', function(data){
                                             $.post(requestUrl+'/kchddjl/update.do',{
@@ -331,6 +306,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
+                $('#other').removeClass().addClass("layui-this");
+                $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
             if(data.isShenhe > 0){ //拥有审核权限
                 var other_table = table.render({//数据表格
@@ -464,21 +441,25 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             //上传附件
             let operationType=""; //当前操作类别
             $('#upfile').click(function(){
-                layer.open({
+                let iframeIndex = layer.open({
                     title : '教学奖惩-课程获得的奖励-上传附件'
-                    ,type : 1
+                    ,type : 2
                     ,area : [ '700px', '300px' ]
                     ,offset : '100px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
-                    ,content : $('#uploadFile_container')
+                    ,content : '../common_upFile.html'
                     ,success: function(layero, index){
+                        let upfileList = $("#layui-layer-iframe"+iframeIndex).contents().find('#upfileList');
                         if(operationType =="update"){
                             $.get(requestUrl+"/getFileListByRelationCode.do" , {
                                 "relationCode": $("#editForm input[ name='code' ] ").val()
-                            } ,  function(data){
-                                if(data.data.length>0){
-                                    $.each(data.data,function(index,fileInfo){
+                            } ,  function(result_data){
+                                if(result_data.data.length ===0){
+                                    let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
+                                    upfileList.append(tr);
+                                } else {
+                                    $.each(result_data.data,function(index,fileInfo){
                                         let tr = $(['<tr id="'+ fileInfo.code +'">'
                                             ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
                                             ,'<td style="text-align: center;">已上传</td>'
@@ -487,7 +468,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             '   <button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>' +
                                             '</td>'
                                             ,'</tr>'].join(''));
-                                        $('#upfileList').append(tr);
+                                        upfileList.append(tr);
                                         //预览
                                         tr.find('a').on('click', function(){//点击文件名
                                             preview_fileInfo(fileInfo);
@@ -508,9 +489,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             }, "json");
                         }
                         //上传附件
-                        let upfileList = $('#upfileList')
-                            ,upfileIns = upload.render({
-                                                elem: '#upfileIns'
+                        let upfileIns = upload.render({
+                                                elem: $("#layui-layer-iframe"+iframeIndex).contents().find("#upfileIns")
                                                 ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                                                 ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
                                                     "relationCode":function () {
@@ -585,10 +565,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 }
                                             });
                     },end:function () {
-                        //重载上传实例
+                       /* //重载上传实例
                         if(operationType=="update"){
                             $("#upfileList").empty();
-                        }
+                        }*/
                     }
                 });
             });
@@ -600,13 +580,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var isOpen = false;
                 let options = {
                     title : '教学奖惩-课程获得的奖励-查看详情'
-                    ,type : 1
+                    ,type : 2
                     ,area : [ '900px', '500px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content :  $('#detail_dataInfo_container')
+                    ,content :  '../common_dataInfo.html'
                     ,success: function(layero, index){
                         isOpen = true;
                         //基础信息
@@ -634,7 +614,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '              </tr>\n' +
                             '            </tbody>\n' +
                             '         </table>';
-                        $("#baseInfo").html(htmlStr);
+                        // $("#baseInfo").html(htmlStr);
+                        $("#layui-layer-iframe"+iframeIndex).contents().find("#baseInfo").html(htmlStr);
                         //附件列表
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
@@ -643,7 +624,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         } ,  function(result_data){
                             if(result_data.data.length ===0){
                                 let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
-                                $('#fileList').append(tr);
+                                // $('#fileList').append(tr);
+                                $("#layui-layer-iframe"+iframeIndex).contents().find("#fileList").append(tr);
                             } else {
                                 $.each(result_data.data,function(index,fileInfo){
                                     let tr = $(['<tr id="'+ fileInfo.code +'">'
@@ -670,14 +652,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         downloadForm.submit();
                                         downloadForm.remove();
                                     });
-                                    $('#fileList').append(tr);
+                                    // $('#fileList').append(tr);
+                                    $("#layui-layer-iframe"+iframeIndex).contents().find("#fileList").append(tr);
                                 });
                             }
                         }, "json");
                     }
                     ,end:function () {
                         isOpen = false;
-                        $('#fileList').empty();
+                        // $('#fileList').empty();
                     }
                 };
                 if(isSubmit && data.isSubmit == '未提交'){
@@ -698,7 +681,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
-                let layer_idx = layer.open(options); //返回一个当前层索引
+                var iframeIndex = layer.open(options); //返回一个当前层索引
             };
 
             let toSubmit = function (row_dataArr){
@@ -717,7 +700,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             };
 
             let toShenHe = function (row_dataArr) {
-                layer.open({
+                let index = layer.open({
                     title : '教学奖惩-课程获得的奖励-审核'
                     ,type : 1
                     ,area : [ '700px', '450px' ]
@@ -740,22 +723,23 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         form.on('submit(shenHeFormSubmitBtn)', function(formData){
                             $.post(requestUrl+'/kchddjl/toShenhe.do'
                                 ,{
-                                "jsonStr":JSON.stringify(row_dataArr)
-                                ,"status":formData.field.status
-                                ,"opinion":formData.field.opinion
-                                ,"userId":function () {
-                                    return $.cookie('userId');
-                                }
-                                ,"userName":function () {
-                                    return $.cookie('userName');
-                                }
-                            },function (result_data) {
-                                if(result_data.code === 200){
-                                    other_table.reload();//重新加载表格数据
-                                    // window.location.reload();//刷新页面，审核后页面状态未改变
-                                }
-                                layer.msg(result_data.msg, {time : 3000, offset: '100px'});
-                            },'json');
+                                    "jsonStr":JSON.stringify(row_dataArr)
+                                    ,"status":formData.field.status
+                                    ,"opinion":formData.field.opinion
+                                    ,"userId":function () {
+                                        return $.cookie('userId');
+                                    }
+                                    ,"userName":function () {
+                                        return $.cookie('userName');
+                                    }
+                                },function (result_data) {
+                                    if(result_data.code === 200){
+                                        other_table.reload();//重新加载表格数据
+                                        // window.location.reload();//刷新页面，审核后页面状态未改变
+                                    }
+                                    layer.msg(result_data.msg, {time : 3000, offset: '100px'});
+                                    layer.close(index);
+                                },'json');
                         });
                     }
                     ,end:function () {

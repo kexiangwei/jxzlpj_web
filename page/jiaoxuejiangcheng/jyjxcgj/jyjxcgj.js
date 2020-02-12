@@ -140,11 +140,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 ,data = checkStatus.data; //获取选中的数据
                             switch(obj.event){
                                 case 'insert':
-                                    //清空表单数据
-                                    document.getElementById("editForm").reset();
                                     //业务数据编号
-                                    let code = new Date().getTime();
-                                    $("#editForm input[ name='code' ] ").val(code);
+                                    let objCode = new Date().getTime();
                                     //
                                     layer.open({
                                         title : '教学奖惩-教育教学成果奖-新增'
@@ -154,13 +151,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         ,area : [ '900px', '500px' ]
                                         ,content : $('#insertOrUpdate_container')
                                         ,success: function(layero, index){
-                                            //初始化laydate实例
-                                            laydate.render({
-                                                elem: '#prizeTime' //指定元素
-                                                // ,type: 'datetime'
-                                                // ,showBottom: false
-                                            });
-
+                                            //清空表单数据
+                                            // document.getElementById("editForm").reset();
+                                            //业务数据编号
+                                            $("#editForm input[ name='code' ] ").val(objCode);
                                             //表单赋值
                                             form.val('editForm', {
                                                 "userId":function () {
@@ -168,15 +162,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 }
                                                 ,"userName":function () {
                                                     return $.cookie('userName');
-                                                }
-                                            });
-
-                                            //自定义验证规则
-                                            form.verify({
-                                                objName: function(value){
-                                                    if(value.length > 64){
-                                                        return '当前字符长度'+value.length+'（最大值64）';
-                                                    }
                                                 }
                                             });
 
@@ -208,13 +193,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         }
                                         ,cancel: function(index, layero){
                                             layer.confirm('填写的信息将会清空，确定要关闭吗？', {icon: 3, title:'提示', offset: '100px'}, function() {
-                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": code});
+                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
                                                 layer.close(index);
                                             });
                                             return false;
                                         }
                                         ,end:function () {
-                                            window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
+                                            // window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                                         }
                                     });
                                     break;
@@ -273,12 +258,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             layer.close(editForm_idx);
                                         });
 
-                                        //初始化laydate实例
-                                        laydate.render({
-                                            elem: '#prizeTime' //指定元素
-                                            // ,type: 'datetime'
-                                            // ,showBottom: false
-                                        });
                                         //表单赋值
                                         form.val("editForm",{
                                             "code":data.code
@@ -293,6 +272,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             ,"certificateCode" : data.certificateCode
                                             ,"grantUnit" : data.grantUnit
                                         });
+
                                         //监听表单提交
                                         form.on('submit(editFormSubmitBtn)', function(data){
                                             $.post(requestUrl+'/jyjxcgj/update.do',{
@@ -488,11 +468,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,shadeClose : true //点击遮罩关闭
                     ,content : $('#uploadFile_container')
                     ,success: function(layero, index){
+                        let upfileList = $('#upfileList');
                         if(operationType =="update"){
                             $.get(requestUrl+"/getFileListByRelationCode.do" , {
                                 "relationCode": $("#editForm input[ name='code' ] ").val()
                             } ,  function(data){
-                                if(data.data.length>0){
+                                if(data.data.length ===0){
+                                    let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
+                                    upfileList.append(tr);
+                                } else {
                                     $.each(data.data,function(index,fileInfo){
                                         let tr = $(['<tr id="'+ fileInfo.code +'">'
                                             ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
@@ -502,7 +486,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             '   <button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>' +
                                             '</td>'
                                             ,'</tr>'].join(''));
-                                        $('#upfileList').append(tr);
+                                        upfileList.append(tr);
                                         //预览
                                         tr.find('a').on('click', function(){//点击文件名
                                             preview_fileInfo(fileInfo);
@@ -523,8 +507,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             }, "json");
                         }
                         //上传附件
-                        let upfileList = $('#upfileList')
-                            ,upfileIns = upload.render({
+                        let upfileIns = upload.render({
                                                 elem: '#upfileIns'
                                                 ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                                                 ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
@@ -600,10 +583,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 }
                                             });
                     },end:function () {
-                        //重载上传实例
+                        /*//重载上传实例
                         if(operationType=="update"){
                             $("#upfileList").empty();
-                        }
+                        }*/
                     }
                 });
             });
@@ -780,6 +763,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     other_table.reload();//重新加载表格数据
                                     // window.location.reload();//刷新页面，审核后页面状态未改变
                                 }
+                                layer.closeAll();
                                 layer.msg(result_data.msg, {time : 3000, offset: '100px'});
                             },'json');
                         });
