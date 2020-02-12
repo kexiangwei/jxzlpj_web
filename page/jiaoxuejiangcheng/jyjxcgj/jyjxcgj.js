@@ -20,8 +20,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
             if(data.isSubmit > 0){ //拥有提交权限
-                $('#other').removeClass();
-                $('#other_item').css('class','layui-tab-item');
 
                 //数据表格
                 var myself_table = table.render({
@@ -343,6 +341,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
+                $('#other').removeClass().addClass("layui-this");
+                $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
             if(data.isShenhe > 0){ //拥有审核权限
                 var other_table = table.render({//数据表格
@@ -609,6 +609,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             });
 
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
+
                 if(isOpen){
                     return;
                 }
@@ -621,7 +622,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content :  $('#detail_dataInfo_container')
+                    ,content :  $('#dataInfo_container')
                     ,success: function(layero, index){
                         isOpen = true;
                         //基础信息
@@ -722,7 +723,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
-                let layer_idx = layer.open(options); //返回一个当前层索引
+                //
+                layer.open(options);
             };
 
             let toSubmit = function (row_dataArr){

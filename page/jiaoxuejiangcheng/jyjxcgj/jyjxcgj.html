@@ -14,7 +14,7 @@
     <div class="layui-tab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
-            <li class="layui-this" id="other">审核列表<span class="layui-badge"></span></li>
+            <li id="other">审核列表<span class="layui-badge"></span></li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" id="myself_item">
@@ -62,7 +62,7 @@
                     <script type="text/html" id="myself_bar"></script>
                 </div>
             </div>
-            <div class="layui-tab-item layui-show" id="other_item">
+            <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
 
                     <!-- 查询条件 -->
@@ -109,7 +109,7 @@
         </div>
     </div>
 
-    <!-- 查看信息 -->
+    <!-- 查看信息-->
     <div class="layui-container" style="width: 90%;" id="detail_dataInfo_container">
         <fieldset class="layui-elem-field" style="margin-top: 10px;">
             <legend>基础信息</legend>
@@ -131,6 +131,7 @@
             </div>
         </fieldset>
     </div>
+
     <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" style="width: 90%;" id="insertOrUpdate_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
