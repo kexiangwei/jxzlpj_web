@@ -616,13 +616,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var isOpen = false;
                 let options = {
                     title : '教学奖惩-教育教学成果奖-查看详情'
-                    ,type : 1
+                    ,type : 2
                     ,area : [ '900px', '500px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content :  $('#dataInfo_container')
+                    ,content :  '../common_dataInfo.html'
                     ,success: function(layero, index){
                         isOpen = true;
                         //基础信息
@@ -659,7 +659,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '              </tr>\n' +
                             '            </tbody>\n' +
                             '         </table>';
-                        $("#baseInfo").html(htmlStr);
+                        // $("#baseInfo").html(htmlStr);
+                        $("#layui-layer-iframe"+iframeIndex).contents().find("#baseInfo").html(htmlStr);
                         //附件列表
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
@@ -668,7 +669,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         } ,  function(result_data){
                             if(result_data.data.length ===0){
                                 let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
-                                $('#fileList').append(tr);
+                                $("#layui-layer-iframe"+iframeIndex).contents().find("#fileList").append(tr);
                             } else {
                                 $.each(result_data.data,function(index,fileInfo){
                                     let tr = $(['<tr id="'+ fileInfo.code +'">'
@@ -695,14 +696,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         downloadForm.submit();
                                         downloadForm.remove();
                                     });
-                                    $('#fileList').append(tr);
+                                    $("#layui-layer-iframe"+iframeIndex).contents().find("#fileList").append(tr);
                                 });
                             }
                         }, "json");
                     }
                     ,end:function () {
                         isOpen = false;
-                        $('#fileList').empty();
                     }
                 };
                 if(isSubmit && data.isSubmit == '未提交'){
@@ -723,8 +723,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
-                //
-                layer.open(options);
+                //返回一个当前层索引
+                var iframeIndex = layer.open(options);
             };
 
             let toSubmit = function (row_dataArr){
