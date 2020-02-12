@@ -194,7 +194,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         ,cancel: function(index, layero){
                                             layer.confirm('填写的信息将会清空，确定要关闭吗？', {icon: 3, title:'提示', offset: '100px'}, function() {
                                                 $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
-                                                layer.close(index);
+                                                layer.closeAll();
                                             });
                                             return false;
                                         }
