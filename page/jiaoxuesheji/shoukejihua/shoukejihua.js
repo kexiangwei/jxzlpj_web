@@ -1,8 +1,8 @@
 /*
-教学设计-教案
+教学设计-授课计划
  */
-layui.use(['layer','element','table','form','laydate'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
+layui.use(['layer','element','table','form'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
 
     //验证用户是否有继续教育的提交、审核权限
     $.ajax({
@@ -26,7 +26,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 let myself_table = table.render({
                     elem : '#myself_table'
                     ,height : 440
-                    ,url: requestUrl+'/jiaoAn/getPageList.do'
+                    ,url: requestUrl+'/skjh/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return $.cookie('userId');
@@ -60,17 +60,24 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field:'stuYear', title:'学年', width:120}
+                        ,{field:'stuTerm', title:'学期', width:120}
+                        ,{field:'college', title:'学院', width:120}
+                        ,{field:'major', title:'专业', width:120}
                         ,{field: 'courseCode', title: '课程编号', width:120}
                         ,{field: 'courseName', title: '课程名称', width:120}
-                        ,{field:'teachDate', title:'授课时间', width:120}
-                        ,{field:'teachNum', title:'节次', width:120}
-                        ,{field:'teachTopic', title:'课题', width:120}
-                        ,{field:'teachHour', title:'学时', width:120}
+                        ,{field: 'teachClass', title: '授课班级', width:120}
+                        ,{field: 'stuNum', title: '学生人数', width:120}
+                        ,{field: 'totalHours', title: '总学时', width:120}
+                        ,{field: 'theoryHours', title: '理论学时', width:120/*,hide:true*/}
+                        ,{field: 'testHours', title: '实验学时', width:120/*,hide:true*/}
+                        ,{field: 'days', title: '实习天数', width:120}
+                        // ,{field: 'createDate', title: '业务数据录入时间', width:120}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
                                 let htmlstr='';
                                 if(data.isSubmit=='已提交'){
                                     htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>\n' +
+                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
                                     $('#myself_bar').html(htmlstr);
@@ -79,7 +86,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     if(data.isSubmit=='未提交' && data.status ==='退回'){
                                         htmlstr =
                                             ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>\n' +
-                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>\n' +
+                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                             ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
                                             ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
                                         $('#myself_bar').html(htmlstr);
@@ -88,7 +95,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 }
                                 htmlstr =
                                     ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>\n' +
-                                    ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>\n' +
+                                    ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                     ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
                                     ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
                                 $('#myself_bar').html(htmlstr);
@@ -138,13 +145,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     document.getElementById("editForm").reset(); //清空表单数据
                                     //
                                     $("#editForm input[ name='code' ] ").val(new Date().getTime());
-                                    //日期
-                                    laydate.render({
-                                        elem: '#teachDate'
-                                    });
                                     //
                                     layer.open({
-                                        title : '教学设计-教案-新增'
+                                        title : '教学设计-授课计划-新增'
                                         ,type : 1
                                         ,offset : '10px'
                                         ,area : [ '700px', '500px' ]
@@ -154,21 +157,21 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                             form.on('submit(toSubmit)', function(form_data){
                                                 $.ajax({
                                                     type: "post",
-                                                    url: requestUrl+'/jiaoAn/insert.do',
+                                                    url: requestUrl+'/skjh/insert.do',
                                                     data: {
                                                         "code":form_data.field.code
+                                                        ,"stuYear": form_data.field.stuYear
+                                                        ,"stuTerm" : form_data.field.stuTerm
+                                                        ,"college" : form_data.field.college
+                                                        ,"major" : form_data.field.major
                                                         ,"courseCode" : form_data.field.courseCode
                                                         ,"courseName" : form_data.field.courseName
-                                                        ,"teachDate" : form_data.field.teachDate
-                                                        ,"teachNum" : form_data.field.teachNum
-                                                        ,"teachTopic" : form_data.field.teachTopic
-                                                        ,"teachHour" : form_data.field.teachHour
-                                                        ,"teachGoal" : form_data.field.teachGoal
-                                                        ,"teachContent" : form_data.field.teachContent
-                                                        ,"teachKeyAndDifficult" : form_data.field.teachKeyAndDifficult
-                                                        ,"teachWay" : form_data.field.teachWay
-                                                        ,"teachProcess" : form_data.field.teachProcess
-                                                        ,"remark" : form_data.field.remark
+                                                        ,"teachClass" : form_data.field.teachClass
+                                                        ,"stuNum" : form_data.field.stuNum
+                                                        ,"totalHours" : form_data.field.totalHours
+                                                        ,"theoryHours" : form_data.field.theoryHours
+                                                        ,"testHours" : form_data.field.testHours
+                                                        ,"days" : form_data.field.days
                                                         ,"userId":function () {
                                                             return $.cookie('userId');
                                                         }
@@ -213,7 +216,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         //
                                         layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                             layer.close(index);
-                                            $.post(requestUrl+'/jiaoAn/toSubimt.do',{
+                                            $.post(requestUrl+'/skjh/toSubimt.do',{
                                                 "menuId":$.cookie('currentMenuId'),
                                                 "jsonStr":JSON.stringify(dataArr)
                                             },function (result_data) {
@@ -234,19 +237,31 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             let row_data = obj.data;
                             if (obj.event === 'view_data') {
                                 view_data(row_data);
-                            } else if (obj.event === 'view_shenheProcess') {
+                            } else if (obj.event === 'detail_shenheProcess') {
                                 if(row_data.isSubmit=='未提交' && row_data.status !='退回'){
                                     return;
                                 }
-                                detail_shenheProcess('教学设计-教案-查看审核流程',row_data);
+                                detail_shenheProcess('教学设计-授课计划-查看审核流程',row_data);
                             } else if (obj.event === 'update') {
                                 if(row_data.isSubmit== '已提交'){
+                                    layer.confirm('审核通过后不可修改，如需修改需提交申请？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                        layer.close(index);
+                                        layer.msg('提交成功', {time : 3000, offset: '100px'});
+                                        /*$.post(requestUrl+'/skjh/toUpdate.do', { code: row_data.code},function(result_data){
+                                            if(result_data.code === 200){
+                                                myself_table.reload();//重新加载表格数据
+                                                layer.msg('提交成功', {time : 3000, offset: '100px'});
+                                            }else{
+                                                layer.msg('提交失败', {time : 3000, offset: '100px'});
+                                            }
+                                        }, "json");*/
+                                    });
                                     return;
                                 }
 
                                 //执行编辑
                                 layer.open({
-                                    title : '教学设计-教案-编辑'
+                                    title : '教学设计-授课计划-编辑'
                                     ,type : 1
                                     ,area : [ '700px', '535px' ]
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -254,25 +269,22 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#insertOrUpdateContainer')
                                     ,success: function(layero, index){
-                                        //日期
-                                        laydate.render({
-                                            elem: '#teachDate'
-                                        });
+
                                         //
                                         form.val("editForm",{
                                             "code":row_data.code
+                                            ,"stuYear": row_data.stuYear
+                                            ,"stuTerm" : row_data.stuTerm
+                                            ,"college" : row_data.college
+                                            ,"major" : row_data.major
                                             ,"courseCode" : row_data.courseCode
                                             ,"courseName" : row_data.courseName
-                                            ,"teachDate" : row_data.teachDate
-                                            ,"teachNum" : row_data.teachNum
-                                            ,"teachTopic" : row_data.teachTopic
-                                            ,"teachHour" : row_data.teachHour
-                                            ,"teachGoal" : row_data.teachGoal
-                                            ,"teachContent" : row_data.teachContent
-                                            ,"teachKeyAndDifficult" : row_data.teachKeyAndDifficult
-                                            ,"teachWay" : row_data.teachWay
-                                            ,"teachProcess" : row_data.teachProcess
-                                            ,"remark" : row_data.remark
+                                            ,"teachClass" : row_data.teachClass
+                                            ,"stuNum" : row_data.stuNum
+                                            ,"totalHours" : row_data.totalHours
+                                            ,"theoryHours" : row_data.theoryHours
+                                            ,"testHours" : row_data.testHours
+                                            ,"days" : row_data.days
                                             ,"userId":row_data.userId
                                             ,"userName":row_data.userName
                                         });
@@ -281,21 +293,21 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         form.on('submit(toSubmit)', function(form_data){
                                             $.ajax({
                                                 type: "post",
-                                                url: requestUrl+'/jiaoAn/update.do',
+                                                url: requestUrl+'/skjh/update.do',
                                                 data: {
-                                                    "code":form_data.field.code
+                                                    "code" : form_data.field.code
+                                                    ,"stuYear": form_data.field.stuYear
+                                                    ,"stuTerm" : form_data.field.stuTerm
+                                                    ,"college" : form_data.field.college
+                                                    ,"major" : form_data.field.major
                                                     ,"courseCode" : form_data.field.courseCode
                                                     ,"courseName" : form_data.field.courseName
-                                                    ,"teachDate" : form_data.field.teachDate
-                                                    ,"teachNum" : form_data.field.teachNum
-                                                    ,"teachTopic" : form_data.field.teachTopic
-                                                    ,"teachHour" : form_data.field.teachHour
-                                                    ,"teachGoal" : form_data.field.teachGoal
-                                                    ,"teachContent" : form_data.field.teachContent
-                                                    ,"teachKeyAndDifficult" : form_data.field.teachKeyAndDifficult
-                                                    ,"teachWay" : form_data.field.teachWay
-                                                    ,"teachProcess" : form_data.field.teachProcess
-                                                    ,"remark" : form_data.field.remark
+                                                    ,"teachClass" : form_data.field.teachClass
+                                                    ,"stuNum" : form_data.field.stuNum
+                                                    ,"totalHours" : form_data.field.totalHours
+                                                    ,"theoryHours" : form_data.field.theoryHours
+                                                    ,"testHours" : form_data.field.testHours
+                                                    ,"days" : form_data.field.days
                                                     ,"userId":function () {
                                                         return $.cookie('userId');
                                                     }
@@ -327,7 +339,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                     layer.close(index);
-                                    $.post(requestUrl+'/jiaoAn/delete.do', { code: row_data.code},function(data){
+                                    $.post(requestUrl+'/skjh/delete.do', { code: row_data.code},function(data){
                                         if(data.code === 200){
                                             myself_table.reload();//重新加载表格数据
                                             layer.msg('删除成功', {time : 3000, offset: '100px'});
@@ -348,7 +360,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
                     ,height : 440
-                    ,url: requestUrl+'/jiaoAn/getPageList.do'
+                    ,url: requestUrl+'/skjh/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {
                             return $.cookie('userId');
@@ -382,12 +394,18 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'courseCode', title: '课程编号', width:160}
-                        ,{field: 'courseName', title: '课程名称', width:160}
-                        ,{field:'teachTopic', title:'课题', width:160}
-                        ,{field:'teachHour', title:'学时', width:120}
-                        ,{field:'teachNum', title:'节次', width:120}
-                        ,{field:'teachDate', title:'授课时间', width:120}
+                        ,{field:'stuYear', title:'学年', width:120}
+                        ,{field:'stuTerm', title:'学期', width:120}
+                        ,{field:'college', title:'学院', width:120}
+                        ,{field:'major', title:'专业', width:120}
+                        ,{field: 'courseCode', title: '课程编号', width:120}
+                        ,{field: 'courseName', title: '课程名称', width:120}
+                        ,{field: 'teachClass', title: '授课班级', width:120}
+                        ,{field: 'stuNum', title: '学生人数', width:120}
+                        ,{field: 'totalHours', title: '总学时', width:120}
+                        ,{field: 'theoryHours', title: '理论学时', width:120/*,hide:true*/}
+                        ,{field: 'testHours', title: '实验学时', width:120/*,hide:true*/}
+                        ,{field: 'days', title: '实习天数', width:120}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -450,7 +468,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 }
                                 //添加审核意见
                                 layer.open({
-                                    title : '教学设计-教案-添加审核意见'
+                                    title : '教学设计-授课计划-添加审核意见'
                                     ,type : 1
                                     ,area : [ '700px', '450px' ]
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
@@ -470,7 +488,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         });
                                         //
                                         form.on('submit(toSubmit)', function(formData){
-                                            $.post(requestUrl+'/jiaoAn/toShenhe.do',{
+                                            $.post(requestUrl+'/skjh/toShenhe.do',{
                                                 "jsonStr":JSON.stringify(dataArr)
                                                 ,"status":formData.field.status
                                                 ,"opinion":formData.field.opinion
@@ -505,8 +523,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     let row_data = obj.data;
                     if (obj.event === 'view_data') {
                         view_data(row_data);
-                    } else if (obj.event === 'view_shenheProcess') {
-                        detail_shenheProcess('教学设计-教案-查看审核流程',row_data);
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        detail_shenheProcess('教学设计-授课计划-查看审核流程',row_data);
                     }
                 });
             } else{
@@ -515,60 +533,43 @@ layui.use(['layer','element','table','form','laydate'], function(){
             }
 
             /**
-             * 查看详情
+             * 查看信息
              * @param data
              */
-            let view_data = function (rowData) {
+            let view_data = function (data) {
+                if(isOpen){
+                    return;
+                }
+                var isOpen = false;
                 layer.open({
-                    title : '教学设计-教案-查看详情'
+                    title : '教学设计-授课计划-查看信息'
                     ,type : 1
-                    ,area : [ '1175px', '535px' ]
+                    ,area : [ '700px', '535px' ]
+                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content : $('#viewContainer')
+                    ,content : '<table class="layui-table">\n' +
+                        '        <tbody>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">学年</td><td>'+data.stuYear+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">学期</td><td>'+data.stuTerm+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">学院</td><td>'+data.college+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">专业</td><td>'+data.major+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">课程编号</td><td>'+data.courseCode+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">课程名称</td><td>'+data.courseName+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">授课班级</td><td>'+data.teachClass+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">学生人数</td><td>'+data.stuNum+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">总学时</td><td>'+data.totalHours+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">理论学时</td><td>'+data.theoryHours+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">实验学时</td><td>'+data.testHours+'</td></tr>\n' +
+                        '            <tr><td style="width: 150px; text-align: center">实习天数</td><td>'+data.days+'</td></tr>\n' +
+                        '        </tbody>\n' +
+                        '    </table>'
                     ,success: function(layero, index){
-                        let htmlStr = '';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">课程编号：</td><td>'+rowData.courseCode+'</td>' +
-                            '                   <td style="width: 120px; text-align: right">课程名称：</td><td>'+rowData.courseName+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">授课时间：</td><td>'+rowData.teachDate+'</td>' +
-                            '                   <td style="width: 120px; text-align: right">节次：</td><td>'+rowData.teachNum+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">课题：</td><td>'+rowData.teachTopic+'</td>' +
-                            '                   <td style="width: 120px; text-align: right">学时：</td><td>'+rowData.teachHour+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">教学目的及要求：</td><td colspan="3">'+rowData.teachGoal+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">教学内容要点：</td><td colspan="3">'+rowData.teachContent+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">教学重点难点：</td><td colspan="3">'+rowData.teachKeyAndDifficult+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">教学方法及教具：</td><td colspan="3">'+rowData.teachWay+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">教学进程：</td><td colspan="3">'+rowData.teachProcess+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">备注：</td><td colspan="3">'+rowData.remark+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        $("#viewContainer").html(htmlStr);
+                        isOpen = true;
                     }
                     ,end:function () {
-                        $("#viewContainer .layui-elem-field").empty();
+                        isOpen = false;
                     }
                 });
             };

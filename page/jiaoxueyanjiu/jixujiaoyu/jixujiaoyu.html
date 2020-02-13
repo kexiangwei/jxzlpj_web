@@ -107,17 +107,18 @@
                         </div>
                     </div>
                     <!-- 数据表格 -->
-                    <script type="text/html" id="other_toolbar">
-                        <div class="layui-btn-container">
-                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>审核</button>
-                        </div>
-                    </script>
-                    <table class="layui-table" id="other_table" lay-filter="other_table"></table>
-                    <script type="text/html" id="other_bar">
-                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-file">查看附件</a>
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>
-                    </script>
+                    <table class="layui-table" id="other_table" lay-filter="other_table">
+                        <script type="text/html" id="other_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>审核</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="other_bar">
+                            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-file">查看附件</a>
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
+                        </script>
+                    </table>
                 </div>
             </div>
         </div>
@@ -304,6 +305,7 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
+    <script src="../../common/common_shenheProcess.js"></script>
     <script src="jixujiaoyu.js"></script>
 
 </body>

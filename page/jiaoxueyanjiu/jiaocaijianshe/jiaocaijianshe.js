@@ -73,7 +73,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 if(val=='已提交'){
                                     var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>\n' +
                                         '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-file">查看附件</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>';
+                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
                                     if(data.status == '退回'){
                                         htmlstr+= '           <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
                                             '           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
@@ -86,7 +86,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>\n' +
                                     '                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-file">查看附件</a>\n' +
-                                    '                    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>\n' +
+                                    '                    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                     '                    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
                                     '                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
                                 $('#myself_bar').html(htmlstr);
@@ -244,7 +244,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         detail(data);
                     } else if (obj.event === 'detail-file') {
                         detail_file(data);
-                    } else if (obj.event === 'detail-shenheProcess') {
+                    } else if (obj.event === 'detail_shenheProcess') {
                         if(data.isSubmit=='未提交'){
                             return;
                         }
@@ -517,7 +517,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         detail(data);
                     } else if (obj.event === 'detail-file') {
                         detail_file(data);
-                    } else if (obj.event === 'detail-shenheProcess') {
+                    } else if (obj.event === 'detail_shenheProcess') {
                         detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
                     }
                 });

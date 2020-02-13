@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教学设计-授课计划</title>
-    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <title>教学设计-教案</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
     <!--<style type="text/css">
         .layui-inline {
             width: 150px;
@@ -95,7 +95,7 @@
                     <table class="layui-table" id="other_table" lay-filter="other_table"></table>
                     <script type="text/html" id="other_bar">
                         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
                     </script>
 
                 </div>
@@ -103,40 +103,15 @@
         </div>
     </div>
 
+    <!-- 查看详情 -->
+    <div class="layui-container" id="viewContainer"></div>
+
     <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" id="insertOrUpdateContainer">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务主键-->
             <input type="hidden" name="code"/>
             <!-- 业务数据 -->
-            <div class="layui-form-item" style="margin-top: 10px;">
-                <div class="layui-inline">
-                    <label class="layui-form-label">学年：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="stuYear" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">学期：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="stuTerm" class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
-                <div class="layui-inline">
-                    <label class="layui-form-label">学院：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="college" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">专业：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="major" class="layui-input">
-                    </div>
-                </div>
-            </div>
             <div class="layui-form-item" style="margin-top: 10px;">
                 <div class="layui-inline">
                     <label class="layui-form-label">课程编号：</label>
@@ -153,44 +128,66 @@
             </div>
             <div class="layui-form-item" style="margin-top: 10px;">
                 <div class="layui-inline">
-                    <label class="layui-form-label">授课班级：</label>
+                    <label class="layui-form-label">授课时间：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="teachClass" class="layui-input">
+                        <input type="text" id="teachDate" name="teachDate" lay-verify="date" placeholder="" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">学生人数：</label>
+                    <label class="layui-form-label">节次：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="stuNum" class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
-                <div class="layui-inline">
-                    <label class="layui-form-label">理论学时：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="theoryHours" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">实验学时：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="testHours" class="layui-input">
+                        <input type="text" name="teachNum" class="layui-input">
                     </div>
                 </div>
             </div>
             <div class="layui-form-item" style="margin-top: 10px;">
                 <div class="layui-inline">
-                    <label class="layui-form-label">总学时：</label>
+                    <label class="layui-form-label">课题：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="totalHours" class="layui-input">
+                        <input type="text" name="teachTopic" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">实习天数：</label>
+                    <label class="layui-form-label">学时：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="days" class="layui-input">
+                        <input type="text" name="teachHour" class="layui-input">
                     </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学目的及要求：</label>
+                <div class="layui-input-block">
+                    <textarea id="teachGoal" name="teachGoal" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学内容要点：</label>
+                <div class="layui-input-block">
+                    <textarea id="teachContent" name="teachContent" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学重点难点：</label>
+                <div class="layui-input-block">
+                    <textarea id="teachKeyAndDifficult" name="teachKeyAndDifficult" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学方法及教具：</label>
+                <div class="layui-input-block">
+                    <textarea id="teachWay" name="teachWay" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学进程：</label>
+                <div class="layui-input-block">
+                    <textarea id="teachProcess" name="teachProcess" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注：</label>
+                <div class="layui-input-block">
+                    <textarea id="remark" name="remark" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
                 </div>
             </div>
 
@@ -203,8 +200,6 @@
         </form>
     </div>
 
-    <!-- 查看审核流程 -->
-    <div class="layui-container" id="shenheProcessContainer"></div>
     <!-- 填写审核意见 -->
     <div class="layui-container" id="shenheContainer">
         <form class="layui-form" action="" lay-filter="shenheForm">
@@ -233,10 +228,11 @@
         </form>
     </div>
 
-    <script src="../../layui/layui.js"></script>
-    <script src="../../js/jquery-3.3.1.js"></script>
-    <script src="../../js/jquery.cookie.js"></script>
-    <script src="../../js/global.js"></script>
-    <script src="shoukejihua.js"></script>
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/global.js"></script>
+    <script src="../../common/common_shenheProcess.js"></script>
+    <script src="jiaoan.js"></script>
 </body>
 </html>

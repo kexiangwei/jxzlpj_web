@@ -72,7 +72,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 let htmlstr='';
                                 if(data.isSubmit=='已提交'){
                                     htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>\n' +
+                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
                                     $('#myself_bar').html(htmlstr);
@@ -81,7 +81,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                     if(data.isSubmit=='未提交' && data.status ==='退回'){
                                         htmlstr =
                                             ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>\n' +
-                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>\n' +
+                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                             ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
                                             ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
                                         $('#myself_bar').html(htmlstr);
@@ -90,7 +90,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 }
                                 htmlstr =
                                     ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>\n' +
-                                    ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="view_shenheProcess">查看流程</a>\n' +
+                                    ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                     ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
                                     ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
                                 $('#myself_bar').html(htmlstr);
@@ -235,7 +235,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                             let row_data = obj.data;
                             if (obj.event === 'view_data') {
                                 view_data(row_data);
-                            } else if (obj.event === 'view_shenheProcess') {
+                            } else if (obj.event === 'detail_shenheProcess') {
                                 if(row_data.isSubmit=='未提交' && row_data.status !='退回'){
                                     return;
                                 }
@@ -497,7 +497,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                     let row_data = obj.data;
                     if (obj.event === 'view_data') {
                         view_data(row_data);
-                    } else if (obj.event === 'view_shenheProcess') {
+                    } else if (obj.event === 'detail_shenheProcess') {
                         detail_shenheProcess('教学效果-试卷分析-查看审核流程',row_data);
                     }
                 });

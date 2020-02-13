@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教学设计-授课计划</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <!--<style type="text/css">
+        .layui-inline {
+            width: 150px;
+        }
+        .layui-form-label {
+            width: 100px;
+        }
+        .layui-input {
+            display: block;
+            width: 90%;
+            padding-left: 10px;
+        }
+    </style>-->
+</head>
+<body class="layui-layout-body">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this" id="myself">信息列表</li>
+            <li class="layui-this" id="other">审核列表<span class="layui-badge"></span></li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show" id="myself_item">
+                <div class="layui-fluid">
+                    <!-- 查询参数 -->
+                    <div class="myself_search">
+                        课程编号：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="myself_courseCode" autocomplete="off" style="width:150px; ">
+                        </div>
+                        课程名称：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="myself_courseName" autocomplete="off" style="width:150px; ">
+                        </div>
+                        提交状态：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="isSubmit" autocomplete="off" style="width:150px; ">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+                            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                        </div>
+                    </div>
+                    <!-- 数据表格 -->
+                    <script type="text/html" id="myself_toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>添加</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>提交</button>
+                        </div>
+                    </script>
+                    <table class="layui-table" id="myself_table" lay-filter="myself_table"></table>
+                    <script type="text/html" id="myself_bar"></script>
+                </div>
+            </div>
+            <div class="layui-tab-item layui-show" id="other_item">
+                <div class="layui-fluid">
+                    <!-- 查询参数 -->
+                    <div class="other_search">
+                        工号：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_userId" autocomplete="off" style="width:150px; ">
+                        </div>
+                        姓名：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_userName" autocomplete="off" style="width:150px; ">
+                        </div>
+                        课程编号：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_courseCode" autocomplete="off" style="width:150px; ">
+                        </div>
+                        课程名称：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="other_courseName" autocomplete="off" style="width:150px; ">
+                        </div>
+                        审核状态：
+                        <div class="layui-inline">
+                            <input class="layui-input" name="shenheStatus" autocomplete="off" style="width:150px; ">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+                            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                        </div>
+                    </div>
+                    <!-- 数据表格 -->
+                    <script type="text/html" id="other_toolbar">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>审核</button>
+                        </div>
+                    </script>
+                    <table class="layui-table" id="other_table" lay-filter="other_table"></table>
+                    <script type="text/html" id="other_bar">
+                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view_data">查看信息</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 响应新增，编辑按钮 -->
+    <div class="layui-container" id="insertOrUpdateContainer">
+        <form class="layui-form" action="" lay-filter="editForm" id="editForm">
+            <!-- 业务主键-->
+            <input type="hidden" name="code"/>
+            <!-- 业务数据 -->
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">学年：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="stuYear" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">学期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="stuTerm" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">学院：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="college" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">专业：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="major" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程编号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="courseCode" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="courseName" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">授课班级：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="teachClass" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">学生人数：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="stuNum" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">理论学时：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="theoryHours" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">实验学时：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="testHours" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">总学时：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="totalHours" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">实习天数：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="days" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="width: 50%;">
+                <div class="layui-input-block" align="center">
+                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmit">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 查看审核流程 -->
+    <div class="layui-container" id="shenheProcessContainer"></div>
+    <!-- 填写审核意见 -->
+    <div class="layui-container" id="shenheContainer">
+        <form class="layui-form" action="" lay-filter="shenheForm">
+            <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
+                <label class="layui-form-label">审核状态：</label>
+                <div class="layui-input-block">
+                    <select name="status" lay-filter="status">
+                        <option value="">请选择</option>
+                        <option value="通过" selected="">通过</option>
+                        <option value="退回">退回</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">审核意见：</label>
+                <div class="layui-input-block">
+                    <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 200px;">通过</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="toSubmit">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/global.js"></script>
+    <script src="../../common/common_shenheProcess.js"></script>
+    <script src="shoukejihua.js"></script>
+</body>
+</html>

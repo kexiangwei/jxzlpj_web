@@ -72,14 +72,14 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
                                     var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="VIEW_INFO">查看信息</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="VIEW_PROCESS">查看流程</a>\n' +
+                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                         '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="VIEW_FILE">预览</a>' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="FILE_UPLOAD">上传</a>';
                                     $('#myself_bar').html(htmlstr);
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
                                 var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="VIEW_INFO">查看信息</a>\n' +
-                                    '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="VIEW_PROCESS">查看流程</a>\n' +
+                                    '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
                                     '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="VIEW_FILE">预览</a>\n' +
                                     '           <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="FILE_UPLOAD">上传</a>';
                                 $('#myself_bar').html(htmlstr);
@@ -167,7 +167,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                     let row_data = obj.data;
                     if (obj.event === 'VIEW_INFO') {
                         VIEW_INFO(row_data);
-                    } else if (obj.event === 'VIEW_PROCESS') {
+                    } else if (obj.event === 'detail_shenheProcess') {
                         if(row_data.isSubmit=='未提交'){
                             return;
                         }
@@ -455,7 +455,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                         VIEW_INFO(row_data);
                     } else if (obj.event === 'VIEW_FILE') {
                         VIEW_FILE(row_data);
-                    } else if (obj.event === 'VIEW_PROCESS') {
+                    } else if (obj.event === 'detail_shenheProcess') {
                         detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
                     }
                 });
