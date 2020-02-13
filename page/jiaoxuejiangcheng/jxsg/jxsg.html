@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教学奖惩-教学事故</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <style type="text/css">
+        .layui-form-label {
+            width: 120px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-fluid">
+        <!-- 查询参数-->
+        <div class="search">
+            事件：
+            <div class="layui-inline">
+                <input class="layui-input" name="event" placeholder="输入关键字查询" autocomplete="off">
+            </div>
+            &nbsp;&nbsp;事故认定级别：
+            <div class="layui-inline">
+                <input class="layui-input" name="eventLevel" autocomplete="off">
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+            </div>
+        </div>
+        <!-- 数据表格 -->
+        <table class="layui-table" id="datatable" lay-filter="datatable">
+            <!-- 数据表格头部工具栏 -->
+            <script type="text/html" id="datatable_toolbar">
+                {{# if(d.isAdmin == 1){  }}
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                </div>
+                {{# } }}
+            </script>
+            <!-- 数据表格右侧工具栏 -->
+            <script type="text/html" id="datatable_bar">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+                {{# if(d.isAdmin == 1){  }}
+                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+                {{# } }}
+            </script>
+        </table>
+    </div>
+
+    <div class="layui-container" style="width: 90%;" id="insertOrUpdate_container">
+        <form class="layui-form" action="" lay-filter="editForm" id="editForm">
+            <!-- 业务数据编号 -->
+            <input type="hidden" name="code"/>
+            <!-- 业务字段 -->
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">教师信息-学院：</label>
+                    <div class="layui-input-inline" style="width: 190px;">
+                        <select name="teacherCollege" lay-filter="teacherCollege">
+                            <option value="">请选择</option>
+                            <option value="XX学院">XX学院</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">教师信息-专业：</label>
+                    <div class="layui-input-inline" style="width: 190px;">
+                        <select name="teacherMajor" lay-filter="teacherMajor">
+                            <option value="">请选择</option>
+                            <option value="XX专业">XX专业</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">教师信息-工号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="teacherId" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">教师信息-姓名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="teacherName" placeholder="依据工号显示" class="layui-input" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">事件：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="event" lay-verify="required|event" autocomplete="off" class="layui-input" style="width: 83%;">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">事故认定级别：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="eventLevel" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="happenTime" name="happenTime" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/global.js"></script>
+    <script src="jxsg.js"></script>
+    <script type="text/javascript">
+        layui.use(['layer','laytpl','form','laydate'], function(){
+            let $ = layui.$,layer = layui.layer,laytpl = layui.laytpl,form = layui.form,laydate = layui.laydate;
+
+            //初始化laydate实例
+            laydate.render({
+                elem : "#happenTime"
+                ,type : 'datetime'
+            });
+
+            //自定义验证规则
+            form.verify({
+                event: function(value){
+                    if(value.length > 64){
+                        return '当前字符长度'+value.length+'（最大值64）';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
