@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        table{border-collapse:collapse;}
+        table td{width:100px;height:25px;text-align:center;}
+    </style>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td class="ui-widget-content">1</td>
+            <td class="ui-widget-content">张三</td>
+            <td class="ui-widget-content">21<input type="hidden"  name="test" value="111" class="conids"/></td>
+            <td class="ui-widget-content">湖南</td>
+            <td class="ui-widget-content"><a href="#" onclick="check(this,'MoveUp')">上移</a>&nbsp;&nbsp;<a href="#" onclick="check(this,'MoveDown')">下移</a></td>
+        </tr>
+        <tr>
+            <td class="ui-widget-content">2</td>
+            <td class="ui-widget-content">李四</td>
+            <td class="ui-widget-content">22<input type="hidden"  name="test" value="111" class="conids"/></td>
+            <td class="ui-widget-content">湖北</td>
+            <td class="ui-widget-content"><a href="#" onclick="check(this,'MoveUp')">上移</a>&nbsp;&nbsp;<a href="#" onclick="check(this,'MoveDown')">下移</a></td>
+        </tr>
+        <tr>
+            <td class="ui-widget-content">3</td>
+            <td class="ui-widget-content">王五</td>
+            <td class="ui-widget-content">34<input type="hidden"  name="test" value="111" class="conids"/></td>
+            <td class="ui-widget-content">河北</td>
+            <td class="ui-widget-content"><a href="#" onclick="check(this,'MoveUp')">上移</a>&nbsp;&nbsp;<a href="#" onclick="check(this,'MoveDown')">下移</a></td>
+        </tr>
+        <tr>
+            <td class="ui-widget-content">4</td>
+            <td class="ui-widget-content">赵六</td>
+            <td class="ui-widget-content">32<input type="hidden"  name="test" value="111" class="conids"/></td>
+            <td class="ui-widget-content">河南</td>
+            <td class="ui-widget-content"><a href="#" onclick="check(this,'MoveUp')">上移</a>&nbsp;&nbsp;<a href="#" onclick="check(this,'MoveDown')">下移</a></td>
+        </tr>
+        <tr>
+            <td class="ui-widget-content">5</td>
+            <td class="ui-widget-content">田七</td>
+            <td class="ui-widget-content">38<input type="hidden"  name="test" value="111" class="conids"/></td>
+            <td class="ui-widget-content">山东</td>
+            <td class="ui-widget-content"><a href="#" onclick="check(this,'MoveUp')">上移</a>&nbsp;&nbsp;<a href="#" onclick="check(this,'MoveDown')">下移</a></td>
+        </tr>
+    </table>
+
+    <script src="../../js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        /*
+        params
+        t:触发事件的元素
+        oper:操作方式
+  */
+        function check(tr,oper){
+            var data_tr=$(tr).parent().parent(); //获取到触发的tr
+            if(oper=="MoveUp"){    //向上移动
+                if($(data_tr).prev().html()==null){ //获取tr的前一个相同等级的元素是否为空
+                    alert("已经是最顶部了!");
+                    return;
+                }
+                $(data_tr).insertBefore($(data_tr).prev()); //将本身插入到目标tr的前面
+            }else{
+                if($(data_tr).next().html()==null){
+                    alert("已经是最低部了!");
+                    return;
+                }
+                $(data_tr).insertAfter($(data_tr).next()); //将本身插入到目标tr的后面
+            }
+        }
+    </script>
+</body>
+</html>
