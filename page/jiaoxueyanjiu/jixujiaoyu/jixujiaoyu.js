@@ -67,7 +67,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'peixunStyle', title: '培训形式', width:150}
                         ,{field: 'peixunStartTime', title: '培训开始时间', width:120,hide:true}
                         ,{field: 'peixunEndTime', title: '培训结束时间', width:120,hide:true}
-                        ,{field: 'peixunClassHour', title: '学时', width:120, sort:true, totalRow:true}
+                        ,{field: 'peixunClassHour', title: '学时', width:120, totalRow:true}
                         ,{field: 'peixunContent', title: '培训内容', width:120,hide:true}
                         ,{field: 'peixunAddress', title: '培训地点', width:120,hide:true}
                         ,{field: 'peixunDept', title: '培训机构', width:120}
@@ -96,7 +96,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 return '<span style="font-weight: bold;">'+val+'</span>';
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120, sort: true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'status', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
                                 if(val=='审核中' || val=='通过'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -104,7 +104,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 if(val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
-                                return '';
+                                return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
                         ,{fixed: 'right', width:340, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
@@ -148,12 +148,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             $(" input[ name='code' ] ").val(randomChar());//每次进入新增页面生成一个新的编号供表单code字段和文件上传字段relationCode使用
                             //
                             layer.open({
-                                title : '继续教育-新增'
+                                title : '教学研究-继续教育-新增'
                                 ,type : 1
-                                ,offset : '10px'
+                                ,offset : '20px'
                                 // ,shadeClose : true //防止不小心点到遮罩关闭弹窗，禁用此功能
-                                ,area : [ '700px', '535px' ]
-                                ,content : $('#editForm')
+                                ,area : [ '900px', '520px' ]
+                                ,content : $('#insertOrUpdate_container')
                                 ,success: function(layero, index){
                                     //初始化laydate实例
                                     laydate.render({
@@ -271,13 +271,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //执行编辑
                         operationType = "edit";
                         let editForm_idx= layer.open({
-                            title : data.peixunName + '-编辑'
+                            title :  '教学研究-继续教育-编辑'
                             ,type : 1
-                            ,area : [ '700px', '535px' ]
+                            ,area : [ '900px', '520px' ]
                             // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                            ,offset : '10px'
+                            ,offset : '20px'
                             ,shadeClose : true //点击遮罩关闭
-                            ,content : $('#editForm')
+                            ,content : $('#insertOrUpdate_container')
                             ,success: function(layero, index){
                                 //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                                 let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
@@ -583,11 +583,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 }
                 var isOpen = false;
                 layer.open({
-                    title : data.peixunName + '-详情'
+                    title : '教学研究-继续教育-查看详情'
                     ,type : 1
-                    ,area : [ '700px', '535px' ]
+                    ,area : [ '900px', '520px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,offset : '20px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : '<table class="layui-table">\n' +
@@ -617,10 +617,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '继续教育-附件'
                     ,type : 1
-                    ,offset : '10px'
+                    ,offset : '20px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
-                    ,area : [ '1175px', '535px' ]
+                    ,area : [ '900px', '520px' ]
                     ,content : $('#viewFileContainer')
                     ,success: function(layero, index){
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
@@ -654,7 +654,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         xdthNum++;
                                         let xdthtr = $(['<tr id="'+ file.code +'">'
                                             ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
-                                            ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
+                                            // ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
                                             ,'<td>'+ file.fileSize +'kb</td>'
                                             ,'<td>'+ file.createDate +'</td>'
                                             ,'<td>' +
@@ -684,7 +684,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         qtwjNum++;
                                         let qtwjtr = $(['<tr id="'+ file.code +'">'
                                             ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
-                                            ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
+                                            // ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
                                             ,'<td>'+ file.fileSize +'kb</td>'
                                             ,'<td>'+ file.createDate +'</td>'
                                             ,'<td>' +
@@ -740,10 +740,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '继续教育-附件'
                     ,type : 1
-                    ,area : [ '1175px', '535px' ]
+                    ,area : [ '900px', '520px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '10px'
+                    ,offset : '20px'
                     ,moveOut:true
+                    ,btn: ['关闭']
                     ,shadeClose : true //点击遮罩关闭
                     ,content : $('#uploadFileContainer')
                     ,success: function(layero, index){
