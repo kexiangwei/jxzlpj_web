@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增&编辑</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+    <style type="text/css">
+        .layui-form-label {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-container" style="width: 90%;" id="insertOrUpdate_container">
+        <form class="layui-form" action="" lay-filter="editForm" id="editForm">
+            <!-- 业务数据编号 -->
+            <input type="hidden" name="code"/>
+            <!-- 业务字段 -->
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="userName" readonly class="layui-input" style="width: 95%;">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">工号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="userId" readonly class="layui-input" style="width: 95%;">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">奖项名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="objName" lay-verify="required|objName" autocomplete="off" class="layui-input" style="width: 80%;">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">奖励级别：</label>
+                    <div class="layui-input-inline" style="width: 185px;">
+                        <select name="level_1" lay-filter="level_1">
+                            <option value="">请选择</option>
+                            <option value="国家级">国家级</option>
+                            <option value="北京市级">北京市级</option>
+                            <option value="校级">校级</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">获得奖项：</label>
+                    <div class="layui-input-inline" style="width: 185px;">
+                        <select name="level_2" lay-filter="level_2">
+                            <option value="">请选择</option>
+                            <option value="一等奖">一等奖</option>
+                            <option value="二等奖">二等奖</option>
+                            <option value="三等奖">三等奖</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 10px;">
+                <label class="layui-form-label">证书授予机构：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="grantUnit" class="layui-input" style="width: 80%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">获奖日期：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="awardDate" name="awardDate" placeholder="年-月-日"  autocomplete="off" class="layui-input" style="width: 80%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">相关证明：</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn layui-btn-primary" id="upfile">上传附件（PDF 格式）</button>
+                </div>
+            </div>
+            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/global.js"></script>
+    <script type="text/javascript">
+        layui.use(['layer','form','laydate'], function(){
+            var $ = layui.$,layer = layui.layer,form = layui.form,laydate = layui.laydate;
+            //初始化laydate实例
+            laydate.render({
+                elem: "#awardDate" //指定元素
+            });
+
+            //自定义验证规则
+            form.verify({
+                objName: function(value){
+                    if(value.length > 64){
+                        return '当前字符长度'+value.length+'（最大值64）';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

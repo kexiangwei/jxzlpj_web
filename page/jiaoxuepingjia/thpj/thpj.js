@@ -6,7 +6,8 @@ layui.use(['layer','element','table','form'], function(){
 
     //初始化数据表格
     let datatable = table.render({
-        elem : '#datatable'
+        id: "datatable"
+        ,elem : '#datatable'
         ,height : 468
         ,url: requestUrl+'/sjfx/getPageList.do'
         ,where:{
@@ -21,7 +22,6 @@ layui.use(['layer','element','table','form'], function(){
         ,response: { //重新规定返回的数据格式
             statusCode: 200 //规定成功的状态码，默认：0
         }
-        //数据格式解析的回调函数，用于将返回的任意数据格式解析成 table 组件规定的数据格式
         ,parseData: function(res){ //res 即为原始返回的数据
             return {
                 "code": res.code, //解析接口状态
@@ -62,9 +62,7 @@ layui.use(['layer','element','table','form'], function(){
                 search: function(){
                     datatable.reload({
                         where: {
-                            'college': $("input[name='college']").val()
-                            ,'teacher': $("input[ name='teacher']").val()
-                            ,'courseName': $("input[ name='courseName']").val()
+                            'courseName': $(".search input[ name='courseName']").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -72,14 +70,15 @@ layui.use(['layer','element','table','form'], function(){
                     });
                 }
                 ,reset: function () {
-                    $(".layui-search input").val('');
+                    $(".search input").val('');
                 }
             };
 
             //监听工具条
             table.on('tool(datatable)', function(obj){
-                let row_data = obj.data;
-                if (obj.event === 'kcpf') {
+                let layEvent = obj.event
+                    , rowData = obj.data;
+                if (layEvent === 'kcpf') {
                     layer.open({
                         title : '教学评价-同行评教-课程评分'
                         ,type : 2
@@ -87,28 +86,11 @@ layui.use(['layer','element','table','form'], function(){
                         ,offset : '30px' //只定义top坐标，水平保持居中
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['关闭']
-                        ,content : 'thpj_sub.html'
+                        ,content : 'thpj_kcpf.html'
                         ,success: function(layero, index){
                             //
                             form.on('submit(toSubmit)', function(formData){
 
-                                /*$.post(requestUrl+'/sjfx/toShenhe.do',{
-                                    "jsonStr":JSON.stringify(dataArr)
-                                    ,"status":formData.field.status
-                                    ,"opinion":formData.field.opinion
-                                    ,"userId":function () {
-                                        return $.cookie('userId');
-                                    }
-                                    ,"userName":function () {
-                                        return $.cookie('userName');
-                                    }
-                                },function (result_data) {
-                                    if(result_data.code === 200){
-                                        layer.msg('提交成功', {time : 3000, offset: '100px'});
-                                    }else{
-                                        layer.msg('提交失败', {time : 3000, offset: '100px'});
-                                    }
-                                },'json');*/
                             });
                         }
                         ,end:function () {

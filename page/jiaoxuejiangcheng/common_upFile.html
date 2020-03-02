@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传附件</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+</head>
+<body>
+    <div class="layui-container" style="width: 90%;" id="uploadFile_container">
+        <div class="layui-upload" style="margin-top: 10px;">
+            <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
+            <span style="color: #8D8D8D">请选择PDF 格式文件</span>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th style="text-align: center;">文件名</th>
+                        <th style="width: 120px;text-align: center;">状态</th>
+                        <th style="width: 120px;text-align: center;">操作</th>
+                    </tr></thead>
+                    <tbody id="upfileList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

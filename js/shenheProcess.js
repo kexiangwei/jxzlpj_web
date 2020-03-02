@@ -3,15 +3,16 @@
  * @param title
  * @param rowData
  */
-function detail_shenheProcess (title,rowData) {
-    let iframeIndex = layer.open({
+var detail_shenheProcess  = function (title,rowData) {
+
+    layer.open({
         title : title
-        ,type : 2
+        ,type : 1
         ,area : [ '1175px', '535px' ]
         ,offset : '10px' //只定义top坐标，水平保持居中
         ,shadeClose : true //点击遮罩关闭
         ,btn : ['关闭']
-        ,content : '../../common/common_shenheProcess.html'
+        ,content : $('#shenheProcess_container')
         ,success: function(layero, index){
             $.get(requestUrl+"/getShenheProcess.do" , {
                 "relationCode": function () {
@@ -61,8 +62,7 @@ function detail_shenheProcess (title,rowData) {
                         if(rowData.status =='通过' || rowData.status =='未通过'){
                             htmlStr +=  '<h2 style="margin-left: 30px;">结束</h2>';
                         }
-                        // $("#shenheProcess_container").html(htmlStr);
-                        $("#layui-layer-iframe"+iframeIndex).contents().find("#shenheProcess_container").html(htmlStr);
+                        $("#shenheProcess_container").html(htmlStr);
                     }else{
                         layer.msg('暂无审核数据', {time : 3000, offset: '100px'});
                     }
@@ -72,7 +72,7 @@ function detail_shenheProcess (title,rowData) {
             }, "json");
         }
         ,end:function () {
-            // $("#shenheProcess_container .layui-elem-field").empty();
+            $("#shenheProcess_container").empty();
         }
     });
 };

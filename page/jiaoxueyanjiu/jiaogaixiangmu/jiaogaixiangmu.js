@@ -211,7 +211,7 @@ layui.use(['layer','element','table','form'], function(){
                                     });
                                 }
                                 ,cancel: function(index, layero){
-                                    layer.confirm('填写的信息将会清空，确定要关闭吗', {icon: 3, title:'提示', offset: '100px'}, function() {
+                                    layer.confirm('表单未提交，填写的信息将会清空', {icon: 3, title:'提示', offset: '100px'}, function() {
                                         layer.close(index);
                                     });
                                     return false;
