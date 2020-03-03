@@ -20,8 +20,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
             if(data.isSubmit > 0){ //拥有提交权限
-                $('#other').removeClass();
-                $('#other_item').css('class','layui-tab-item');
+
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
@@ -150,9 +149,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             layer.open({
                                 title : '教学研究-继续教育-新增'
                                 ,type : 1
-                                ,offset : '20px'
                                 // ,shadeClose : true //防止不小心点到遮罩关闭弹窗，禁用此功能
                                 ,area : [ '900px', '520px' ]
+                                ,offset : '20px'
                                 ,content : $('#insertOrUpdate_container')
                                 ,success: function(layero, index){
                                     //初始化laydate实例
@@ -390,8 +389,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
+                $('#other').removeClass().addClass("layui-this");
+                $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
             if(data.isShenhe > 0){ //拥有审核权限
+
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
+
                 var other_table = table.render({ //数据表格
                     elem : '#other_table'
                     ,height : 440
@@ -740,9 +749,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '继续教育-附件'
                     ,type : 1
-                    ,area : [ '900px', '520px' ]
+                    ,area : [ '1175px', '535px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '20px'
+                    ,offset : '10px'
                     ,moveOut:true
                     ,btn: ['关闭']
                     ,shadeClose : true //点击遮罩关闭
