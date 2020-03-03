@@ -65,8 +65,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'name', title: '赛事名称', width:150}
                         ,{field: 'userId', title: '第一指导教师工号', width:150}
                         ,{field: 'userName', title: '第一指导教师姓名', width:150}
-                        ,{field: 'hjLevel1', title: '获奖等级', width:150}
-                        ,{field: 'hjLevel2', title: '获得奖项', width:150}
+                        ,{field: 'level1', title: '获奖等级', width:150}
+                        ,{field: 'level2', title: '获得奖项', width:150}
                         ,{field: 'grantUnit', title: '证书授予单位', width:150}
                         ,{field: 'grantDate', title: '证书授予日期', width:150}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
@@ -338,8 +338,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'name', title: '赛事名称', width:150}
                         ,{field: 'userId', title: '第一指导教师工号', width:150}
                         ,{field: 'userName', title: '第一指导教师姓名', width:150}
-                        ,{field: 'hjLevel1', title: '获奖等级', width:150}
-                        ,{field: 'hjLevel2', title: '获得奖项', width:150}
+                        ,{field: 'level1', title: '获奖等级', width:150}
+                        ,{field: 'level2', title: '获得奖项', width:150}
                         ,{field: 'grantUnit', title: '证书授予单位', width:150}
                         ,{field: 'grantDate', title: '证书授予日期', width:150}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
@@ -497,8 +497,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                 <td style="width: 80px; text-align: right">赛事名称：</td><td style="width: 120px;" colspan="3">'+data.name+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">获奖等级：</td><td style="width: 120px;">'+data.hjLevel1+'</td>' +
-                            '                <td style="width: 80px; text-align: right">获得奖项：</td><td style="width: 120px;">'+data.hjLevel2+'</td>' +
+                            '                <td style="width: 80px; text-align: right">获奖等级：</td><td style="width: 120px;">'+data.level1+'</td>' +
+                            '                <td style="width: 80px; text-align: right">获得奖项：</td><td style="width: 120px;">'+data.level2+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
                             '                 <td style="width: 80px; text-align: right">证书授予单位：</td><td style="width: 120px;" colspan="3">'+data.grantUnit+'</td>' +
@@ -728,8 +728,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,"userId":data.userId
                     ,"userName":data.userName
                     ,"name" : data.name
-                    ,"hjLevel1" : data.hjLevel1
-                    ,"hjLevel2" : data.hjLevel2
+                    ,"level1" : data.level1
+                    ,"level2" : data.level2
                     ,"grantUnit" : data.grantUnit
                     ,"grantDate" : data.grantDate
                 });
@@ -740,8 +740,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '教学奖惩-教学名师-上传附件'
                     ,type : 1
-                    ,area : [ '900px', '300px' ]
-                    ,offset : '50px'
+                    ,area : [ '700px', '300px' ]
+                    ,offset : '100px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
                     ,btn: ['关闭']

@@ -9,7 +9,7 @@ var detail_shenheProcess  = function (title,rowData) {
         title : title
         ,type : 1
         ,area : [ '1175px', '535px' ]
-        ,offset : '10px' //只定义top坐标，水平保持居中
+        ,offset : '50px' //只定义top坐标，水平保持居中
         ,shadeClose : true //点击遮罩关闭
         ,btn : ['关闭']
         ,content : $('#shenheProcess_container')

@@ -5,6 +5,11 @@
     <title>教学奖惩-教学事故</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
+
+        .search .layui-inline {
+            width: 150px;
+        }
+
         .layui-form-label {
             width: 120px;
         }
@@ -16,11 +21,11 @@
         <div class="search">
             事件：
             <div class="layui-inline">
-                <input class="layui-input" name="event" placeholder="输入关键字查询" autocomplete="off">
+                <input class="layui-input" name="event" placeholder="支持关键字查询">
             </div>
             &nbsp;&nbsp;事故认定级别：
             <div class="layui-inline">
-                <input class="layui-input" name="eventLevel" autocomplete="off">
+                <input class="layui-input" name="eventLevel">
             </div>
             <div class="layui-inline">
                 <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
@@ -48,28 +53,24 @@
         </table>
     </div>
 
-    <div class="layui-container" style="width: 90%;" id="insertOrUpdate_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
+            <input type="hidden" name="userId"/>
+            <input type="hidden" name="userName"/>
             <!-- 业务字段 -->
             <div class="layui-form-item" style="margin-top: 10px;">
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-学院：</label>
                     <div class="layui-input-inline" style="width: 190px;">
-                        <select name="teacherCollege" lay-filter="teacherCollege">
-                            <option value="">请选择</option>
-                            <option value="XX学院">XX学院</option>
-                        </select>
+                        <select id="teacherCollege" name="teacherCollege" lay-filter="teacherCollege"><option value="">请选择</option></select>
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-专业：</label>
                     <div class="layui-input-inline" style="width: 190px;">
-                        <select name="teacherMajor" lay-filter="teacherMajor">
-                            <option value="">请选择</option>
-                            <option value="XX专业">XX专业</option>
-                        </select>
+                        <select id="teacherMajor" name="teacherMajor" lay-filter="teacherMajor"><option value="">请选择</option></select>
                     </div>
                 </div>
             </div>
@@ -110,7 +111,7 @@
             </div>
 
             <div class="layui-btn-container" align="center" style="margin-top: 50px;">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn">保存</button>
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
@@ -121,25 +122,5 @@
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="jxsg.js"></script>
-    <script type="text/javascript">
-        layui.use(['layer','laytpl','form','laydate'], function(){
-            let $ = layui.$,layer = layui.layer,laytpl = layui.laytpl,form = layui.form,laydate = layui.laydate;
-
-            //初始化laydate实例
-            laydate.render({
-                elem : "#happenTime"
-                ,type : 'datetime'
-            });
-
-            //自定义验证规则
-            form.verify({
-                event: function(value){
-                    if(value.length > 64){
-                        return '当前字符长度'+value.length+'（最大值64）';
-                    }
-                }
-            });
-        });
-    </script>
 </body>
 </html>

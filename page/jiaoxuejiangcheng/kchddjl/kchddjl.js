@@ -49,8 +49,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                         layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
                         ,limits: [10,20,50,100]
-                        ,first: true //不显示首页
-                        ,last: true //不显示尾页
+                        , first: '首页'
+                        , prev: '上一页'
+                        , next: '下一页'
+                        , last: '尾页'
                     }
                     ,limit: 10
                     ,even: true //隔行背景
@@ -59,8 +61,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'objName', title: '奖项名称', width:150}
-                        ,{field: 'level_1', title: '奖励级别', width:120}
-                        ,{field: 'level_2', title: '获得奖项', width:120}
+                        ,{field: 'level1', title: '奖励级别', width:120}
+                        ,{field: 'level2', title: '获得奖项', width:120}
                         ,{field: 'grantUnit', title: '证书授予机构', width:120}
                         ,{field: 'awardDate', title: '获奖时间', width:120}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
@@ -137,48 +139,30 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             switch(obj.event){
                                 case 'insert':
                                     let objCode = new Date().getTime(); //业务数据编号
-                                    let layerIndex = layer.open({
+                                    layer.open({
                                         title : '教学奖惩-课程获得的奖励-新增'
                                         ,type : 1
-                                        ,offset : '20px'
                                         ,area : [ '900px', '500px' ]
+                                        ,offset : '50px'
                                         ,content : $("#insertOrUpdate_container")
                                         ,success: function(layero, index){
-                                            //清空表单数据
-                                            // document.getElementById("editForm").reset();
-                                            //业务数据编号
-                                            $("#editForm input[ name='code' ] ").val(objCode);
 
-                                            //表单赋值
-                                            form.val('editForm', {
-                                                "userId":function () {
-                                                    return $.cookie('userId');
-                                                }
-                                                ,"userName":function () {
-                                                    return $.cookie('userName');
-                                                }
+                                            //初始化表单
+                                            initEditForm({
+                                                'code': objCode
+                                                ,'userId':$.cookie('userId')
+                                                ,'userName':$.cookie('userName')
                                             });
 
                                             //监听表单提交
-                                            form.on('submit(editFormSubmitBtn)', function(data){
-                                                 /*layer.alert(JSON.stringify(data.field), {
-                                                     title: '最终的提交信息'
-                                                 });
-                                                 return false;*/
-                                                $.post(requestUrl+'/kchddjl/insert.do',{
-                                                    "code":data.field.code
-                                                    ,"userId": data.field.userId
-                                                    ,"userName": data.field.userName
-                                                    ,"objName": data.field.objName
-                                                    ,"level_1" : data.field.level_1
-                                                    ,"level_2" : data.field.level_2
-                                                    ,"grantUnit" : data.field.grantUnit
-                                                    ,"awardDate" : data.field.awardDate
-                                                },function(result_data){
+                                            form.on('submit(toSubmitEidtForm)', function(data){
+                                                $.post(requestUrl+'/kchddjl/insert.do', data.field, function(result_data){
                                                     if(result_data.code == 200){
                                                         myself_table.reload();//重新加载表格数据
                                                     }
-                                                    layer.msg(result_data.msg, {time : 3000, offset: '100px'});
+                                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                        layer.close(index);
+                                                    });
                                                 },'json');
                                             });
                                         }
@@ -232,12 +216,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     return;
                                 }
                                 //执行编辑
-                                operationType = "update";
-                                let layerIndex = layer.open({
+                                layer.open({
                                     title : '教学奖惩-课程获得的奖励-编辑'
                                     ,type : 1
                                     ,area : [ '900px', '500px' ]
-                                    ,offset : '10px'
+                                    ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#insertOrUpdate_container')
                                     ,success: function(layero, index){
@@ -245,42 +228,23 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
                                         $("#editForm .layui-btn-container").append(cancelBtn);
                                         cancelBtn.click(function (event) {
-                                            // event.preventDefault();
-                                            layer.close(layerIndex);
+                                            layer.close(index);
                                         });
 
-                                        //表单赋值
-                                        form.val("editForm",{
-                                            "code":data.code
-                                            ,"userId":data.userId
-                                            ,"userName":data.userName
-                                            ,"objName": data.objName
-                                            ,"level_1" : data.level_1
-                                            ,"level_2" : data.level_2
-                                            ,"grantUnit" : data.grantUnit
-                                            ,"awardDate" : data.awardDate
-                                        });
-
+                                        //初始化表单
+                                        initEditForm(data);
                                         //监听表单提交
-                                        form.on('submit(editFormSubmitBtn)', function(data){
-                                            $.post(requestUrl+'/kchddjl/update.do',{
-                                                "code":data.field.code
-                                                ,"userId": data.field.userId
-                                                ,"userName": data.field.userName
-                                                ,"objName": data.field.objName
-                                                ,"level_1" : data.field.level_1
-                                                ,"level_2" : data.field.level_2
-                                                ,"grantUnit" : data.field.grantUnit
-                                                ,"awardDate" : data.field.awardDate
-                                            },function(result_data){
+                                        form.on('submit(toSubmitEidtForm)', function(data){
+                                            $.post(requestUrl+'/kchddjl/update.do', data.field, function(result_data){
                                                 if(result_data.code == 200){
                                                     myself_table.reload();//重新加载表格数据
                                                 }
-                                                layer.msg(result_data.msg, {time : 3000, offset: '100px'});
+                                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                    layer.close(index);
+                                                });
                                             },'json');
                                         });
                                     },end:function () {
-                                        operationType=="";
                                         window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                                     }
                                 });
@@ -290,18 +254,19 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     return;
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    layer.close(index);
                                     $.post(requestUrl+'/kchddjl/delete.do', { "objCode": data.code},function(result_data){
                                         if(result_data.code == 200){
                                             myself_table.reload();//重新加载表格数据
                                         }
-                                        layer.msg(result_data.msg, {time : 3000, offset: '100px'});
+                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            layer.close(index);
+                                        });
                                     }, "json");
                                 });
                             }
                         });
                     }
-                });//table end.
+                });
 
             } else{
                 $('#myself').remove();
@@ -310,6 +275,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
             if(data.isShenhe > 0){ //拥有审核权限
+
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
+                //
                 var other_table = table.render({//数据表格
                     id: "other_table"
                     ,elem : '#other_table'
@@ -339,8 +312,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,page: {
                         layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
                         ,limits: [10,20,50,100]
-                        ,first: true
-                        ,last: true
+                        , first: '首页'
+                        , prev: '上一页'
+                        , next: '下一页'
+                        , last: '尾页'
                     }
                     ,limit: 10
                     ,even: true
@@ -349,8 +324,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'objName', title: '奖项名称', width:200}
-                        ,{field: 'level_1', title: '奖励级别', width:150}
-                        ,{field: 'level_2', title: '获得奖项', width:150}
+                        ,{field: 'level1', title: '奖励级别', width:150}
+                        ,{field: 'level2', title: '获得奖项', width:150}
                         ,{field: 'grantUnit', title: '证书授予机构', width:150}
                         ,{field: 'awardDate', title: '获奖时间', width:150}
                         ,{field: 'shenheStatus', title: '审核状态', width:150,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
@@ -431,147 +406,43 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             }
                         });
                     }
-                });//table end.
+                });
 
             } else{
                 $('#other').remove();
                 $('#other_item').remove();
             }
 
-            //上传附件
-            let operationType=""; //当前操作类别
-            $('#upfile').click(function(){
-                let iframeIndex = layer.open({
-                    title : '教学奖惩-课程获得的奖励-上传附件'
-                    ,type : 2
-                    ,area : [ '700px', '300px' ]
-                    ,offset : '100px'
-                    ,moveOut:true
-                    ,shadeClose : true //点击遮罩关闭
-                    ,content : '../common_upFile.html'
-                    ,success: function(layero, index){
-                        let upfileList = $("#layui-layer-iframe"+iframeIndex).contents().find('#upfileList');
-                        if(operationType =="update"){
-                            $.get(requestUrl+"/getFileListByRelationCode.do" , {
-                                "relationCode": $("#editForm input[ name='code' ] ").val()
-                            } ,  function(result_data){
-                                if(result_data.data.length ===0){
-                                    let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
-                                    upfileList.append(tr);
-                                } else {
-                                    $.each(result_data.data,function(index,fileInfo){
-                                        let tr = $(['<tr id="'+ fileInfo.code +'">'
-                                            ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
-                                            ,'<td style="text-align: center;">已上传</td>'
-                                            ,'<td style="text-align: center;">' +
-                                            '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
-                                            '   <button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>' +
-                                            '</td>'
-                                            ,'</tr>'].join(''));
-                                        upfileList.append(tr);
-                                        //预览
-                                        tr.find('a').on('click', function(){//点击文件名
-                                            preview_fileInfo(fileInfo);
-                                        });
-                                        tr.find('.upfile_preview').on('click', function(){//点击预览按钮
-                                            preview_fileInfo(fileInfo);
-                                        });
-                                        //删除
-                                        tr.find('.upfile_delete').on('click', function(){
-                                            $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                "code": tr.attr("id")
-                                            } ,  function(data){
-                                                tr.remove();
-                                            }, "json");
-                                        });
-                                    });
-                                }
-                            }, "json");
+            //初始化表单
+            var initEditForm = function (data) {
+
+                //初始化laydate实例
+                laydate.render({
+                    elem: "#awardDate" //指定元素
+                    ,trigger: 'click' //解决layDate 时间控件一闪而过问题
+                });
+
+                //自定义验证规则
+                form.verify({
+                    objName: function(value){
+                        if(value.length > 64){
+                            return '当前字符长度'+value.length+'（最大值64）';
                         }
-                        //上传附件
-                        let upfileIns = upload.render({
-                                                elem: $("#layui-layer-iframe"+iframeIndex).contents().find("#upfileIns")
-                                                ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                                                ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                                    "relationCode":function () {
-                                                        return $("#editForm input[ name='code' ] ").val();
-                                                    }
-                                                    ,"fileCategory":"jxjc_kchddjl" // 固定值
-                                                    ,"fileType":"附件" // 固定值
-                                                    ,"userId":function () {
-                                                        return $.cookie('userId');
-                                                    }
-                                                    ,"userName":function () {
-                                                        return $.cookie('userName');
-                                                    }
-                                                }
-                                                ,field:"file" //设定文件域的字段名
-                                                ,multiple: true // 	是否允许多文件上传
-                                                ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                                                ,exts:'pdf'
-                                                ,choose: function(obj){
-                                                    let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                                    //读取本地文件
-                                                    obj.preview(function(index, file, result){
-                                                        let tr = $(['<tr id="upfile_'+ index +'">'
-                                                            ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ file.name +'</a></td>'
-                                                            ,'<td style="text-align: center;">正在上传</td>'
-                                                            ,'<td style="text-align: center;">'
-                                                            // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-                                                            ,'<button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
-                                                            '<button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>'
-                                                            ,'</td>'
-                                                            ,'</tr>'].join(''));
-                                                        upfileList.append(tr);
-
-                                                        //删除
-                                                        tr.find('.upfile_delete').on('click', function(){
-                                                            $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                                "code": $('#upfile_'+index).attr("data-id")
-                                                            } ,  function(data){
-                                                                // layer.msg(data.msg);
-                                                                delete files[index]; //删除对应的文件
-                                                                tr.remove();
-                                                                upfileIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                                            }, "json");
-                                                        });
-                                                    });
-                                                }
-                                                ,done: function(res, index, upload){
-                                                    if(res.code == 200){ //上传成功
-                                                        let tr = upfileList.find('tr#upfile_'+ index)
-                                                            ,tds = tr.children();
-                                                        tr.attr("data-id",res.data.code);//
-                                                        tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
-                                                        // tds.eq(2).html(''); //清空操作
-
-                                                        //预览
-                                                        let fileInfo = res.data;
-                                                        tr.find('a').on('click', function(){//点击文件名
-                                                            preview_fileInfo(fileInfo);
-                                                        });
-                                                        tr.find('.upfile_preview').on('click', function(){//点击预览按钮
-                                                            preview_fileInfo(fileInfo);
-                                                        });
-                                                        //
-                                                        return delete this.files[index]; //删除文件队列已经上传成功的文件
-                                                    }
-                                                    this.error(index, upload);
-                                                }
-                                                ,error: function(index, upload){
-                                                    let tr = upfileList.find('tr#upfile_'+ index)
-                                                        ,tds = tr.children();
-                                                    tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
-                                                }
-                                            });
-                    },end:function () {
-                       /* //重载上传实例
-                        if(operationType=="update"){
-                            $("#upfileList").empty();
-                        }*/
                     }
                 });
-            });
+
+                //表单赋值
+                form.val("editForm",{
+                    "code":data.code
+                    ,"userId":data.userId
+                    ,"userName":data.userName
+                    ,"objName": data.objName
+                    ,"level1" : data.level1
+                    ,"level2" : data.level2
+                    ,"grantUnit" : data.grantUnit
+                    ,"awardDate" : data.awardDate
+                });
+            };
 
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
                 if(isOpen){
@@ -580,17 +451,17 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var isOpen = false;
                 let options = {
                     title : '教学奖惩-课程获得的奖励-查看详情'
-                    ,type : 2
+                    ,type : 1
                     ,area : [ '900px', '500px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content :  '../common_dataInfo.html'
+                    ,content :  $('#dataInfo_container')
                     ,success: function(layero, index){
                         isOpen = true;
                         //基础信息
-                        let htmlStr = '<table class="layui-table">\n' +
+                        let html = '<table class="layui-table">\n' +
                             '           <tbody>\n' +
                             '              <tr>' +
                             '                <td style="width: 80px; text-align: right">工号：</td><td style="width: 120px;">'+data.userId+'</td>' +
@@ -600,8 +471,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                 <td style="width: 80px; text-align: right">奖项名称：</td><td style="width: 120px;" colspan="3">'+data.objName+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">奖励级别：</td><td style="width: 120px;">'+data.level_1+'</td>' +
-                            '                <td style="width: 80px; text-align: right">获得奖项：</td><td style="width: 120px;">'+data.level_2+'</td>' +
+                            '                <td style="width: 80px; text-align: right">奖励级别：</td><td style="width: 120px;">'+data.level1+'</td>' +
+                            '                <td style="width: 80px; text-align: right">获得奖项：</td><td style="width: 120px;">'+data.level2+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
                             '                 <td style="width: 80px; text-align: right">证书授予机构：</td><td style="width: 120px;" colspan="3">'+data.grantUnit+'</td>' +
@@ -614,8 +485,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '              </tr>\n' +
                             '            </tbody>\n' +
                             '         </table>';
-                        // $("#baseInfo").html(htmlStr);
-                        $("#layui-layer-iframe"+iframeIndex).contents().find("#baseInfo").html(htmlStr);
+                        $("#baseInfo").html(html);
                         //附件列表
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
@@ -624,8 +494,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         } ,  function(result_data){
                             if(result_data.data.length ===0){
                                 let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
-                                // $('#fileList').append(tr);
-                                $("#layui-layer-iframe"+iframeIndex).contents().find("#fileList").append(tr);
+                                $("#fileList").append(tr);
                             } else {
                                 $.each(result_data.data,function(index,fileInfo){
                                     let tr = $(['<tr id="'+ fileInfo.code +'">'
@@ -652,17 +521,17 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         downloadForm.submit();
                                         downloadForm.remove();
                                     });
-                                    // $('#fileList').append(tr);
-                                    $("#layui-layer-iframe"+iframeIndex).contents().find("#fileList").append(tr);
+                                    $('#fileList').append(tr);
                                 });
                             }
                         }, "json");
                     }
                     ,end:function () {
                         isOpen = false;
-                        // $('#fileList').empty();
+                        $('#fileList').empty();
                     }
                 };
+                //提交
                 if(isSubmit && data.isSubmit == '未提交'){
                     options.btn = ['提交','关闭'];
                     options.yes = function(index, layero){
@@ -672,6 +541,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
+                //审核
                 if(isShenHe && data.shenheStatus == '未审核'){
                     options.btn = ['审核','关闭'];
                     options.yes = function(index, layero){
@@ -681,7 +551,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
-                var iframeIndex = layer.open(options); //返回一个当前层索引
+                layer.open(options); //返回一个当前层索引
             };
 
             let toSubmit = function (row_dataArr){
@@ -700,15 +570,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             };
 
             let toShenHe = function (row_dataArr) {
-                let index = layer.open({
+                layer.open({
                     title : '教学奖惩-课程获得的奖励-审核'
                     ,type : 1
-                    ,area : [ '700px', '450px' ]
+                    ,area : [ '900px', '450px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content : $('#shenHeForm')
+                    ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
                         form.on('select(status)', function(data) {
@@ -720,7 +590,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                         });
                         //
-                        form.on('submit(shenHeFormSubmitBtn)', function(formData){
+                        form.on('submit(toSubmitShenHeForm)', function(formData){
                             $.post(requestUrl+'/kchddjl/toShenhe.do'
                                 ,{
                                     "jsonStr":JSON.stringify(row_dataArr)
@@ -735,15 +605,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 },function (result_data) {
                                     if(result_data.code === 200){
                                         other_table.reload();//重新加载表格数据
-                                        // window.location.reload();//刷新页面，审核后页面状态未改变
                                     }
-                                    layer.msg(result_data.msg, {time : 3000, offset: '100px'});
-                                    layer.close(index);
+                                    layer.msg(result_data.msg, { offset: '100px'},function () {
+                                        layer.closeAll();
+                                    });
                                 },'json');
                         });
-                    }
-                    ,end:function () {
-
                     }
                 });
             };

@@ -668,8 +668,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '双创教育-本科生申请专利-上传附件'
                     ,type : 1
-                    ,area : [ '900px', '300px' ]
-                    ,offset : '50px'
+                    ,area : [ '700px', '300px' ]
+                    ,offset : '100px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
                     ,btn: ['关闭']

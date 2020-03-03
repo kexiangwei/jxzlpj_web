@@ -178,7 +178,7 @@ layui.use(['layer','table','form','util'], function(){
                                 var shenheCode = randomChar();
                                 //监听表单提交
                                 var isSubmit = true;
-                                form.on('submit(editFormSubmitBtn)', function(data){
+                                form.on('submit(toSubmitEidtForm)', function(data){
                                     if(!isSubmit){
                                         return false;
                                     }
@@ -270,7 +270,7 @@ layui.use(['layer','table','form','util'], function(){
                                 "shenheDesc":rowData.shenheDesc
                             });
                             //监听表单提交
-                            form.on('submit(editFormSubmitBtn)', function(data){
+                            form.on('submit(toSubmitEidtForm)', function(data){
                                 var data = data.field;
                                 $.post(requestUrl+'/updateShenheByCode.do',{
                                     "shenheCode":data.shenheCode,

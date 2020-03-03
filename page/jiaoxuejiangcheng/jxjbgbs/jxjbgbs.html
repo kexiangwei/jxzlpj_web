@@ -4,14 +4,10 @@
     <meta charset="utf-8">
     <title>教学奖惩-教学基本功比赛</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
-    <style type="text/css">
-        .layui-form-label {
-            width: 100px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../../css/global.css">
 </head>
 <body class="layui-layout-body">
-    <div class="layui-tab">
+    <div class="layui-tab" lay-filter="layTab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
             <li id="other">审核列表<span class="layui-badge"></span></li>
@@ -52,14 +48,15 @@
                     </div>
 
                     <!-- 数据表格 -->
-                    <script type="text/html" id="myself_toolbar">
-                        <div class="layui-btn-container">
-                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
-                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>提交</button>
-                        </div>
-                    </script>
-                    <table class="layui-table" id="myself_table" lay-filter="myself_table"></table>
-                    <script type="text/html" id="myself_bar"></script>
+                    <table class="layui-table" id="myself_table" lay-filter="myself_table">
+                        <script type="text/html" id="myself_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                                <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>提交</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="myself_bar"></script>
+                    </table>
                 </div>
             </div>
             <div class="layui-tab-item" id="other_item">
@@ -94,22 +91,46 @@
                     </div>
 
                     <!-- 数据表格 -->
-                    <script type="text/html" id="other_toolbar">
-                        <div class="layui-btn-container">
-                            <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>审核</button>
-                        </div>
-                    </script>
-                    <table class="layui-table" id="other_table" lay-filter="other_table"></table>
-                    <script type="text/html" id="other_bar">
-                        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
-                    </script>
+                    <table class="layui-table" id="other_table" lay-filter="other_table">
+                        <script type="text/html" id="other_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>审核</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="other_bar">
+                            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>
+                            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
+                        </script>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="layui-container" style="width: 90%;" id="insertOrUpdate_container">
+    <!-- 查看信息 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
+        <fieldset class="layui-elem-field" style="margin-top: 10px;">
+            <legend>基础信息</legend>
+            <div id="baseInfo"></div>
+        </fieldset>
+        <fieldset class="layui-elem-field" style="margin-top: 10px;">
+            <legend>附件列表</legend>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">文件名</th>
+                        <th style="width: 150px; text-align: center;">上传日期</th>
+                        <th style="width: 150px; text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="fileList"></tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
+    <!-- 响应新增，编辑按钮 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
@@ -132,7 +153,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">级别：</label>
                     <div class="layui-input-inline" style="width: 190px;">
-                        <select name="level_1" lay-filter="level_1">
+                        <select name="level1" lay-filter="level1">
                             <option value="">请选择</option>
                             <option value="国家级">国家级</option>
                             <option value="北京市级">北京市级</option>
@@ -143,7 +164,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">奖项：</label>
                     <div class="layui-input-inline" style="width: 190px;">
-                        <select name="level_2" lay-filter="level_2">
+                        <select name="level2" lay-filter="level2">
                             <option value="">请选择</option>
                             <option value="一等奖">一等奖</option>
                             <option value="二等奖">二等奖</option>
@@ -172,13 +193,13 @@
                 </div>
             </div>
             <div class="layui-btn-container" align="center" style="margin-top: 50px;">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="editFormSubmitBtn">保存</button>
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
     </div>
     <!-- 上传附件 -->
-    <div class="layui-container" style="width: 90%;" id="uploadFile_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="uploadFile_container">
         <div class="layui-upload" style="margin-top: 10px;">
             <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
             <span style="color: #8D8D8D">请选择PDF 格式文件</span>
@@ -188,14 +209,16 @@
                         <th style="width: 120px;text-align: center;">状态</th>
                         <th style="width: 120px;text-align: center;">操作</th>
                     </tr></thead>
-                    <tbody id="upfileList"></tbody>
+                    <tbody id="upfileList"><tr id="noData"><td colspan="3" style="text-align: center;">无数据</td></tr></tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <!-- 查看审核流程 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
     <!-- 填写审核意见 -->
-    <div class="layui-container" id="shenHeForm_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
             <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
                 <label class="layui-form-label">审核状态：</label>
@@ -216,7 +239,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block" align="center">
-                    <button class="layui-btn" lay-submit="" lay-filter="shenHeFormSubmitBtn" id="shenHeFormSubmitBtn">提交</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="toSubmitShenHeForm" id="toSubmitShenHeForm">提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -227,26 +250,9 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="../../common/common_shenheProcess.js"></script>
+    <script src="../../../js/shenheProcess.js"></script>
+    <script src="../../../js/preview_fileInfo.js"></script>
+    <script src="upfile.js"></script>
     <script src="jxjbgbs.js"></script>
-    <script type="text/javascript">
-        layui.use(['layer','form','laydate'], function(){
-            let $ = layui.$,layer = layui.layer,form = layui.form,laydate = layui.laydate;
-            //初始化laydate实例
-            laydate.render({
-                elem: "#awardDate" //指定元素
-                ,trigger: 'click' //解决layDate 时间控件一闪而过问题
-            });
-
-            //自定义验证规则
-            form.verify({
-                objName: function(value){
-                    if(value.length > 64){
-                        return '当前字符长度'+value.length+'（最大值64）';
-                    }
-                }
-            });
-        });
-    </script>
 </body>
 </html>

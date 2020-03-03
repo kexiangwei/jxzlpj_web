@@ -661,7 +661,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     other_table.reload();//重新加载表格数据
                                 }
                                 layer.msg(result_data.msg, { offset: '100px'},function () {
-                                    layer.close(index);
+                                    layer.closeAll();
                                 });
                             },'json');
                         });

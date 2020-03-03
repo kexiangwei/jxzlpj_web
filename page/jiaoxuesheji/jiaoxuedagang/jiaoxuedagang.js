@@ -52,8 +52,8 @@ layui.use(['layer','element','table','form','upload'], function(){
                     ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                         layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
                         ,limits: [10,20,50,100]
-                        ,first: true //不显示首页
-                        ,last: true //不显示尾页
+                        ,first: '首页' //不显示首页
+                        ,last: '尾页' //不显示尾页
                     }
                     ,limit: 10
                     ,even: true //隔行背景
@@ -316,8 +316,8 @@ layui.use(['layer','element','table','form','upload'], function(){
                     ,page: {
                         layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
                         ,limits: [10,20,50,100]
-                        ,first: true
-                        ,last: true
+                        ,first: '首页'
+                        ,last: '尾页'
                     }
                     ,limit: 10
                     ,even: true
@@ -417,7 +417,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                             }
                                         });
                                         //
-                                        form.on('submit(shenHeFormSubmitBtn)', function(formData){
+                                        form.on('submit(toSubmitShenHeForm)', function(formData){
                                             $.post(requestUrl+'/jxdg/toShenhe.do',{
                                                 "jsonStr":JSON.stringify(data)
                                                 ,"status":formData.field.status

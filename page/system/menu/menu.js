@@ -242,7 +242,7 @@ layui.use(['layer','table','form'], function(){
                         ,content : $('#editForm')
                         ,success: function(layero, index){
                             //监听表单提交
-                            form.on('submit(editFormSubmitBtn)', function(data){
+                            form.on('submit(toSubmitEidtForm)', function(data){
                                 layer.msg(JSON.stringify(data.field));
                                 return false;
                             });
