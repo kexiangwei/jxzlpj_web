@@ -35,10 +35,10 @@ layui.use(['layer','upload'], function(){
                             upfileList.append(tr);
                             //预览
                             tr.find('a').on('click', function(){//点击文件名
-                                preview_fileInfo(fileInfo);
+                                previewFileInfo(fileInfo);
                             });
                             tr.find('.upfile_preview').on('click', function(){//点击预览按钮
-                                preview_fileInfo(fileInfo);
+                                previewFileInfo(fileInfo);
                             });
                             //删除
                             tr.find('.upfile_delete').on('click', function(){
@@ -112,10 +112,10 @@ layui.use(['layer','upload'], function(){
                             //预览
                             let fileInfo = res.data;
                             tr.find('a').on('click', function(){//点击文件名
-                                preview_fileInfo(fileInfo);
+                                previewFileInfo(fileInfo);
                             });
                             tr.find('.upfile_preview').on('click', function(){//点击预览按钮
-                                preview_fileInfo(fileInfo);
+                                previewFileInfo(fileInfo);
                             });
                             //
                             return delete this.files[index]; //删除文件队列已经上传成功的文件

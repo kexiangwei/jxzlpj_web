@@ -3,7 +3,7 @@
  * 预览文件（目前仅支持图片和PDF格式）
  * @param file
  */
-var preview_fileInfo = function(file){
+var previewFileInfo = function(file){
     let suffix = file.fileName.substring(file.fileName.lastIndexOf(".")+1);
     switch (suffix) {
         case 'pdf':

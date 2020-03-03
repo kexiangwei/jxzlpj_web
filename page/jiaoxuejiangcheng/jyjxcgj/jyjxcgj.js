@@ -527,10 +527,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         ,'</tr>'].join(''));
                                     //预览
                                     tr.find('a').on('click', function(){
-                                        preview_fileInfo(fileInfo);
+                                        previewFileInfo(fileInfo);
                                     });
                                     tr.find('.upfile_preview').on('click', function(){
-                                        preview_fileInfo(fileInfo);
+                                        previewFileInfo(fileInfo);
                                     });
                                     tr.find('.upfile_download').on('click', function(){
                                         let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
