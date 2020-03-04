@@ -22,12 +22,12 @@
     <div class="layui-tab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
-            <li class="layui-this" id="other">审核列表<span class="layui-badge">0</span></li>
+            <li id="other">审核列表<span class="layui-badge">0</span></li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" id="myself_item">
                 <div class="layui-fluid">
-                    <div class="myself_search">
+                    <div class="layui-form myself_search">
                         课程编号：
                         <div class="layui-inline">
                             <input class="layui-input" name="myself_courseCode" autocomplete="off">
@@ -55,9 +55,9 @@
                     <script type="text/html" id="myself_bar"></script>
                 </div>
             </div>
-            <div class="layui-tab-item layui-show" id="other_item">
+            <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
-                    <div class="other_search">
+                    <div class="layui-form other_search">
                         工号：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_userId" autocomplete="off">
@@ -137,7 +137,7 @@
     </div>
 
     <!-- 查看审核流程 -->
-    <div class="layui-container" id="shenheProcessContainer"></div>
+    <div class="layui-container" id="shenheProcess_container"></div>
 
     <!-- 填写审核意见 -->
     <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
@@ -169,7 +169,7 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="../../common/common_shenheProcess.js"></script>
+<script src="../../../js/shenheProcess.js"></script>
     <script src="jiaoxuedagang.js"></script>
 
 </body>

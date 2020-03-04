@@ -162,7 +162,7 @@
     </div>
 
     <!-- 新增&修改，基础信息 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
@@ -182,7 +182,7 @@
             </fieldset>
             <fieldset class="layui-elem-field" style="margin-top: 10px;">
                 <legend>指导教师信息（第一指导教师）</legend>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">教师工号：</label>
                         <div class="layui-input-inline">
@@ -199,13 +199,13 @@
             </fieldset>
             <fieldset class="layui-elem-field" style="margin-top: 10px;">
                 <legend>赛事信息</legend>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">赛事名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="name" lay-verify="required|name" autocomplete="off" class="layui-input" style="width: 82%;">
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">获奖等级：</label>
                         <div class="layui-input-inline">
@@ -231,7 +231,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">证书授予单位：</label>
                     <div class="layui-input-block">
                         <input type="text" name="grantUnit" class="layui-input" style="width: 82%;">
@@ -278,7 +278,7 @@
     <!-- 新增&修改，参赛学生信息 -->
     <div class="layui-container" style="width: 90%; display: none;" id="stu_container">
         <form class="layui-form" action="" lay-filter="stuForm" id="stuForm">
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">学号：</label>
                     <div class="layui-input-inline">
@@ -292,7 +292,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">学院：</label>
                     <div class="layui-input-inline">

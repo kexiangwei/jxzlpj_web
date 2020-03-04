@@ -526,7 +526,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,offset : '10px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content : $('#viewContainer')
+                    ,content : $('#dataInfo_container')
                     ,success: function(layero, index){
                         let htmlStr = '';
                         htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
@@ -565,10 +565,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             '           </tbody>\n' +
                             '       </table>' +
                             '   </fieldset>';
-                        $("#viewContainer").html(htmlStr);
+                        $("#dataInfo_container").html(htmlStr);
                     }
                     ,end:function () {
-                        $("#viewContainer .layui-elem-field").empty();
+                        $("#dataInfo_container .layui-elem-field").empty();
                     }
                 });
             };

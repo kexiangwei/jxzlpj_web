@@ -134,12 +134,12 @@
         </fieldset>
     </div>
     <!-- 响应新增，编辑按钮 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
             <!-- 业务字段 -->
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-inline">
@@ -153,13 +153,13 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">奖项名称：</label>
                 <div class="layui-input-block">
                     <input type="text" name="objName" lay-verify="required|objName" autocomplete="off" class="layui-input" style="width: 80%;">
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">奖励级别：</label>
                     <div class="layui-input-inline" style="width: 190px;">
@@ -184,7 +184,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">证书授予机构：</label>
                 <div class="layui-input-block">
                     <input type="text" name="grantUnit" class="layui-input" style="width: 80%;">

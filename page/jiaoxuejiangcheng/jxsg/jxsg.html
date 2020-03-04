@@ -53,14 +53,14 @@
         </table>
     </div>
 
-    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
             <!-- 业务字段 -->
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-学院：</label>
                     <div class="layui-input-inline" style="width: 190px;">
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-工号：</label>
                     <div class="layui-input-inline">
@@ -89,13 +89,13 @@
                 </div>
             </div>
 
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">事件：</label>
                 <div class="layui-input-block">
                     <input type="text" name="event" lay-verify="required|event" autocomplete="off" class="layui-input" style="width: 83%;">
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">事故认定级别：</label>
                     <div class="layui-input-inline">

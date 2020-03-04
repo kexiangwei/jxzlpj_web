@@ -150,7 +150,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         // ,shadeClose : true //防止不小心点到遮罩关闭弹窗，禁用此功能
                                         ,area : [ '900px', '520px' ]
                                         ,offset : '20px'
-                                        ,content : $('#insertOrUpdate_container')
+                                        ,content : $('#editForm_container')
                                         ,success: function(layero, index){
                                             //初始化laydate实例
                                             laydate.render({
@@ -273,14 +273,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                                     ,offset : '20px'
                                     ,shadeClose : true //点击遮罩关闭
-                                    ,content : $('#insertOrUpdate_container')
+                                    ,content : $('#editForm_container')
                                     ,success: function(layero, index){
                                         //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                                         let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
                                         $("#editForm .layui-btn-container").append(cancelBtn);
                                         cancelBtn.click(function (event) {
-                                            // event.preventDefault();
-                                            layer.close(editForm_idx);
+                                            layer.close(index);
                                         });
 
                                         //初始化laydate实例

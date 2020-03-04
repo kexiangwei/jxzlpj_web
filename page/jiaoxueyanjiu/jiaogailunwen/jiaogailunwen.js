@@ -20,8 +20,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
             if(data.isSubmit > 0){ //拥有提交权限
-                $('#other').removeClass();
-                $('#other_item').css('class','layui-tab-item');
+
                 //数据表格
                 let myself_table = table.render({
                     elem : '#myself_table'
@@ -146,10 +145,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             layer.open({
                                 title : '教学研究-教改论文-新增'
                                 ,type : 1
-                                ,offset : '10px'
                                 // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                ,area : [ '700px', '535px' ]
-                                ,content : $('#editForm')
+                                ,area : [ '900px', '500px' ]
+                                ,offset : '50px'
+                                ,content : $('#editForm_container')
                                 ,success: function(layero, index){
                                     /*//发表日期XXXX年XX月
                                     laydate.render({
@@ -252,11 +251,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.open({
                             title : '教学研究-教改论文-编辑'
                             ,type : 1
-                            ,area : [ '700px', '535px' ]
-                            ,offset : '10px'
+                            ,area : [ '900px', '500px' ]
+                            ,offset : '50px'
                             ,shadeClose : true //点击遮罩关闭
-                            ,content : $('#editForm')
+                            ,content : $('#editForm_container')
                             ,success: function(layero, index){
+                                //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
+                                let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
+                                $("#editForm .layui-btn-container").append(cancelBtn);
+                                cancelBtn.click(function (event) {
+                                    layer.close(index);
+                                });
+
                                 form.val("editForm",{
                                     "code":data.code
                                     ,"lwTitle": data.lwTitle
@@ -325,6 +331,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#myself_item').remove();
             }
             if(data.isShenhe > 0){ //拥有审核权限
+
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
+
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
                     ,height : 440
@@ -359,11 +373,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                     ,limit: 10
                     ,even: true
-                    ,totalRow: true
                     ,toolbar: '#other_toolbar'
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
-                        ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
+                        ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'userId', title: '工号', width:120, sort: true}
                         ,{field: 'userName', title: '姓名', width:120}
                         ,{field: 'lwTitle', title: '论文题目', width:150}
@@ -448,7 +461,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     ,offset : '10px' //只定义top坐标，水平保持居中
                                     ,shadeClose : true //点击遮罩关闭
                                     ,btn : ['关闭']
-                                    ,content : $('#shenHeForm')
+                                    ,content : $('#shenHeForm_container')
                                     ,success: function(layero, index){
                                         //
                                         form.on('select(status)', function(data) {
@@ -515,9 +528,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '教学研究-教改论文-查看详情'
                     ,type : 1
-                    ,area : [ '700px', '535px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,area : [ '900px', '500px' ]
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : '<table class="layui-table">\n' +
@@ -547,10 +559,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '教学研究-教改论文-查看附件'
                     ,type : 1
-                    ,offset : '10px'
+                    ,area : [ '700px', '300px' ]
+                    ,offset : '100px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
-                    ,area : [ '1175px', '535px' ]
+                    ,btn: ['关闭']
                     ,content : $('#viewFileContainer')
                     ,success: function(layero, index){
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
@@ -567,7 +580,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 len++;
                                 let tr = $(['<tr id="'+ file.code +'">'
                                     ,'<td>	<a href="'+requestUrl+file.filePath+'" target="_blank">'+ file.fileName +'</a></td>'
-                                    ,'<td>'+ file.fileSize +'kb</td>'
                                     ,'<td>'+ file.createDate +'</td>'
                                     ,'<td>' +
                                     '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
@@ -610,10 +622,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '教学研究-教改论文-上传附件'
                     ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px'
+                    ,area : [ '700px', '300px' ]
+                    ,offset : '100px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
                     ,content : $('#uploadFileContainer')
                     ,success: function(layero, index){
                         if(operationType =="edit"){
@@ -624,7 +637,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     $.each(data.data,function(index,file){
                                         let tr = $(['<tr id="'+ file.code +'">'
                                             ,'<td>'+ file.fileName +'</td>'
-                                            ,'<td>'+ file.fileSize +'kb</td>'
                                             ,'<td>已上传</td>'
                                             ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
                                             ,'</tr>'].join(''));
@@ -669,7 +681,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 obj.preview(function(index, file, result){
                                     var tr = $(['<tr id="upload-'+ index +'">'
                                         ,'<td>'+ file.name +'</td>'
-                                        ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
                                         ,'<td>待上传</td>'
                                         ,'<td>'
                                         // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
@@ -696,7 +707,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     var tr = demoListView.find('tr#upload-'+ index)
                                         ,tds = tr.children();
                                     tr.attr("data-id",res.data.code);//
-                                    tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
+                                    tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
                                     // tds.eq(3).html(''); //清空操作
                                     return delete this.files[index]; //删除文件队列已经上传成功的文件
                                 }

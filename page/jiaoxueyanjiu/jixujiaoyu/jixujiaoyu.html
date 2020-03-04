@@ -62,7 +62,7 @@
             </div>
             <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
-                    <div class="other_search">
+                    <div class="layui-form other_search">
                         工号：
                         <div class="layui-inline">
                             <input type="text" name="other_userId" autocomplete="off" class="layui-input" >
@@ -107,14 +107,14 @@
     </div>
 
     <!-- 响应新增，编辑按钮 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 声明一个隐藏域，信息编号是修改数据的依据-->
             <input type="hidden" name="code"/>
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
             <!-- -->
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">培训名称：</label>
                 <div class="layui-input-block">
                     <input type="text" name="peixunName" required  lay-verify="required" placeholder="包括教学方面的培训、研讨会、调研、在线学习等形式" class="layui-input">

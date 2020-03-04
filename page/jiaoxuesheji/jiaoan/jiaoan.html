@@ -22,13 +22,13 @@
     <div class="layui-tab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
-            <li class="layui-this" id="other">审核列表<span class="layui-badge"></span></li>
+            <li id="other">审核列表<span class="layui-badge"></span></li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" id="myself_item">
                 <div class="layui-fluid">
                     <!-- 查询参数 -->
-                    <div class="myself_search">
+                    <div class="layui-form myself_search">
                         课程编号：
                         <div class="layui-inline">
                             <input class="layui-input" name="myself_courseCode" autocomplete="off" style="width:150px; ">
@@ -57,10 +57,10 @@
                     <script type="text/html" id="myself_bar"></script>
                 </div>
             </div>
-            <div class="layui-tab-item layui-show" id="other_item">
+            <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
                     <!-- 查询参数 -->
-                    <div class="other_search">
+                    <div class="layui-form other_search">
                         工号：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_userId" autocomplete="off" style="width:150px; ">
@@ -104,7 +104,7 @@
     </div>
 
     <!-- 查看详情 -->
-    <div class="layui-container" id="viewContainer"></div>
+    <div class="layui-container" id="dataInfo_container"></div>
 
     <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" id="insertOrUpdateContainer">
@@ -112,7 +112,7 @@
             <!-- 业务主键-->
             <input type="hidden" name="code"/>
             <!-- 业务数据 -->
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">课程编号：</label>
                     <div class="layui-input-inline">
@@ -126,7 +126,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">授课时间：</label>
                     <div class="layui-input-inline">
@@ -140,7 +140,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">课题：</label>
                     <div class="layui-input-inline">
@@ -232,7 +232,7 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="../../common/common_shenheProcess.js"></script>
+<script src="../../../js/shenheProcess.js"></script>
     <script src="jiaoan.js"></script>
 </body>
 </html>

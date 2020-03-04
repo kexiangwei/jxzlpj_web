@@ -143,12 +143,12 @@
     </div>
 
     <!-- 新增&修改，基础信息 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="insertOrUpdate_container">
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
             <!-- 业务字段 -->
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">学院：</label>
                     <div class="layui-input-inline">
@@ -162,7 +162,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">学号：</label>
                     <div class="layui-input-inline">
@@ -176,13 +176,13 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">论文题目：</label>
                 <div class="layui-input-block">
                     <input type="text" name="thesisTitle" lay-verify="required|thesisTitle" autocomplete="off" class="layui-input" style="width: 82%;">
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">期刊名称：</label>
                     <div class="layui-input-inline">
@@ -196,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">收录情况：</label>
                 <div class="layui-input-inline">
                     <select name="includStatus" lay-filter="includStatus">
@@ -219,7 +219,7 @@
                     <button type="button" class="layui-btn layui-btn-primary" id="upfile">上传论文附件(PDF 格式)</button>
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">指导教师工号：</label>
                     <div class="layui-input-inline">

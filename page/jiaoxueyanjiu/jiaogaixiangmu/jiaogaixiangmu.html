@@ -6,15 +6,15 @@
     <link rel="stylesheet" href="../../../layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
-    <div class="layui-tab">
+    <div class="layui-tab" lay-filter="layTab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
-            <li class="layui-this" id="other">审核列表<span class="layui-badge"></span></li>
+            <li id="other">审核列表<span class="layui-badge"></span></li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" id="myself_item">
                 <div class="layui-fluid">
-                    <div class="myself_search">
+                    <div class="layui-form myself_search">
                         项目名称：
                         <div class="layui-inline">
                             <input class="layui-input" name="myself_search_xmName" autocomplete="off" style="width: 90%;">
@@ -47,9 +47,9 @@
                     <script type="text/html" id="myself_bar"></script>
                 </div>
             </div>
-            <div class="layui-tab-item layui-show" id="other_item">
+            <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
-                    <div class="other_search">
+                    <div class="layui-form other_search">
                         <!--工号：
                         <div class="layui-inline">
                             <input class="layui-input" name="other_search_userId" autocomplete="off" style="width: 120px;">
@@ -84,7 +84,7 @@
                     </script>
                     <script type="text/html" id="other_bar">
                         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>
-                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-shenheProcess">查看流程</a>
+                        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
                     </script>
                 </div>
             </div>
@@ -92,22 +92,22 @@
     </div>
 
     <!-- 查看详情 -->
-    <div class="layui-container" id="viewContainer"></div>
+    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container"></div>
     <!-- 响应新增，编辑按钮 -->
-    <form class="layui-form" id="editForm" lay-filter="editForm">
+    <form class="layui-form" style="width: 90%; display: none;" id="editForm" lay-filter="editForm">
         <!-- 声明一个隐藏域，信息编号是修改数据的依据-->
         <input type="hidden" name="code"/>
         <!-- -->
         <div class="layui-container">
             <fieldset class="layui-elem-field" style="margin-top: 10px;">
                 <legend>一、项目基本信息</legend>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">项目名称：</label>
                     <div class="layui-input-block">
                         <input type="text" name="xmName" required  lay-verify="required" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">项目类型：</label>
                     <div class="layui-input-block">
                         <select name="xmType" lay-filter="xmType">
@@ -120,13 +120,13 @@
             </fieldset>
             <fieldset class="layui-elem-field" style="margin-top: 10px;">
                 <legend>二、项目主持人信息</legend>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-block">
                         <input type="text" name="leader" readonly class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">工号：</label>
                     <div class="layui-input-block">
                         <input type="text" name="leaderId" readonly class="layui-input">
@@ -147,25 +147,25 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">二级单位：</label>
                     <div class="layui-input-block">
                         <input type="text" name="collegeOrDept" readonly class="layui-input"><!-- placeholder="学院或部门" -->
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">专业：</label>
                     <div class="layui-input-block">
                         <input type="text" name="major" readonly class="layui-input"><!-- placeholder="若是职能部门，可以不填写" -->
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">主要教学工作简历：</label>
                     <div class="layui-input-block">
                         <script type="text/plain" id="mainTeachWork" name="mainTeachWork"></script>
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">主要教育教学研究领域及成果：</label>
                     <div class="layui-input-block">
                         <script type="text/plain" id="mainTeachAchievement" name="mainTeachAchievement"></script>
@@ -198,13 +198,13 @@
             </fieldset>
             <fieldset class="layui-elem-field" style="margin-top: 10px;">
                 <legend>四、项目的研究背景与研究基础</legend>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">现状与背景分析（包括已有研究实践基础）：</label>
                     <div class="layui-input-block">
                         <script type="text/plain" id="currentAndBackground" name="currentAndBackground"></script>
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">研究内容、目标、要解决的问题和主要特色：</label>
                     <div class="layui-input-block">
                         <script type="text/plain" id="questionAndTarget" name="questionAndTarget"></script>
@@ -213,13 +213,13 @@
             </fieldset>
             <fieldset class="layui-elem-field" style="margin-top: 10px;">
                 <legend>五、项目的预期效果、具体成果和进度安排</legend>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">预期效果与具体成果：</label>
                     <div class="layui-input-block">
                         <script type="text/plain" id="expectAndResult" name="expectAndResult"></script>
                     </div>
                 </div>
-                <div class="layui-form-item" style="margin-top: 10px;">
+                <div class="layui-form-item">
                     <label class="layui-form-label">进度安排：</label>
                     <div class="layui-input-block">
                         <script type="text/plain" id="planAndProcess" name="planAndProcess"></script>
@@ -250,21 +250,21 @@
         </div>
     </form>
     <!-- 项目主要参加人员情况 -->
-    <form class="layui-form" id="memberForm" lay-filter="memberForm">
+    <form class="layui-form" style="width: 90%; display: none;" id="memberForm" lay-filter="memberForm">
         <div class="layui-container" style="width: 90%;">
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">姓名：</label>
                 <div class="layui-input-block">
                     <input type="text" name="userName" required  lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">工号：</label>
                 <div class="layui-input-block">
                     <input type="text" name="userId" required  lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">任务分工：</label>
                 <div class="layui-input-block">
                     <textarea name="task" required  lay-verify="required" autocomplete="off" class="layui-textarea"></textarea>
@@ -279,15 +279,15 @@
         </div>
     </form>
     <!-- 经费预算 -->
-    <form class="layui-form" id="fundBudgetForm" lay-filter="fundBudgetForm">
+    <form class="layui-form" style="width: 90%; display: none;" id="fundBudgetForm" lay-filter="fundBudgetForm">
         <div class="layui-container" style="width: 90%;">
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">科目：</label>
                 <div class="layui-input-block">
                     <input type="text" name="subject" required  lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item" style="margin-top: 10px;">
+            <div class="layui-form-item">
                 <label class="layui-form-label">预算金额（元）：</label>
                 <div class="layui-input-block">
                     <input type="text" name="budgetAmount" required  lay-verify="required" autocomplete="off" class="layui-input">
@@ -303,49 +303,51 @@
     </form>
 
     <!-- 查看审核流程 -->
-    <div class="layui-container" id="shenheProcessContainer"></div>
+    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
     <!-- 查看专家审核意见 -->
-    <div class="layui-container" id="zjshContainer"></div>
+    <div class="layui-container" style="width: 90%; display: none;" id="zjshContainer"></div>
     <!-- 填写审核意见 -->
-    <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
-        <div class="layui-form-item" style="width: 320px; margin-top: 20px; display: none" id="shenheType">
-            <label class="layui-form-label">审核类别：</label>
-            <div class="layui-input-inline" style="width: 150px;">
-                <select name="shenheType" disabled lay-filter="shenheType">
-                    <option value="">请选择</option>
-                    <option value="初审">初审</option>
-                    <option value="终审">终审</option>
-                </select>
+    <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
+        <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
+            <div class="layui-form-item" style="width: 320px; margin-top: 20px; display: none" id="shenheType">
+                <label class="layui-form-label">审核类别：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <select name="shenheType" disabled lay-filter="shenheType">
+                        <option value="">请选择</option>
+                        <option value="初审">初审</option>
+                        <option value="终审">终审</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
-            <label class="layui-form-label">审核状态：</label>
-            <div class="layui-input-inline" style="width: 150px;">
-                <select name="status" lay-filter="status">
-                    <option value="">请选择</option>
-                    <option value="通过" selected="">通过</option>
-                    <option value="退回">退回</option>
-                </select>
+            <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
+                <label class="layui-form-label">审核状态：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <select name="status" lay-filter="status">
+                        <option value="">请选择</option>
+                        <option value="通过" selected="">通过</option>
+                        <option value="退回">退回</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">审核意见：</label>
-            <div class="layui-input-block">
-                <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 150px;">通过</textarea>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">审核意见：</label>
+                <div class="layui-input-block">
+                    <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 150px;">通过</textarea>
+                </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="toSubmitShenHeForm" id="toSubmitShenHeForm">提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="toSubmitShenHeForm" id="toSubmitShenHeForm">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
 
-    <script type="text/javascript" src="../../../js/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" src="../../../js/ueditor/ueditor.all.min.js"></script>
-    <script type="text/javascript" src="../../../js/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="../../../js/ueditor/ueditor.config.js"></script>
+    <script src="../../../js/ueditor/ueditor.all.min.js"></script>
+    <script src="../../../js/ueditor/lang/zh-cn/zh-cn.js"></script>
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>

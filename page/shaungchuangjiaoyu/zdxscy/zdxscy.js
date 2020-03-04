@@ -162,7 +162,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         ,type : 1
                                         ,area : [ '900px', '400px' ]
                                         ,offset : '50px'
-                                        ,content : $('#insertOrUpdate_container')
+                                        ,content : $('#editForm_container')
                                         ,success: function(layero, index){
 
                                             //初始化表单
@@ -238,7 +238,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     ,area : [ '900px', '400px' ]
                                     ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
-                                    ,content : $('#insertOrUpdate_container')
+                                    ,content : $('#editForm_container')
                                     ,success: function(layero, index){
                                         //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                                         let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');

@@ -20,8 +20,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
             if(data.isSubmit > 0){ //拥有提交权限
-                $('#other').removeClass();
-                $('#other_item').css('class','layui-tab-item');
+
                 //数据表格
                 let myself_table = table.render({
                     elem : '#myself_table'
@@ -149,10 +148,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             layer.open({
                                 title : '教学研究-教材建设-新增'
                                 ,type : 1
-                                ,offset : '20px'
-                                // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                ,area : [ '700px', '435px' ]
-                                ,content : $('#editForm')
+                                ,area : [ '900px', '500px' ]
+                                ,offset : '50px'
+                                ,content : $('#editForm_container')
                                 ,success: function(layero, index){
                                     //初始化laydate实例
                                     laydate.render({
@@ -259,11 +257,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.open({
                             title : '教学研究-教材建设-编辑'
                             ,type : 1
-                            ,area : [ '700px', '535px' ]
-                            ,offset : '10px'
+                            ,area : [ '900px', '500px' ]
+                            ,offset : '50px'
                             ,shadeClose : true //点击遮罩关闭
-                            ,content : $('#editForm')
+                            ,content : $('#editForm_container')
                             ,success: function(layero, index){
+                                //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
+                                let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
+                                $("#editForm .layui-btn-container").append(cancelBtn);
+                                cancelBtn.click(function (event) {
+                                    layer.close(index);
+                                });
+
                                 //初始化laydate实例
                                 laydate.render({
                                     elem: '#publishingTime' //指定元素
@@ -339,8 +344,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
+                $('#other').removeClass().addClass("layui-this");
+                $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
             if(data.isShenhe > 0){ //拥有审核权限
+
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
+
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
                     ,height : 440
@@ -467,7 +482,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     ,offset : '10px' //只定义top坐标，水平保持居中
                                     ,shadeClose : true //点击遮罩关闭
                                     ,btn : ['关闭']
-                                    ,content : $('#shenHeForm')
+                                    ,content : $('#shenHeForm_container')
                                     ,success: function(layero, index){
                                         //
                                         form.on('select(status)', function(data) {
