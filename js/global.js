@@ -4,8 +4,8 @@
 
 var requestUrl="http://127.0.0.1:8080/jxzlpj";
 
-//生成随机字符
-var randomChar = function(){
+//全局唯一标识符
+var guid = function(){
     return 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function(c) {
         var r = Math.random()*16|0
             , v = c == 'x' ? r : (r&0x3|0x8);

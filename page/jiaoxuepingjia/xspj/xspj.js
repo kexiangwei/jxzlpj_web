@@ -6,15 +6,14 @@ layui.use(['layer','table','form'], function(){
 
     //数据表格
     let datatable = table.render({
-        id: "datatable"
+        id: guid() //设定一个id，防止重复弹出
         ,elem : '#datatable'
         ,height : 520
         ,url: requestUrl+'/xspj/getCourseList.do'
         ,where:{
             "userId":function () {
-                return $.cookie('userId');
+                return /*$.cookie('userId');*/ 556677
             }
-            ,"pageSize":999999
         }
         ,request: {
             pageName: 'pageIndex'
@@ -31,7 +30,7 @@ layui.use(['layer','table','form'], function(){
                 "data": res.data.pageList //解析数据列表
             };
         }
-        ,toolbar: '#datatable_toolbar'
+        ,toolbar: '#table_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
             ,{field: 'code', title: '课程编号', width:120}
@@ -41,13 +40,15 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'stuScore', title: '学分', width:120, sort: true}
             ,{field: 'courseType', title: '课程类别', width:120}
             ,{field: 'courseDept', title: '开课部门'}
-            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+            ,{fixed: 'right', width:120, align:'center', toolbar: '#row_toolbar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
         ,page: {
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
             ,limits: [10,20,50,100]
+            ,first: '首页'
+            ,last: '尾页'
         }
         ,done : function(res, curr, count) {
 
@@ -100,7 +101,7 @@ layui.use(['layer','table','form'], function(){
                                             return false;
                                         }
                                         ,btn3: function(index, layero){
-                                            layer.msg('保存', {time : 3000, offset: '100px'});
+                                            layer.msg('保存成功', {time : 3000, offset: '100px'});
                                         }
                                     });
                                 }else{

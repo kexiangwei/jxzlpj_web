@@ -175,7 +175,7 @@ layui.use(['layer','table','form','util'], function(){
                                     menuId = data.value;
                                 });
                                 //初始化审核流程编号
-                                var shenheCode = randomChar();
+                                var shenheCode = guid();
                                 //监听表单提交
                                 var isSubmit = true;
                                 form.on('submit(toSubmitEidtForm)', function(data){

@@ -5,6 +5,10 @@
     <title>教学评价-同行评教</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
+        .layui-search .layui-inline {
+            width: 150px;
+        }
+
         .layer-btn-skin .layui-layer-btn .layui-layer-btn0 {
             border-color: white;
             background-color: #c5c1c1;
@@ -13,21 +17,20 @@
     </style>
 </head>
 <body class="layui-layout-body">
-
     <div class="layui-fluid">
         <!-- 查询参数 -->
-        <div class="search">
+        <div class="layui-form .layui-search" autocomplete="off">
             学院：
             <div class="layui-inline">
-                <input class="layui-input" name="courseName" autocomplete="off">
+                <input class="layui-input" name="collegeName" >
             </div>
             &nbsp;&nbsp;教师姓名：
             <div class="layui-inline">
-                <input class="layui-input" name="courseName" autocomplete="off">
+                <input class="layui-input" name="teacherName">
             </div>
             &nbsp;&nbsp;课程名称：
             <div class="layui-inline">
-                <input class="layui-input" name="courseName" placeholder="请输入关键字或课程全称" autocomplete="off">
+                <input class="layui-input" name="courseName" placeholder="支持关键字查询">
             </div>
             <div class="layui-inline">
                 <button class="layui-btn" data-type="search">搜索</button>
@@ -36,7 +39,7 @@
         </div>
         <!-- 数据表格 -->
         <table class="layui-table" id="datatable" lay-filter="datatable">
-            <script type="text/html" id="datatable_bar">
+            <script type="text/html" id="datatable_toolbar">
                 <a class="layui-btn layui-btn-xs" lay-event="kcpf"><i class="layui-icon layui-icon-edit"></i>课程评分</a>
             </script>
         </table>
@@ -53,18 +56,23 @@
 
             //示范一个公告层
             layer.open({
-                 id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                ,title: '评教说明' //不显示标题栏
+                 id: guid() //设定一个id，防止重复弹出
+                ,title: '评教说明'
                 ,type: 1
-                ,area: '300px;'
+                ,area : [ '900px', '500px' ]
                 ,offset : '50px' //只定义top坐标，水平保持居中
                 ,shade: 0.1
                 ,btn: ['确定']
                 ,btnAlign: 'c' //按钮居中显示
                 ,skin: 'layer-btn-skin'
                 ,closeBtn: false
-                ,content: '<div style="padding: 50px; line-height: 200px; background-color: lightslategray; color: #fff; font-weight: 300;">' +
-                    '<h1>评教说明</h1>' +
+                ,content: '<div style="padding: 50px; line-height: 50px; background-color: lightslategray; color: #fff; font-weight: 300;">' +
+                    '说明：按照以下扣减分数的要求，相对应的评分细项扣完为止。<br/>' +
+                    '（注 1）上课照本（屏）宣科，不能脱稿讲授，教学无互动，按轻、中、重程度扣减。<br/>' +
+                    '（注 2）教学方法单一，满堂灌，按轻、中、重程度扣减。<br/>' +
+                    '（注 3）教师上课迟到，晚一分钟减一分；铃响后延迟教学，晚一分钟减 1 分。<br/>' +
+                    '（注 4）学生上课缺勤率 6-10%减 2 分；11-20%扣 4 分，21-30%扣 6 分，31%以上扣 8 分并上报；上课随意进出，每一人次减 1 分。<br/>' +
+                    '（注 5）上课不记笔记且无教材，存在玩手机、睡觉、吃东西等现象，按轻、中、重程度扣减。' +
                     '</div>'
             });
         });

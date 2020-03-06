@@ -6,7 +6,7 @@ layui.use(['layer','element','table','form'], function(){
 
     //初始化数据表格
     let datatable = table.render({
-        id: "datatable"
+        id: guid()
         ,elem : '#datatable'
         ,height : 468
         ,url: requestUrl+'/sjfx/getPageList.do'
@@ -41,15 +41,15 @@ layui.use(['layer','element','table','form'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field:'testName', title:'测试条目', width:120}
-            ,{field:'testName', title:'测试条目', width:120}
-            ,{field:'testName', title:'测试条目', width:120}
-            ,{field:'testName', title:'测试条目', width:120}
-            ,{field:'testName', title:'测试条目', width:120}
-            ,{field:'testName', title:'测试条目', width:120}
-            ,{field:'testName', title:'测试条目', width:120}
+            ,{field:'testName', title:'测试条目1', width:120}
+            ,{field:'testName', title:'测试条目2', width:120}
+            ,{field:'testName', title:'测试条目3', width:120}
+            ,{field:'testName', title:'测试条目4', width:120}
+            ,{field:'testName', title:'测试条目5', width:120}
+            ,{field:'testName', title:'测试条目6', width:120}
+            ,{field:'testName', title:'测试条目7', width:120}
             ,{field:'remark', title:'备注'}
-            ,{fixed: 'right', title:'操作', width:110, align:'center', toolbar: '#datatable_bar'} //这里的toolbar值是模板元素的选择器
+            ,{fixed: 'right', title:'操作', width:120, align:'center', toolbar: '#datatable_toolbar'} //这里的toolbar值是模板元素的选择器
         ]]
         ,done: function(res, curr, count){ //数据渲染完的回调
 
@@ -62,7 +62,7 @@ layui.use(['layer','element','table','form'], function(){
                 search: function(){
                     datatable.reload({
                         where: {
-                            'courseName': $(".search input[ name='courseName']").val()
+                            'courseName': $(".layui-search input[ name='courseName']").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -70,7 +70,7 @@ layui.use(['layer','element','table','form'], function(){
                     });
                 }
                 ,reset: function () {
-                    $(".search input").val('');
+                    $(".layui-search input").val('');
                 }
             };
 
@@ -80,18 +80,16 @@ layui.use(['layer','element','table','form'], function(){
                     , rowData = obj.data;
                 if (layEvent === 'kcpf') {
                     layer.open({
-                        title : '教学评价-同行评教-课程评分'
+                        id: guid() //设定一个id，防止重复弹出
+                        ,title : '教学评价-同行评教-课程评分'
                         ,type : 2
-                        ,area : [ '1100px', '500px' ]
-                        ,offset : '30px' //只定义top坐标，水平保持居中
+                        ,area : [ '900px', '500px' ]
+                        ,offset : '50px' //只定义top坐标，水平保持居中
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['关闭']
                         ,content : 'thpj_kcpf.html'
                         ,success: function(layero, index){
-                            //
-                            form.on('submit(toSubmit)', function(formData){
 
-                            });
                         }
                         ,end:function () {
 

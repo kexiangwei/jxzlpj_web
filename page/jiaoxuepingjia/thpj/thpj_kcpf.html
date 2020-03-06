@@ -5,15 +5,33 @@
     <title>教学评价-同行评教</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
-        .layui-form .layui-form-label {
-            width: 200px;
+        .layui-form-item {
+            margin-top: 10px;
+        }
+        .layui-form-label {
+            width: 100px;
         }
     </style>
 </head>
 <body>
+    <div class="layui-container" id="editForm_container">
+        <form class="layui-form" action="" lay-filter="editForm" id="editForm">
 
-    <div class="layui-container" style="width: 100%;">
-        <form class="layui-form" action="" lay-filter="editForm">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">任课教师：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="teacher" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">学生班级：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="class" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">课程名称：</label>
@@ -24,7 +42,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">课程类型：</label>
                     <div class="layui-input-inline">
-                        <select name="status" lay-filter="status">
+                        <select name="courseType" lay-filter="courseType">
                             <option value="">请选择</option>
                             <option value="公共基础课">公共基础课</option>
                             <option value="专业基础课">专业基础课</option>
@@ -34,59 +52,18 @@
                     </div>
                 </div>
             </div>
-            <!--<div class="layui-form-item">
-    <label class="layui-form-label">课程类型：</label>
-    <div class="layui-input-block">
-        <input type="radio" name="sex" value="公共基础课" title="公共基础课" checked="">
-        <input type="radio" name="sex" value="专业基础课" title="专业基础课">
-        <input type="radio" name="sex" value="专业课" title="专业课">
-        <input type="radio" name="sex" value="公共选修课" title="公共选修课">
-    </div>
-</div>-->
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">任课教师：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="courseCode" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">教学形式：</label>
-                    <div class="layui-input-inline">
-                        <select name="status" lay-filter="status">
-                            <option value="">请选择</option>
-                            <option value="讲授">讲授</option>
-                            <option value="案例分析">案例分析</option>
-                            <option value="讨论">讨论</option>
-                            <option value="汇报">汇报</option>
-                            <option value="作业">作业</option>
-                            <option value="其他">其他</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <!--<div class="layui-form-item">
-    <label class="layui-form-label">教学形式：</label>
-    <div class="layui-input-block">
-        <input type="checkbox" name="like1[write]" lay-skin="primary" title="讲授" checked="">
-        <input type="checkbox" name="like1[read]" lay-skin="primary" title="案例分析">
-        <input type="checkbox" name="like1[game]" lay-skin="primary" title="讨论">
-        <input type="checkbox" name="like1[read]" lay-skin="primary" title="汇报">
-        <input type="checkbox" name="like1[read]" lay-skin="primary" title="作业">
-        <input type="checkbox" name="like1[read]" lay-skin="primary" title="其他">
-    </div>
-</div>-->
+
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">听课人：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="courseCode" class="layui-input">
+                        <input type="text" name="uName" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">听课人身份：</label>
                     <div class="layui-input-inline">
-                        <select name="status" lay-filter="status">
+                        <select name="uIdentity" lay-filter="uIdentity">
                             <option value="">请选择</option>
                             <option value="领导">领导</option>
                             <option value="督导">督导</option>
@@ -96,39 +73,42 @@
                 </div>
             </div>
 
-            <div>
-                <table>
-                    <tr>
-                        <td style="width: 50%;">
-                            <fieldset class="layui-elem-field" style="margin-left:40px; margin-top:10px; width: 90%;height: 200px;">
-                                <legend>听课时间</legend>
-                                <table class="layui-table">
-                                    <tr><td style="width: 100px;">时间：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                    <tr><td>周次：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                    <tr><td>节次：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                    <tr><td>教室：</td><td><input type="text" name="peixunAddress"  placeholder="教学 A/B 楼" style="width: 100px;"></td></tr>
-                                </table>
-                            </fieldset>
-                        </td>
-                        <td style="width: 50%;">
-                            <fieldset class="layui-elem-field" style="margin-left:119px; margin-top: 10px;width: 90%;height: 200px;">
-                                <legend>学生出勤情况</legend>
-                                <table class="layui-table">
-                                    <tr><td style="width: 100px;">应到人数：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                    <tr><td>实到人数：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                    <tr><td>迟到人数：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                    <tr><td>缺课人数：</td><td><input type="text" name="peixunAddress" style="width: 100px;"></td></tr>
-                                </table>
-                            </fieldset>
-                        </td>
-                    </tr>
+            <fieldset class="layui-elem-field" style="margin-left:40px; margin-top:10px; width: 87%;">
+                <legend>听课时间</legend>
+                <table class="layui-table">
+                    <tr><td style="width: 100px;">时间：</td><td><input type="text" name="shijian" class="layui-input"></td></tr>
+                    <tr><td>周次：</td><td><input type="text" name="zhouci" class="layui-input"></td></tr>
+                    <tr><td>节次：</td><td><input type="text" name="jieci" class="layui-input"></td></tr>
+                    <tr><td>教室：</td><td><input type="text" name="classRoom"  placeholder="教学 A/B 楼" class="layui-input"></td></tr>
                 </table>
+            </fieldset>
+
+            <fieldset class="layui-elem-field" style="margin-left:40px; margin-top:10px; width: 87%;">
+                <legend>学生出勤情况</legend>
+                <table class="layui-table">
+                    <tr><td style="width: 100px;">应到人数：</td><td><input type="text" name="yingdao" class="layui-input"</td></tr>
+                    <tr><td>实到人数：</td><td><input type="text" name="shidao" class="layui-input"></td></tr>
+                    <tr><td>迟到人数：</td><td><input type="text" name="chidao" class="layui-input"></td></tr>
+                    <tr><td>缺课人数：</td><td><input type="text" name="queke" class="layui-input"></td></tr>
+                </table>
+            </fieldset>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学形式：</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="like1[write]" lay-skin="primary" title="讲授">
+                    <input type="checkbox" name="like1[read]" lay-skin="primary" title="案例分析">
+                    <input type="checkbox" name="like1[game]" lay-skin="primary" title="讨论">
+                    <input type="checkbox" name="like1[read]" lay-skin="primary" title="汇报">
+                    <input type="checkbox" name="like1[read]" lay-skin="primary" title="作业">
+                    <input type="checkbox" name="like1[read]" lay-skin="primary" title="其他">
+                </div>
             </div>
 
-            <div style="margin-left:40px; width: 78%;">
+            <div style="margin-left:40px; margin-top:10px; width: 87%;">
                 <table class="layui-table">
                     <colgroup>
-                        <col width="200">
+                        <col width="180">
                         <col>
                         <col width="80">
                         <col width="80">
@@ -144,34 +124,77 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>一、教学内容（15 分）</td>
+                        <td rowspan="3">一、教学内容（15 分）</td>
                         <td>
-                            1．教学目标明确，授课计划执行良好，有详尽教案或备课笔记。<br/><hr/>
-                            2．教学内容不陈旧，与相关课程无简单重复，重点、难点突出。<br/><hr/>
-                            3. 学生有教材、讲义或参考文献。
+                            1．教学目标明确，授课计划执行良好，有详尽教案或备课笔记。
                         </td>
-                        <td>5<br/><hr/>5<br/><hr/>5</td>
-                        <td></td>
+                        <td>5</td>
+                        <td rowspan="3"></td>
                     </tr>
                     <tr>
-                        <td>二、教学组织（20 分）</td>
                         <td>
-                            1．课前准备充分，信息量大，内容严谨、生动。<br/><hr/>
-                            2. 教学有互动，提问、讨论有点评（注 1）。<br/><hr/>
-                            3. 方法多样灵活，能有效调控学习气氛（注 2）。<br/><hr/>
-                            4．严格课堂秩序，实施有效管理。
+                            2．教学内容不陈旧，与相关课程无简单重复，重点、难点突出。
                         </td>
-                        <td>5<br/><hr/>5<br/><hr/>5<br/><hr/>5</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            3. 学生有教材、讲义或参考文献。
+                        </td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">二、教学组织（20 分）</td>
+                        <td>
+                            1．教学目标明确，授课计划执行良好，有详尽教案或备课笔记。
+                        </td>
+                        <td>5</td>
+                        <td rowspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            2．教学内容不陈旧，与相关课程无简单重复，重点、难点突出。
+                        </td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            3. 学生有教材、讲义或参考文献。
+                        </td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: right">评分合计</td>
                         <td></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block" align="center">
-                    <button class="layui-btn" lay-submit="" lay-filter="toSubmit">提交</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+
+            <fieldset class="layui-elem-field" style="margin-left:40px; margin-top:10px; width: 87%;">
+                <legend>教师教学情况点评</legend>
+                <div class="layui-form-item layui-form-text">
+                    <textarea name="jiaoxueDIANPING" placeholder="100-200字" autocomplete="off"  class="layui-textarea"></textarea>
                 </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field" style="margin-left:40px; margin-top:10px; width: 87%;">
+                <legend>学生听课情况点评</legend>
+                <div class="layui-form-item layui-form-text">
+                    <textarea name="DIANPING2" placeholder="100-200字" autocomplete="off"  class="layui-textarea"></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field" style="margin-left:40px; margin-top:10px; width: 87%;">
+                <legend>改进建议</legend>
+                <div class="layui-form-item layui-form-text">
+                    <textarea name="JIANYI" placeholder="听课人对教室及设施的评价及改进建议（包括多媒体设备、教室卫生等状况）" autocomplete="off"  class="layui-textarea"></textarea>
+                </div>
+            </fieldset>
+
+            <div class="layui-btn-container" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmit">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
     </div>
@@ -180,10 +203,6 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script type="text/javascript">
-        layui.use(['layer','form'], function(){
-            let $ = layui.$,layer = layui.layer,form = layui.form;
-        });
-    </script>
+    <script src="thpj_kcpf.js"></script>
 </body>
 </html>

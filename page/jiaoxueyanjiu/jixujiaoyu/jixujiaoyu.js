@@ -142,7 +142,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     /*$('#editForm').reset();//清空表单数据
                                     form.render();*/
                                     document.getElementById("editForm").reset(); //清空表单数据
-                                    $(" input[ name='code' ] ").val(randomChar());//每次进入新增页面生成一个新的编号供表单code字段和文件上传字段relationCode使用
+                                    $(" input[ name='code' ] ").val(guid());//每次进入新增页面生成一个新的编号供表单code字段和文件上传字段relationCode使用
                                     //
                                     layer.open({
                                         title : '教学研究-继续教育-新增'

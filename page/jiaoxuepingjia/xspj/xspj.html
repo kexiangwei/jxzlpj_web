@@ -10,18 +10,19 @@
         <!-- 数据表格 -->
         <table class="layui-table" lay-filter="datatable" id="datatable">
             <!-- 数据表格头部工具栏 -->
-            <script type="text/html" id="datatable_toolbar">
+            <script type="text/html" id="table_toolbar">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-radius layui-btn-sm" lay-event="kcpf">课程评分</button>
                 </div>
             </script>
             <!-- 数据表格右侧工具栏 -->
-            <script type="text/html" id="datatable_bar">
+            <script type="text/html" id="row_toolbar">
                 <a class="layui-btn layui-btn-xs" lay-event="detail_dataInfo">查看详情</a>
             </script>
         </table>
     </div>
 
+    <!-- 课程评分 -->
     <div class="layui-container" style="width: 90%; display: none" id="kcpf_container"></div>
 
     <script src="../../../layui/layui.js"></script>

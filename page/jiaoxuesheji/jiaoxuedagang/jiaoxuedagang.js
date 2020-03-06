@@ -19,12 +19,12 @@ layui.use(['layer','element','table','form','upload'], function(){
         dataType:'json'
         ,success:function(data) {
             var data = data.data;
+
             if(data.isSubmit > 0){ //拥有提交权限
-                $('#other').removeClass();
-                $('#other_item').css('class','layui-tab-item');
+
                 //数据表格
                 var myself_table = table.render({
-                    id: "myself_table_id"
+                    id: guid()
                     ,elem : '#myself_table'
                     ,height : 440
                     ,url: requestUrl+'/jxdg/getCourseList.do'
@@ -63,25 +63,25 @@ layui.use(['layer','element','table','form','upload'], function(){
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'code', title: '课程编号', width:150}
                         ,{field: 'nameZh', title: '课程中文名称', width:150}
-                        ,{field: 'nameEn', title: '课程英文名称', width:150}
+                        ,{field: 'nameEn', title: '课程英文名称', width:150, hide:true}
                         ,{field: 'type', title: '课程类别', width:150}
-                        ,{field: 'score', title: '学分', width:100}
-                        ,{field: 'stuHour', title: '学时', width:100}
+                        ,{field: 'score', title: '学分', width:120, sort:true}
+                        ,{field: 'stuHour', title: '学时', width:120, sort:true}
                         ,{field: 'collegeName', title: '开课部门', width:150}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 if(val=='已提交'){
-                                    var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="VIEW_INFO">查看信息</a>\n' +
+                                    var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
                                         '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="VIEW_FILE">预览</a>' +
-                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="FILE_UPLOAD">上传</a>';
+                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_fileInfo">预览</a>' +
+                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="upload_fileInfo">上传</a>';
                                     $('#myself_bar').html(htmlstr);
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
-                                var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="VIEW_INFO">查看信息</a>\n' +
+                                var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
                                     '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                    '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="VIEW_FILE">预览</a>\n' +
-                                    '           <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="FILE_UPLOAD">上传</a>';
+                                    '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_fileInfo">预览</a>\n' +
+                                    '           <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="upload_fileInfo">上传</a>';
                                 $('#myself_bar').html(htmlstr);
                                 return '<span style="font-weight: bold;">'+val+'</span>';
                             }
@@ -91,205 +91,217 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 if(val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
-                                return '<span style="color: blue;font-weight: bold;">'+(val != null ? val : '')+'</span>';
+                                return '<span style="color: blue;font-weight: bold;">'+(val != null ? val : '待审核')+'</span>';
                             }
                         }
                         ,{fixed: 'right', width:280, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
 
-                    }
-                });//table end.
-
-                //监听搜索框事件
-                $('.myself_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-                let active = {
-                    search: function(){
-                        myself_table.reload({
-                            where: {
-                                'courseCode': $("input[name='myself_courseCode']").val()
-                                ,'courseName': $("input[ name='myself_courseName']").val()
-                                ,'isSubmit': $("input[ name='myself_isSubmit']").val()
-                            }
-                            ,page: {
-                                curr: 1 //重新从第 1 页开始
-                            }
+                        //监听搜索框事件
+                        $('.myself_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
                         });
-                    }
-                    ,reset: function () {
-                        $("input").val('');
-                    }
-                };
-
-                //监听头工具栏事件
-                table.on('toolbar(myself_table)', function(obj){
-                    var checkStatus = table.checkStatus(obj.config.id)
-                        ,data = checkStatus.data; //获取选中的数据
-                    switch(obj.event){
-                        case 'submit':
-                            if(data.length === 0){
-                                layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
-                            } else {
-                                let isSubmit = false;
-                                $.each(data,function(idx,obj){
-                                    if(obj.isSubmit == '已提交'){
-                                        isSubmit = true;
-                                        return false;//跳出循环
+                        let active = {
+                            search: function(){
+                                myself_table.reload({
+                                    where: {
+                                        'courseCode': $(".myself_search input[name='myself_courseCode']").val()
+                                        ,'courseName': $(".myself_search input[ name='myself_courseName']").val()
+                                        ,'isSubmit': $(".myself_search input[ name='myself_isSubmit']").val()
+                                    }
+                                    ,page: {
+                                        curr: 1 //重新从第 1 页开始
                                     }
                                 });
-                                if(isSubmit){
-                                    layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
+                            }
+                            ,reset: function () {
+                                $("input").val('');
+                            }
+                        };
+
+                        //监听头工具栏事件
+                        table.on('toolbar(myself_table)', function(obj){
+                            var checkStatus = table.checkStatus(obj.config.id)
+                                ,data = checkStatus.data; //获取选中的数据
+                            switch(obj.event){
+                                case 'submit':
+                                    if(data.length === 0){
+                                        layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
+                                    } else {
+                                        let isSubmit = false;
+                                        $.each(data,function(idx,obj){
+                                            if(obj.isSubmit == '已提交'){
+                                                isSubmit = true;
+                                                return false;//跳出循环
+                                            }
+                                        });
+                                        if(isSubmit){
+                                            layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
+                                            return;
+                                        }
+                                        //
+                                        layer.confirm('信息提交后不可编辑，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                            layer.close(index);
+                                            $.post(requestUrl+'/jxdg/toSubimt.do',{
+                                                "menuId":$.cookie('currentMenuId'),
+                                                "jsonStr":JSON.stringify(data)
+                                            },function (result_data) {
+                                                layer.msg(result_data.msg, {time : 3000, offset: '100px'});
+                                                if(result_data.code === 200){
+                                                    myself_table.reload();//重新加载表格数据
+                                                }
+                                            },'json');
+                                        });
+                                    }
+                                    break;
+                            }
+                        });
+
+                        //监听行工具条事件
+                        table.on('tool(myself_table)', function(obj){
+                            let row_data = obj.data;
+                            if (obj.event === 'detail_dataInfo') {
+                                detail_dataInfo(row_data);
+                            } else if (obj.event === 'detail_shenheProcess') {
+                                if(row_data.isSubmit=='未提交'){
                                     return;
                                 }
-                                //
-                                layer.confirm('信息提交后不可编辑，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    layer.close(index);
-                                    $.post(requestUrl+'/jxdg/toSubimt.do',{
-                                        "menuId":$.cookie('currentMenuId'),
-                                        "jsonStr":JSON.stringify(data)
-                                    },function (result_data) {
-                                        layer.msg(result_data.msg, {time : 3000, offset: '100px'});
-                                        if(result_data.code === 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
-                                    },'json');
-                                });
-                            }
-                            break;
-                    }
-                });
+                                detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
+                            } else if (obj.event === 'detail_fileInfo') {
+                                detail_fileInfo(row_data);
+                            } else if (obj.event === 'upload_fileInfo') {
+                                if(row_data.isSubmit == '已提交'){
+                                    return;
+                                }
+                                layer.open({
+                                    id : guid()
+                                    ,title : '教学设计-教学大纲-上传附件'
+                                    ,type : 1
+                                    ,area : [ '900px', '500px' ]
+                                    ,offset : '50px'
+                                    ,moveOut:true
+                                    ,shadeClose : true //点击遮罩关闭
+                                    ,btn : ['关闭']
+                                    ,content : $('#uploadFile_ontainer')
+                                    ,success: function(layero, index){
+                                        //填充已上傳附件
+                                        $.get(requestUrl+"/getFileListByRelationCode.do" , {
+                                            "relationCode": row_data.code
+                                        } ,  function(data){
+                                            if(data.data.length>0){
+                                                $.each(data.data,function(index,file){
+                                                    let tr = $(['<tr id="'+ file.code +'">'
+                                                        ,'<td>'+ file.fileName +'</td>'
+                                                        ,'<td>已上传</td>'
+                                                        ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
+                                                        ,'</tr>'].join(''));
+                                                    $('#demoList').append(tr);
+                                                    //删除
+                                                    tr.find('.demo-delete').on('click', function(){
+                                                        $.post(requestUrl+"/deleteFileInfo.do" , {
+                                                            "code": tr.attr("id")
+                                                        } ,  function(data){
+                                                            tr.remove();
+                                                        }, "json");
+                                                    });
+                                                });
+                                            }
+                                        }, "json");
 
-                //监听工具条
-                table.on('tool(myself_table)', function(obj){
-                    let row_data = obj.data;
-                    if (obj.event === 'VIEW_INFO') {
-                        VIEW_INFO(row_data);
-                    } else if (obj.event === 'detail_shenheProcess') {
-                        if(row_data.isSubmit=='未提交'){
-                            return;
-                        }
-                        detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
-                    } else if (obj.event === 'VIEW_FILE') {
-                        VIEW_FILE(row_data);
-                    } else if (obj.event === 'FILE_UPLOAD') {
-                        if(row_data.isSubmit == '已提交'){
-                            return;
-                        }
-                        layer.open({
-                            title : '教学设计-教学大纲-上传附件'
-                            ,type : 1
-                            ,area : [ '1175px', '535px' ]
-                            ,offset : '10px'
-                            ,moveOut:true
-                            ,shadeClose : true //点击遮罩关闭
-                            ,content : $('#fileUploadContainer')
-                            ,success: function(layero, index){
-                                //填充已上傳附件
-                                $.get(requestUrl+"/getFileListByRelationCode.do" , {
-                                    "relationCode": row_data.code
-                                } ,  function(data){
-                                    if(data.data.length>0){
-                                        $.each(data.data,function(index,file){
-                                            let tr = $(['<tr id="'+ file.code +'">'
-                                                ,'<td>'+ file.fileName +'</td>'
-                                                ,'<td>'+ file.fileSize +'kb</td>'
-                                                ,'<td>已上传</td>'
-                                                ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
-                                                ,'</tr>'].join(''));
-                                            $('#demoList').append(tr);
-                                            //删除
-                                            tr.find('.demo-delete').on('click', function(){
-                                                $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                    "code": tr.attr("id")
-                                                } ,  function(data){
-                                                    tr.remove();
-                                                }, "json");
-                                            });
+                                        //上传附件
+                                        let demoListView = $('#demoList')
+                                            ,uploadListIns = upload.render({
+                                            elem: '#testList'
+                                            ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
+                                            ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
+                                                "relationCode":row_data.code
+                                                ,"fileCategory":"JXSJ_JXDG" // 固定值
+                                                ,"fileType":"教学大纲" // 固定值
+                                                ,"userId":function () {
+                                                    return $.cookie('userId');
+                                                }
+                                                ,"userName":function () {
+                                                    return $.cookie('userName');
+                                                }
+                                            }
+                                            ,field:"file" //设定文件域的字段名
+                                            ,multiple: true // 	是否允许多文件上传
+                                            ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
+                                            ,exts:'doc|docx|pdf'
+                                            ,choose: function(obj){
+                                                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                                                //读取本地文件
+                                                obj.preview(function(index, file, result){
+                                                    var tr = $(['<tr id="upload-'+ index +'">'
+                                                        ,'<td>'+ file.name +'</td>'
+                                                        ,'<td>待上传</td>'
+                                                        ,'<td>'
+                                                        // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                                                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                                                        ,'</td>'
+                                                        ,'</tr>'].join(''));
+                                                    demoListView.append(tr);
+
+                                                    //删除
+                                                    tr.find('.demo-delete').on('click', function(){
+                                                        $.post(requestUrl+"/deleteFileInfo.do" , {
+                                                            "code": $('#upload-'+index).attr("data-id")
+                                                        } ,  function(data){
+                                                            // layer.msg(data.msg);
+                                                            delete files[index]; //删除对应的文件
+                                                            tr.remove();
+                                                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                                                        }, "json");
+                                                    });
+                                                });
+                                            }
+                                            ,done: function(res, index, upload){
+                                                if(res.code == 200){ //上传成功
+                                                    var tr = demoListView.find('tr#upload-'+ index)
+                                                        ,tds = tr.children();
+                                                    tr.attr("data-id",res.data.code);//
+                                                    tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
+                                                    // tds.eq(3).html(''); //清空操作
+                                                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                                                }
+                                                this.error(index, upload);
+                                            }
+                                            ,error: function(index, upload){
+                                                let tr = demoListView.find('tr#upload-'+ index)
+                                                    ,tds = tr.children();
+                                                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                                            }
                                         });
-                                    }
-                                }, "json");
-
-                                //上传附件
-                                let demoListView = $('#demoList')
-                                    ,uploadListIns = upload.render({
-                                    elem: '#testList'
-                                    ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                                    ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                        "relationCode":row_data.code
-                                        ,"fileCategory":"JXSJ_JXDG" // 固定值
-                                        ,"fileType":"教学大纲" // 固定值
-                                        ,"userId":function () {
-                                            return $.cookie('userId');
-                                        }
-                                        ,"userName":function () {
-                                            return $.cookie('userName');
-                                        }
-                                    }
-                                    ,field:"file" //设定文件域的字段名
-                                    ,multiple: true // 	是否允许多文件上传
-                                    ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                                    ,exts:'doc|docx|pdf'
-                                    ,choose: function(obj){
-                                        var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                        //读取本地文件
-                                        obj.preview(function(index, file, result){
-                                            var tr = $(['<tr id="upload-'+ index +'">'
-                                                ,'<td>'+ file.name +'</td>'
-                                                ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
-                                                ,'<td>待上传</td>'
-                                                ,'<td>'
-                                                // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-                                                ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
-                                                ,'</td>'
-                                                ,'</tr>'].join(''));
-                                            demoListView.append(tr);
-
-                                            //删除
-                                            tr.find('.demo-delete').on('click', function(){
-                                                $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                    "code": $('#upload-'+index).attr("data-id")
-                                                } ,  function(data){
-                                                    // layer.msg(data.msg);
-                                                    delete files[index]; //删除对应的文件
-                                                    tr.remove();
-                                                    uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                                }, "json");
-                                            });
-                                        });
-                                    }
-                                    ,done: function(res, index, upload){
-                                        if(res.code == 200){ //上传成功
-                                            var tr = demoListView.find('tr#upload-'+ index)
-                                                ,tds = tr.children();
-                                            tr.attr("data-id",res.data.code);//
-                                            tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
-                                            // tds.eq(3).html(''); //清空操作
-                                            return delete this.files[index]; //删除文件队列已经上传成功的文件
-                                        }
-                                        this.error(index, upload);
-                                    }
-                                    ,error: function(index, upload){
-                                        let tr = demoListView.find('tr#upload-'+ index)
-                                            ,tds = tr.children();
-                                        tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                                    },end:function () {
+                                        window.location.reload();//刷新页面
                                     }
                                 });
-                            },end:function () {
-                                window.location.reload();//刷新页面
                             }
                         });
+
                     }
                 });
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
+                $('#other').removeClass().addClass("layui-this");
+                $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
+
             if(data.isShenhe > 0){ //拥有审核权限
+
+                //监听Tab切换
+                element.on('tab(layui_tab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
+
                 var other_table = table.render({//数据表格
-                    elem : '#other_table'
+                    id: guid()
+                    ,elem : '#other_table'
                     ,height : 440
                     ,url: requestUrl+'/jxdg/getCourseList.do'
                     ,where:{
@@ -330,10 +342,10 @@ layui.use(['layer','element','table','form','upload'], function(){
                         ,{field: 'userName', title: '教师姓名', width:150}
                         ,{field: 'code', title: '课程编号', width:150}
                         ,{field: 'nameZh', title: '课程中文名称', width:150}
-                        ,{field: 'nameEn', title: '课程英文名称', width:150}
+                        ,{field: 'nameEn', title: '课程英文名称', width:150, hide:true}
                         ,{field: 'type', title: '课程类别', width:150}
-                        ,{field: 'score', title: '学分', width:100}
-                        ,{field: 'stuHour', title: '学时', width:100}
+                        ,{field: 'score', title: '学分', width:120, sort:true}
+                        ,{field: 'stuHour', title: '学时', width:120, sort:true}
                         ,{field: 'collegeName', title: '开课部门', width:150}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 let val = data.shenheStatus;
@@ -347,116 +359,93 @@ layui.use(['layer','element','table','form','upload'], function(){
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
-                    }
-                });//table end.
 
-                //监听搜索框事件
-                $('.other_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-                let active = {
-                    search: function(){
-                        other_table.reload({
-                            where: {
-                                'userId': $(" input[ name='other_userId' ] ").val()
-                                ,'userName': $(" input[ name='other_userName' ] ").val()
-                                ,'courseCode': $(" input[ name='other_courseCode' ] ").val()
-                                ,'courseName': $(" input[ name='other_courseName' ] ").val()
-                                ,'shenheStatus': $(" input[ name='other_shenheStatus' ] ").val()
+                        //监听搜索框事件
+                        $('.other_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                        });
+                        let active = {
+                            search: function(){
+                                other_table.reload({
+                                    where: {
+                                        'userId': $(".other_search input[ name='other_userId' ] ").val()
+                                        ,'userName': $(".other_search input[ name='other_userName' ] ").val()
+                                        ,'courseCode': $(".other_search input[ name='other_courseCode' ] ").val()
+                                        ,'courseName': $(".other_search input[ name='other_courseName' ] ").val()
+                                        ,'shenheStatus': $(".other_search input[ name='other_shenheStatus' ] ").val()
+                                    }
+                                    ,page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
                             }
-                            ,page: {
-                                curr: 1 //重新从第 1 页开始
+                            ,reset: function () {
+                                $("input").val('');
+                            }
+                        };
+
+                        //监听头工具栏事件
+                        table.on('toolbar(other_table)', function(obj){
+                            var checkStatus = table.checkStatus(obj.config.id)
+                                ,data = checkStatus.data; //获取选中的数据
+                            switch(obj.event){
+                                case 'submit':
+                                    if(data.length === 0){
+                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                        return;
+                                    } else {
+                                        let isSubmit = false;
+                                        $.each(data,function(idx,obj){
+                                            if(obj.shenheStatus== '已审核'){
+                                                isSubmit = true;
+                                                return false;//跳出循环
+                                            }
+                                        });
+                                        if(isSubmit){
+                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                            return;
+                                        } else {
+                                            //添加审核意见
+                                            layer.open({
+                                                id : guid()
+                                                ,title : '教学设计-教学大纲-添加审核意见'
+                                                ,type : 2
+                                                ,area : [ '700px', '300px' ]
+                                                ,offset : '100px' //只定义top坐标，水平保持居中
+                                                ,shadeClose : true //点击遮罩关闭
+                                                ,content : '../../common/common_shenHe.html'
+                                                ,success: function(layero, index){
+                                                    //
+                                                    var body = layer.getChildFrame('body', index);
+                                                    var iframeWin = window[layero.find('iframe')[0]['name']];
+                                                    iframeWin.params = {
+                                                        rowDatas : data
+                                                        ,userId: $.cookie('userId')
+                                                        ,userName: $.cookie('userName')
+                                                    }
+                                                }
+                                                ,end:function () {
+                                                    other_table.reload();//重新加载表格数据
+                                                }
+                                            });
+                                        }
+                                    }
+                                    break;
                             }
                         });
-                    }
-                    ,reset: function () {
-                        $("input").val('');
-                    }
-                };
 
-                //监听头工具栏事件
-                table.on('toolbar(other_table)', function(obj){
-                    var checkStatus = table.checkStatus(obj.config.id)
-                        ,data = checkStatus.data; //获取选中的数据
-                    switch(obj.event){
-                        case 'submit':
-                            if(data.length === 0){
-                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                return;
-                            } else {
-                                let isSubmit = false;
-                                $.each(data,function(idx,obj){
-                                    if(obj.shenheStatus== '已审核'){
-                                        isSubmit = true;
-                                        return false;//跳出循环
-                                    }
-                                });
-                                if(isSubmit){
-                                    layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                    return;
-                                }
-                                //添加审核意见
-                                layer.open({
-                                    title : '教学设计-教学大纲-添加审核意见'
-                                    ,type : 1
-                                    ,area : [ '700px', '450px' ]
-                                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '10px' //只定义top坐标，水平保持居中
-                                    ,shadeClose : true //点击遮罩关闭
-                                    ,btn : ['关闭']
-                                    ,content : $('#shenHeForm')
-                                    ,success: function(layero, index){
-                                        //
-                                        form.on('select(status)', function(data) {
-                                            if(data.value == '通过'){
-                                                $('#opinion').html('通过');
-                                            }
-                                            if(data.value == '退回'){
-                                                $('#opinion').empty();
-                                            }
-                                        });
-                                        //
-                                        form.on('submit(toSubmitShenHeForm)', function(formData){
-                                            $.post(requestUrl+'/jxdg/toShenhe.do',{
-                                                "jsonStr":JSON.stringify(data)
-                                                ,"status":formData.field.status
-                                                ,"opinion":formData.field.opinion
-                                                ,"userId":function () {
-                                                    return $.cookie('userId');
-                                                }
-                                                ,"userName":function () {
-                                                    return $.cookie('userName');
-                                                }
-                                            },function (data) {
-                                                if(data.code === 200){
-                                                    other_table.reload();//重新加载表格数据
-                                                    // window.location.reload();//刷新页面，审核后页面状态未改变
-                                                    layer.msg('审核成功', {time : 3000, offset: '100px'});
-                                                }else{
-                                                    layer.msg('审核失败', {time : 3000, offset: '100px'});
-                                                }
-                                            },'json');
-                                        });
-                                    }
-                                    ,end:function () {
-
-                                    }
-                                });
+                        //监听工具条
+                        table.on('tool(other_table)', function(obj){
+                            let row_data = obj.data;
+                            if (obj.event === 'detail_dataInfo') {
+                                detail_dataInfo(row_data);
+                            } else if (obj.event === 'detail_fileInfo') {
+                                detail_fileInfo(row_data);
+                            } else if (obj.event === 'detail_shenheProcess') {
+                                detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
                             }
-                            break;
-                    }
-                });
-
-                //监听工具条
-                table.on('tool(other_table)', function(obj){
-                    let row_data = obj.data;
-                    if (obj.event === 'VIEW_INFO') {
-                        VIEW_INFO(row_data);
-                    } else if (obj.event === 'VIEW_FILE') {
-                        VIEW_FILE(row_data);
-                    } else if (obj.event === 'detail_shenheProcess') {
-                        detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
+                        });
                     }
                 });
             } else{
@@ -464,16 +453,17 @@ layui.use(['layer','element','table','form','upload'], function(){
                 $('#other_item').remove();
             }
 
-            let VIEW_INFO = function (data) {
+            let detail_dataInfo = function (data) {
                 if(isOpen){
                     return;
                 }
-                var isOpen = false; // let：jiaoxuedagang.js:367 Uncaught ReferenceError: Cannot access 'isOpen' before initialization
+                var isOpen = false;
                 layer.open({
-                    title : '教学设计-教学大纲-查看信息'
+                    id: guid()
+                    ,title : '教学设计-教学大纲-查看信息'
                     ,type : 1
-                    ,area : [ '700px', '535px' ]
-                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,area : [ '900px', '500px' ]
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : '<table class="layui-table">\n' +
@@ -498,15 +488,17 @@ layui.use(['layer','element','table','form','upload'], function(){
                 });
             };
 
-            let VIEW_FILE = function (data) {
+            let detail_fileInfo = function (data) {
                 layer.open({
-                    title : '教学设计-教学大纲-查看附件'
+                    id: guid()
+                    ,title : '教学设计-教学大纲-查看附件'
                     ,type : 1
-                    ,offset : '10px'
+                    ,area : [ '900px', '500px' ]
+                    ,offset : '50px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
-                    ,area : [ '1175px', '535px' ]
-                    ,content : $('#viewFileContainer')
+                    ,btn: ['关闭']
+                    ,content : $('#fileInfo_container')
                     ,success: function(layero, index){
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
@@ -514,30 +506,29 @@ layui.use(['layer','element','table','form','upload'], function(){
                             }
                         } ,  function(data){
                             if(data.data.length==0){
-                                $('#fileList').append('<tr><td colspan="4" style="text-align: center;">无数据</td></tr>');
-                                layer.msg('还没有上传文件哦', {time : 3000, offset: '100px'});
+                                $('#fileList').append('<tr><td colspan="3" style="text-align: center;">无数据</td></tr>');
                                 return;
                             }
                             $.each(data.data,function(index,file){
                                 let tr = $(['<tr id="'+ file.code +'">'
                                     ,'<td>	<a href="'+requestUrl+file.filePath+'" target="_blank">'+ file.fileName +'</a></td>'
-                                    ,'<td>'+ file.fileSize +'kb</td>'
                                     ,'<td>'+ file.createDate +'</td>'
                                     ,'<td>' +
-                                    '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
-                                    '<button class="layui-btn layui-btn-xs layui-btn-normal demo-download">下载</button>' +
+                                    '   <button class="layui-btn layui-btn-xs layui-btn-normal detail">预览</button>' +
+                                    '   <button class="layui-btn layui-btn-xs layui-btn-normal download">下载</button>' +
                                     '</td>'
                                     ,'</tr>'].join(''));
+
                                 //预览
-                                tr.find('.demo-view').on('click', function(){
+                                tr.find('.detail').on('click', function(){
                                     window.open(requestUrl+file.filePath);
                                 });
-                                tr.find('.demo-download').on('click', function(){
+                                //下载
+                                tr.find('.download').on('click', function(){
                                     let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
                                     downloadForm.append("<input type='hidden' name='fileName' value='"+file.fileName+"'/>");
                                     downloadForm.append("<input type='hidden' name='filePath' value='"+file.filePath+"'/>");
                                     $(document.body).append(downloadForm);
-                                    // alert(downloadForm.serialize());
                                     downloadForm.submit();
                                     downloadForm.remove();
                                 });
