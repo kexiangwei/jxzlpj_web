@@ -420,10 +420,11 @@ layui.use(['layer','element','table','form','upload'], function(){
                                                     var body = layer.getChildFrame('body', index);
                                                     var iframeWin = window[layero.find('iframe')[0]['name']];
                                                     iframeWin.params = {
-                                                        rowDatas : data
+                                                        module : 'jxdg'
                                                         ,userId: $.cookie('userId')
                                                         ,userName: $.cookie('userName')
-                                                    }
+                                                        ,rowDatas : rowDatas
+                                                    };
                                                 }
                                                 ,end:function () {
                                                     other_table.reload();//重新加载表格数据
