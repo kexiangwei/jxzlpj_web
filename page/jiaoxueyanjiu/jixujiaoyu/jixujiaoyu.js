@@ -148,7 +148,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         title : '教学研究-继续教育-新增'
                                         ,type : 1
                                         // ,shadeClose : true //防止不小心点到遮罩关闭弹窗，禁用此功能
-                                        ,area : [ '900px', '520px' ]
+                                        ,area : [ '900px', '550px' ]
                                         ,offset : '20px'
                                         ,content : $('#editForm_container')
                                         ,success: function(layero, index){
@@ -269,8 +269,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 let editForm_idx= layer.open({
                                     title :  '教学研究-继续教育-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '520px' ]
-                                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                                    ,area : [ '900px', '550px' ]
                                     ,offset : '20px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')
@@ -622,12 +621,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
             let detail_fileInfo = function (data) {
                 layer.open({
-                    title : '继续教育-附件'
+                    id: guid()
+                    ,title : '教学研究-继续教育-查看附件'
                     ,type : 1
-                    ,offset : '20px'
+                    ,area : [ '900px', '500px' ]
+                    ,offset : '50px'
                     ,moveOut:true
                     ,shadeClose : true //点击遮罩关闭
-                    ,area : [ '900px', '520px' ]
+                    ,btn: ['关闭']
                     ,content : $('#viewFileContainer')
                     ,success: function(layero, index){
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
@@ -662,7 +663,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         let xdthtr = $(['<tr id="'+ file.code +'">'
                                             ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
                                             // ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
-                                            ,'<td>'+ file.fileSize +'kb</td>'
                                             ,'<td>'+ file.createDate +'</td>'
                                             ,'<td>' +
                                             '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
@@ -692,7 +692,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         let qtwjtr = $(['<tr id="'+ file.code +'">'
                                             ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
                                             // ,'<td>'+ file.fileName.split('.').pop() +'</td>' //pop() 方法用于删除并返回数组的最后一个元素
-                                            ,'<td>'+ file.fileSize +'kb</td>'
                                             ,'<td>'+ file.createDate +'</td>'
                                             ,'<td>' +
                                                 '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +

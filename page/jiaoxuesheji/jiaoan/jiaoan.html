@@ -4,19 +4,17 @@
     <meta charset="utf-8">
     <title>教学设计-教案</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
-    <!--<style type="text/css">
-        .layui-inline {
+    <style type="text/css">
+       /* .layui-inline {
             width: 150px;
-        }
+        }*/
         .layui-form-label {
-            width: 100px;
+            width: 120px;
         }
-        .layui-input {
-            display: block;
-            width: 90%;
-            padding-left: 10px;
-        }
-    </style>-->
+       .layui-textarea {
+           width: 85%;
+       }
+    </style>
 </head>
 <body class="layui-layout-body">
     <div class="layui-tab">
@@ -104,15 +102,15 @@
     </div>
 
     <!-- 查看详情 -->
-    <div class="layui-container" id="dataInfo_container"></div>
+    <div class="layui-container" style="width: 90%; display: none" id="dataInfo_container"></div>
 
     <!-- 响应新增，编辑按钮 -->
-    <div class="layui-container" id="insertOrUpdateContainer">
+    <div class="layui-container" style="width: 90%; display: none" id="insertOrUpdateContainer">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务主键-->
             <input type="hidden" name="code"/>
             <!-- 业务数据 -->
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="margin-top: 20px;">
                 <div class="layui-inline">
                     <label class="layui-form-label">课程编号：</label>
                     <div class="layui-input-inline">
@@ -157,41 +155,41 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">教学目的及要求：</label>
                 <div class="layui-input-block">
-                    <textarea id="teachGoal" name="teachGoal" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                    <textarea id="teachGoal" name="teachGoal" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">教学内容要点：</label>
                 <div class="layui-input-block">
-                    <textarea id="teachContent" name="teachContent" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                    <textarea id="teachContent" name="teachContent" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">教学重点难点：</label>
                 <div class="layui-input-block">
-                    <textarea id="teachKeyAndDifficult" name="teachKeyAndDifficult" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                    <textarea id="teachKeyAndDifficult" name="teachKeyAndDifficult" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">教学方法及教具：</label>
                 <div class="layui-input-block">
-                    <textarea id="teachWay" name="teachWay" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                    <textarea id="teachWay" name="teachWay" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">教学进程：</label>
                 <div class="layui-input-block">
-                    <textarea id="teachProcess" name="teachProcess" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                    <textarea id="teachProcess" name="teachProcess" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">备注：</label>
                 <div class="layui-input-block">
-                    <textarea id="remark" name="remark" class="layui-textarea" style="width: 50%; height: 100px;"></textarea>
+                    <textarea id="remark" name="remark" class="layui-textarea"></textarea>
                 </div>
             </div>
 
-            <div class="layui-form-item" style="width: 50%;">
+            <div class="layui-form-item">
                 <div class="layui-input-block" align="center">
                     <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmit">保存</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>

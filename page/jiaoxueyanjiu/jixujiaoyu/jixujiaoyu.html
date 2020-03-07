@@ -128,13 +128,20 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">培训时间：</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="startDate" name="peixunStartTime" placeholder="开始时间" class="layui-input">
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训开始时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="startDate" name="peixunStartTime" placeholder="开始时间" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
-                <div class="layui-input-inline">
-                    <input type="text" id="endDate" name="peixunEndTime" placeholder="结束时间" class="layui-input">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训结束时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="endDate" name="peixunEndTime" placeholder="结束时间" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
+
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">学时：</label>
@@ -148,24 +155,29 @@
                     <textarea name="peixunContent" placeholder="100-200字" autocomplete="off"  class="layui-textarea" style="width: 80%;"></textarea>
                 </div>
             </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训机构：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="peixunDept" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训证明：</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary"  style="width: 191px" id="upload">上传附件</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">培训地点：</label>
                 <div class="layui-input-block">
                     <input type="text" name="peixunAddress" required  lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">培训机构：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="peixunDept" required  lay-verify="required" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">培训证明：</label>
-                <div class="layui-input-block">
-                    <button type="button" class="layui-btn layui-btn-primary" id="upload">上传附件</button>
-                </div>
-            </div>
+
             <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm" id="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -188,8 +200,6 @@
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
-                        <!--<th style="width: 150px;">文件类型</th>-->
-                        <th style="width: 120px;">文件大小</th>
                         <th style="width: 160px;">上传日期</th>
                         <th style="width: 120px;">操作</th>
                     </tr></thead>
@@ -202,8 +212,6 @@
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
-                        <!--<th style="width: 150px;">文件类型</th>-->
-                        <th style="width: 120px;">文件大小</th>
                         <th style="width: 160px;">上传日期</th>
                         <th style="width: 120px;">操作</th>
                     </tr></thead>
@@ -229,7 +237,6 @@
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
-                        <th style="width: 120px;">大小</th>
                         <th style="width: 120px;">状态</th>
                         <th style="width: 120px;">操作</th>
                     </tr></thead>
@@ -243,7 +250,6 @@
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead><tr><th>文件名</th>
-                        <th style="width: 120px;">大小</th>
                         <th style="width: 120px;">状态</th>
                         <th style="width: 120px;">操作</th>
                     </tr></thead>
@@ -253,8 +259,6 @@
         </div>
     </div>
 
-    <!-- 查看审核流程 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">

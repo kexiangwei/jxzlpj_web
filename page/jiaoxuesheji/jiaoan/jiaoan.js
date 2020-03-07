@@ -146,8 +146,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     layer.open({
                                         title : '教学设计-教案-新增'
                                         ,type : 1
-                                        ,offset : '10px'
-                                        ,area : [ '700px', '500px' ]
+                                        ,area : [ '900px', '500px' ]
+                                        ,offset : '50px'
                                         ,content : $('#insertOrUpdateContainer')
                                         ,success: function(layero, index){
                                             //监听表单提交
@@ -248,9 +248,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 layer.open({
                                     title : '教学设计-教案-编辑'
                                     ,type : 1
-                                    ,area : [ '700px', '535px' ]
-                                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '10px'
+                                    ,area : [ '900px', '500px' ]
+                                    ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#insertOrUpdateContainer')
                                     ,success: function(layero, index){
@@ -522,8 +521,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 layer.open({
                     title : '教学设计-教案-查看详情'
                     ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,area : [ '900px', '500px' ]
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : $('#dataInfo_container')

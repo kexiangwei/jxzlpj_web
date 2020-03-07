@@ -12,9 +12,9 @@ layui.use(['layer','upload'], function(){
         layer.open({
             title : '继续教育-附件'
             ,type : 1
-            ,area : [ '1175px', '535px' ]
+            ,area : [ '900px', '500px' ]
             // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-            ,offset : '10px'
+            ,offset : '50px'
             ,moveOut:true
             ,btn: ['关闭']
             ,shadeClose : true //点击遮罩关闭
@@ -39,7 +39,6 @@ layui.use(['layer','upload'], function(){
                                 case "xdth":
                                     var tr = $(['<tr id="'+ file.code +'">'
                                         ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
-                                        ,'<td>'+ file.fileSize +'kb</td>'
                                         ,'<td>已上传</td>'
                                         ,'<td>' +
                                         '   <button class="layui-btn layui-btn-xs layui-btn-normal preview_fileInfo">预览</button>' +
@@ -66,7 +65,6 @@ layui.use(['layer','upload'], function(){
                                 case "qtwj":
                                     var tr = $(['<tr id="'+ file.code +'">'
                                         ,'<td>	<a href="javascript:void(0)">'+ file.fileName +'</a></td>'
-                                        ,'<td>'+ file.fileSize +'kb</td>'
                                         ,'<td>已上传</td>'
                                         ,'<td>' +
                                         '   <button class="layui-btn layui-btn-xs layui-btn-normal preview_fileInfo">预览</button>' +
@@ -261,7 +259,6 @@ layui.use(['layer','upload'], function(){
                         obj.preview(function(index, file, result){
                             var tr = $(['<tr id="upload-'+ index +'">'
                                 ,'<td>	<a href="javascript:void(0)">'+ file.name +'</a></td>'
-                                ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
                                 ,'<td>待上传</td>'
                                 ,'<td>' +
                                 '   <button class="layui-btn layui-btn-xs layui-btn-normal preview_fileInfo">预览</button>' +
@@ -286,7 +283,7 @@ layui.use(['layer','upload'], function(){
                             let tr = xdthListView.find('tr#upload-'+ index)
                                 ,tds = tr.children();
                             tr.attr("data-id",res.data.code);//
-                            tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
+                            tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
                             // tds.eq(3).html(''); //清空操作
 
                             //预览
@@ -340,7 +337,6 @@ layui.use(['layer','upload'], function(){
                             // alert(JSON.stringify(file));
                             var tr = $(['<tr id="upload-'+ index +'">'
                                 ,'<td>	<a href="javascript:void(0)">'+ file.name +'</a></td>'
-                                ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
                                 ,'<td>待上传</td>'
                                 ,'<td>' +
                                 '   <button class="layui-btn layui-btn-xs layui-btn-normal preview_fileInfo">预览</button>' +
@@ -367,7 +363,7 @@ layui.use(['layer','upload'], function(){
                             var tr = demoListView.find('tr#upload-'+ index)
                                 ,tds = tr.children();
                             tr.attr("data-id",res.data.code);//
-                            tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
+                            tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
                             // tds.eq(3).html(''); //清空操作
 
                             //预览
