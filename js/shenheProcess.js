@@ -60,7 +60,8 @@ var detail_shenheProcess  = function (title,rowData) {
                     ,title : title
                     ,type : 1
                     ,area : [ '1100px', '500px' ]
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,offset : '30px' //只定义top坐标，水平保持居中
+                    // ,maxmin: true
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : html

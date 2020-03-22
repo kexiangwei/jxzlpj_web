@@ -62,19 +62,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'collegeName', title: '学院', width:150, hide:true}
-                        ,{field: 'majorName', title: '专业', width:150, hide:true}
-                        ,{field: 'stuCode', title: '学号', width:150, hide:true}
-                        ,{field: 'stuName', title: '姓名', width:150, hide:true}
-                        ,{field: 'name', title: '专利（著作权）名称', width:150}
-                        ,{field: 'type', title: '类型', width:150}
-                        ,{field: 'authNum', title: '授权号', width:150}
-                        ,{field: 'approvalTime', title: '获批时间', width:150}
-                        ,{field: 'owner', title: '专利（著作权）人', width:150}
-                        ,{field: 'isFirstInventor', title: '学生是否为第一发明人', width:150}
-                        ,{field: 'userId', title: '指导教师工号', width:150, hide:true}
-                        ,{field: 'userName', title: '指导教师姓名', width:150, hide:true}
-                        ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
+                        ,{field: 'userId', title: '第一指导教师工号', width:160, sort:true, hide:true}
+                        ,{field: 'userName', title: '第一指导教师姓名', width:160, sort:true, hide:true}
+                        ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
+                        ,{field: 'name', title: '专利名称', width:200, sort:true}
+                        ,{field: 'type', title: '类型', width:150, sort:true}
+                        ,{field: 'authNum', title: '授权号', width:150, sort:true}
+                        ,{field: 'approvalTime', title: '获批时间', width:150, sort:true}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){
                                 let htmlstr='';
                                 if(data.isSubmit=='未提交'){
                                     if(data.status ==='退回'){
@@ -103,7 +98,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120,templet: function(data){
+                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){
                                 if(data.status==='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+data.status+'</span>';
                                 }
@@ -113,14 +108,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){ //数据渲染完的回调
-
-                        /*//监听行单击事件
-                        table.on('row(myself_table)', function(obj){
-                            // console.log(obj.tr) //得到当前行元素对象
-                            layer.msg(JSON.stringify(obj.data)) //得到当前行数据
-                            //obj.del(); //删除当前行
-                            //obj.update(fields) //修改当前行数据
-                        });*/
 
                         //监听行双击事件
                         table.on('rowDouble(myself_table)', function(obj){
@@ -137,8 +124,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 myself_table.reload({
                                     where: {
                                         'name': $(".myself_search input[name='name']").val()
-                                        ,'owner': $(".myself_search input[name='owner']").val()
-                                        ,'isSubmit': $("#isSubmit option:selected").val() //获取选中的值
                                         ,'status': $("#status option:selected").val() //获取选中的值
                                     }
                                     ,page: {
@@ -149,7 +134,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,reset: function () {
                                 $(".myself_search input").val('');
                                 //清除选中状态
-                                $("#isSubmit").val("");
                                 $("#status").val("");
                                 form.render("select");
                             }
@@ -338,18 +322,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'collegeName', title: '学院', width:150, hide:true}
-                        ,{field: 'majorName', title: '专业', width:150, hide:true}
-                        ,{field: 'stuCode', title: '学号', width:150, hide:true}
-                        ,{field: 'stuName', title: '姓名', width:150, hide:true}
-                        ,{field: 'name', title: '专利（著作权）名称', width:200}
-                        ,{field: 'type', title: '类型', width:150}
-                        ,{field: 'authNum', title: '授权号', width:150}
-                        ,{field: 'approvalTime', title: '获批时间', width:150}
-                        ,{field: 'owner', title: '专利（著作权）人', width:150}
-                        ,{field: 'isFirstInventor', title: '学生是否为第一发明人', width:150}
-                        ,{field: 'userId', title: '指导教师工号', width:150, hide:true}
-                        ,{field: 'userName', title: '指导教师姓名', width:150, hide:true}
+                        ,{field: 'userId', title: '第一指导教师工号', width:160, sort:true, hide:true}
+                        ,{field: 'userName', title: '第一指导教师姓名', width:160, sort:true, hide:true}
+                        ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
+                        ,{field: 'name', title: '专利名称', width:200, sort:true}
+                        ,{field: 'type', title: '类型', width:150, sort:true}
+                        ,{field: 'authNum', title: '授权号', width:150, sort:true}
+                        ,{field: 'approvalTime', title: '获批时间', width:150, sort:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -378,7 +357,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 other_table.reload({
                                     where: {
                                         'name': $(".other_search input[name='name']").val()
-                                        ,'owner': $(".other_search input[name='owner']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
@@ -446,189 +424,216 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other_item').remove();
             }
 
-            /**
-             * 查看详情
-             * @param data 行数据
-             * @param isSubmit 是否信息列表查看
-             * @param isShenHe 是否审核列表查看
-             */
-            var detail_dataInfo = function (data,isSubmit,isShenHe) {
-                if(isOpen){
-                    return;
-                }
-                var isOpen = false;
-                let options = {
-                    title : '双创教育-本科生申请专利-查看详情'
-                    ,type : 1
-                    ,area : [ '900px', '500px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '50px' //只定义top坐标，水平保持居中
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
-                    ,content :  $('#dataInfo_container')
-                    ,success: function(layero, index){
-                        isOpen = true;
-                        //基础信息
-                        let htmlStr = '<table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">学院：</td><td style="width: 120px;">'+data.collegeName+'</td>' +
-                            '                <td style="width: 80px; text-align: right">专业：</td><td style="width: 120px;">'+data.majorName+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">学号：</td><td style="width: 120px;">'+data.stuCode+'</td>' +
-                            '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+data.stuName+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">名称：</td><td style="width: 120px;" colspan="3">'+data.name+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">类型：</td><td style="width: 120px;" colspan="3">'+data.type+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">授权号：</td><td style="width: 120px;">'+data.authNum+'</td>' +
-                            '                <td style="width: 80px; text-align: right">获批时间：</td><td style="width: 120px;">'+data.approvalTime+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">专利权（著作权）人：</td><td style="width: 120px;">'+data.owner+'</td>' +
-                            '                <td style="width: 80px; text-align: right">学生是否为第一发明人：</td><td style="width: 120px;">'+data.isFirstInventor+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">指导教师工号：</td><td style="width: 120px;">'+data.userId+'</td>' +
-                            '                <td style="width: 80px; text-align: right">指导教师姓名：</td><td style="width: 120px;">'+data.userName+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;" colspan="3">'+data.createDate+'</td>' +
-                            '              </tr>\n' +
-                            '            </tbody>\n' +
-                            '         </table>';
-                        $("#baseInfo").html(htmlStr);
-
-                        //附件列表
-                        let fileList = $("#fileList");
-                        $.get(requestUrl+"/getFileListByRelationCode.do" , {
-                            "relationCode": function () {
-                                return data.code;
-                            }
-                        } ,  function(result_data){
-                            if(result_data.data.length ===0){
-                                let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
-                                fileList.append(tr);
-                            } else {
-                                $.each(result_data.data,function(index,fileInfo){
-                                    let tr = $(['<tr id="'+ fileInfo.code +'">'
-                                        ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
-                                        ,'<td style="text-align: center;">'+ fileInfo.createDate +'</td>'
-                                        ,'<td style="text-align: center;">' +
-                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
-                                        '   <button class="layui-btn layui-btn-xs layui-btn-primary upfile_download">下载</button>' +
-                                        '</td>'
-                                        ,'</tr>'].join(''));
-                                    //预览
-                                    tr.find('a').on('click', function(){
-                                        previewFileInfo(fileInfo);
-                                    });
-                                    tr.find('.upfile_preview').on('click', function(){
-                                        previewFileInfo(fileInfo);
-                                    });
-                                    //下载
-                                    tr.find('.upfile_download').on('click', function(){
-                                        let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
-                                        downloadForm.append("<input type='hidden' name='fileName' value='"+fileInfo.fileName+"'/>");
-                                        downloadForm.append("<input type='hidden' name='filePath' value='"+fileInfo.filePath+"'/>");
-                                        $(document.body).append(downloadForm);
-                                        // alert(downloadForm.serialize());
-                                        downloadForm.submit();
-                                        downloadForm.remove();
-                                    });
-                                    fileList.append(tr);
-                                });
-                            }
-                        }, "json");
-                    }
-                    ,end:function () {
-                        isOpen = false;
-                        $("#fileList").empty();
-                    }
-                };
-                if(isSubmit && data.isSubmit == '未提交'){
-                    options.btn = ['提交','关闭'];
-                    options.yes = function(index, layero){
-                        toSubmit(new Array(data));
-                    };
-                    options.btn2 = function(index, layero){
-                        layer.close(index); //如果设定了yes回调，需进行手工关闭
-                    };
-                }
-                if(isShenHe && data.shenheStatus == '未审核'){
-                    options.btn = ['审核','关闭'];
-                    options.yes = function(index, layero){
-                        toShenHe(new Array(data));
-                    };
-                    options.btn2 = function(index, layero){
-                        layer.close(index); //如果设定了yes回调，需进行手工关闭
-                    };
-                }
-                layer.open(options); //返回一个当前层索引
-            };
-
             //初始化表单
             var initEditForm = function (data) {
-                // alert(JSON.stringify(data));
-                //
-                $.get(requestUrl+'/getCollege.do',function(result_data){
-                    if(result_data.code == 200){
-                        // alert(JSON.stringify(result_data.data));
-                        // 加载下拉选项
-                        $("select[name='college']").empty(); //移除下拉选项
-                        let html = '<option value="">请选择</option>';
-                        for (let i = 0; i < result_data.data.length; i++) {
-                            if(data.college == result_data.data[i].CODE ){
-                                html += '<option value="' + result_data.data[i].CODE + '" selected="">' + result_data.data[i].NAME + '</option>';
-                            }else{
-                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                            }
-                        }
-                        $("select[name='college']").append(html);
-                        form.render('select');
+
+                //其他指导教师数据表格
+                let teacher_datatable = table.render({
+                    id: "teacher_datatable"
+                    ,elem : '#teacher_datatable'
+                    ,width: 750
+                    // ,height : 200
+                    ,url: requestUrl+'/scjx/getTeacherInfo.do'
+                    ,where: {
+                        "relationCode":data.code
                     }
-                },'json');
-                // 监听学院下拉选项
-                form.on('select(college)', function(data) {
-                    $.get(requestUrl+'/getMajor.do',{
-                        'collegeCode': data.value
-                    },function(result_data){
-                        if(result_data.code == 200){
-                            // 加载下拉选项
-                            $("select[name='major']").empty(); //移除下拉选项
-                            let html = '<option value="">请选择</option>';
-                            for (let i = 0; i < result_data.data.length; i++) {
-                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                    ,response: {
+                        statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": "", //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    ,toolbar: '#teacher_datatable_toolbar' //指向自定义工具栏模板选择器
+                    ,defaultToolbar:[]
+                    ,cols : [[ //表头
+                        {type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'teacherCode', title: '工号', width:120, align:'center'}
+                        ,{field: 'teacherName', title: '姓名', width:120, align:'center'}
+                        ,{field: 'teacherUnit', title: '单位', align:'center'}
+                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#teacher_datatable_bar'}
+                    ]]
+                    ,even: true //隔行背景
+                    ,done : function(res, curr, count) {
+
+                        //监听头工具栏事件
+                        table.on('toolbar(teacher_datatable)', function(obj){
+
+                            //
+                            layer.open({
+                                title : '其他指导教师信息'
+                                ,type : 1
+                                ,area : [ '900px', '300px' ]
+                                ,offset : '100px'
+                                ,btn : ['关闭']
+                                ,content : $('#teacher_container')
+                                ,success: function(layero, index){
+
+                                    //监听表单提交
+                                    form.on('submit(toSubmitTeacherForm)', function(form_data){
+                                        $.post(requestUrl+'/scjx/addTeacherInfo.do',{
+                                            "relationCode":data.code,
+                                            "teacherCode":form_data.field.teacherCode,
+                                            "teacherName":form_data.field.teacherName,
+                                            "teacherUnit":form_data.field.teacherUnit
+                                        },function (result_data) {
+                                            if(result_data.code == 200){
+                                                teacher_datatable.reload();//重新加载数据
+                                            }
+                                            layer.msg(result_data.msg, { offset: '100px'},function () {
+                                                layer.close(index);
+                                            });
+                                        },'json');
+                                        return false;
+                                    });
+                                },end:function () {
+                                    $("#teacher_form input").val("");
+                                }
+                            });
+                        });
+
+                        //监听右侧工具条
+                        table.on('tool(teacher_datatable)', function(obj){
+                            if (obj.event === 'delete') {
+                                $.post(parent.requestUrl+'/scjx/delTeacherInfo.do', {
+                                    "relationCode": obj.data.relationCode
+                                    ,"teacherCode": obj.data.teacherCode
+                                },function(result_data){
+                                    if(result_data.code === 200){
+                                        teacher_datatable.reload();//重新加载表格数据
+                                    }
+                                    layer.msg(result_data.msg, { offset: '100px'});
+                                }, "json");
                             }
-                            $("select[name='major']").append(html);
-                            form.render('select');
-                        }
-                    },'json');
+                        });
+                    }
                 });
-                //
-                $.get(requestUrl+'/getMajor.do',{
-                    'collegeCode': data.college !== undefined?data.college:null
-                },function(result_data){
-                    if(result_data.code == 200){
-                        // 加载下拉选项
-                        $("select[name='major']").empty(); //移除下拉选项
-                        let html = '<option value="">请选择</option>';
-                        for (let i = 0; i < result_data.data.length; i++) {
-                            if(data.major == result_data.data[i].CODE ){
-                                html += '<option value="' + result_data.data[i].CODE + '" selected="">' + result_data.data[i].NAME + '</option>';
-                            }else{
-                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                            }
-                        }
-                        $("select[name='major']").append(html);
-                        form.render('select');
+
+                //学生信息
+                let student_datatable = table.render({
+                    id: "student_datatable"
+                    ,elem : '#student_datatable'
+                    ,url: requestUrl+'/scjx/getStudentInfo.do'
+                    ,where: {
+                        "relationCode":data.code
                     }
-                },'json');
+                    ,response: {
+                        statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": "", //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    ,toolbar: '#student_datatable_toolbar' //指向自定义工具栏模板选择器
+                    ,defaultToolbar:[]
+                    ,cols : [[ //表头
+                        {type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'college', title: '学院', width:120, align:'center'}
+                        ,{field: 'major', title: '专业', width:120, align:'center'}
+                        ,{field: 'studentCode', title: '学号', width:120, align:'center'}
+                        ,{field: 'studentName', title: '姓名', width:120, align:'center'}
+                        ,{field: 'sorted', title: '排序', width:120, align:'center'}
+                        ,{fixed: 'right', title: '操作', width:80, align:'center', toolbar: '#student_datatable_bar'}
+                    ]]
+                    ,even: true //隔行背景
+                    ,done : function(res, curr, count) {
+
+                        //监听头工具栏事件
+                        table.on('toolbar(student_datatable)', function(obj){
+
+                            //
+                            layer.open({
+                                title : '学生信息'
+                                ,type : 1
+                                ,area : [ '900px', '400px' ]
+                                ,offset : '100px'
+                                ,btn : ['关闭']
+                                ,content : $('#stu_container')
+                                ,success: function(layero, index){
+
+                                    //
+                                    $.get(requestUrl+'/getCollege.do',function(result_data){
+                                        if(result_data.code == 200){
+                                            // alert(JSON.stringify(result_data.data));
+                                            // 加载下拉选项
+                                            $("select[name='college']").empty(); //移除下拉选项
+                                            let html = '<option value="">请选择</option>';
+                                            for (let i = 0; i < result_data.data.length; i++) {
+                                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                                            }
+                                            $("select[name='college']").append(html);
+                                            form.render('select');
+                                        }
+                                    },'json');
+                                    // 监听学院下拉选项
+                                    form.on('select(college)', function(data) {
+                                        $.get(requestUrl+'/getMajor.do',{
+                                            'collegeCode': data.value
+                                        },function(result_data){
+                                            if(result_data.code == 200){
+                                                // 加载下拉选项
+                                                $("select[name='major']").empty(); //移除下拉选项
+                                                let html = '<option value="">请选择</option>';
+                                                for (let i = 0; i < result_data.data.length; i++) {
+                                                    html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                                                }
+                                                $("select[name='major']").append(html);
+                                                form.render('select');
+                                            }
+                                        },'json');
+                                    });
+
+                                    //监听表单提交
+                                    form.on('submit(toSubmitStuForm)', function(form_data){
+                                        $.post(requestUrl+'/scjx/addStudentInfo.do',{
+                                            "relationCode":data.code,
+                                            "college":form_data.field.college,
+                                            "major":form_data.field.major,
+                                            "studentCode":form_data.field.studentCode,
+                                            "studentName":form_data.field.studentName,
+                                            "sorted":form_data.field.sorted
+                                        },function (result_data) {
+                                            if(result_data.code == 200){
+                                                student_datatable.reload();//重新加载数据
+                                            }
+                                            layer.msg(result_data.msg, { offset: '100px'},function () {
+                                                layer.close(index);
+                                            });
+                                        },'json');
+                                        return false;
+                                    });
+                                },end:function () {
+                                    $("#stuForm input").val("");
+                                    //清除选中状态
+                                    $("#college").val("");
+                                    $("#major").val("");
+                                    form.render("select");
+                                }
+                            });
+                        });
+
+                        //监听右侧工具条
+                        table.on('tool(student_datatable)', function(obj){
+                            if (obj.event === 'delete') {
+                                $.post(parent.requestUrl+'/scjx/delStudentInfo.do', {
+                                    "relationCode": obj.data.relationCode
+                                    ,"studentCode": obj.data.studentCode
+                                },function(result_data){
+                                    if(result_data.code === 200){
+                                        student_datatable.reload();//重新加载表格数据
+                                    }
+                                    layer.msg(result_data.msg, { offset: '100px'});
+                                }, "json");
+                            }
+                        });
+                    }
+                });
 
                 //初始化laydate实例
                 laydate.render({
@@ -648,18 +653,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //表单赋值
                 form.val("editForm",{
                     "code":data.code
-                    ,"college" : data.college
-                    ,"major" : data.major
-                    ,"stuCode" : data.stuCode
-                    ,"stuName" : data.stuName
+                    ,"userId":data.userId
+                    ,"userName":data.userName
+                    ,"userUnit" : data.userUnit
                     ,"name" : data.name
                     ,"type" : data.type
                     ,"authNum" : data.authNum
                     ,"approvalTime" : data.approvalTime
-                    ,"owner" : data.owner
-                    ,"isFirstInventor" : data.isFirstInventor
-                    ,"userId":data.userId
-                    ,"userName":data.userName
                 });
             };
 
@@ -795,6 +795,161 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                 });
             });
+
+            //查看详情
+            var detail_dataInfo = function (data,isSubmit,isShenHe) {
+                if(isOpen){
+                    return;
+                }
+                var isOpen = false;
+                let options = {
+                    title : '双创教育-本科生申请专利-查看详情'
+                    ,type : 1
+                    ,area : [ '900px', '450px' ]
+                    ,offset : '50px'
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
+                    ,content :  $('#dataInfo_container')
+                    ,success: function(layero, index){
+                        isOpen = true;
+
+                        //第一指导教师信息
+                        let htmlStr = '<table class="layui-table">\n' +
+                            '            <tbody>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">工号：</td><td style="width: 120px;">'+data.userId+'</td>' +
+                            '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+data.userName+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">单位：</td><td colspan="3">'+data.userUnit+'</td>' +
+                            '              </tr>\n' +
+                            '            </tbody>\n' +
+                            '         </table>';
+                        $("#teacherInfo").html(htmlStr);
+
+                        //其他指导教师信息
+                        $.get(requestUrl+'/scjx/getTeacherInfo.do',{
+                            "relationCode":data.code
+                        },function (result_data) {
+                            if(result_data.code = 200){
+                                if(result_data.data.length > 0){
+                                    let html = '';
+                                    $.each(result_data.data,function(idx,obj){
+                                        html += '<tr><td style="text-align: center;">'+parseInt(idx+1)+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].teacherCode+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].teacherName+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].teacherUnit+'</td></tr>';
+                                    });
+                                    $("#teacherList").html(html);
+                                }
+                            }
+                        },'json');
+
+                        //学生信息
+                        $.get(requestUrl+'/scjx/getStudentInfo.do',{
+                            "relationCode":data.code
+                        },function (result_data) {
+                            if(result_data.code = 200){
+                                if(result_data.data.length > 0){
+                                    html = '';
+                                    $.each(result_data.data,function(idx,obj){
+                                        html += '<tr><td style="text-align: center;">'+parseInt(idx+1)+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].college+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].major+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].studentCode+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].studentName+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].sorted+'</td></tr>';
+                                    });
+                                    $("#studentList").html(html);
+                                }
+                            }
+                        },'json');
+
+                        //专利信息
+                        html = '<table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '              <tr>' +
+                            '                 <td style="width: 80px; text-align: right">专利名称：</td><td style="width: 120px;" colspan="3">'+data.name+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                 <td style="width: 80px; text-align: right">类型：</td><td style="width: 120px;">'+data.type+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">授权号：</td><td style="width: 120px;">'+data.authNum+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                 <td style="width: 80px; text-align: right">获批时间：</td><td style="width: 120px;">'+data.approvalTime+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;">'+data.createDate+'</td>' +
+                            '              </tr>\n' +
+                            '            </tbody>\n' +
+                            '         </table>';
+                        $("#baseInfo").html(html);
+
+                        //附件列表
+                        let fileList = $("#fileList");
+                        $.get(requestUrl+"/getFileListByRelationCode.do" , {
+                            "relationCode": function () {
+                                return data.code;
+                            }
+                        } ,  function(result_data){
+                            if(result_data.data.length ===0){
+                                let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
+                                fileList.append(tr);
+                            } else {
+                                $.each(result_data.data,function(index,fileInfo){
+                                    let tr = $(['<tr id="'+ fileInfo.code +'">'
+                                        ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
+                                        ,'<td style="text-align: center;">'+ fileInfo.createDate +'</td>'
+                                        ,'<td style="text-align: center;">' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-primary upfile_download">下载</button>' +
+                                        '</td>'
+                                        ,'</tr>'].join(''));
+                                    //预览
+                                    tr.find('a').on('click', function(){
+                                        previewFileInfo(fileInfo);
+                                    });
+                                    tr.find('.upfile_preview').on('click', function(){
+                                        previewFileInfo(fileInfo);
+                                    });
+                                    //下载
+                                    tr.find('.upfile_download').on('click', function(){
+                                        let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
+                                        downloadForm.append("<input type='hidden' name='fileName' value='"+fileInfo.fileName+"'/>");
+                                        downloadForm.append("<input type='hidden' name='filePath' value='"+fileInfo.filePath+"'/>");
+                                        $(document.body).append(downloadForm);
+                                        // alert(downloadForm.serialize());
+                                        downloadForm.submit();
+                                        downloadForm.remove();
+                                    });
+                                    fileList.append(tr);
+                                });
+                            }
+                        }, "json");
+                    }
+                    ,end:function () {
+                        isOpen = false;
+                        $("#fileList").empty();
+                    }
+                };
+                if(isSubmit && data.isSubmit == '未提交'){
+                    options.btn = ['提交','关闭'];
+                    options.yes = function(index, layero){
+                        toSubmit(new Array(data));
+                    };
+                    options.btn2 = function(index, layero){
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    };
+                }
+                if(isShenHe && data.shenheStatus == '未审核'){
+                    options.btn = ['审核','关闭'];
+                    options.yes = function(index, layero){
+                        toShenHe(new Array(data));
+                    };
+                    options.btn2 = function(index, layero){
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    };
+                }
+                layer.open(options); //返回一个当前层索引
+            };
 
             //提交
            var toSubmit = function (row_dataArr){
