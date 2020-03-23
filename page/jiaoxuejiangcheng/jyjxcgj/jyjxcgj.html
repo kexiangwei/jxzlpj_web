@@ -20,15 +20,7 @@
                     <div class="layui-form myself_search">
                         成果名称：
                         <div class="layui-inline">
-                            <input class="layui-input" name="objName">
-                        </div>
-                        &nbsp;&nbsp;提交状态：
-                        <div class="layui-inline">
-                            <select name="isSubmit" id="isSubmit">
-                                <option value="">请选择</option>
-                                <option value="已提交">已提交</option>
-                                <option value="未提交">未提交</option>
-                            </select>
+                            <input class="layui-input" name="objName" placeholder="支持关键字查询">
                         </div>
                         &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
@@ -68,7 +60,7 @@
                     <div class="layui-form other_search">
                         成果名称：
                         <div class="layui-inline">
-                            <input class="layui-input" name="objName">
+                            <input class="layui-input" name="objName" placeholder="支持关键字查询">
                         </div>
                         &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
@@ -105,12 +97,12 @@
 
     <!-- 查看信息 -->
     <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
-        <fieldset class="layui-elem-field" style="margin-top: 10px;">
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
             <legend>基础信息</legend>
             <div id="baseInfo"></div>
         </fieldset>
-        <fieldset class="layui-elem-field" style="margin-top: 10px;">
-            <legend>附件列表</legend>
+        <fieldset class="layui-elem-field">
+            <legend>证明材料</legend>
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead>
@@ -145,32 +137,59 @@
                     </div>
                 </div>
             </div>
-
+            <div class="layui-form-item">
+                <label class="layui-form-label">单位：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userUnit" lay-verify="required|userUnit" autocomplete="off" class="layui-input" style="width: 82%;">
+                </div>
+            </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">成果名称：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="objName" lay-verify="required|objName" autocomplete="off" class="layui-input" style="width: 80%;">
+                    <input type="text" name="objName" lay-verify="required|objName" placeholder="请填写奖项名称的全称" autocomplete="off" class="layui-input" style="width: 82%;">
                 </div>
             </div>
-
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">本人排名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="personRank" class="layui-input">
+                        <select name="personRank">
+                            <option value="">请选择</option>
+                            <option value="第一完成人">第一完成人</option>
+                            <option value="第二完成人">第二完成人</option>
+                            <option value="第三完成人">第三完成人</option>
+                            <option value="第四完成人">第四完成人</option>
+                            <option value="第五完成人">第五完成人</option>
+                            <option value="第六完成人">第六完成人</option>
+                            <option value="第七完成人">第七完成人</option>
+                            <option value="第八完成人">第八完成人</option>
+                            <option value="第九完成人">第九完成人</option>
+                            <option value="第十完成人">第十完成人</option>
+                            <option value="第十一完成人">第十一完成人</option>
+                            <option value="第十二完成人">第十二完成人</option>
+                            <option value="第十三完成人">第十三完成人</option>
+                            <option value="第十四完成人">第十四完成人</option>
+                            <option value="第十五完成人">第十五完成人</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">完成单位排名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="unitRank" class="layui-input">
+                        <select name="unitRank">
+                            <option value="">请选择</option>
+                            <option value="第一完成单位">第一完成单位</option>
+                            <option value="第二完成单位">第二完成单位</option>
+                            <option value="第三完成单位">第三完成单位</option>
+                            <option value="第四完成单位">第四完成单位</option>
+                            <option value="第五完成单位">第五完成单位</option>
+                        </select>
                     </div>
                 </div>
             </div>
-
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">级别：</label>
+                    <label class="layui-form-label">获奖级别：</label>
                     <div class="layui-input-inline">
                         <select name="level1" lay-filter="level1">
                             <option value="">请选择</option>
@@ -181,7 +200,7 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">奖项：</label>
+                    <label class="layui-form-label">获得奖项：</label>
                     <div class="layui-input-inline">
                         <select name="level2" lay-filter="level2">
                             <option value="">请选择</option>
@@ -189,38 +208,32 @@
                             <option value="一等奖">一等奖</option>
                             <option value="二等奖">二等奖</option>
                             <option value="三等奖">三等奖</option>
+                            <option value="三等奖">优秀奖</option>
                         </select>
                     </div>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">获奖时间：</label>
-                <div class="layui-input-block">
-                    <input type="text" id="prizeTime" name="prizeTime" placeholder="年-月-日"  autocomplete="off" class="layui-input" style="width: 80%;">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">获奖证书编号：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="certificateCode" class="layui-input" style="width: 80%;">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">授予单位：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="grantUnit" class="layui-input" style="width: 80%;">
+                    <input type="text" name="grantUnit" class="layui-input" style="width: 82%;">
                 </div>
             </div>
-
             <div class="layui-form-item">
-                <label class="layui-form-label">获奖证书：</label>
-                <div class="layui-input-block">
-                    <button type="button" class="layui-btn layui-btn-primary" id="upfile">上传附件（PDF 格式）</button>
+                <div class="layui-inline">
+                    <label class="layui-form-label">获奖时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="datetimeYear" name="datetimeYear" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">证明材料：</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary" style="width: 192px" id="upfile">上传附件（PDF 格式）</button>
+                    </div>
                 </div>
             </div>
-
-            <div class="layui-btn-container" align="center" style="margin-top: 20px;">
+            <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
@@ -243,8 +256,8 @@
         </div>
     </div>
 
-    <!-- 查看审核流程 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
+    <!-- 查看审核流程
+    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div> -->
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHe_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
