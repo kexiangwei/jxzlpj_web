@@ -20,13 +20,27 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
 
+            // 初始化获得奖项下拉选项
+            $.get(requestUrl+'/hjLevel/getHjLevelSet.do',{
+                'menuId':function () {
+                    return $.cookie('currentMenuId');
+                }
+            },function(result_data){
+                if(result_data.code == 200){
+                    if(result_data.data.length >0){
+                        initSelect('请选择','level2',result_data.data);
+                    }
+                }
+            },'json');
+
+            //
             if(data.isSubmit > 0){ //拥有提交权限
 
                 laydate.render({
-                    elem: "#myself_search_grantDate_start" //指定元素
+                    elem: "#myself_grantDateStart" //指定元素
                 });
                 laydate.render({
-                    elem: "#myself_search_grantDate_end" //指定元素
+                    elem: "#myself_grantDateEnd" //指定元素
                 });
 
                 //数据表格
@@ -461,6 +475,24 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other').remove();
                 $('#other_item').remove();
             }
+
+            /**
+             * 加载下拉选项
+             * @param defaultOptionVal
+             * @param inputName
+             * @param data
+             */
+            var initSelect = function(defaultOptionVal, inputName, data){
+                //
+                $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
+                //
+                let html = '<option value="">'+defaultOptionVal+'</option>';
+                for (let i = 0; i < data.length; i++) {
+                    html += '<option value="' + data[i]['NAME'] + '" >' + data[i]['NAME'] + '</option>';
+                }
+                $("select[name='"+inputName+"']").append(html);
+                form.render('select');
+            };
 
             //初始化表单
             var initEditForm = function (data) {

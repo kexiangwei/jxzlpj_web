@@ -40,21 +40,21 @@
                         </div>
                         &nbsp;&nbsp;获得奖项：
                         <div class="layui-inline">
-                            <select name="level2">
-                                <option value="">请选择</option>
+                            <select name="level2" lay-filter="level2">
+                                <!--<option value="">请选择</option>
                                 <option value="特等奖">特等奖</option>
                                 <option value="一等奖（金奖）">一等奖（金奖）</option>
                                 <option value="二等奖（银奖）">二等奖（银奖）</option>
                                 <option value="三等奖（铜奖）">三等奖（铜奖）</option>
-                                <option value="优秀奖">优秀奖</option>
+                                <option value="优秀奖">优秀奖</option>-->
                             </select>
                         </div>
                         &nbsp;&nbsp;证书授予日期：
                         <div class="layui-inline">
-                            <input type="text" id="myself_search_grantDate_start" name="grantDate_start" placeholder="开始日期"  autocomplete="off" class="layui-input">
+                            <input type="text" id="myself_grantDateStart" name="grantDate_start" placeholder="开始日期"  autocomplete="off" class="layui-input">
                         </div>
                         <div class="layui-inline">
-                            <input type="text" id="myself_search_grantDate_end" name="grantDate_end" placeholder="结束日期"  autocomplete="off" class="layui-input">
+                            <input type="text" id="myself_grantDateEnd" name="grantDate_end" placeholder="结束日期"  autocomplete="off" class="layui-input">
                         </div>
                         <!--&nbsp;&nbsp;提交状态：
                         <div class="layui-inline">
@@ -109,13 +109,8 @@
                         </div>
                         &nbsp;&nbsp;获得奖项：
                         <div class="layui-inline">
-                            <select name="level2">
-                                <option value="">请选择</option>
-                                <option value="特等奖">特等奖</option>
-                                <option value="一等奖（金奖）">一等奖（金奖）</option>
-                                <option value="二等奖（银奖）">二等奖（银奖）</option>
-                                <option value="三等奖（铜奖）">三等奖（铜奖）</option>
-                                <option value="优秀奖">优秀奖</option>
+                            <select name="level2" lay-filter="level2">
+
                             </select>
                         </div>
                         &nbsp;&nbsp;证书授予日期：
@@ -294,12 +289,7 @@
                         <label class="layui-form-label">获得奖项：</label>
                         <div class="layui-input-inline">
                             <select name="level2" lay-filter="level2">
-                                <option value="">请选择</option>
-                                <option value="特等奖">特等奖</option>
-                                <option value="一等奖（金奖）">一等奖（金奖）</option>
-                                <option value="二等奖（银奖）">二等奖（银奖）</option>
-                                <option value="三等奖（铜奖）">三等奖（铜奖）</option>
-                                <option value="优秀奖">优秀奖</option>
+
                             </select>
                         </div>
                     </div>
@@ -457,6 +447,7 @@
     <script src="../../../js/global.js"></script>
     <script src="../../../js/shenheProcess.js"></script>
     <script src="../../../js/previewFileInfo.js"></script>
+    <script src="../../../js/initSelect.js"></script>
     <script src="wtbs.js"></script>
 </body>
 </html>
