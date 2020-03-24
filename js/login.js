@@ -25,7 +25,7 @@
                             $.cookie('userId', obj.userId, { path: '/' });
                             $.cookie('userName', obj.userName, { path: '/' });
                             $.cookie('password', obj.password, { path: '/' });
-                            $.cookie('accountType', obj.accountType, { path: '/' });
+                            $.cookie('accountLevel', obj.accountLevel, { path: '/' });
                             $.cookie('accountStatus', obj.accountStatus, { path: '/' });
                             $.cookie('headImg', obj.headImg, { path: '/' });
                             $.cookie('phone', obj.phone, { path: '/' });

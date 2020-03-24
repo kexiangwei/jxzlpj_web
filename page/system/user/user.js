@@ -29,7 +29,7 @@ layui.use(['layer','table','form','transfer','util'], function(){
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             ,{field: 'userId', title: '工号(学号)', width:120, sort: true}
             ,{field: 'userName', title: '姓名', width:120}
-            ,{field: 'accountType', title: '账号类别', width:120}
+            ,{field: 'accountLevel', title: '账号类别', width:120}
             ,{field: 'collegeName', title: '所属学院(部门)', width:200}
             // ,{field: 'accountStatus', title: '账号状态', width:120}
             ,{field: 'phone', title: '电话', width:120}
