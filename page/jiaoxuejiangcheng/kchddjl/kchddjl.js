@@ -60,12 +60,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'objName', title: '奖项名称', width:150}
-                        ,{field: 'level1', title: '奖励级别', width:120}
-                        ,{field: 'level2', title: '获得奖项', width:120}
-                        ,{field: 'grantUnit', title: '证书授予机构', width:120}
-                        ,{field: 'awardDate', title: '获奖时间', width:120}
-                        ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
+                        ,{field: 'objName', title: '奖项名称', width:150, sort:true}
+                        ,{field: 'level1', title: '奖励级别', width:150, sort:true}
+                        ,{field: 'level2', title: '获得奖项', width:150, sort:true}
+                        ,{field: 'grantUnit', title: '证书授予机构', width:150, sort:true}
+                        ,{field: 'datetimeYear', title: '获奖时间', width:150, sort:true}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){
                                 let htmlstr='';
                                 if(data.isSubmit=='未提交'){
                                     if(data.status ==='退回'){
@@ -94,7 +94,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120,templet: function(data){
+                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){
                                 if(data.status==='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+data.status+'</span>';
                                 }
@@ -115,7 +115,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 myself_table.reload({
                                     where: {
                                         'objName': $(".myself_search input[name='objName']").val()
-                                        ,'isSubmit': $("#isSubmit option:selected").val() //获取选中的值
                                         ,'status': $("#status option:selected").val() //获取选中的值
                                     }
                                     ,page: {
@@ -126,7 +125,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,reset: function () {
                                 $(".myself_search input").val('');
                                 //清除选中状态
-                                $("#isSubmit").val("");
                                 $("#status").val("");
                                 form.render("select");
                             }
@@ -142,7 +140,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.open({
                                         title : '教学奖惩-课程获得的奖励-新增'
                                         ,type : 1
-                                        ,area : [ '900px', '500px' ]
+                                        ,area : [ '900px', '450px' ]
                                         ,offset : '50px'
                                         ,content : $("#editForm_container")
                                         ,success: function(layero, index){
@@ -219,7 +217,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 layer.open({
                                     title : '教学奖惩-课程获得的奖励-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '500px' ]
+                                    ,area : [ '900px', '450px' ]
                                     ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')
@@ -323,12 +321,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'objName', title: '奖项名称', width:200}
-                        ,{field: 'level1', title: '奖励级别', width:150}
-                        ,{field: 'level2', title: '获得奖项', width:150}
-                        ,{field: 'grantUnit', title: '证书授予机构', width:150}
-                        ,{field: 'awardDate', title: '获奖时间', width:150}
-                        ,{field: 'shenheStatus', title: '审核状态', width:150,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'objName', title: '奖项名称', width:150, sort:true}
+                        ,{field: 'level1', title: '奖励级别', width:150, sort:true}
+                        ,{field: 'level2', title: '获得奖项', width:150, sort:true}
+                        ,{field: 'grantUnit', title: '证书授予机构', width:150, sort:true}
+                        ,{field: 'datetimeYear', title: '获奖时间', width:150, sort:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: #009688;font-weight: bold;">'+val+'</span>';
@@ -350,9 +348,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'userId': $(".other_search input[name='userId']").val()
-                                        ,'userName': $(".other_search input[name='userName']").val()
-                                        ,'objName': $(".other_search input[name='objName']").val()
+                                        'objName': $(".other_search input[name='objName']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
@@ -416,10 +412,97 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             //初始化表单
             var initEditForm = function (data) {
 
+                //其他指导教师数据表格
+                let teacher_datatable = table.render({
+                    id: "teacher_datatable"
+                    ,elem : '#teacher_datatable'
+                    ,width: 750
+                    // ,height : 200
+                    ,url: requestUrl+'/scjx/getTeacherInfo.do'
+                    ,where: {
+                        "relationCode":data.code
+                    }
+                    ,response: {
+                        statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": "", //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    ,toolbar: '#teacher_datatable_toolbar' //指向自定义工具栏模板选择器
+                    ,defaultToolbar:[]
+                    ,cols : [[ //表头
+                        {type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'teacherCode', title: '工号', width:120, align:'center'}
+                        ,{field: 'teacherName', title: '姓名', width:120, align:'center'}
+                        ,{field: 'teacherUnit', title: '单位', align:'center'}
+                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#teacher_datatable_bar'}
+                    ]]
+                    ,even: true //隔行背景
+                    ,done : function(res, curr, count) {
+
+                        //监听头工具栏事件
+                        table.on('toolbar(teacher_datatable)', function(obj){
+
+                            //
+                            layer.open({
+                                title : '参加人信息'
+                                ,type : 1
+                                ,area : [ '900px', '300px' ]
+                                ,offset : '100px'
+                                ,btn : ['关闭']
+                                ,content : $('#teacher_container')
+                                ,success: function(layero, index){
+
+                                    //监听表单提交
+                                    form.on('submit(toSubmitTeacherForm)', function(form_data){
+                                        $.post(requestUrl+'/scjx/addTeacherInfo.do',{
+                                            "relationCode":data.code,
+                                            "teacherCode":form_data.field.teacherCode,
+                                            "teacherName":form_data.field.teacherName,
+                                            "teacherUnit":form_data.field.teacherUnit
+                                        },function (result_data) {
+                                            if(result_data.code == 200){
+                                                teacher_datatable.reload();//重新加载数据
+                                            }
+                                            layer.msg(result_data.msg, { offset: '100px'},function () {
+                                                layer.close(index);
+                                            });
+                                        },'json');
+                                        return false;
+                                    });
+                                },end:function () {
+                                    $("#teacher_form input").val("");
+                                }
+                            });
+                        });
+
+                        //监听右侧工具条
+                        table.on('tool(teacher_datatable)', function(obj){
+                            if (obj.event === 'delete') {
+                                $.post(parent.requestUrl+'/scjx/delTeacherInfo.do', {
+                                    "relationCode": obj.data.relationCode
+                                    ,"teacherCode": obj.data.teacherCode
+                                },function(result_data){
+                                    if(result_data.code === 200){
+                                        teacher_datatable.reload();//重新加载表格数据
+                                    }
+                                    layer.msg(result_data.msg, { offset: '100px'});
+                                }, "json");
+                            }
+                        });
+                    }
+                });
+
                 //初始化laydate实例
                 laydate.render({
-                    elem: "#awardDate" //指定元素
-                    ,trigger: 'click' //解决layDate 时间控件一闪而过问题
+                    elem: "#datetimeYear" //指定元素
+                    ,type: 'year'
+                    // ,min: ''
+                    ,max: new Date().getFullYear()+"-01-01" //直接设置年份还不行，格式“年-月-日”，参考链接：//https://www.layui.com/doc/modules/laydate.html#minmax
                 });
 
                 //自定义验证规则
@@ -434,13 +517,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //表单赋值
                 form.val("editForm",{
                     "code":data.code
-                    ,"userId":data.userId
-                    ,"userName":data.userName
                     ,"objName": data.objName
                     ,"level1" : data.level1
                     ,"level2" : data.level2
                     ,"grantUnit" : data.grantUnit
-                    ,"awardDate" : data.awardDate
+                    ,"datetimeYear" : data.datetimeYear
+                    ,"userId":data.userId
+                    ,"userName":data.userName
+                    ,"userUnit":data.userUnit
                 });
             };
 
@@ -452,21 +536,49 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 let options = {
                     title : '教学奖惩-课程获得的奖励-查看详情'
                     ,type : 1
-                    ,area : [ '900px', '500px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                    ,area : [ '900px', '450px' ]
                     ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content :  $('#dataInfo_container')
                     ,success: function(layero, index){
                         isOpen = true;
-                        //基础信息
-                        let html = '<table class="layui-table">\n' +
-                            '           <tbody>\n' +
+
+                        //第一指导教师信息
+                        let htmlStr = '<table class="layui-table">\n' +
+                            '            <tbody>\n' +
                             '              <tr>' +
                             '                <td style="width: 80px; text-align: right">工号：</td><td style="width: 120px;">'+data.userId+'</td>' +
                             '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+data.userName+'</td>' +
                             '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">单位：</td><td colspan="3">'+data.userUnit+'</td>' +
+                            '              </tr>\n' +
+                            '            </tbody>\n' +
+                            '         </table>';
+                        $("#teacherInfo").html(htmlStr);
+
+                        //其他指导教师信息
+                        $.get(requestUrl+'/scjx/getTeacherInfo.do',{
+                            "relationCode":data.code
+                        },function (result_data) {
+                            if(result_data.code = 200){
+                                if(result_data.data.length > 0){
+                                    let html = '';
+                                    $.each(result_data.data,function(idx,obj){
+                                        html += '<tr><td style="text-align: center;">'+parseInt(idx+1)+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].teacherCode+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].teacherName+'</td>' +
+                                            '<td style="text-align: center;">'+result_data.data[idx].teacherUnit+'</td></tr>';
+                                    });
+                                    $("#teacherList").html(html);
+                                }
+                            }
+                        },'json');
+
+                        //基础信息
+                        let html = '<table class="layui-table">\n' +
+                            '           <tbody>\n' +
                             '              <tr>' +
                             '                 <td style="width: 80px; text-align: right">奖项名称：</td><td style="width: 120px;" colspan="3">'+data.objName+'</td>' +
                             '              </tr>\n' +
@@ -478,14 +590,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                 <td style="width: 80px; text-align: right">证书授予机构：</td><td style="width: 120px;" colspan="3">'+data.grantUnit+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">获奖时间：</td><td style="width: 120px;" colspan="3">'+data.awardDate+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;" colspan="3">'+data.createDate+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">获奖时间：</td><td style="width: 120px;" colspan="3">'+data.datetimeYear+'</td>' +
                             '              </tr>\n' +
                             '            </tbody>\n' +
                             '         </table>';
                         $("#baseInfo").html(html);
+
                         //附件列表
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
