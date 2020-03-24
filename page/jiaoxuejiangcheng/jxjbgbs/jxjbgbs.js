@@ -20,6 +20,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
             if(data.isSubmit > 0){ //拥有提交权限
+
+                laydate.render({
+                    elem: "#myself_datetimeYearStart" //指定元素
+                    ,type: 'year'
+                    ,max: new Date().getFullYear()+"-01-01"
+                });
+                laydate.render({
+                    elem: "#myself_datetimeYearEnd" //指定元素
+                    ,type: 'year'
+                    ,max: new Date().getFullYear()+"-01-01"
+                });
+
                 //数据表格
                 var myself_table = table.render({
                     id: "myself_table"
@@ -60,11 +72,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'level1', title: '级别', width:150}
-                        ,{field: 'level2', title: '奖项', width:150}
-                        ,{field: 'grantUnit', title: '证书授予机构', width:150}
-                        ,{field: 'awardDate', title: '获奖时间', width:150}
-                        ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
+                        ,{field: 'userId', title: '教师工号', width:150, sort:true}
+                        ,{field: 'userName', title: '教师姓名', width:150, sort:true}
+                        ,{field: 'userUnit', title: '教师单位', width:150, sort:true}
+                        ,{field: 'level1', title: '获奖级别', width:150, sort:true}
+                        ,{field: 'level2', title: '获得奖项', width:150, sort:true}
+                        ,{field: 'grantUnit', title: '证书授予机构', width:150, sort:true}
+                        ,{field: 'datetimeYear', title: '获奖时间', width:150, sort:true}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){
                                 let htmlstr='';
                                 if(data.isSubmit=='未提交'){
                                     if(data.status ==='退回'){
@@ -93,7 +108,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120,templet: function(data){
+                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){
                                 if(data.status==='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+data.status+'</span>';
                                 }
@@ -113,8 +128,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             search: function(){
                                 myself_table.reload({
                                     where: {
-                                        'grantUnit': $(".myself_search input[name='grantUnit']").val()
-                                        ,'isSubmit': $("#isSubmit option:selected").val() //获取选中的值
+                                        'level1': $(".myself_search select[name='level1']").val()
+                                        ,'level2': $(".myself_search select[name='level2']").val()
+                                        ,'datetimeYearStart': $(".myself_search input[name='datetimeYearStart']").val()
+                                        ,'datetimeYearEnd': $(".myself_search input[name='datetimeYearEnd']").val()
                                         ,'status': $("#status option:selected").val() //获取选中的值
                                     }
                                     ,page: {
@@ -125,7 +142,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,reset: function () {
                                 $(".myself_search input").val('');
                                 //清除选中状态
-                                $("#isSubmit").val("");
+                                $(".myself_search select[name='level1']").val("");
+                                $(".myself_search select[name='level2']").val("");
                                 $("#status").val("");
                                 form.render("select");
                             }
@@ -275,11 +293,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             }
             if(data.isShenhe > 0){ //拥有审核权限
 
-                //监听Tab切换
-                element.on('tab(layTab)', function(data){
-                    if(data.index == 1){ //
-                        other_table.reload(); //重新加载表格数据
-                    }
+                laydate.render({
+                    elem: "#other_datetimeYearStart" //指定元素
+                    ,type: 'year'
+                    ,max: new Date().getFullYear()+"-01-01"
+                });
+                laydate.render({
+                    elem: "#other_datetimeYearEnd" //指定元素
+                    ,type: 'year'
+                    ,max: new Date().getFullYear()+"-01-01"
                 });
 
                 var other_table = table.render({//数据表格
@@ -322,13 +344,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'userId', title: '工号', width:200}
-                        ,{field: 'userName', title: '姓名', width:200}
-                        ,{field: 'level1', title: '级别', width:150}
-                        ,{field: 'level2', title: '奖项', width:150}
-                        ,{field: 'grantUnit', title: '证书授予机构', width:150}
-                        ,{field: 'awardDate', title: '获奖时间', width:150}
-                        ,{field: 'shenheStatus', title: '审核状态', width:150,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'userId', title: '教师工号', width:150, sort:true}
+                        ,{field: 'userName', title: '教师姓名', width:150, sort:true}
+                        ,{field: 'userUnit', title: '教师单位', width:150, sort:true}
+                        ,{field: 'level1', title: '获奖级别', width:150, sort:true}
+                        ,{field: 'level2', title: '获得奖项', width:150, sort:true}
+                        ,{field: 'grantUnit', title: '证书授予机构', width:150, sort:true}
+                        ,{field: 'datetimeYear', title: '获奖时间', width:150, sort:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: #009688;font-weight: bold;">'+val+'</span>';
@@ -350,9 +373,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'userId': $(".other_search input[name='userId']").val()
-                                        ,'userName': $(".other_search input[name='userName']").val()
-                                        ,'grantUnit': $(".other_search input[name='grantUnit']").val()
+                                        'level1': $(".other_search select[name='level1']").val()
+                                        ,'level2': $(".other_search select[name='level2']").val()
+                                        ,'datetimeYearStart': $(".other_search input[name='datetimeYearStart']").val()
+                                        ,'datetimeYearEnd': $(".other_search input[name='datetimeYearEnd']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
@@ -363,6 +387,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,reset: function () {
                                 $(".other_search input").val("");
                                 //清除选中状态
+                                $(".other_search select[name='level1']").val("");
+                                $(".other_search select[name='level2']").val("");
                                 $("#shenheStatus").val("");
                                 form.render("select");
                             }
@@ -408,6 +434,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                 });
 
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
             } else{
                 $('#other').remove();
                 $('#other_item').remove();
@@ -418,8 +450,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                 //初始化laydate实例
                 laydate.render({
-                    elem: "#awardDate" //指定元素
-                    ,trigger: 'click' //解决layDate 时间控件一闪而过问题
+                    elem: "#datetimeYear" //指定元素
+                    ,type: 'year'
+                    // ,min: ''
+                    ,max: new Date().getFullYear()+"-01-01" //直接设置年份还不行，格式“年-月-日”，参考链接：//https://www.layui.com/doc/modules/laydate.html#minmax
                 });
 
                 //自定义验证规则
@@ -434,12 +468,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //表单赋值
                 form.val("editForm",{
                     "code":data.code
-                    ,"userId":data.userId
-                    ,"userName":data.userName
                     ,"level1" : data.level1
                     ,"level2" : data.level2
                     ,"grantUnit" : data.grantUnit
-                    ,"awardDate" : data.awardDate
+                    ,"datetimeYear" : data.datetimeYear
+                    ,"userId":data.userId
+                    ,"userName":data.userName
+                    ,"userUnit":data.userUnit
                 });
             };
 
@@ -458,12 +493,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,content :  $('#dataInfo_container')
                     ,success: function(layero, index){
                         isOpen = true;
+
                         //基础信息
                         let html = '<table class="layui-table">\n' +
                             '           <tbody>\n' +
                             '              <tr>' +
                             '                <td style="width: 80px; text-align: right">工号：</td><td style="width: 120px;">'+data.userId+'</td>' +
                             '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+data.userName+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                 <td style="width: 80px; text-align: right">单位：</td><td style="width: 120px;" colspan="3">'+data.userUnit+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
                             '                <td style="width: 80px; text-align: right">级别：</td><td style="width: 120px;">'+data.level1+'</td>' +
@@ -473,7 +512,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                 <td style="width: 80px; text-align: right">证书授予机构：</td><td style="width: 120px;" colspan="3">'+data.grantUnit+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">获奖时间：</td><td style="width: 120px;" colspan="3">'+data.awardDate+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">获奖时间：</td><td style="width: 120px;" colspan="3">'+data.datetimeYear+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
                             '                 <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;" colspan="3">'+data.createDate+'</td>' +
@@ -481,6 +520,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '            </tbody>\n' +
                             '         </table>';
                         $("#baseInfo").html(html);
+
                         //附件列表
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
