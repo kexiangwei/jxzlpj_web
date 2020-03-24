@@ -25,6 +25,15 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
 
     //数据表格
     let init_datatable = function(){
+        laydate.render({
+            elem: "#datetimeStart" //指定元素
+            ,type: 'datetime'
+        });
+        laydate.render({
+            elem: "#datetimeEnd" //指定元素
+            ,type: 'datetime'
+        });
+
         let datatable = table.render({
             id: "datatable"
             ,elem : '#datatable'
@@ -54,13 +63,14 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
             ,cols : [[ //表头
                 {type:'checkbox', fixed: 'left'}
                 ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                ,{field: 'collegeName', title: '教师信息-学院', width:150}
-                ,{field: 'majorName', title: '教师信息-专业', width:150}
-                ,{field: 'teacherId', title: '教师信息-工号', width:120}
-                ,{field: 'teacherName', title: '教师信息-姓名', width:120}
-                ,{field: 'event', title: '事件', width:180}
-                ,{field: 'eventLevel', title: '事故认定级别', width:180}
-                ,{field: 'happenTime', title: '时间', width:180}
+                ,{field: 'collegeName', title: '教师学院', width:150, sort:true}
+                ,{field: 'majorName', title: '教师专业', width:150, sort:true}
+                ,{field: 'teacherId', title: '教师工号', width:150, sort:true}
+                ,{field: 'teacherName', title: '教师姓名', width:150, sort:true}
+                ,{field: 'teacherUnit', title: '教师单位', width:150, sort:true}
+                ,{field: 'event', title: '事件', width:150, sort:true}
+                ,{field: 'eventLevel', title: '事故认定级别', width:150, sort:true}
+                ,{field: 'happenTime', title: '事故认定时间', width:150, sort:true}
                 ,{fixed: 'right', width: (isAdmin == 1 ? 180 : 80), align:'center', toolbar: '#datatable_bar'}
             ]]
             ,even: true //隔行背景
@@ -97,8 +107,10 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                     search: function(){
                         datatable.reload({
                             where: { //设定异步数据接口的额外参数，任意设
-                                'event': $(".search input[ name='event' ] ").val()
-                                ,'eventLevel': $(".search input[ name='eventLevel' ] ").val()
+                                'event': $(".search-container input[ name='event' ] ").val()
+                                ,'eventLevel': $(".search-container select[ name='eventLevel' ] ").val()
+                                ,'datetimeStart': $(".search-container input[name='datetimeStart']").val()
+                                ,'datetimeEnd': $(".search-container input[name='datetimeEnd']").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -107,6 +119,9 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                     }
                     ,reset: function () {
                         $("input").val('');
+                        //清除选中状态
+                        $(".search-container select[name='eventLevel']").val("");
+                        form.render("select");
                     }
                 };
 
@@ -117,7 +132,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                             let layerIndex = layer.open({
                                 title : '教学奖惩-教学事故-新增'
                                 ,type : 1
-                                ,area : [ '900px', '400px' ]
+                                ,area : [ '900px', '450px' ]
                                 ,offset : '50px'
                                 ,content : $("#editForm_container")
                                 ,success: function(layero, index){
@@ -164,7 +179,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                         let layIndex = layer.open({
                             title : '教学奖惩-教学事故-编辑'
                             ,type : 1
-                            ,area : [ '900px', '400px' ]
+                            ,area : [ '900px', '450px' ]
                             ,offset : '50px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#editForm_container')
@@ -212,7 +227,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         layer.open({
             title : '教学奖惩-教学事故-查看详情'
             ,type : 1
-            ,area : [ '900px', '400px' ]
+            ,area : [ '900px', '450px' ]
             ,offset : '50px'
             ,shadeClose : true
             ,btn : ['关闭']
@@ -222,9 +237,10 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                 '            <tr><td style="width: 150px; text-align: right">教师信息-专业</td><td>'+data.majorName+'</td></tr>\n' +
                 '            <tr><td style="width: 150px; text-align: right">教师信息-工号</td><td>'+data.teacherId+'</td></tr>\n' +
                 '            <tr><td style="width: 150px; text-align: right">教师信息-姓名</td><td>'+data.teacherName+'</td></tr>\n' +
+                '            <tr><td style="width: 150px; text-align: right">教师信息-单位</td><td>'+data.teacherUnit+'</td></tr>\n' +
                 '            <tr><td style="width: 150px; text-align: right">事件</td><td>'+data.event+'</td></tr>\n' +
                 '            <tr><td style="width: 150px; text-align: right">事故认定级别</td><td>'+data.eventLevel+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">时间</td><td>'+data.happenTime+'</td></tr>\n' +
+                '            <tr><td style="width: 150px; text-align: right">事故认定时间</td><td>'+data.happenTime+'</td></tr>\n' +
                 '        </tbody>\n' +
                 '    </table>'
         });
@@ -235,7 +251,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         //初始化laydate实例
         laydate.render({
             elem : "#happenTime"
-            ,type : 'datetime'
+            ,type: 'datetime'
         });
 
         //
@@ -293,7 +309,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
             }
         },'json');
 
-        //input:teacherId 失去焦点事件
+        /*//input:teacherId 失去焦点事件
         $("#editForm input[ name='teacherId']").blur(function(){
             $.get(requestUrl+'/getUserDetail.do',{
                 'userId': $(this).val()
@@ -306,7 +322,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                     }
                 }
             },'json');
-        });
+        });*/
 
         //自定义验证规则
         form.verify({
@@ -324,6 +340,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
             ,"teacherMajor" : data.teacherMajor
             ,"teacherId" : data.teacherId
             ,"teacherName" : data.teacherName
+            ,"teacherUnit" : data.teacherUnit
             ,"event" : data.event
             ,"eventLevel" : data.eventLevel
             ,"happenTime" : data.happenTime

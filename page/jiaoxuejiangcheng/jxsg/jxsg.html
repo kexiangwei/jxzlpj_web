@@ -18,14 +18,27 @@
 <body class="layui-layout-body">
     <div class="layui-fluid">
         <!-- 查询参数-->
-        <div class="search">
+        <div class="layui-form search-container">
             事件：
             <div class="layui-inline">
                 <input class="layui-input" name="event" placeholder="支持关键字查询">
             </div>
             &nbsp;&nbsp;事故认定级别：
             <div class="layui-inline">
-                <input class="layui-input" name="eventLevel">
+                <select name="eventLevel">
+                    <option value="">请选择</option>
+                    <option value="重大事故">重大事故</option>
+                    <option value="一般事故">一般事故</option>
+                    <option value="过失">过失</option>
+                    <option value="负面清单">负面清单</option>
+                </select>
+            </div>
+            &nbsp;&nbsp;事故认定时间：
+            <div class="layui-inline">
+                <input type="text" id="datetimeStart" name="datetimeStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-inline">
+                <input type="text" id="datetimeEnd" name="datetimeEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
             </div>
             <div class="layui-inline">
                 <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
@@ -60,16 +73,16 @@
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
             <!-- 业务字段 -->
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="margin-top: 50px">
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-学院：</label>
-                    <div class="layui-input-inline" style="width: 190px;">
+                    <div class="layui-input-inline">
                         <select id="teacherCollege" name="teacherCollege" lay-filter="teacherCollege"><option value="">请选择</option></select>
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-专业：</label>
-                    <div class="layui-input-inline" style="width: 190px;">
+                    <div class="layui-input-inline">
                         <select id="teacherMajor" name="teacherMajor" lay-filter="teacherMajor"><option value="">请选择</option></select>
                     </div>
                 </div>
@@ -84,7 +97,13 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">教师信息-姓名：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="teacherName" placeholder="依据工号显示" class="layui-input" readonly>
+                        <input type="text" name="teacherName" placeholder="依据工号显示" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">教师信息-单位：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="teacherUnit" lay-verify="required|teacherUnit" autocomplete="off" class="layui-input" style="width: 83%;">
                     </div>
                 </div>
             </div>
@@ -99,18 +118,24 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">事故认定级别：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="eventLevel" class="layui-input">
+                        <select name="eventLevel">
+                            <option value="">请选择</option>
+                            <option value="重大事故">重大事故</option>
+                            <option value="一般事故">一般事故</option>
+                            <option value="过失">过失</option>
+                            <option value="负面清单">负面清单</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">时间：</label>
+                    <label class="layui-form-label">事故认定时间：</label>
                     <div class="layui-input-inline">
-                        <input type="text" id="happenTime" name="happenTime" class="layui-input">
+                        <input type="text" id="happenTime" name="happenTime" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
 
-            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
+            <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>

@@ -18,17 +18,21 @@
 
                     <!-- 查询条件 -->
                     <div class="layui-form myself_search">
-                        证书授予机构：
+                        获奖等级：
                         <div class="layui-inline">
-                            <input class="layui-input" name="grantUnit">
-                        </div>
-                        &nbsp;&nbsp;提交状态：
-                        <div class="layui-inline">
-                            <select name="isSubmit" id="isSubmit">
+                            <select name="level1">
                                 <option value="">请选择</option>
-                                <option value="已提交">已提交</option>
-                                <option value="未提交">未提交</option>
+                                <option value="国家级">国家级</option>
+                                <option value="北京市级">北京市级</option>
+                                <option value="校级">校级</option>
                             </select>
+                        </div>
+                        &nbsp;&nbsp;获奖日期：
+                        <div class="layui-inline">
+                            <input type="text" id="myself_datetimeYearStart" name="datetimeYearStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" id="myself_datetimeYearEnd" name="datetimeYearEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
                         </div>
                         &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
@@ -64,17 +68,21 @@
 
                     <!-- 查询条件 -->
                     <div class="layui-form other_search">
-                        教师工号：
+                        获奖等级：
                         <div class="layui-inline">
-                            <input class="layui-input" name="userId">
+                            <select name="level1">
+                                <option value="">请选择</option>
+                                <option value="国家级">国家级</option>
+                                <option value="北京市级">北京市级</option>
+                                <option value="校级">校级</option>
+                            </select>
                         </div>
-                        &nbsp;&nbsp;教师姓名：
+                        &nbsp;&nbsp;获奖日期：
                         <div class="layui-inline">
-                            <input class="layui-input" name="userName">
+                            <input type="text" id="other_datetimeYearStart" name="datetimeYearStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
                         </div>
-                        &nbsp;&nbsp;证书授予机构：
                         <div class="layui-inline">
-                            <input class="layui-input" name="grantUnit">
+                            <input type="text" id="other_datetimeYearEnd" name="datetimeYearEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
                         </div>
                         &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
@@ -114,7 +122,7 @@
             <div id="baseInfo"></div>
         </fieldset>
         <fieldset class="layui-elem-field" style="margin-top: 10px;">
-            <legend>附件列表</legend>
+            <legend>证明材料</legend>
             <div class="layui-upload-list">
                 <table class="layui-table">
                     <thead>
@@ -129,13 +137,14 @@
             </div>
         </fieldset>
     </div>
+
     <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
             <input type="hidden" name="code"/>
             <!-- 业务字段 -->
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="margin-top: 50px">
                 <div class="layui-inline">
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-inline">
@@ -150,14 +159,28 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">级别：</label>
-                <div class="layui-input-inline">
-                    <select name="level1" lay-filter="level1">
-                        <option value="">请选择</option>
-                        <option value="国家级">国家级</option>
-                        <option value="北京市级">北京市级</option>
-                        <option value="校级">校级</option>
-                    </select>
+                <label class="layui-form-label">单位：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="userUnit" lay-verify="required|userUnit" autocomplete="off" class="layui-input" style="width: 80%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">级别：</label>
+                    <div class="layui-input-inline">
+                        <select name="level1" lay-filter="level1">
+                            <option value="">请选择</option>
+                            <option value="国家级">国家级</option>
+                            <option value="北京市级">北京市级</option>
+                            <option value="校级">校级</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">称号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="title" lay-verify="required|userUnit" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -167,23 +190,26 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">获奖日期：</label>
-                <div class="layui-input-block">
-                    <input type="text" id="awardDate" name="awardDate" placeholder="年-月-日"  autocomplete="off" class="layui-input" style="width: 80%;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">获奖日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="datetimeYear" name="datetimeYear" placeholder=""  autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">证明材料：</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary" style="width: 192px" id="upfile">上传附件（PDF 格式）</button>
+                    </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">获奖证书：</label>
-                <div class="layui-input-block">
-                    <button type="button" class="layui-btn layui-btn-primary" id="upfile">上传附件（PDF 格式）</button>
-                </div>
-            </div>
-            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
+            <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
     </div>
+
     <!-- 上传附件 -->
     <div class="layui-container" style="width: 90%; display: none;" id="uploadFile_container">
         <div class="layui-upload" style="margin-top: 10px;">
@@ -201,8 +227,8 @@
         </div>
     </div>
 
-    <!-- 查看审核流程 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
+    <!-- 查看审核流程
+    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div> -->
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
