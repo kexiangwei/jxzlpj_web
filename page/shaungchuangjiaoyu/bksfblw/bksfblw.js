@@ -252,7 +252,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             },'json');
                                         });
                                     },end:function () {
-                                        location.reload();
+                                        window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                                     }
                                 });
                             } else if (obj.event === 'delete') {

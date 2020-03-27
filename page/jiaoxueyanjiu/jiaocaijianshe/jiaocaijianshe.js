@@ -1,8 +1,8 @@
 /*
 教学研究-教材建设
  */
-layui.use(['layer','element','table','form','laydate','upload'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,upload = layui.upload;
+layui.use(['layer','element','table','form','laydate'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
     //验证用户是否拥有提交、审核权限
     $.ajax({
@@ -22,7 +22,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             if(data.isSubmit > 0){ //拥有提交权限
 
                 //数据表格
-                let myself_table = table.render({
+                var myself_table = table.render({
                     elem : '#myself_table'
                     ,height : 440
                     ,id: "myself_table_id"
@@ -59,40 +59,37 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'name', title: '名称', width:120}
-                        ,{field: 'category', title: '类别', width:120}
-                        ,{field: 'participationType', title: '参与形式', width:120}
-                        ,{field: 'isbn', title: 'ISBN', width:120}
-                        ,{field: 'publishers', title: '出版社', width:120}
-                        ,{field: 'publishingTime', title: '出版时间', width:120,hide:true}
-                        ,{field: 'selected', title: '教材入选情况', width:120,hide:true}
-                        ,{field: 'selectedTime', title: '入选时间', width:120,hide:true}
-                        ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'name', title: '教材名称', width:150, sort:true}
+                        ,{field: 'category', title: '教材类别', width:150, sort:true}
+                        ,{field: 'participationType', title: '参与形式', width:150, sort:true}
+                        ,{field: 'isbn', title: 'ISBN', width:150, sort:true}
+                        ,{field: 'publishers', title: '出版社', width:150, sort:true}
+                        ,{field: 'publishingTime', title: '出版时间', width:150, sort:true}
+                        ,{field: 'selected', title: '教材入选情况', width:150, sort:true}
+                        ,{field: 'selectedTime', title: '入选时间', width:150, sort:true}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
+                                var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
                                 if(val=='已提交'){
-                                    var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-file">查看附件</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
-                                    if(data.status == '退回'){
-                                        htmlstr+= '           <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                            '           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                    }else{
-                                        htmlstr+= '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                            '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
-                                    }
-                                    $('#myself_bar').html(htmlstr);
+                                    html += '       <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
+                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>\n' +
+                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
+                                    $('#myself_bar').html(html);
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                }else{
+                                    if(data.status == '退回'){
+                                        html+= '    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    }else{
+                                        html+= '    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    }
+                                    html += '       <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
+                                        '           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
+                                    $('#myself_bar').html(html);
+                                    return '<span style="font-weight: bold;">'+val+'</span>';
                                 }
-                                var htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>\n' +
-                                    '                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-file">查看附件</a>\n' +
-                                    '                    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                    '                    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                    '                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                $('#myself_bar').html(htmlstr);
-                                return '<span style="font-weight: bold;">'+val+'</span>';
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
                                 if(val=='审核中' || val=='通过'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -100,22 +97,24 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 if(val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
-                                return '';
+                                return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
-                        ,{fixed: 'right', width:340, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
+                        ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                 });//table end.
 
                 //监听搜索框事件
+                $('.myself_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
                 let active = {
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'name': $("input[name='myself_name']").val()
-                                // ,'category': $("input[ name='myself_category']").val()
-                                ,'publishers': $("input[ name='myself_publishers']").val()
-                                ,'isSubmit': $("input[ name='myself_isSubmit']").val()
+                                'name': $(".myself_search input[name='name']").val()
+                                ,'status': $("#status option:selected").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -123,14 +122,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         });
                     }
                     ,reset: function () {
-                        $("input").val('');
+                        $(".myself_search input").val('');
+                        //清除选中状态
+                        $("#status").val("");
+                        form.render("select");
                     }
                 };
-                $('.myself_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-
 
                 //监听头工具栏事件
                 table.on('toolbar(myself_table)', function(obj){
@@ -138,62 +135,40 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,data = checkStatus.data; //获取选中的数据
                     switch(obj.event){
                         case 'insert':
-                            //清空表单数据
-                            /*$('#editForm').reset();
-                            form.render();*/
-                            document.getElementById("editForm").reset();
-                            //每次进入新增页面生成一个新的编号
-                            $(" input[ name='code' ] ").val(new Date().getTime());
-                            //
+                            let objCode = new Date().getTime(); //初始化业务数据编号
                             layer.open({
                                 title : '教学研究-教材建设-新增'
                                 ,type : 1
-                                ,area : [ '900px', '500px' ]
+                                ,area : [ '900px', '450px' ]
                                 ,offset : '50px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
-                                    //初始化laydate实例
-                                    laydate.render({
-                                        elem: '#publishingTime' //指定元素
-                                        ,showBottom: false
+
+                                    //初始化表单
+                                    initEditForm({
+                                        'code': objCode
+                                        ,'userId':$.cookie('userId')
+                                        ,'userName':$.cookie('userName')
                                     });
-                                    laydate.render({
-                                        elem: '#selectedTime' //指定元素
-                                        ,showBottom: false
-                                    });
+
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        /* layer.alert(JSON.stringify(data.field), {
-                                             title: '最终的提交信息'
-                                         });
-                                         return false;*/
-                                        $.post(requestUrl+'/jiaoCaiJianShe/insert.do',{
-                                            "code":data.field.code
-                                            ,"name": data.field.name
-                                            ,"category" : data.field.category
-                                            ,"participationType" : data.field.participationType
-                                            ,"isbn" : data.field.isbn
-                                            ,"publishers" : data.field.publishers
-                                            ,"publishingTime" : data.field.publishingTime
-                                            ,"selected" : data.field.selected
-                                            ,"selectedTime" : data.field.selectedTime
-                                            ,"userId":function () {
-                                                return $.cookie('userId');
-                                            }
-                                            ,"userName":function () {
-                                                return $.cookie('userName');
-                                            }
-                                        },function(result_data){
+                                        $.post(requestUrl+'/jiaoCaiJianShe/insert.do' ,data.field ,function(result_data){
                                             if(result_data.code == 200){
                                                 myself_table.reload();//重新加载表格数据
-                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
                                             }
+                                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                layer.close(index);
+                                            });
                                         },'json');
                                     });
-                                },end:function () {
-                                    window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
+                                }
+                                ,cancel: function(index, layero){
+                                    layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                        $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
+                                        layer.closeAll();
+                                    });
+                                    return false;
                                 }
                             });
                             break;
@@ -201,35 +176,19 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             if(data.length === 0){
                                 layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
                             } else {
-                                if(data.length === 1&&data[0].isSubmit == '已提交' &&  data[0].status != '退回'){
+                                let isSubmit = false;
+                                $.each(data,function(idx,obj){
+                                    if(obj.isSubmit== '已提交'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
+                                    }
+                                });
+                                if(isSubmit){
                                     layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
                                     return;
                                 }else{
-                                    let isSubmit = false;
-                                    $.each(data,function(index,item){
-                                        if(item.isSubmit== '已提交' &&  item.status != '退回'){
-                                            isSubmit = true;
-                                            return false;//跳出循环
-                                        }
-                                    });
-                                    if(isSubmit){
-                                        layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
-                                        return;
-                                    }
+                                    toSubmit(data);
                                 }
-                                layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    layer.close(index);
-                                    $.post(requestUrl+'/jiaoCaiJianShe/toSubimt.do',{
-                                        "menuId":$.cookie('currentMenuId'),
-                                        "jsonStr":JSON.stringify(data)
-                                    },function (result_data) {
-                                        if(result_data.code === 200){
-                                            myself_table.reload();//重新加载表格数据
-                                            window.location.reload();//刷新页面
-                                        }
-                                        layer.msg(result_data.msg, {time : 3000, offset: '100px'});
-                                    },'json');
-                                });
                             }
                             break;
                     }
@@ -238,10 +197,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //监听工具条
                 table.on('tool(myself_table)', function(obj){
                     var data = obj.data;
-                    if (obj.event === 'detail') {
-                        detail(data);
-                    } else if (obj.event === 'detail-file') {
-                        detail_file(data);
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(data,true);
                     } else if (obj.event === 'detail_shenheProcess') {
                         if(data.isSubmit=='未提交'){
                             return;
@@ -249,15 +206,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
                     } else if (obj.event === 'update') {
                         if(data.isSubmit== '已提交' &&  data.status != '退回'){
-                            // layer.msg('信息已提交，不可编辑', {icon:7, time : 3000, offset: '100px'});
                             return;
                         }
                         //执行编辑
-                        operationType = "edit";
                         layer.open({
                             title : '教学研究-教材建设-编辑'
                             ,type : 1
-                            ,area : [ '900px', '500px' ]
+                            ,area : [ '900px', '450px' ]
                             ,offset : '50px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#editForm_container')
@@ -269,74 +224,35 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.close(index);
                                 });
 
-                                //初始化laydate实例
-                                laydate.render({
-                                    elem: '#publishingTime' //指定元素
-                                    ,showBottom: false
-                                });
-                                laydate.render({
-                                    elem: '#selectedTime' //指定元素
-                                    ,showBottom: false
-                                });
-                                form.val("editForm",{
-                                    "code":data.code
-                                    ,"name": data.name
-                                    ,"category" : data.category
-                                    ,"participationType" : data.participationType
-                                    ,"isbn" : data.isbn
-                                    ,"publishers" : data.publishers
-                                    ,"publishingTime" : data.publishingTime
-                                    ,"selected" : data.selected
-                                    ,"selectedTime" : data.selectedTime
-                                    ,"userId":data.userId
-                                    ,"userName":data.userName
-                                });
-                                //监听编辑页submit按钮提交
+                                //初始化表单
+                                initEditForm(data);
+                                //监听表单提交
                                 form.on('submit(toSubmitEidtForm)', function(data){
-                                    $.post(requestUrl+'/jiaoCaiJianShe/update.do',{
-                                        "code":data.field.code
-                                        ,"name": data.field.name
-                                        ,"category" : data.field.category
-                                        ,"participationType" : data.field.participationType
-                                        ,"isbn" : data.field.isbn
-                                        ,"publishers" : data.field.publishers
-                                        ,"publishingTime" : data.field.publishingTime
-                                        ,"selected" : data.field.selected
-                                        ,"selectedTime" : data.field.selectedTime
-                                        ,"userId":function () {
-                                            return $.cookie('userId');
-                                        }
-                                        ,"userName":function () {
-                                            return $.cookie('userName');
-                                        }
-                                    },function(result_data){
+                                    $.post(requestUrl+'/jiaoCaiJianShe/update.do' ,data.field ,function(result_data){
                                         if(result_data.code == 200){
                                             myself_table.reload();//重新加载表格数据
-                                            layer.msg('修改成功', {time : 3000, offset: '100px'});
-                                        }else{
-                                            layer.msg('修改失败', {time : 3000, offset: '100px'});
                                         }
+                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            layer.close(index);
+                                        });
                                     },'json');
                                 });
                             },end:function () {
-                                operationType=="";
                                 window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                             }
                         });
                     } else if (obj.event === 'delete') {
-                        if(data.isSubmit== '已提交' &&  data.status != '退回'){
-                            // layer.msg('信息已提交，不可删除', {icon:7, time : 3000, offset: '100px'});
+                        if(data.isSubmit== '已提交'){
                             return;
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            layer.close(index);
-                            $.post(requestUrl+'/jiaoCaiJianShe/delete.do', { code: data.code},function(data){
-                                if(data.code === 200){
+                            $.post(requestUrl+'/jiaoCaiJianShe/delete.do', { 'code': data.code},function(result_data){
+                                if(result_data.code == 200){
                                     myself_table.reload();//重新加载表格数据
-                                    layer.msg('删除成功', {time : 3000, offset: '100px'});
-                                }else{
-                                    layer.msg('删除失败', {time : 3000, offset: '100px'});
                                 }
+                                layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                                    layer.close(index);
+                                });
                             }, "json");
                         });
                     }
@@ -348,13 +264,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
             if(data.isShenhe > 0){ //拥有审核权限
-
-                //监听Tab切换
-                element.on('tab(layTab)', function(data){
-                    if(data.index == 1){ //
-                        other_table.reload(); //重新加载表格数据
-                    }
-                });
 
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
@@ -395,145 +304,97 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'userId', title: '工号', width:120, sort: true}
-                        ,{field: 'userName', title: '姓名', width:120}
-                        ,{field: 'name', title: '教材名称', width:120}
-                        ,{field: 'category', title: '类别', width:120}
-                        ,{field: 'participationType', title: '参与形式', width:120}
-                        ,{field: 'isbn', title: 'ISBN', width:120}
-                        ,{field: 'publishers', title: '出版社', width:120}
-                        ,{field: 'publishingTime', title: '出版时间', width:120,hide:true}
-                        ,{field: 'selected', title: '教材入选情况', width:120,hide:true}
-                        ,{field: 'selectedTime', title: '入选时间', width:120,hide:true}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'name', title: '教材名称', width:150, sort:true}
+                        ,{field: 'category', title: '教材类别', width:150, sort:true}
+                        ,{field: 'participationType', title: '参与形式', width:150, sort:true}
+                        ,{field: 'isbn', title: 'ISBN', width:150, sort:true}
+                        ,{field: 'publishers', title: '出版社', width:150, sort:true}
+                        ,{field: 'publishingTime', title: '出版时间', width:150, sort:true}
+                        ,{field: 'selected', title: '教材入选情况', width:150, sort:true}
+                        ,{field: 'selectedTime', title: '入选时间', width:150, sort:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
-                        } //【已审核 | 待审核 | 退回】
-                        ,{fixed: 'right', width:240, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
+                        }
+                        ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
-                    }
-                });//table end.
 
-                //监听搜索框事件
-                let active = {
-                    search: function(){
-                        other_table.reload({
-                            where: {
-                                'userId': $(" input[ name='other_userId' ] ").val()
-                                ,'userName': $(" input[ name='other_userName' ] ").val()
-                                , 'name': $("input[name='other_name']").val()
-                                // ,'category': $("input[ name='other_category']").val()
-                                ,'publishers': $("input[ name='other_publishers']").val()
-                                ,'shenheStatus': $(" input[ name='other_shenheStatus' ] ").val()
-                            }
-                            ,page: {
-                                curr: 1 //重新从第 1 页开始
-                            }
+                        //监听搜索框事件
+                        $('.other_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
                         });
-                    }
-                    ,reset: function () {
-                        $("input").val('');
-                    }
-                };
-                $('.other_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-
-
-                //监听头工具栏事件
-                table.on('toolbar(other_table)', function(obj){
-                    var checkStatus = table.checkStatus(obj.config.id)
-                        ,data = checkStatus.data; //获取选中的数据
-                    switch(obj.event){
-                        case 'submit':
-                            if(data.length === 0){
-                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                return;
-                            } else {
-                                if(data.length === 1&&data[0].shenheStatus == '已审核'){
-                                    layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                    return;
-                                }else{
-                                    let isSubmit = false;
-                                    $.each(data,function(index,item){
-                                        if(item.shenheStatus== '已审核'){
-                                            isSubmit = true;
-                                            return false;//跳出循环
-                                        }
-                                    });
-                                    if(isSubmit){
-                                        layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                        return;
+                        let active = {
+                            search: function(){
+                                other_table.reload({
+                                    where: {
+                                        'name': $(".other_search input[name='name']").val()
+                                        ,'shenheStatus': $("#shenheStatus").val()
                                     }
-                                }
-                                //添加审核意见
-                                layer.open({
-                                    title : '教学研究-教材建设-审核'
-                                    ,type : 1
-                                    ,area : [ '700px', '450px' ]
-                                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '10px' //只定义top坐标，水平保持居中
-                                    ,shadeClose : true //点击遮罩关闭
-                                    ,btn : ['关闭']
-                                    ,content : $('#shenHeForm_container')
-                                    ,success: function(layero, index){
-                                        //
-                                        form.on('select(status)', function(data) {
-                                            if(data.value == '通过'){
-                                                $('#opinion').html('通过');
-                                            }
-                                            if(data.value == '退回'){
-                                                $('#opinion').empty();
-                                            }
-                                        });
-                                        //
-                                        form.on('submit(toSubmitShenHeForm)', function(formData){
-                                            $.post(requestUrl+'/jiaoCaiJianShe/toShenhe.do',{
-                                                "jsonStr":JSON.stringify(data)
-                                                ,"status":formData.field.status
-                                                ,"opinion":formData.field.opinion
-                                                ,"userId":function () {
-                                                    return $.cookie('userId');
-                                                }
-                                                ,"userName":function () {
-                                                    return $.cookie('userName');
-                                                }
-                                            },function (data) {
-                                                if(data.code === 200){
-                                                    other_table.reload();//重新加载表格数据
-                                                    // window.location.reload();//刷新页面，审核后页面状态未改变
-                                                    layer.msg('审核成功', {time : 3000, offset: '100px'});
-                                                }else{
-                                                    layer.msg('审核失败', {time : 3000, offset: '100px'});
-                                                }
-                                            },'json');
-                                        });
-                                    }
-                                    ,end:function () {
-
+                                    ,page: {
+                                        curr: 1 //重新从第 1 页开始
                                     }
                                 });
                             }
-                            break;
-                    }
-                });
+                            ,reset: function () {
+                                $(".other_search input").val("");
+                                //清除选中状态
+                                $("#shenheStatus").val("");
+                                form.render("select");
+                            }
+                        };
 
-                //监听工具条
-                table.on('tool(other_table)', function(obj){
-                    var data = obj.data;
-                    if (obj.event === 'detail') {
-                        detail(data);
-                    } else if (obj.event === 'detail-file') {
-                        detail_file(data);
-                    } else if (obj.event === 'detail_shenheProcess') {
-                        detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
+                        //监听头工具栏事件
+                        table.on('toolbar(other_table)', function(obj){
+                            var checkStatus = table.checkStatus(obj.config.id)
+                                ,data = checkStatus.data; //获取选中的数据
+                            switch(obj.event){
+                                case 'submit':
+                                    if(data.length === 0){
+                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                        return;
+                                    } else {
+                                        let isSubmit = false;
+                                        $.each(data,function(index,item){
+                                            if(item.shenheStatus== '已审核'){
+                                                isSubmit = true;
+                                                return false;//跳出循环
+                                            }
+                                        });
+                                        if(isSubmit){
+                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                            return;
+                                        } else {
+                                            toShenHe(data); //添加审核意见
+                                        }
+                                    }
+                                    break;
+                            }
+                        });
+
+                        //监听工具条
+                        table.on('tool(other_table)', function(obj){
+                            var data = obj.data;
+                            if (obj.event === 'detail_dataInfo') {
+                                detail_dataInfo(data,false,true);
+                            } else if (obj.event === 'detail_shenheProcess') {
+                                detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
+                            }
+                        });
+
+                    }
+                });//table end.
+
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
                     }
                 });
             } else{
@@ -541,215 +402,202 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other_item').remove();
             }
 
-            let detail = function (data) {
-                if(isOpen){
-                    return;
-                }
-                var isOpen = false;
-                layer.open({
-                    title : '教学研究-教材建设-查看详情'
-                    ,type : 1
-                    ,area : [ '700px', '535px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '10px' //只定义top坐标，水平保持居中
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
-                    ,content : '<table class="layui-table">\n' +
-                        '        <tbody>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">工号</td><td>'+data.userId+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">姓名</td><td>'+data.userName+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">教材名称</td><td>'+data.name+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">类别</td><td>'+data.category+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">参与形式</td><td>'+data.participationType+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">ISBN</td><td>'+data.isbn+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">出版社</td><td>'+data.publishers+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">出版时间</td><td>'+data.publishingTime+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">教材入选情况</td><td>'+data.selected+'</td></tr>\n' +
-                        '            <tr><td style="width: 150px; text-align: center">入选时间</td><td>'+data.selectedTime+'</td></tr>\n' +
-                        '        </tbody>\n' +
-                        '    </table>'
-                    ,success: function(layero, index){
-                        isOpen = true;
-                    }
-                    ,end:function () {
-                        isOpen = false;
-                    }
+            //初始化表单
+            var initEditForm = function (data) {
+                //初始化laydate实例
+                laydate.render({
+                    elem: '#publishingTime' //指定元素
+                    ,type: 'month'
+                    ,showBottom: false
                 });
+                laydate.render({
+                    elem: '#selectedTime' //指定元素
+                    ,type: 'month'
+                    ,showBottom: false
+                });
+
+                //
+                form.val("editForm",{
+                    "code":data.code
+                    ,"name": data.name
+                    ,"category" : data.category
+                    ,"participationType" : data.participationType
+                    ,"isbn" : data.isbn
+                    ,"publishers" : data.publishers
+                    ,"publishingTime" : data.publishingTime
+                    ,"selected" : data.selected
+                    ,"selectedTime" : data.selectedTime
+                    ,"userId":data.userId
+                    ,"userName":data.userName
+                });
+
+
             };
 
-            let detail_file = function (data) {
-                layer.open({
-                    title : '教学研究-教材建设-查看附件'
+            let detail_dataInfo = function (data,isSubmit,isShenHe) {
+                //
+                let options = {
+                    title : '教学研究-教材建设-查看详情'
                     ,type : 1
-                    ,offset : '10px'
-                    ,moveOut:true
+                    ,area : [ '900px', '450px' ]
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
-                    ,area : [ '1175px', '535px' ]
-                    ,content : $('#viewFileContainer')
+                    ,btn : ['关闭']
+                    ,content : $('#dataInfo_container')
                     ,success: function(layero, index){
+                        //
+                        let html = '<table class="layui-table">\n' +
+                            '        <tbody>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">教材名称：</td><td style="width: 120px;">'+data.name+'</td>' +
+                            '                <td style="width: 80px; text-align: right">教材类别：</td><td style="width: 120px;">'+data.category+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">参与形式：</td><td style="width: 120px;">'+data.participationType+'</td>' +
+                            '                <td style="width: 80px; text-align: right">ISBN：</td><td style="width: 120px;">'+data.isbn+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">出版社：</td><td style="width: 120px;">'+data.publishers+'</td>' +
+                            '                <td style="width: 80px; text-align: right">出版时间：</td><td style="width: 120px;">'+data.publishingTime+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">教材入选情况：</td><td style="width: 120px;">'+data.selected+'</td>' +
+                            '                <td style="width: 80px; text-align: right">入选时间：</td><td style="width: 120px;">'+data.selectedTime+'</td>' +
+                            '              </tr>\n' +
+                            '        </tbody>\n' +
+                            '    </table>';
+                        $("#baseInfo").html(html);
+
+                        //证明材料
+                        let fileList = $("#fileList");
                         $.get(requestUrl+"/getFileListByRelationCode.do" , {
                             "relationCode": function () {
                                 return data.code;
                             }
-                        } ,  function(data){
-                            if(data.data.length==0){
-                                layer.msg('还没有上传文件哦', {time : 3000, offset: '100px'});
-                                return;
-                            }
-                            let len = 0;
-                            $.each(data.data,function(index,file){
-                                len++;
-                                let tr = $(['<tr id="'+ file.code +'">'
-                                    ,'<td>	<a href="'+requestUrl+file.filePath+'" target="_blank">'+ file.fileName +'</a></td>'
-                                    ,'<td>'+ file.fileSize +'kb</td>'
-                                    ,'<td>'+ file.createDate +'</td>'
-                                    ,'<td>' +
-                                    '<button class="layui-btn layui-btn-xs layui-btn-normal demo-view">预览</button>' +
-                                    '<button class="layui-btn layui-btn-xs layui-btn-normal demo-download">下载</button>' +
-                                    '</td>'
-                                    ,'</tr>'].join(''));
-                                //预览
-                                tr.find('a').on('click', function(){
-                                    window.open(requestUrl+file.filePath);
+                        } ,  function(result_data){
+                            if(result_data.data.length ===0){
+                                let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
+                                fileList.append(tr);
+                            } else {
+                                $.each(result_data.data,function(index,fileInfo){
+                                    let tr = $(['<tr id="'+ fileInfo.code +'">'
+                                        ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
+                                        ,'<td style="text-align: center;">'+ fileInfo.createDate +'</td>'
+                                        ,'<td style="text-align: center;">' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-primary upfile_download">下载</button>' +
+                                        '</td>'
+                                        ,'</tr>'].join(''));
+                                    //预览
+                                    tr.find('a').on('click', function(){
+                                        previewFileInfo(fileInfo);
+                                    });
+                                    tr.find('.upfile_preview').on('click', function(){
+                                        previewFileInfo(fileInfo);
+                                    });
+                                    //下载
+                                    tr.find('.upfile_download').on('click', function(){
+                                        let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
+                                        downloadForm.append("<input type='hidden' name='fileName' value='"+fileInfo.fileName+"'/>");
+                                        downloadForm.append("<input type='hidden' name='filePath' value='"+fileInfo.filePath+"'/>");
+                                        $(document.body).append(downloadForm);
+                                        // alert(downloadForm.serialize());
+                                        downloadForm.submit();
+                                        downloadForm.remove();
+                                    });
+                                    fileList.append(tr);
                                 });
-                                tr.find('.demo-view').on('click', function(){
-                                    window.open(requestUrl+file.filePath);
-                                });
-                                tr.find('.demo-download').on('click', function(){
-                                    let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
-                                    downloadForm.append("<input type='hidden' name='fileName' value='"+file.fileName+"'/>");
-                                    downloadForm.append("<input type='hidden' name='filePath' value='"+file.filePath+"'/>");
-                                    $(document.body).append(downloadForm);
-                                    // alert(downloadForm.serialize());
-                                    downloadForm.submit();
-                                    downloadForm.remove();
-                                });
-                                $('#fileList').append(tr);
-                            });
-                            if(len == 0){
-                                let tr = '<tr><td colspan="4" style="text-align: center;">无数据</td></tr>';
-                                $('#fileList').append(tr);
                             }
                         }, "json");
                     }
                     ,end:function () {
-                        $('#fileList').empty();
+                        $("#fileList").empty();
                     }
+                };
+                if(isSubmit && data.isSubmit == '未提交'){
+                    options.btn = ['提交','关闭'];
+                    options.yes = function(index, layero){
+                        toSubmit(new Array(data));
+                    };
+                    options.btn2 = function(index, layero){
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    };
+                }
+                if(isShenHe && data.shenheStatus == '未审核'){
+                    options.btn = ['审核','关闭'];
+                    options.yes = function(index, layero){
+                        toShenHe(new Array(data));
+                    };
+                    options.btn2 = function(index, layero){
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    };
+                }
+                layer.open(options);
+            };
+
+            //提交
+            var toSubmit = function (row_dataArr){
+                layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                    $.post(requestUrl+'/jiaoCaiJianShe/toSubimt.do',{
+                        "menuId":$.cookie('currentMenuId'),
+                        "jsonStr":JSON.stringify(row_dataArr)
+                    },function (result_data) {
+                        if(result_data.code === 200){
+                            myself_table.reload();//重新加载表格数据
+                        }
+                        layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            layer.closeAll();
+                        });
+                    },'json');
                 });
             };
 
-            let operationType="" //操作类别
-                ,uploadTest;
-            $(document).on('click','#upload',function(data){
+            //审核
+            var toShenHe = function (row_dataArr) {
                 layer.open({
-                    title : '教学研究-教材建设-上传附件'
+                    title : '教学研究-教材建设-审核'
                     ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px'
-                    ,moveOut:true
+                    ,area : [ '900px', '450px' ]
+                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
-                    ,content : $('#uploadFileContainer')
+                    ,btn : ['关闭']
+                    ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
-                        if(operationType =="edit"){
-                            $.get(requestUrl+"/getFileListByRelationCode.do" , {
-                                "relationCode": $(" input[ name='code' ] ").val()
-                            } ,  function(data){
-                                if(data.data.length>0){
-                                    $.each(data.data,function(index,file){
-                                        let tr = $(['<tr id="'+ file.code +'">'
-                                            ,'<td>'+ file.fileName +'</td>'
-                                            ,'<td>'+ file.fileSize +'kb</td>'
-                                            ,'<td>已上传</td>'
-                                            ,'<td><button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button></td>'
-                                            ,'</tr>'].join(''));
-                                        $('#demoList').append(tr);
-                                        //删除
-                                        tr.find('.demo-delete').on('click', function(){
-                                            $.post(requestUrl+"/deleteFileInfo.do" , {
-                                                "code": tr.attr("id")
-                                            } ,  function(data){
-                                                tr.remove();
-                                            }, "json");
-                                        });
-                                    });
-                                }
-                            }, "json");
-                        }
-                        //上传附件
-                        let demoListView = $('#demoList')
-                            ,uploadListIns = upload.render({
-                            elem: '#testList'
-                            ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                            ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                "relationCode":function () {
-                                    return $(" input[ name='code' ] ").val();
-                                }
-                                ,"fileCategory":"JXYJ_JCJS" // 固定值
-                                ,"fileType":"附件" // 固定值
+                        //
+                        form.on('select(status)', function(data) {
+                            if(data.value == '通过'){
+                                $('#opinion').html('通过');
+                            }else{
+                                $('#opinion').empty();
+                            }
+                        });
+
+                        //
+                        form.on('submit(toSubmitShenHeForm)', function(formData){
+                            $.post(requestUrl+'/jiaoCaiJianShe/toShenhe.do',{
+                                "jsonStr":JSON.stringify(row_dataArr)
+                                ,"status":formData.field.status
+                                ,"opinion":formData.field.opinion
                                 ,"userId":function () {
                                     return $.cookie('userId');
                                 }
                                 ,"userName":function () {
                                     return $.cookie('userName');
                                 }
-                            }
-                            ,field:"file" //设定文件域的字段名
-                            ,multiple: true // 	是否允许多文件上传
-                            ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                            ,exts:'pdf'
-                            ,choose: function(obj){
-                                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                //读取本地文件
-                                obj.preview(function(index, file, result){
-                                    var tr = $(['<tr id="upload-'+ index +'">'
-                                        ,'<td>'+ file.name +'</td>'
-                                        ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
-                                        ,'<td>待上传</td>'
-                                        ,'<td>'
-                                        // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-                                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
-                                        ,'</td>'
-                                        ,'</tr>'].join(''));
-                                    demoListView.append(tr);
-
-                                    //删除
-                                    tr.find('.demo-delete').on('click', function(){
-                                        $.post(requestUrl+"/deleteFileInfo.do" , {
-                                            "code": $('#upload-'+index).attr("data-id")
-                                        } ,  function(data){
-                                            // layer.msg(data.msg);
-                                            delete files[index]; //删除对应的文件
-                                            tr.remove();
-                                            uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                        }, "json");
-                                    });
-                                });
-                            }
-                            ,done: function(res, index, upload){
-                                if(res.code == 200){ //上传成功
-                                    var tr = demoListView.find('tr#upload-'+ index)
-                                        ,tds = tr.children();
-                                    tr.attr("data-id",res.data.code);//
-                                    tds.eq(2).html('<span style="color: #5FB878;">已上传</span>');
-                                    // tds.eq(3).html(''); //清空操作
-                                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                            },function (result_data) {
+                                if(result_data.code === 200){
+                                    other_table.reload();//重新加载表格数据
                                 }
-                                this.error(index, upload);
-                            }
-                            ,error: function(index, upload){
-                                let tr = demoListView.find('tr#upload-'+ index)
-                                    ,tds = tr.children();
-                                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
-                            }
+                                layer.msg(result_data.msg, { offset: '100px'},function () {
+                                    layer.close(index);
+                                });
+                            },'json');
                         });
-                    },end:function () {
-                        //重载上传实例
-                        if(operationType=="edit"){
-                            $("#demoList").empty();
-                        }
                     }
                 });
-            });
+            };
+
         }
         ,error:function() {
             layer.msg('网络连接失败', {icon:7, time : 3000, offset: '100px'});
