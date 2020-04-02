@@ -116,13 +116,13 @@
                 <div class="layui-form-item" style="margin-top: 20px;">
                     <label class="layui-form-label">团队名称：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="teamName" required  lay-verify="required|teamName" autocomplete="off" class="layui-input">
+                        <input type="text" name="teamName" required  lay-verify="required|teamName" autocomplete="off" class="layui-input" style="width: 90%">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">建立时间：</label>
                     <div class="layui-input-block">
-                        <input type="text"  id="registDate" name="registDate" required  lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text"  id="registDate" name="registDate" required  lay-verify="required" autocomplete="off" class="layui-input" style="width: 90%">
                     </div>
                 </div>
             </fieldset>
@@ -131,13 +131,13 @@
                 <div class="layui-form-item" style="margin-top: 20px;">
                     <div class="layui-inline">
                         <label class="layui-form-label">工号：</label>
-                        <div class="layui-input-inline">
+                        <div class="layui-input-inline" style="width: 305px">
                             <input type="text" name="teamLeaderId" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名：</label>
-                        <div class="layui-input-inline">
+                        <div class="layui-input-inline" style="width: 305px">
                             <input type="text" name="teamLeader" class="layui-input">
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">单位：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="teamLeaderUnit" lay-verify="required|userUnit" autocomplete="off" class="layui-input">
+                        <input type="text" name="teamLeaderUnit" lay-verify="required|userUnit" autocomplete="off" class="layui-input" style="width: 90%">
                     </div>
                 </div>
             </fieldset>
@@ -219,7 +219,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">单位：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="teacherUnit" class="layui-input" style="width: 80%;">
+                    <input type="text" name="teacherUnit" class="layui-input" style="width: 77%;">
                 </div>
             </div>
             <div class="layui-btn-container" align="center">
@@ -229,8 +229,8 @@
         </form>
     </div>
 
-    <!-- 查看团队负责人在本系统关联的业务信息
-    <div class="layui-container" style="width: 90%; display: none;" id="teamLeaderContainer">暂未开发</div> -->
+    <!-- 查看团队负责人在本系统关联的业务信息 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="teamLeaderContainer">暂未开发</div>
     <!-- 考核 -->
     <div class="layui-container" style="width: 90%; display: none;" id="pingshenContainer">
         <form class="layui-form" lay-filter="pingshenForm">
