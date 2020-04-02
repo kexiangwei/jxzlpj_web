@@ -18,10 +18,18 @@ layui.use(['layer','element'], function(){
             $.each(data.data,function(index,item){
                 html += '<li class="layui-nav-item">\n' +
                     '        <a href="javascript:;"><i class="layui-icon '+item.icon+'" style="font-size: 20px;"></i>&nbsp;&nbsp;'+item.menuName+'<span class="layui-nav-more"></span></a>';
-                $.each(item.children,function(index,item){
+                $.each(item.children,function(index,item2){
                     html += '<dl class="layui-nav-child">\n' +
-                        '       <dd><a class="site-demo-active" href="javascript:;" data-id="'+item.menuId+'" data-title="'+item.menuName+'" data-url="'+item.url+'" data-type="tabAdd">'+item.menuName+'</a></dd>\n' +
-                        '   </dl>';
+                        '       <dd><a class="site-demo-active" href="javascript:;" data-id="'+item2.menuId+'" data-title="'+item2.menuName+'" data-url="'+item2.url+'" data-type="tabAdd"><span class="l-line"></span>'+item2.menuName+'</a>';
+                        if(item2.menuName == '教学团队'){
+                            $.each(item2.children,function(index,item3){
+                                if(item3.menuName != '提交' && item3.menuName != '审核'){
+                                    html += '<dl class="layui-nav-child">' +
+                                        '   <dd><a class="site-demo-active" href="javascript:;" data-id="'+item2.menuId+'" data-title="'+item3.menuName+'" data-url="'+item3.url+'" data-type="tabAdd"><span class="l-line" style="margin-left: 52px"></span>'+item3.menuName+'</a></dd></dl>';
+                                }
+                            });
+                        }
+                    html += '</dd></dl>';
                 });
                 html+='</li>';
             });
@@ -50,7 +58,7 @@ layui.use(['layer','element'], function(){
                     element.tabDelete("demo", id);//删除
                 }
             };
-
+            //
             $('.site-demo-active').on('click', function () {
                 // alert($(this).attr("data-id"));
 
