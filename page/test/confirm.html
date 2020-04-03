@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <style type="text/css">
+        /**
+        全量设置
+         */
+        /*.confirm-btn-skin .layui-layer-btn a {
+            background-color: #84c101;
+            border: 1px solid #84c101;
+            color: #FFF;
+        }*/
+        /**
+        单个设置
+         */
+        .confirm-btn-skin .layui-layer-btn .layui-layer-btn1 {
+            background-color: #84c101;
+            border: 1px solid #84c101;
+            color: #FFF;
+        }
+    </style>
+</head>
+<body>
+
+<script src="../../layui/layui.js"></script>
+<script type="text/javascript">
+    layui.use(['layer'], function(){
+        let $ = layui.$,layer = layui.layer;
+        //
+        layer.confirm('请选择提交的材料?',{
+            title: '我是标题'
+            ,skin: 'confirm-btn-skin'
+            ,btn: ['申报','年度报告','取消']
+            , btn1:function(){
+                layer.msg("申报");
+            }, btn2:function(){
+                layer.msg("年度报告");
+            }, btn3:function(){
+                layer.msg("取消");
+            }
+        });
+    });
+</script>
+</body>
+</html>
