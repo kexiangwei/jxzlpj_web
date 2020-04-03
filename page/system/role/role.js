@@ -75,6 +75,11 @@ layui.use(['layer','table','form','tree','util'], function(){
                                                 menuIdArr.push(item.id);
                                                 $.each(item.children,function(index,item){
                                                     menuIdArr.push(item.id);
+                                                    if(item.children.length > 0){
+                                                        $.each(item.children,function(index,item){
+                                                            menuIdArr.push(item.id);
+                                                        });
+                                                    }
                                                 });
                                             });
                                         });
@@ -131,13 +136,19 @@ layui.use(['layer','table','form','tree','util'], function(){
                             $('#roleName').val(rowData.roleName);
                             //
                             var menuIdArr = [];
-                            $.each(rowData.menuList,function(index,item){ //一级节点 [{id:'',children:[{id:'',children:[{id:'',children:[]}]}]}]
+                            $.each(rowData.menuList,function(index,item){ //一级节点 [{id:'',children:[{id:'',children:[{id:'',children:[]}]}]}]教学研究
                                 //选择父节点会把所有子节点都勾选
                                 if(item.children.length > 0){
-                                    $.each(item.children,function(index,item){ //二级节点 [{id:'',children:[{id:'',children:[]}]}]
+                                    $.each(item.children,function(index,item){ //二级节点 [{id:'',children:[{id:'',children:[]}]}]教学团队
                                         if(item.children.length > 0){
-                                            $.each(item.children,function(index,item){ //三级节点 [{id:'',children:[]}]
-                                                menuIdArr.push(item.menuId);
+                                            $.each(item.children,function(index,item){ //三级节点 [{id:'',children:[]}]申报
+                                                if(item.children.length > 0){
+                                                    $.each(item.children,function(index,item){ //三级节点 [{id:'',children:[]}]提交&审核
+                                                        menuIdArr.push(item.menuId);
+                                                    });
+                                                }else{
+                                                    menuIdArr.push(item.menuId);
+                                                }
                                             });
                                         }else{
                                             menuIdArr.push(item.menuId);
@@ -147,6 +158,7 @@ layui.use(['layer','table','form','tree','util'], function(){
                                     menuIdArr.push(item.menuId);
                                 }
                             });
+                            // alert(menuIdArr);
                             //获取菜单数据
                             $.get(requestUrl+'/getMenuTree.do', {},function(data){
                                 //初始化菜单树
@@ -162,17 +174,24 @@ layui.use(['layer','table','form','tree','util'], function(){
                                 util.event('lay-event', {
                                     commit: function(othis){//提交
                                         menuIdArr = [];
-                                        var selectDataArr = tree.getChecked('menuTreeId');//选择的节点数据
+                                        var selectDataArr = tree.getChecked('menuTreeId');//选择的节点数据  alert(JSON.stringify(item));
+
                                         $.each(selectDataArr,function(index,item){
                                             menuIdArr.push(item.id);
                                             $.each(item.children,function(index,item){
                                                 menuIdArr.push(item.id);
                                                 $.each(item.children,function(index,item){
                                                     menuIdArr.push(item.id);
+                                                    if(item.children.length > 0){
+                                                        $.each(item.children,function(index,item){
+                                                            menuIdArr.push(item.id);
+                                                        });
+                                                    }
                                                 });
                                             });
                                         });
                                         //持久化选择的节点数据
+
                                         $.ajax({
                                             type: "POST",
                                             url: requestUrl+'/insertOrUodateRoleMenu.do',
