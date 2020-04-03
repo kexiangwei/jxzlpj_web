@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教学研究-教学团队</title>
+    <title>教学研究-教学团队-申报</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
     <style type="text/css">
         .myself_search .layui-inline {
@@ -10,14 +10,6 @@
         }
         .other_search  .layui-inline {
             width: 150px;
-        }
-        .confirm-btn-skin .layui-layer-btn a {
-            background-color: #84c101;
-            border: 1px solid #84c101;
-            color: #FFF;
-        }
-        .confirm-btn-skin .layui-layer-btn .layui-layer-btn3 {
-            background:#999;
         }
     </style>
 </head>
@@ -101,7 +93,49 @@
     </div>
 
     <!-- 查看详情 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container"></div>
+    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+            <legend>团队基本信息</legend>
+            <div id="teamBaseInfo"></div>
+        </fieldset>
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+            <legend>团队负责人信息</legend>
+            <div id="teamLeaderInfo"></div>
+        </fieldset>
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+            <legend>团队成员信息</legend>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="width: 110px; text-align: center;">序号</th>
+                    <th style="width: 150px; text-align: center;">工号</th>
+                    <th style="width: 150px; text-align: center;">姓名</th>
+                    <th style="text-align: center;">单位</th>
+                </tr>
+                </thead>
+                <tbody id="teamMemberInfo"><tr><td colspan="4" style="text-align: center;">无数据</td></tr></tbody>
+            </table>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>申报书</legend>
+            <div id="declareInfo"></div>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>证明材料</legend>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">文件名</th>
+                        <th style="width: 150px; text-align: center;">上传日期</th>
+                        <th style="width: 150px; text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="fileList"></tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
 
     <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
@@ -163,11 +197,11 @@
                     </script>
                 </table>
             </fieldset>
-            <fieldset class="layui-elem-field" style="display: none;" id="shenbao">
+            <fieldset class="layui-elem-field">
                 <legend>申报书</legend>
                 <textarea id="sbs" name="sbs" class="layui-textarea" style="height: 150px;"></textarea>
             </fieldset>
-            <fieldset class="layui-elem-field" style="display: none;" id="zhengMingCaiLiao">
+            <fieldset class="layui-elem-field">
                 <legend>证明材料</legend>
                 <div class="layui-upload" style="margin-top: 20px;">
                     <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
@@ -175,23 +209,14 @@
                     <div class="layui-upload-list">
                         <table class="layui-table">
                             <thead><tr><th style="text-align: center;">文件名</th>
-                                <th style="width: 120px;text-align: center;">状态</th>
-                                <th style="width: 120px;text-align: center;">操作</th>
+                                <th style="width: 150px;text-align: center;">状态</th>
+                                <th style="width: 150px;text-align: center;">操作</th>
                             </tr></thead>
                             <tbody id="upfileList"><tr id="noData"><td colspan="3" style="text-align: center;">无数据</td></tr></tbody>
                         </table>
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="layui-elem-field" style="display: none;" id="zqbg">
-                <legend>中期报告</legend>
-                <textarea id="middleReport" name="middleReport" class="layui-textarea" style="height: 150px;"></textarea>
-            </fieldset>
-            <fieldset class="layui-elem-field" style="display: none;" id="zjbg">
-                <legend>总结报告</legend>
-                <textarea id="finalReport" name="finalReport" class="layui-textarea" style="height: 150px;"></textarea>
-            </fieldset>
-
             <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -199,8 +224,8 @@
         </form>
     </div>
 
-    <!-- 新增&修改，项目主要参加人员 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="teacher_container">
+    <!-- 新增团队成员信息 -->
+    <div class="layui-container" style="width: 90%;" id="teacher_container">
         <form class="layui-form" action="" lay-filter="teacherForm" id="teacherForm">
             <div class="layui-form-item" style="margin-top: 20px;">
                 <div class="layui-inline">
@@ -229,58 +254,6 @@
         </form>
     </div>
 
-    <!-- 查看团队负责人在本系统关联的业务信息 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="teamLeaderContainer">暂未开发</div>
-    <!-- 考核 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="pingshenContainer">
-        <form class="layui-form" lay-filter="pingshenForm">
-            <table class="layui-table">
-                <thead>
-                <tr>
-                    <th style="width:100px;text-align: center;">指标</th>
-                    <th style="width:100px;text-align: center;">评审要素</th>
-                    <th style="width:auto;text-align: center;">评审标准</th>
-                    <th style="width:80px;text-align: center;">分值</th>
-                    <th style="width:80px;text-align: center;">得分</th>
-                </tr>
-                </thead>
-                <tbody id="pingshenContent">
-
-                </tbody>
-            </table>
-            <div class="layui-form-item">
-                <div class="layui-input-block" align="center">
-                    <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="pingshenFormSubmitBtn">保存</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <!-- 查看考核结果 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="resultContainer">
-        <table class="layui-table">
-            <thead>
-                <tr>
-                    <th style="text-align: center">评委</th>
-                    <th style="text-align: center">团队建设规划</th>
-                    <th style="text-align: center">团队及组成</th>
-                    <th style="text-align: center">团队负责人</th>
-                    <th style="text-align: center">教学工作</th>
-                    <th style="text-align: center">教学研究</th>
-                    <th style="text-align: center">创新创业</th>
-                    <th style="text-align: center">教师培养</th>
-                    <th style="text-align: center">总分</th>
-                    <th style="text-align: center">评审意见</th>
-                </tr>
-            </thead>
-            <tbody id="pingshenResult">
-
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 查看审核流程
-    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div> -->
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
@@ -313,11 +286,10 @@
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
-    <script src="../../../js/pdfjs/build/pdf.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="../../../js/shenheProcess.js"></script>
     <script src="../../../js/previewFileInfo.js"></script>
-    <script src="jiaoxuetuandui.js"></script>
+    <script src="declare.js"></script>
 
 </body>
 </html>
