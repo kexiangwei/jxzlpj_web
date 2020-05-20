@@ -1,5 +1,5 @@
 /*
-教学设计-授课计划
+教学设计-课程实施计划
  */
 layui.use(['layer','element','table','form'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
@@ -151,7 +151,7 @@ layui.use(['layer','element','table','form'], function(){
                                     //
                                     layer.open({
                                         id : guid()
-                                        ,title : '教学设计-授课计划-新增'
+                                        ,title : '教学设计-课程实施计划-新增'
                                         ,type : 1
                                         ,area : [ '1100px', '500px' ]
                                         ,offset : '50px'
@@ -220,7 +220,7 @@ layui.use(['layer','element','table','form'], function(){
                                 if(rowData.isSubmit=='未提交' && row_data.status !='退回'){
                                     return;
                                 }
-                                detail_shenheProcess('教学设计-授课计划-查看审核流程',rowData);
+                                detail_shenheProcess('教学设计-课程实施计划-查看审核流程',rowData);
                             } else if (obj.event === 'update') {
                                 if(rowData.isSubmit== '已提交'){
                                     layer.confirm('已提交的数据不可修改，如需修改需提交申请？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
@@ -239,7 +239,7 @@ layui.use(['layer','element','table','form'], function(){
                                 //执行编辑
                                 layer.open({
                                     id : guid()
-                                    ,title : '教学设计-授课计划-编辑'
+                                    ,title : '教学设计-课程实施计划-编辑'
                                     ,type : 1
                                     ,area : [ '1100px', '500px' ] // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                                     ,offset : '50px'
@@ -430,7 +430,7 @@ layui.use(['layer','element','table','form'], function(){
                             if (layEvt === 'detail_dataInfo') {
                                 detail_dataInfo(rowData,false,true);
                             } else if (layEvt === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学设计-授课计划-查看审核流程',rowData);
+                                detail_shenheProcess('教学设计-课程实施计划-查看审核流程',rowData);
                             }
                         });
                     }
@@ -677,7 +677,7 @@ layui.use(['layer','element','table','form'], function(){
             var detail_dataInfo = function (rowData,isSubmit,isShenHe) {
                 let options = {
                     id :guid() //弹层唯一标识,一般用于页面层和iframe层模式,设置该值后，不管是什么类型的层，都只允许同时弹出一个。
-                    ,title : '教学设计-授课计划-查看信息'
+                    ,title : '教学设计-课程实施计划-查看信息'
                     ,type : 1
                     ,area : [ '900px', '500px' ]
                     ,offset : '50px' //只定义top坐标，水平保持居中
@@ -766,7 +766,7 @@ layui.use(['layer','element','table','form'], function(){
             var toShenHe = function (rowDatas) {
                 layer.open({
                     id: guid()
-                    ,title : '教学设计-授课计划-添加审核意见'
+                    ,title : '教学设计-课程实施计划-添加审核意见'
                     ,type : 2
                     ,area : [ '700px', '300px' ]
                     ,offset : '100px' //只定义top坐标，水平保持居中

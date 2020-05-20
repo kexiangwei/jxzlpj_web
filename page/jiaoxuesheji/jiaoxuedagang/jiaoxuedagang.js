@@ -1,5 +1,5 @@
 /*
-教学设计-教学大纲
+教学设计-课程教学大纲
  */
 layui.use(['layer','element','table','form','upload'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,upload = layui.upload;
@@ -88,10 +88,13 @@ layui.use(['layer','element','table','form','upload'], function(){
                         }
                         ,{field: 'status', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
+                                if(val=='审核中' || val=='通过'){
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                }
                                 if(val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
-                                return '<span style="color: blue;font-weight: bold;">'+(val != null ? val : '待审核')+'</span>';
+                                return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
                         ,{fixed: 'right', width:280, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
@@ -107,9 +110,8 @@ layui.use(['layer','element','table','form','upload'], function(){
                             search: function(){
                                 myself_table.reload({
                                     where: {
-                                        'courseCode': $(".myself_search input[name='myself_courseCode']").val()
-                                        ,'courseName': $(".myself_search input[ name='myself_courseName']").val()
-                                        ,'isSubmit': $(".myself_search input[ name='myself_isSubmit']").val()
+                                        'courseName': $(".myself_search input[ name='courseName']").val()
+                                        ,'status': $("#status option:selected").val() //获取选中的值
                                     }
                                     ,page: {
                                         curr: 1 //重新从第 1 页开始
@@ -118,6 +120,9 @@ layui.use(['layer','element','table','form','upload'], function(){
                             }
                             ,reset: function () {
                                 $("input").val('');
+                                //清除选中状态
+                                $("#status").val("");
+                                form.render("select");
                             }
                         };
 
@@ -142,16 +147,16 @@ layui.use(['layer','element','table','form','upload'], function(){
                                             return;
                                         }
                                         //
-                                        layer.confirm('信息提交后不可编辑，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                            layer.close(index);
+                                        layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                             $.post(requestUrl+'/jxdg/toSubimt.do',{
                                                 "menuId":$.cookie('currentMenuId'),
                                                 "jsonStr":JSON.stringify(data)
                                             },function (result_data) {
-                                                layer.msg(result_data.msg, {time : 3000, offset: '100px'});
                                                 if(result_data.code === 200){
                                                     myself_table.reload();//重新加载表格数据
                                                 }
+                                                layer.msg(result_data.msg);
+                                                layer.closeAll();
                                             },'json');
                                         });
                                     }
@@ -168,7 +173,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 if(row_data.isSubmit=='未提交'){
                                     return;
                                 }
-                                detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
+                                detail_shenheProcess( '教学设计-课程教学大纲-查看审核流程',row_data);
                             } else if (obj.event === 'detail_fileInfo') {
                                 detail_fileInfo(row_data);
                             } else if (obj.event === 'upload_fileInfo') {
@@ -177,7 +182,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 }
                                 layer.open({
                                     id : guid()
-                                    ,title : '教学设计-教学大纲-上传附件'
+                                    ,title : '教学设计-课程教学大纲-上传附件'
                                     ,type : 1
                                     ,area : [ '900px', '500px' ]
                                     ,offset : '50px'
@@ -218,7 +223,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                             ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
                                                 "relationCode":row_data.code
                                                 ,"fileCategory":"JXSJ_JXDG" // 固定值
-                                                ,"fileType":"教学大纲" // 固定值
+                                                ,"fileType":"课程教学大纲" // 固定值
                                                 ,"userId":function () {
                                                     return $.cookie('userId');
                                                 }
@@ -369,11 +374,8 @@ layui.use(['layer','element','table','form','upload'], function(){
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'userId': $(".other_search input[ name='other_userId' ] ").val()
-                                        ,'userName': $(".other_search input[ name='other_userName' ] ").val()
-                                        ,'courseCode': $(".other_search input[ name='other_courseCode' ] ").val()
-                                        ,'courseName': $(".other_search input[ name='other_courseName' ] ").val()
-                                        ,'shenheStatus': $(".other_search input[ name='other_shenheStatus' ] ").val()
+                                        'courseName': $(".other_search input[ name='courseName' ] ").val()
+                                        ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
                                         curr: 1 //重新从第 1 页开始
@@ -381,7 +383,10 @@ layui.use(['layer','element','table','form','upload'], function(){
                                 });
                             }
                             ,reset: function () {
-                                $("input").val('');
+                                $(".other_search input").val("");
+                                //清除选中状态
+                                $("#shenheStatus").val("");
+                                form.render("select");
                             }
                         };
 
@@ -409,7 +414,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                                             //添加审核意见
                                             layer.open({
                                                 id : guid()
-                                                ,title : '教学设计-教学大纲-添加审核意见'
+                                                ,title : '教学设计-课程教学大纲-添加审核意见'
                                                 ,type : 2
                                                 ,area : [ '700px', '300px' ]
                                                 ,offset : '100px' //只定义top坐标，水平保持居中
@@ -444,7 +449,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                             } else if (obj.event === 'detail_fileInfo') {
                                 detail_fileInfo(row_data);
                             } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess( '教学设计-教学大纲-查看审核流程',row_data);
+                                detail_shenheProcess( '教学设计-课程教学大纲-查看审核流程',row_data);
                             }
                         });
                     }
@@ -461,7 +466,7 @@ layui.use(['layer','element','table','form','upload'], function(){
                 var isOpen = false;
                 layer.open({
                     id: guid()
-                    ,title : '教学设计-教学大纲-查看信息'
+                    ,title : '教学设计-课程教学大纲-查看信息'
                     ,type : 1
                     ,area : [ '900px', '500px' ]
                     ,offset : '50px' //只定义top坐标，水平保持居中
@@ -492,7 +497,7 @@ layui.use(['layer','element','table','form','upload'], function(){
             let detail_fileInfo = function (data) {
                 layer.open({
                     id: guid()
-                    ,title : '教学设计-教学大纲-查看附件'
+                    ,title : '教学设计-课程教学大纲-查看附件'
                     ,type : 1
                     ,area : [ '900px', '500px' ]
                     ,offset : '50px'
