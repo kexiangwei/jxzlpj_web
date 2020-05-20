@@ -67,8 +67,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
                         ,{field: 'lwTitle', title: '论文题目', width:150, sort:true}
                         ,{field: 'qkName', title: '期刊名称', width:150, sort:true}
-                        ,{field: 'publishYear', title: '发表时间（年）', width:150, sort:true}
-                        ,{field: 'publishIssue', title: '发表时间（期）', width:150, sort:true}
+                        ,{field: 'publishYear', title: '发表时间', width:150, sort:true}
                         ,{field: 'includStatus', title: '收录情况', width:150, sort:true}
                         ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){
                                 let htmlstr='';
@@ -328,8 +327,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
                         ,{field: 'lwTitle', title: '论文题目', width:200, sort:true}
                         ,{field: 'qkName', title: '期刊名称', width:150, sort:true}
-                        ,{field: 'publishYear', title: '发表时间（年）', width:150, sort:true}
-                        ,{field: 'publishIssue', title: '发表时间（期）', width:150, sort:true}
+                        ,{field: 'publishYear', title: '发表时间', width:150, sort:true}
                         ,{field: 'includStatus', title: '收录情况', width:150, sort:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:150,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
@@ -429,6 +427,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             //初始化表单
             var initEditForm = function (data) {
 
+                //初始化laydate实例
+                laydate.render({
+                    elem: '#publishYear' //指定元素
+                    ,type: 'year'
+                    ,max: new Date().getFullYear()+'-01-01'
+                });
 
                 //其他指导教师数据表格
                 let teacher_datatable = table.render({
@@ -712,7 +716,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,"lwTitle" : data.lwTitle
                     ,"qkName" : data.qkName
                     ,"publishYear" : data.publishYear
-                    ,"publishIssue" : data.publishIssue
                     ,"includStatus" : data.includStatus
                 });
             };
@@ -930,11 +933,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                <td style="width: 80px; text-align: right">收录情况：</td><td style="width: 120px;">'+data.includStatus+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">发表时间（年）：</td><td style="width: 120px;">'+data.publishYear+'</td>' +
-                            '                 <td style="width: 80px; text-align: right">发表时间（期）：</td><td style="width: 120px;">'+data.publishIssue+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;" colspan="3">'+data.createDate+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">发表时间：</td><td style="width: 120px;" colspan="3">'+data.publishYear+'</td>' +
                             '              </tr>\n' +
                             '            </tbody>\n' +
                             '         </table>';

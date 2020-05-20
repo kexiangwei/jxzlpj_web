@@ -408,12 +408,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 laydate.render({
                     elem: '#publishingTime' //指定元素
                     ,type: 'month'
-                    ,showBottom: false
+                    // ,showBottom: false
                 });
                 laydate.render({
                     elem: '#selectedTime' //指定元素
                     ,type: 'month'
-                    ,showBottom: false
+                    // ,showBottom: false
                 });
 
                 //

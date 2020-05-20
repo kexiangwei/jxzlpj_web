@@ -232,15 +232,6 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">发表时间：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="publishYear" style="width: 70px; height: 33px;">&nbsp;年
-                            <input type="text" name="publishIssue" style="width: 70px; height: 33px;">&nbsp;期
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
                         <label class="layui-form-label">收录情况：</label>
                         <div class="layui-input-inline">
                             <select name="includStatus" lay-filter="includStatus">
@@ -257,6 +248,14 @@
                             </select>
                         </div>
                     </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">发表时间：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="publishYear" name="publishYear" placeholder="" class="layui-input">
+                        </div>
+                    </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">证明材料：</label>
                         <div class="layui-input-inline">
@@ -266,7 +265,7 @@
                 </div>
             </fieldset>
 
-            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
+            <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>

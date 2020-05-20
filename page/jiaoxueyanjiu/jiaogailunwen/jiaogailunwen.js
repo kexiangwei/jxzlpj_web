@@ -64,7 +64,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'qkType', title: '期刊类别', width:150, sort:true}
                         ,{field: 'dyAuthorName', title: '第一作者', width:150, sort:true}
                         ,{field: 'txAuthorName', title: '通讯作者', width:150, sort:true}
-                        ,{field: 'fbTime', title: '发表时间', width:150, sort:true}
+                        ,{field: 'publishYear', title: '发表时间', width:150, sort:true}
                         ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
@@ -308,7 +308,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         ,{field: 'qkType', title: '期刊类别', width:150, sort:true}
                         ,{field: 'dyAuthorName', title: '第一作者', width:150, sort:true}
                         ,{field: 'txAuthorName', title: '通讯作者', width:150, sort:true}
-                        ,{field: 'fbTime', title: '发表时间', width:150, sort:true}
+                        ,{field: 'publishYear', title: '发表时间', width:150, sort:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -418,10 +418,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,"qkType" : data.qkType
                     ,"dyAuthorCode" : data.dyAuthorCode
                     ,"dyAuthorName" : data.dyAuthorName
+                    ,"dyAuthorUnit" : data.dyAuthorUnit
                     ,"txAuthorCode" : data.txAuthorCode
                     ,"txAuthorName" : data.txAuthorName
+                    ,"txAuthorUnit" : data.txAuthorUnit
                     ,"publishYear" : data.publishYear
-                    ,"publishIssue" : data.publishIssue
                     ,"userId":data.userId
                     ,"userName":data.userName
                     ,"userUnit":data.userUnit
@@ -454,11 +455,17 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                <td style="width: 80px; text-align: right">第一作者姓名：</td><td style="width: 120px;">'+data.dyAuthorName+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">第一作者单位：</td><td colspan="3">'+data.dyAuthorUnit+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
                             '                <td style="width: 80px; text-align: right">通讯作者工号：</td><td style="width: 120px;">'+data.txAuthorCode+'</td>' +
                             '                <td style="width: 80px; text-align: right">通讯作者姓名：</td><td style="width: 120px;">'+data.txAuthorName+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">发表时间：</td><td colspan="3">'+data.fbTime+'</td>' +
+                            '                <td style="width: 80px; text-align: right">通讯作者单位：</td><td colspan="3">'+data.txAuthorUnit+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">发表时间：</td><td colspan="3">'+data.publishYear+'</td>' +
                             '              </tr>\n' +
                             '        </tbody>\n' +
                             '    </table>';

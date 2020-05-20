@@ -66,6 +66,28 @@
         </table>
     </div>
 
+    <!-- 查看信息 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+            <legend>基础信息</legend>
+            <div id="baseInfo"></div>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>证明材料</legend>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">文件名</th>
+                        <th style="width: 150px; text-align: center;">上传日期</th>
+                        <th style="width: 150px; text-align: center;">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="fileList"></tbody>
+                </table>
+            </div>
+        </fieldset>
+    </div>
     <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
             <!-- 业务数据编号 -->
@@ -135,6 +157,15 @@
                 </div>
             </div>
 
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">相关材料：</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary" style="width: 192px" id="upfile">上传附件（PDF 格式）</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
@@ -142,10 +173,28 @@
         </form>
     </div>
 
+    <!-- 上传附件 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="uploadFile_container">
+        <div class="layui-upload" style="margin-top: 10px;">
+            <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
+            <span style="color: #8D8D8D">请选择PDF 格式文件</span>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th style="text-align: center;">文件名</th>
+                        <th style="width: 120px;text-align: center;">状态</th>
+                        <th style="width: 120px;text-align: center;">操作</th>
+                    </tr></thead>
+                    <tbody id="upfileList"><tr id="noData"><td colspan="3" style="text-align: center;">无数据</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="jxsg.js"></script>
+    <script src="upfile.js"></script>
+    <script src="../../../js/previewFileInfo.js"></script>
 </body>
 </html>

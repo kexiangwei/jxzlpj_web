@@ -231,18 +231,66 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
             ,offset : '50px'
             ,shadeClose : true
             ,btn : ['关闭']
-            ,content : '<table class="layui-table">\n' +
-                '        <tbody>\n' +
-                '            <tr><td style="width: 150px; text-align: right">教师信息-学院</td><td>'+data.collegeName+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">教师信息-专业</td><td>'+data.majorName+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">教师信息-工号</td><td>'+data.teacherId+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">教师信息-姓名</td><td>'+data.teacherName+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">教师信息-单位</td><td>'+data.teacherUnit+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">事件</td><td>'+data.event+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">事故认定级别</td><td>'+data.eventLevel+'</td></tr>\n' +
-                '            <tr><td style="width: 150px; text-align: right">事故认定时间</td><td>'+data.happenTime+'</td></tr>\n' +
-                '        </tbody>\n' +
-                '    </table>'
+            ,content : $('#dataInfo_container')
+            ,success: function(layero, index){
+
+                let html = '<table class="layui-table">\n' +
+                    '        <tbody>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">教师信息-学院</td><td>'+data.collegeName+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">教师信息-专业</td><td>'+data.majorName+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">教师信息-工号</td><td>'+data.teacherId+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">教师信息-姓名</td><td>'+data.teacherName+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">教师信息-单位</td><td>'+data.teacherUnit+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">事件</td><td>'+data.event+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">事故认定级别</td><td>'+data.eventLevel+'</td></tr>\n' +
+                    '            <tr><td style="width: 150px; text-align: right">事故认定时间</td><td>'+data.happenTime+'</td></tr>\n' +
+                    '        </tbody>\n' +
+                    '    </table>';
+                $("#baseInfo").html(html);
+
+                //附件列表
+                $.get(requestUrl+"/getFileListByRelationCode.do" , {
+                    "relationCode": function () {
+                        return data.code;
+                    }
+                } ,  function(result_data){
+                    if(result_data.data.length ===0){
+                        let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
+                        $('#fileList').append(tr);
+                    } else {
+                        $.each(result_data.data,function(index,fileInfo){
+                            let tr = $(['<tr id="'+ fileInfo.code +'">'
+                                ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
+                                ,'<td style="text-align: center;">'+ fileInfo.createDate +'</td>'
+                                ,'<td style="text-align: center;">' +
+                                '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                '   <button class="layui-btn layui-btn-xs layui-btn-primary upfile_download">下载</button>' +
+                                '</td>'
+                                ,'</tr>'].join(''));
+                            //预览
+                            tr.find('a').on('click', function(){
+                                previewFileInfo(fileInfo);
+                            });
+                            tr.find('.upfile_preview').on('click', function(){
+                                previewFileInfo(fileInfo);
+                            });
+                            tr.find('.upfile_download').on('click', function(){
+                                let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
+                                downloadForm.append("<input type='hidden' name='fileName' value='"+fileInfo.fileName+"'/>");
+                                downloadForm.append("<input type='hidden' name='filePath' value='"+fileInfo.filePath+"'/>");
+                                $(document.body).append(downloadForm);
+                                // alert(downloadForm.serialize());
+                                downloadForm.submit();
+                                downloadForm.remove();
+                            });
+                            $('#fileList').append(tr);
+                        });
+                    }
+                }, "json");
+            }
+            ,end:function () {
+                $('#fileList').empty();
+            }
         });
     };
 
