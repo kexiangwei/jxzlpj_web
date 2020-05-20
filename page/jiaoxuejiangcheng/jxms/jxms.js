@@ -603,7 +603,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content : $('#shenHe_container')
+                    ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
                         form.on('select(status)', function(data) {

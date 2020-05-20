@@ -732,7 +732,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             //上传附件
             $('#upfile').click(function(){
                 layer.open({
-                    title : '双创教育-指导学生创业-上传附件'
+                    title : '双创教育-指导学生创业-上传证明材料'
                     ,type : 1
                     ,area : [ '700px', '300px' ]
                     ,offset : '100px'
@@ -799,7 +799,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,field:"file" //设定文件域的字段名
                             ,multiple: true // 	是否允许多文件上传
                             ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                            ,exts:'pdf'
+                            ,exts:'pdf|jpg'
                             ,choose: function(obj){
                                 $('#noData').empty();
                                 let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列

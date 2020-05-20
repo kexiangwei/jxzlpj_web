@@ -60,6 +60,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'courseName', title: '课程名称', width:150, sort:true}
                         ,{field: 'objName', title: '奖项名称', width:150, sort:true}
                         ,{field: 'level1', title: '奖励级别', width:150, sort:true}
                         ,{field: 'level2', title: '获得奖项', width:150, sort:true}
@@ -321,6 +322,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'courseName', title: '课程名称', width:150, sort:true}
                         ,{field: 'objName', title: '奖项名称', width:150, sort:true}
                         ,{field: 'level1', title: '奖励级别', width:150, sort:true}
                         ,{field: 'level2', title: '获得奖项', width:150, sort:true}
@@ -517,6 +519,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //表单赋值
                 form.val("editForm",{
                     "code":data.code
+                    ,"courseName": data.courseName
                     ,"objName": data.objName
                     ,"level1" : data.level1
                     ,"level2" : data.level2
@@ -579,6 +582,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //基础信息
                         let html = '<table class="layui-table">\n' +
                             '           <tbody>\n' +
+                            '              <tr>' +
+                            '                 <td style="width: 80px; text-align: right">课程名称：</td><td style="width: 120px;" colspan="3">'+data.courseName+'</td>' +
+                            '              </tr>\n' +
                             '              <tr>' +
                             '                 <td style="width: 80px; text-align: right">奖项名称：</td><td style="width: 120px;" colspan="3">'+data.objName+'</td>' +
                             '              </tr>\n' +
