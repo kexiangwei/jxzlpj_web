@@ -102,7 +102,7 @@ layui.use(['layer','element','table','form'], function(){
                                 if(val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
-                                return '';
+                                return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
                         ,{field: 'createDate', title: '创建时间', width:120,hide:true}
