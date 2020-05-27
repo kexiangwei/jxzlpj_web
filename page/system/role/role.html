@@ -2,39 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>系统管理-用户组</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 
     <div class="layui-fluid">
-        <table class="layui-table" id="dataTable" lay-filter="dataTable"></table>
-        <script type="text/html" id="dataTable_toolbar">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
-            </div>
-        </script>
-        <script type="text/html" id="dataTable_bar">
-            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
-            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
-        </script>
+        <table class="layui-table" id="dataTable" lay-filter="dataTable">
+            <script type="text/html" id="dataTable_toolbar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                </div>
+            </script>
+            <script type="text/html" id="dataTable_bar">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
+                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </table>
     </div>
 
-    <div class="layui-container" id="role_container">
+    <div class="layui-container" style="width: 90%" id="insertOrUpdate_container">
         <!-- 用于修改角色的隐藏主键 -->
         <input type="hidden" name="roleId">
-        角色名称：
-        <div class="layui-inline">
-            <input class="layui-input" name="roleName" id="roleName" autocomplete="off">
-        </div>
-        <div class="layui-inline">
-            <div class="layui-btn-container" style="margin-top: 10px; margin-left: 20px;">
-                <button type="button" class="layui-btn layui-btn-sm" lay-event="commit">确认</button>
-                <button type="button" class="layui-btn layui-btn-sm" lay-event="reset">重置</button>
+        <div style="margin-top: 20px">
+            用户组名称：
+            <div class="layui-inline">
+                <input class="layui-input" name="roleName" autocomplete="off">
             </div>
         </div>
+
         <div class="demo-tree-more" style="margin-top: 10px; margin-left: 20px;" id="menuTree"></div>
+        <div class="layui-btn-container" style="margin-top: 50px;">
+            <button type="button" class="layui-btn layui-btn-sm" lay-event="commit">确认</button>
+            <button type="button" class="layui-btn layui-btn-sm" lay-event="reset">重置</button>
+        </div>
     </div>
 
     <script src="../../../layui/layui.js"></script>

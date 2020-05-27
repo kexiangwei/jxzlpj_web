@@ -4,10 +4,10 @@ layui.use(['layer','table','form','transfer','util'], function(){
 
     //数据表格
     let dataTable = table.render({
-        id: "dataTable_id"
+        id: guid()
         ,elem : '#dataTable'
         ,height : 500
-        ,url: requestUrl+'/getUserList.do'
+        ,url: requestUrl+'/getUserPageList.do'
         ,request: {
             pageName: 'pageIndex'
             ,limitName: 'pageSize'
@@ -27,13 +27,11 @@ layui.use(['layer','table','form','transfer','util'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'userId', title: '工号(学号)', width:120, sort: true}
-            ,{field: 'userName', title: '姓名', width:120}
-            ,{field: 'accountLevel', title: '账号类别', width:120}
-            ,{field: 'collegeName', title: '所属学院(部门)', width:200}
-            // ,{field: 'accountStatus', title: '账号状态', width:120}
-            ,{field: 'phone', title: '电话', width:120}
-            ,{field: 'remark', title: '备注'}
+            ,{field: 'collegeOrDept', title: '学院(部门)', width:200, sort: true}
+            ,{field: 'userId', title: '工号(学号)', width:150, sort: true}
+            ,{field: 'userName', title: '姓名', width:150, sort: true}
+            ,{field: 'userGroup', title: '用户组', sort: true}
+            ,{field: 'phone', title: '电话', width:150, sort: true}
             ,{fixed: 'right', width:210, align:'center', toolbar: '#dataTable_bar'}
         ]]
         ,even: true //隔行背景
@@ -50,8 +48,11 @@ layui.use(['layer','table','form','transfer','util'], function(){
                 search: function(){
                     dataTable.reload({
                         where: { //设定异步数据接口的额外参数，任意设
-                            userId: $(" input[ name='userId' ] ").val()
-                            ,userName: $(" input[ name='userName' ] ").val()
+                            'collegeOrDept': $(".search-container input[ name='collegeOrDept' ] ").val()
+                            ,'userId': $(".search-container input[ name='userId' ] ").val()
+                            ,'userName': $(".search-container input[ name='userName' ] ").val()
+                            ,'userGroup': $(".search-container input[ name='userGroup' ] ").val()
+                            // ,'phone': $(".search-container input[ name='phone' ] ").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -59,7 +60,7 @@ layui.use(['layer','table','form','transfer','util'], function(){
                     });
                 }
                 ,reset: function () {
-                    $("input").val('');
+                    $(".search-container input").val('');
                 }
             };
             $('.search-container .layui-btn').on('click', function(){
@@ -73,9 +74,6 @@ layui.use(['layer','table','form','transfer','util'], function(){
                     case 'insert':
                         layer.msg('新增', {time : 3000, offset: '100px'});
                         break;
-                    case 'import':
-                        layer.msg('导入', {time : 3000, offset: '100px'});
-                        break;
                 }
             });
 
@@ -83,41 +81,37 @@ layui.use(['layer','table','form','transfer','util'], function(){
             table.on('tool(dataTable)', function(obj){
                 var rowData = obj.data;
                 if (obj.event === 'detail') {
-                    $.get(requestUrl+'/getUserDetail.do', {"userId":rowData.userId},function (resultData) {
-                        if(resultData.code == 200){
-                            let data = resultData.data;
-                            layer.open({
-                                title : '用户管理-详情'
-                                ,type : 1
-                                ,area : [ '700px', '535px' ]
-                                ,offset : '10px'
-                                ,shadeClose : true
-                                ,btn : ['关闭']
-                                ,content : '<table class="layui-table">\n' +
-                                    '        <tbody>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">工号</td><td>'+data.CODE+'</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">姓名</td><td>'+data.NAME+'</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">性别</td><td>'+data.SEX+'</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">证件类型</td><td>'+data.CARD_TYPE+'</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">证件号码</td><td>'+data.CARD_NUM+'</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">文化程度</td><td>博士</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">所属部门</td><td>'+data.COLLEGE_NAME+'</td></tr>\n' +
-                                    '            <tr><td style="width: 150px; text-align: right">当前状态</td><td>正常</td></tr>\n' +
-                                    '        </tbody>\n' +
-                                    '    </table>'
-                            });
-                        }else{
-                            layer.msg('数据加载失败', {time : 3000, offset: '100px'});
-                        }
-                    },'json');
+                    layer.msg('查看', {time : 3000, offset: '100px'});
+                    /* $.get(requestUrl+'/getUserDetail.do', {"userId":rowData.userId},function (resultData) {
+                         if(resultData.code == 200){
+                             let data = resultData.data;
+                             layer.open({
+                                 title : '系统管理-用户-详情'
+                                 ,type : 1
+                                 ,area : [ '700px', '535px' ]
+                                 ,offset : '20px'
+                                 ,shadeClose : true
+                                 ,btn : ['关闭']
+                                 ,content : '<table class="layui-table">\n' +
+                                     '        <tbody>\n' +
+                                     '            <tr><td style="width: 150px; text-align: right">学院(部门)</td><td>'+data.collegeOrDept+'</td></tr>\n' +
+                                     '            <tr><td style="width: 150px; text-align: right">工号</td><td>'+data.userId+'</td></tr>\n' +
+                                     '            <tr><td style="width: 150px; text-align: right">姓名</td><td>'+data.userName+'</td></tr>\n' +
+                                     '        </tbody>\n' +
+                                     '    </table>'
+                             });
+                         }else{
+                             layer.msg('数据加载失败', {time : 3000, offset: '100px'});
+                         }
+                     },'json');*/
                 } else if (obj.event === 'grant') {
-                    layer.open({
-                        title : '用户管理-授权'
+                    var layIndex = layer.open({
+                        title : '系统管理-用户-授权'
                         ,type : 1
-                        ,area : [ '700px', '535px' ]
-                        ,offset : '10px'
+                        ,area : [ '700px', '480px' ]
+                        ,offset : '20px'
                         ,shadeClose : true //点击遮罩关闭
-                        ,content : '<div class="layui-container">\n' +
+                        ,content : '<div class="layui-container" style="width: 90%;">\n' +
                             '           <div class="demo-transfer" style="margin-top: 10px; margin-left: 20px;" id="grant"></div>\n' +
                             '           <div class="layui-btn-container" style="margin-top: 10px; margin-left: 20px;">\n' +
                             '               <button type="button" class="layui-btn" lay-event="submit">确认</button>\n' +
@@ -126,74 +120,67 @@ layui.use(['layer','table','form','transfer','util'], function(){
                             '       </div>'
                         ,success: function(layero, index){
                             //
-                            $.get(requestUrl+'/toGrant.do', {"userId":rowData.userId},
-                                function(data){
+                            $.get(requestUrl+'/toGrant.do', {"userId":rowData.userId}, function(data){
                                     let roleArr = data.data.roleArr,
                                      userRoleIdArr = data.data.userRoleIdArr;
+
                                     //实例调用
                                     transfer.render({
                                         id: 'grantId' //定义唯一索引
                                         ,elem: '#grant'
-                                        ,title: ['待选角色列表', '已选角色列表']
+                                        ,title: ['待选用户组列表', '已选用户组列表']
                                         ,data: roleArr
                                         ,value: userRoleIdArr
                                         ,showSearch: true
                                     });
+
                                     //批量办法定事件
-                                    util.event('lay-event', {
-                                        submit: function(othis){
-                                            // alert(JSON.stringify(transfer.getData('grantId')));
-                                            var ajax_excute_flag = false; //设置一个对象来控制是否进入AJAX过程
-                                            if(ajax_excute_flag){
-                                                return; //如果正在提交则直接返回，停止执行
-                                            }else{
-                                                ajax_excute_flag = true;//标记当前状态为正在提交状态
-                                                $.ajax({
-                                                    type: "POST",
-                                                    url: requestUrl+'/grant.do',
-                                                    data: {
-                                                        "userId":rowData.userId,
-                                                        "roleIdArr":function (){
-                                                            let arr=[],roleIdArr = [];
-                                                            //获取选择的角色id
-                                                            $.each(transfer.getData('grantId'),function(index,item){
-                                                                arr.push(item.value);
-                                                            });
-                                                            //去重
-                                                            for (var i = 0; i < arr.length; i++) {
-                                                                for (var j = i+1; j < arr.length; j++) {
-                                                                    if(arr[i]===arr[j]){
-                                                                        ++i;
-                                                                    }
+
+                                        util.event('lay-event', {
+                                            submit: function(othis){
+                                                // alert(111);
+                                                //
+                                                $.post(requestUrl+'/grant.do',{
+                                                    "userId":rowData.userId,
+                                                    "roleIdArr":function (){
+                                                        let arr=[],roleIdArr = [];
+                                                        //获取选择的角色id
+                                                        $.each(transfer.getData('grantId'),function(index,item){
+                                                            arr.push(item.value);
+                                                        });
+                                                        //去重
+                                                        for (var i = 0; i < arr.length; i++) {
+                                                            for (var j = i+1; j < arr.length; j++) {
+                                                                if(arr[i]===arr[j]){
+                                                                    ++i;
                                                                 }
-                                                                roleIdArr.push(arr[i]);
                                                             }
-                                                            return roleIdArr;
+                                                            roleIdArr.push(arr[i]);
                                                         }
-                                                    },
-                                                    dataType: "json",
-                                                    traditional:true,
-                                                    success: function(data){
-                                                        ajax_excute_flag =false; //在提交成功之后将标志标记为可提交状态
+                                                        return roleIdArr;
+                                                    }
+                                                },function (result_data) {
+                                                    if(result_data.code == 200){
+                                                        // dataTable.reload({});//重新加载数据
                                                         layer.msg('授权成功', {time : 3000, offset: '100px'});
-                                                    },
-                                                    error:function () {
-                                                        ajax_excute_flag =false; //AJAX失败也需要将标志标记为可提交状态
+                                                    }else{
                                                         layer.msg('授权失败', {time : 3000, offset: '100px'});
                                                     }
-                                                });
+                                                    layer.close(layIndex);
+                                                },'json');
                                             }
-                                        }
-                                        ,reload:function(){
-                                            //实例重载
-                                            transfer.reload('grantId', {
-                                                value: userRoleIdArr
-                                            })
-                                        }
-                                    });
+                                            ,reload:function(){
+                                                //实例重载
+                                                transfer.reload('grantId', {
+                                                    value: userRoleIdArr
+                                                })
+                                            }
+                                        });
+
                                 },'json');
 
                         },end:function () {
+                            window.location.reload();
                         }
                     });
                 } else if (obj.event === 'update') {

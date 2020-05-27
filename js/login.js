@@ -17,19 +17,16 @@
                         'userId': formData.field.userId,
                         'password': formData.field.password,
                         'token': data.data.token,
-                        'verityCode': formData.field.verityCode
+                        'verifyCode': formData.field.verifyCode
                     } ,  function(resultData){
                         if(resultData.code==200){
                             //保存用户信息
                             let obj = resultData.data;
                             $.cookie('userId', obj.userId, { path: '/' });
                             $.cookie('userName', obj.userName, { path: '/' });
-                            $.cookie('password', obj.password, { path: '/' });
-                            $.cookie('accountLevel', obj.accountLevel, { path: '/' });
-                            $.cookie('accountStatus', obj.accountStatus, { path: '/' });
+                            $.cookie('userGroup', obj.userGroup, { path: '/' });
                             $.cookie('headImg', obj.headImg, { path: '/' });
                             $.cookie('phone', obj.phone, { path: '/' });
-                            $.cookie('remark', obj.remark, { path: '/' });
                             //跳转到主页面
                             window.location.href="index.html";
                         }else{
@@ -40,7 +37,7 @@
                 });
             },
             error:function() {
-                layer.msg('获取图形验证码失败!', {time : 3000, offset: '100px'});
+                layer.msg('网络连接失败！', {time : 3000, offset: '100px'});
             }
         });
     };

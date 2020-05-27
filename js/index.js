@@ -4,7 +4,7 @@ layui.use(['layer','element'], function(){
     //
     layer.msg("欢迎你，"+ $.cookie('userName'));
     //
-    $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/userHeadImg/tly.jpg'));
+    $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/files/userHeadImg/tly.jpg'));
     //
     $.ajax({
         type: "get",

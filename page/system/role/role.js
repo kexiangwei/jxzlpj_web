@@ -1,13 +1,15 @@
-
+/**
+ * 系统管理-用户组
+ */
 layui.use(['layer','table','form','tree','util'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,tree = layui.tree,util = layui.util;
 
     //数据表格
     let dataTable = table.render({
-        id: "dataTable_id"
+        id: guid()
         ,elem : '#dataTable'
         ,height : 540
-        ,url: requestUrl+'/getRoleList.do'
+        ,url: requestUrl+'/getRolePageList.do'
         ,request: {
             pageName: 'pageIndex'
             ,limitName: 'pageSize'
@@ -28,7 +30,8 @@ layui.use(['layer','table','form','tree','util'], function(){
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
             ,{field: 'roleId', title: '编号', width:200, sort: true}
-            ,{field: 'roleName', title: '名称'}
+            ,{field: 'roleName', title: '名称', width:200, sort: true}
+            ,{field: 'remark', title: '备注'}
             ,{fixed: 'right', width:220, align:'center', toolbar: '#dataTable_bar'}
         ]]
         ,even: true //隔行背景
@@ -41,15 +44,15 @@ layui.use(['layer','table','form','tree','util'], function(){
 
             //监听头工具栏事件
             table.on('toolbar(dataTable)', function(obj){
-                let idx = layer.open({
-                    title : '角色管理-新增'
+                let layIndex = layer.open({
+                    title : '系统管理-用户组-新增'
                     ,type : 1
-                    ,area : [ '700px', '535px' ]
-                    ,offset : '10px'
+                    ,area : [ '700px', '480px' ]
+                    ,offset : '20px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,content : $('#role_container')
+                    ,content : $('#insertOrUpdate_container')
                     ,success: function(layero, index){
-                        $('#roleName').val("");//重置角色名称
+
                         //获取菜单数据
                         $.get(requestUrl+'/getMenuTree.do', {},function(data){
                             //初始化菜单树
@@ -67,6 +70,8 @@ layui.use(['layer','table','form','tree','util'], function(){
                                         return; //如果正在提交则直接返回，停止执行
                                     }else{
                                         exec_flag = true;
+
+                                        //提取选择的节点数据
                                         let menuIdArr = [];
                                         let selectDataArr = tree.getChecked('menuTreeId');//选择的节点数据
                                         $.each(selectDataArr,function(index,item){
@@ -86,33 +91,35 @@ layui.use(['layer','table','form','tree','util'], function(){
                                         //持久化选择的节点数据
                                         $.ajax({
                                             type: "POST",
-                                            url: requestUrl+'/insertOrUodateRoleMenu.do',
+                                            url: requestUrl+'/insertOrUpdateRoleMenu.do',
                                             data: {
-                                                "roleName":$('#roleName').val(),
+                                                "roleName":$("input[ name='roleName']").val(),
                                                 "menuIdArr":menuIdArr
                                             },
                                             dataType: "json",
                                             traditional:true ,
                                             success: function(data){
                                                 exec_flag = false; //在提交成功之后将标志标记为可提交状态
-                                                layer.close(idx);
-                                                layer.msg('设置成功', {time : 3000, offset: '100px'});
                                                 dataTable.reload({});//重新加载数据
+                                                layer.msg('设置成功', {time : 3000, offset: '100px'});
+                                                layer.close(layIndex);
                                             },
                                             error:function () {
                                                 exec_flag =false; //AJAX失败也需要将标志标记为可提交状态
                                                 layer.msg('设置失败', {time : 3000, offset: '100px'});
+                                                layer.close(layIndex);
                                             }
                                         });
                                     }
                                 }
                                 ,reset: function(){//重置
-                                    $('#roleName').val("");//重置角色名称
+                                    $("input[ name='roleName' ]").val("");//重置角色名称
                                     tree.reload('menuTreeId');//重载菜单树实例
                                 }
                             });
                         },'json');
                     },end:function () {
+                        $("input[ name='roleName' ]").val("");//重置角色名称
                     }
                 });
             });
@@ -123,17 +130,17 @@ layui.use(['layer','table','form','tree','util'], function(){
                 if (obj.event === 'detail') {
                     layer.msg('查看', {time : 3000, offset: '100px'});
                 } else if (obj.event === 'update') {
-                    var idx = layer.open({
-                        title : '角色管理-编辑'
+                    let layIndex = layer.open({
+                        title : '系统管理-用户组-编辑'
                         ,type : 1
-                        ,area : [ '700px', '535px' ]
-                        ,offset : '10px'
+                        ,area : [ '700px', '480px' ]
+                        ,offset : '20px'
                         ,shadeClose : true //点击遮罩关闭
-                        ,content : $('#role_container')
+                        ,content : $('#insertOrUpdate_container')
                         ,success: function(layero, index){
                             //
                             $("input[name='roleId']").val(rowData.roleId);
-                            $('#roleName').val(rowData.roleName);
+                            $("input[name='roleName']").val(rowData.roleName);
                             //
                             var menuIdArr = [];
                             $.each(rowData.menuList,function(index,item){ //一级节点 [{id:'',children:[{id:'',children:[{id:'',children:[]}]}]}]教学研究
@@ -175,7 +182,6 @@ layui.use(['layer','table','form','tree','util'], function(){
                                     commit: function(othis){//提交
                                         menuIdArr = [];
                                         var selectDataArr = tree.getChecked('menuTreeId');//选择的节点数据  alert(JSON.stringify(item));
-
                                         $.each(selectDataArr,function(index,item){
                                             menuIdArr.push(item.id);
                                             $.each(item.children,function(index,item){
@@ -191,26 +197,29 @@ layui.use(['layer','table','form','tree','util'], function(){
                                             });
                                         });
                                         //持久化选择的节点数据
-
                                         $.ajax({
                                             type: "POST",
-                                            url: requestUrl+'/insertOrUodateRoleMenu.do',
+                                            url: requestUrl+'/insertOrUpdateRoleMenu.do',
                                             data: {
                                                 "roleId":rowData.roleId,
-                                                "roleName":$('#roleName').val(),
+                                                "roleName":$("input[name='roleName']").val(),
                                                 "menuIdArr":menuIdArr
                                             },
                                             dataType: "json",
                                             traditional:true ,
                                             success: function(data){
-                                                layer.close(idx);
-                                                layer.msg('设置成功', {time : 3000, offset: '100px'});
                                                 dataTable.reload({});//重新加载数据
+                                                layer.msg('设置成功', {time : 3000, offset: '100px'});
+                                                layer.close(layIndex);
+                                            },
+                                            error:function () {
+                                                layer.msg('设置失败', {time : 3000, offset: '100px'});
+                                                layer.close(layIndex);
                                             }
                                         });
                                     }
                                     ,reset: function(){//重置
-                                        $('#roleName').val(rowData.roleName);//重置角色名称
+                                        $("input[name='roleName']").val(rowData.roleName);//重置角色名称
                                         //重载菜单树实例
                                         tree.reload('menuTreeId');
                                         tree.setChecked('menuTreeId', menuIdArr); //重置选中的节点数据
@@ -218,6 +227,7 @@ layui.use(['layer','table','form','tree','util'], function(){
                                 });
                             },'json');
                         },end:function () {
+                            $("input[ name='roleName' ]").val("");//重置角色名称
                         }
                     });
                 } else if (obj.event === 'delete') {
