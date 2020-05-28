@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>审核流程设置</title>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-fluid">
+
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <select name="parentMenuList" lay-filter="parentMenuList"></select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="childMenuList" lay-search="" lay-filter="childMenuList"></select>
+                </div>
+            </div>
+        </form>
+
+        <table class="layui-table" id="dataTable" lay-filter="dataTable">
+            <script type="text/html" id="dataTable_toolbar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>添加</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delete"><i class="layui-icon">&#xe640;</i>删除</button>
+                </div>
+            </script>
+            <script type="text/html" id="dataTable_bar"></script>
+        </table>
+    </div>
+
+    <!-- 新增&编辑审核流程 -->
+    <div class="layui-container" style="display: none" id="editContainer">
+
+        <form class="layui-form" action="" lay-filter="editForm">
+            <!-- 审核流程编号 -->
+            <input type="hidden" name="shenheCode"/><!-- 编辑时使用 -->
+            <!-- 业务属性 -->
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px">业务模块：</label>
+                    <div class="layui-input-inline">
+                        <select name="editFormMenu" lay-search="" lay-filter="editFormMenu"></select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px">流程名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="shenheName" value="" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px">流程描述：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="shenheDesc" value="" required  lay-verify="required" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline" style="width: 155px;margin-top: 10px;">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <table class="layui-table" id="nodeDataTable" lay-filter="nodeDataTable">
+            <script type="text/html" id="nodeDataTable_toolbar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>增加节点</button>
+                </div>
+            </script>
+            <script type="text/html" id="nodeDataTable_bar">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="up">上移</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="down">下移</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+            </script>
+        </table>
+    </div>
+
+    <!-- 增加节点 -->
+    <div class="layui-container" style="width: 90%; display: none" id="nodeContainer">
+        <form class="layui-form" action="" id="nodeForm">
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">节点名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" value="" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">节点任务：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="task" value="" required  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">执行角色：</label>
+                <div class="layui-input-block">
+                    <select name="userGroup" required  lay-verify="required" lay-search="" lay-filter="userGroup"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" align="center">
+                    <button class="layui-btn  layui-btn-normal" lay-submit="" lay-filter="nodeFormSubmitBtn">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../js/global.js"></script>
+    <script src="shenhe.js"></script>
+</body>
+</html>

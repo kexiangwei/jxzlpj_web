@@ -4,6 +4,74 @@
 layui.use(['layer','table','form','util'], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,util = layui.util;
 
+    // 初始化一级菜单项
+    var parentMenuData;
+    $.get(requestUrl+'/getParentMenuList.do',{},function(data){
+        if(data.code == 200){
+            parentMenuData =  data.data;
+            if(parentMenuData.length > 0){
+                reloadSelect('parentMenuList','请选择一级菜单',parentMenuData);
+            }
+        }
+    },'json');
+
+    // 初始化二级菜单项
+    var childMenuData;
+    $.get(requestUrl+'/getChildMenuList.do',{},function(data){
+        if(data.code == 200){
+            childMenuData =  data.data;
+            if(childMenuData.length > 0){
+                reloadSelect('childMenuList','请选择二级菜单',childMenuData);
+            }
+        }
+    },'json');
+
+    // 监听一级菜单
+    form.on('select(parentMenuList)', function(data) {
+        let parentMenuId = data.value;
+        if(parentMenuId == ''){
+            dataTable.reload({
+                done: function(res, curr, count){
+                    reloadSelect('childMenuList','请选择二级菜单',childMenuData);
+                }
+            });
+        }else{
+            $.get(requestUrl+'/getParentMenuList.do',{"menuId":parentMenuId},function(data){
+                if(data.code == 200){
+                    dataTable.reload({
+                        where: {
+                            "parentMenuId":parentMenuId
+                        },
+                        done: function(res, curr, count){
+                            reloadSelect('childMenuList','请选择二级菜单',data.data);
+                        }
+                    });
+                }
+            },'json');
+        }
+    });
+
+    // 监听二级菜单
+    form.on('select(childMenuList)', function(data) {
+        let menuId = data.value;
+        if(menuId == ''){
+            dataTable.reload({
+                done: function(res, curr, count){
+                    reloadSelect('childMenuList','请选择二级菜单',childMenuData);
+                }
+            });
+        } else {
+            dataTable.reload({
+                where: {
+                    "menuId":menuId
+                }
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        }
+    });
+
     // 加载菜单选项
     var reloadSelect = function(inputName,defaultOptionVal,data,defaultSelectedMenuId){
         $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
@@ -20,87 +88,12 @@ layui.use(['layer','table','form','util'], function(){
         form.render('select');
     };
 
-    // 初始化菜单项
-    var menuParentData;
-    $.get(requestUrl+'/getMenuParentList.do',{},function(data){
-        if(data.code == 200){
-            menuParentData =  data.data;
-            if(menuParentData.length!=0){
-                reloadSelect('searchMenuParent','请选择一级菜单',menuParentData);
-            }
-        }
-    },'json');
-    var menuData;
-    $.get(requestUrl+'/getMenuListForShenHe.do',{},function(data){
-        if(data.code == 200){
-            menuData =  data.data;
-            if(menuData.length!=0){
-                reloadSelect('searchMenu','请选择二级菜单',menuData);
-            }
-        }
-    },'json');
-
-    // 监听一级菜单
-    form.on('select(searchMenuParent)', function(data) {
-        let menuParentId = data.value;
-        if(menuParentId == ''){
-            dataTable.reload({
-                where: {
-                    "menuParentId":''
-                    ,"menuId":''
-                },
-                done: function(res, curr, count){
-                    reloadSelect('searchMenu','请选择二级菜单',menuData);
-                }
-            });
-        }else{
-            $.get(requestUrl+'/getMenuParentList.do',{"menuId":menuParentId}
-                ,function(data){
-                    if(data.code == 200){
-                        dataTable.reload({
-                            where: {
-                                "menuParentId":menuParentId
-                                ,"menuId":''
-                            },
-                            done: function(res, curr, count){
-                                reloadSelect('searchMenu','请选择二级菜单',data.data);
-                            }
-                        });
-                    }
-                },'json');
-        }
-    });
-
-    // 监听二级菜单
-    form.on('select(searchMenu)', function(data) {
-        let menuId = data.value;
-        if(menuId == ''){
-            dataTable.reload({
-                where: {
-                    "menuId":''
-                },
-                done: function(res, curr, count){
-                    reloadSelect('searchMenu','请选择二级菜单',menuData);
-                }
-            });
-        } else {
-            dataTable.reload({
-                where: {
-                    "menuId":menuId
-                }
-                ,page: {
-                    curr: 1 //重新从第 1 页开始
-                }
-            });
-        }
-    });
-
     // 加载数据表格
     var dataTable = table.render({
-        id: "dataTable_id"
+        id: guid()
         ,elem : '#dataTable'
-        ,height : 500
-        ,url: requestUrl+'/getShenHeList.do'
+        ,height : 450
+        ,url: requestUrl+'/getShenHeSetPageList.do'
         ,request: {
             pageName: 'pageIndex'
             ,limitName: 'pageSize'
@@ -120,21 +113,21 @@ layui.use(['layer','table','form','util'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'menuName', title: '业务模块', width:180}
-            ,{field: 'shenheName', title: '审核名称', width:180}
-            ,{field: 'shenheDesc', title: '审核描述', width:180}
-            ,{field: 'roleStr', title: '审核流程'}
+            ,{field: 'menuName', title: '业务模块', width:150}
+            ,{field: 'shenheName', title: '审核名称', width:150}
+            ,{field: 'shenheDesc', title: '审核描述', width:150}
+            ,{field: 'shenheProcess', title: '审核流程'}
             ,{field: 'status', title: '状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                         //
-                        var htmlstr = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>\n' +
+                        let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>\n' +
                             '       <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>';
-                        if(data.isDelete===0){
-                            htmlstr += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
+                        if(data.isDelete===0){ //当流程有审核数据时，列表的删除按钮置为灰色，即为不可删除状态
+                            html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
                         }
                         if(data.isDelete===1){
-                            htmlstr += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
+                            html += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
                         }
-                        $('#dataTable_bar').html(htmlstr);
+                        $('#dataTable_bar').html(html);
                         //
                         if(data.status==1){
                             return '<span style="color: green;font-weight: bold;">激活</span>';
@@ -159,7 +152,7 @@ layui.use(['layer','table','form','util'], function(){
                 switch(obj.event){
                     case 'insert':
                         layer.open({
-                            title : '审核流程设置'
+                            title : '通用设置-审核流程-新增'
                             ,type : 1
                             ,area : [ '1175px', '535px' ] //宽高
                             ,offset : '10px'
@@ -168,10 +161,10 @@ layui.use(['layer','table','form','util'], function(){
                             ,content : $('#editContainer')
                             ,success: function(layero, index){
                                 // 初始化菜单选项
-                                reloadSelect('formMenu','请选择',menuData);
+                                reloadSelect('editFormMenu','请选择',childMenuData);
                                 // 监听菜单选项
                                 var menuId;
-                                form.on('select(formMenu)', function(data) {
+                                form.on('select(editFormMenu)', function(data) {
                                     menuId = data.value;
                                 });
                                 //初始化审核流程编号
@@ -184,7 +177,7 @@ layui.use(['layer','table','form','util'], function(){
                                     }
                                     var data = data.field; //表单数据
                                     var btn = $(this);//提交按钮
-                                    $.post(requestUrl+'/addShenhe.do',{
+                                    $.post(requestUrl+'/addShenheSet.do',{
                                         "menuId":menuId,
                                         "shenheCode":shenheCode,
                                         "shenheName":data.shenheName,
@@ -192,7 +185,7 @@ layui.use(['layer','table','form','util'], function(){
                                     },function (data) {
                                         if(data.code==200){
                                             isSubmit = false;
-                                            btn.removeClass("layui-btn-normal").addClass("layui-btn-disabled");
+                                            btn.removeClass("layui-btn-normal").addClass("layui-btn-disabled"); //禁用提交按钮
                                             initNodeContainer(menuId,shenheCode);
                                         }else{
                                             layer.msg('网络连接失败！', {time : 3000, offset: '100px'});
@@ -209,33 +202,28 @@ layui.use(['layer','table','form','util'], function(){
                         if(data.length === 0){
                             layer.msg('请选择需要删除的信息', {time : 3000, offset: '100px'});
                         } else {
-                            if(data.length === 1 && data[0].isDelete === 1){
+                            let codeArr = [], isDelete = true;
+                            $.each(data,function(idx,obj){
+                                codeArr.push(obj.shenheCode);
+                                if(obj.isDelete === 0){
+                                    isDelete = false;
+                                    return false;//跳出循环
+                                }
+                            });
+                            if(!isDelete){
                                 layer.msg('您选择了审核中的信息', {time : 3000, offset: '100px'});
                                 return;
-                            }else{
-                                var codeArr = [],isDelete = true;
-                                $.each(data,function(idx,obj){
-                                    codeArr.push(obj.shenheCode);
-                                    if(obj.isDelete=== 1){
-                                        isDelete = false;
-                                        return false;//跳出循环
-                                    }
-                                });
-                                if(!isDelete){
-                                    layer.msg('您选择了审核中的信息', {time : 3000, offset: '100px'});
-                                    return;
-                                }
                             }
                             //执行删除
                             layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                layer.close(index);
-                                $.post(requestUrl+'/batchDeleteForShenHe.do', { "codeArr": codeArr.join(",")},function(data){
+                                $.post(requestUrl+'/batchDeleteShenHeSet.do', { "codeArr": codeArr.join(",")},function(data){
                                     if(data.code === 200){
                                         dataTable.reload();//重新加载表格数据
                                         layer.msg('删除成功', {time : 3000, offset: '100px'});
                                     }else{
                                         layer.msg('删除失败', {time : 3000, offset: '100px'});
                                     }
+                                    layer.close(index);
                                 }, "json");
                             });
                         }
@@ -247,11 +235,11 @@ layui.use(['layer','table','form','util'], function(){
             table.on('tool(dataTable)', function(obj){
                 var rowData = obj.data;
                 if (obj.event === 'detail') {
-                    layer.msg('暂未提供查看功能', {time : 3000, offset: '100px'});
+                    layer.msg('查看', {time : 3000, offset: '100px'});
                 } else if (obj.event === 'update') {
                     //
                     layer.open({
-                        title : rowData.shenheName + '-编辑'
+                        title : '通用设置-审核流程-编辑'
                         ,type : 1
                         ,area : [ '1175px', '535px' ] //宽高
                         ,offset : '10px'
@@ -261,8 +249,8 @@ layui.use(['layer','table','form','util'], function(){
                         ,success: function(layero, index){
                             // alert(JSON.stringify(rowData));
                             // 初始化菜单选项
-                            reloadSelect('formMenu','请选择',menuData,rowData.menuId);
-                            // $('#formMenu').find('option[value="'+rowData.menuId+'"]').prop("selected",true);//prop() 方法设置或返回被选元素的属性和值。
+                            reloadSelect('editFormMenu','请选择',childMenuData,rowData.menuId);
+                            // $('#editFormMenu').find('option[value="'+rowData.menuId+'"]').prop("selected",true);//prop() 方法设置或返回被选元素的属性和值。
                             // 初始化表单数据
                             form.val("editForm",{
                                 "shenheCode":rowData.shenheCode,
@@ -272,7 +260,7 @@ layui.use(['layer','table','form','util'], function(){
                             //监听表单提交
                             form.on('submit(toSubmitEidtForm)', function(data){
                                 var data = data.field;
-                                $.post(requestUrl+'/updateShenheByCode.do',{
+                                $.post(requestUrl+'/updateShenheSetByCode.do',{
                                     "shenheCode":data.shenheCode,
                                     "shenheName":data.shenheName,
                                     "shenheDesc":data.shenheDesc
@@ -285,6 +273,7 @@ layui.use(['layer','table','form','util'], function(){
                                 },'json');
                                 return false;
                             });
+
                             //初始化节点数据
                             initNodeContainer(rowData.menuId,rowData.shenheCode,rowData.isDelete);
                         },end:function () {
@@ -292,19 +281,19 @@ layui.use(['layer','table','form','util'], function(){
                         }
                     });
                 } else if (obj.event === 'delete') {
-                    if(rowData.isDelete===1){
+                    if(rowData.isDelete === 0){
                         return;
                     }
                     //执行删除
                     layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                        layer.close(index);
-                        $.post(requestUrl+'/batchDeleteForShenHe.do', { "codeArr": rowData.shenheCode},function(data){
+                        $.post(requestUrl+'/batchDeleteShenHeSet.do', { "codeArr": rowData.shenheCode},function(data){
                             if(data.code === 200){
                                 dataTable.reload();//重新加载表格数据
                                 layer.msg('删除成功', {time : 3000, offset: '100px'});
                             }else{
                                 layer.msg('删除失败', {time : 3000, offset: '100px'});
                             }
+                            layer.close(index);
                         }, "json");
                     });
                 }
@@ -314,9 +303,10 @@ layui.use(['layer','table','form','util'], function(){
 
     // 新增或编辑节点信息
     var initNodeContainer = function (menuId,shenheCode,isDelete) {
+
         //数据表格
         let nodeDataTable = table.render({
-            id: "nodeDataTable_Id"
+            id: guid()
             ,elem : '#nodeDataTable'
             ,height : 360
             ,url: requestUrl+'/getShenHeNodeList.do'
@@ -339,13 +329,13 @@ layui.use(['layer','table','form','util'], function(){
                 {field:'execLevel', width:120, align:'center'}
                 ,{field: 'nodeName', title: '节点名称', width:200, align:'center', edit: 'text'}
                 ,{field: 'nodeTask', title: '节点任务', width:200, align:'center', edit: 'text'}
-                ,{field: 'roleName', title: '执行角色', align:'center'}
+                ,{field: 'roleName', title: '用户组', align:'center'}
                 ,{fixed: 'right', title: '操作', width:166, align:'center', toolbar: '#nodeDataTable_bar'}
             ]]
             ,even: true //隔行背景
             ,done : function(res, curr, count) {
                 var data = res.data;
-                //
+                //根据执行级别设置首列文本值
                 $("[data-field='execLevel']").children().each(function(){
                     var val = $(this).text();
                     if(val==1){
@@ -356,24 +346,25 @@ layui.use(['layer','table','form','util'], function(){
                         $(this).text("结束节点");
                     }
                 });
-                //
+                //页面按钮控制
                 $('.layui-table-body tr').each(function() {
-                    // alert(isDelete);
-                    if(isDelete == 1){// 未传递isDelete 参数时取值为0
+                    //
+                    if(isDelete == 0){ // 0-不可删除
                         $('#editContainer').find(".layui-table-tool").remove();//删除头工具栏
-                        $(this).find('a').removeClass("layui-btn-primary").addClass("layui-btn-disabled"); //
-                    } else {
+                        $(this).find('a').removeClass("layui-btn-primary").addClass("layui-btn-disabled"); //隐藏数据表格右侧按钮
+                    } else { //1可以删除
                         var dataindex = $(this).attr('data-index');
-                        if (dataindex == 0) {
-                            $(this).find('a').eq(0).removeClass("layui-btn-primary").addClass("layui-btn-disabled");
-                            // $(this).find('a').eq(0).remove();
-                        } else if(dataindex == data.length-1){
-                            $(this).find('a').eq(1).removeClass("layui-btn-primary").addClass("layui-btn-disabled");
-                            // $(this).find('a').eq(1).remove();
+                        if (dataindex == 0) { //如果是第一行数据
+                            $(this).find('a').eq(0).remove(); //隐藏“上移”按钮
+                            if(data.length == 1){ //并且就有一条数据
+                                $(this).find('a').eq(0).remove(); //隐藏“下移”按钮
+                            }
+                        } else if(dataindex == (data.length-1)){
+                            // $(this).find('a').eq(1).removeClass("layui-btn-primary").addClass("layui-btn-disabled");
+                            $(this).find('a').eq(1).remove();
                         }
                     }
                 });
-
 
                 //监听单元格编辑
                 table.on('edit(nodeDataTable)', function(obj){
@@ -399,10 +390,10 @@ layui.use(['layer','table','form','util'], function(){
                 //监听头工具栏事件
                 table.on('toolbar(nodeDataTable)', function(obj){
                     var nodeContainer = layer.open({
-                        title : '审核流程配置-增加节点'
+                        title : '通用设置-审核流程-增加节点'
                         ,type : 1
-                        ,area : [ '700px', '350px' ] //宽高
-                        ,offset : '30px'
+                        ,area : [ '700px', '450px' ] //宽高
+                        ,offset : '50px'
                         ,btn : ['关闭']
                         ,content : $('#nodeContainer')
                         ,success: function(layero, index){
@@ -410,29 +401,30 @@ layui.use(['layer','table','form','util'], function(){
                             $.get(requestUrl+'/getRoleListByMenuId.do',{ "menuId" : menuId}
                                 ,function(data){
                                     if(data.code == 200){
+                                        data = data.data;
                                         //提取已选择的角色编号
                                         var roleIdArr = [];
                                         $.each(res.data,function(idx,obj){
                                             roleIdArr.push(obj.roleId);
                                         });
-                                        if(roleIdArr.length == data.data.length){
+                                        if(roleIdArr.length == data.length){
                                             layer.msg('已无角色可选', {time : 3000, offset: '100px'});
                                         }
                                         //
-                                        data = data.data;
-                                        $("select[name='roles']").empty(); //移除下拉框所有选项option
-                                        var htmlstr = '<option value="">请选择</option>';
+
+                                        $("select[name='userGroup']").empty(); //移除下拉框所有选项option
+                                        var html = '<option value="">请选择</option>';
                                         for (var i = 0; i < data.length; i++) {
                                             /*if(!roleIdArr.includes(data[i].roleId)){//判断数组中是否存在某个值
-                                                htmlstr += '<option value="' + data[i].roleId + '">' + data[i].roleName + '</option>';
+                                                html += '<option value="' + data[i].roleId + '">' + data[i].roleName + '</option>';
                                             }*/
                                             if(roleIdArr.includes(data[i].roleId)){//上面的方式效果不友好，有的用户会以为数据没有加载出来
-                                                htmlstr += '<option value="' + data[i].roleId + '" disabled="disabled">' + data[i].roleName + '</option>';
+                                                html += '<option value="' + data[i].roleId + '" disabled="disabled">' + data[i].roleName + '</option>';
                                             }else{
-                                                htmlstr += '<option value="' + data[i].roleId + '">' + data[i].roleName + '</option>';
+                                                html += '<option value="' + data[i].roleId + '">' + data[i].roleName + '</option>';
                                             }
                                         }
-                                        $("select[name='roles']").append(htmlstr);
+                                        $("select[name='userGroup']").append(html);
                                         form.render('select');
 
                                         //监听表单提交
@@ -442,7 +434,7 @@ layui.use(['layer','table','form','util'], function(){
                                                 "shenheCode":shenheCode,
                                                 "nodeName":data.name,
                                                 "nodeTask":data.task,
-                                                "roleId":data.roles
+                                                "roleId":data.userGroup
                                             },function (data) {
                                                 if(data.code == 200){
                                                     nodeDataTable.reload();//重新加载数据
@@ -465,7 +457,7 @@ layui.use(['layer','table','form','util'], function(){
                 table.on('tool(nodeDataTable)', function(obj){
                     var rowData = obj.data;
                     if (obj.event === 'up') {
-                        if(isDelete == 1 || rowData.execLevel == 1){
+                        if(isDelete == 0 || rowData.execLevel == 1){
                             return;
                         }
                         $.post(requestUrl+'/updateShenHeNodeByCode.do', {
@@ -479,7 +471,7 @@ layui.use(['layer','table','form','util'], function(){
                             }
                         });
                     } else if (obj.event === 'down') {
-                        if(isDelete == 1 || rowData.execLevel == data.length){
+                        if(isDelete == 0 || rowData.execLevel == data.length){
                             return;
                         }
                         $.post(requestUrl+'/updateShenHeNodeByCode.do', {
@@ -493,7 +485,7 @@ layui.use(['layer','table','form','util'], function(){
                             }
                         });
                     } else if (obj.event === 'delete') {
-                        if(isDelete == 1){
+                        if(isDelete == 0){
                             return;
                         }
                         //执行删除

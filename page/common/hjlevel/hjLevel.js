@@ -90,6 +90,24 @@ layui.use(['layer','table','form','util'], function(){
                 },'json');
             });
 
+            /**
+             * 加载下拉选项
+             * @param defaultOptionVal
+             * @param inputName
+             * @param data
+             */
+            var initSelect = function(defaultOptionVal, inputName, data){
+                //
+                $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
+                //
+                let html = '<option value="">'+defaultOptionVal+'</option>';
+                for (let i = 0; i < data.length; i++) {
+                    html += '<option value="' + data[i].MENU_ID + '" >' + data[i].MENU_NAME + '</option>';
+                }
+                $("select[name='"+inputName+"']").append(html);
+                form.render('select');
+            };
+
             //监听头工具栏事件
             table.on('toolbar(datatable)', function(obj){
                 var layEvt = obj.event
@@ -176,22 +194,4 @@ layui.use(['layer','table','form','util'], function(){
             });
         }
     });
-
-    /**
-     * 加载下拉选项
-     * @param defaultOptionVal
-     * @param inputName
-     * @param data
-     */
-    var initSelect = function(defaultOptionVal, inputName, data){
-        //
-        $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
-        //
-        let html = '<option value="">'+defaultOptionVal+'</option>';
-        for (let i = 0; i < data.length; i++) {
-            html += '<option value="' + data[i].MENU_ID + '" >' + data[i].MENU_NAME + '</option>';
-        }
-        $("select[name='"+inputName+"']").append(html);
-        form.render('select');
-    };
 });
