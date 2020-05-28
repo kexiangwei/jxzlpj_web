@@ -23,7 +23,8 @@ layui.use(['layer','element','table','form'], function(){
 
                 //数据表格
                 let myself_table = table.render({
-                    elem : '#myself_table'
+                    id: guid()
+                    ,elem : '#myself_table'
                     ,height : 440
                     ,url: requestUrl+'/jiaoGaiXiangMu/getPageList.do'
                     ,where:{
@@ -115,10 +116,10 @@ layui.use(['layer','element','table','form'], function(){
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'xmName': $("input[name='myself_search_xmName']").val()
-                                ,'xmType': $("input[ name='myself_search_xmType']").val()
-                                ,'leader': $("input[ name='myself_search_leader']").val()
-                                ,'isSubmit': $("input[ name='isSubmit']").val()
+                                'xmName': $(".myself_search input[name='xmName']").val()
+                                ,'xmType': $(".myself_search input[ name='xmType']").val()
+                                ,'leader': $(".myself_search input[ name='leader']").val()
+                                ,'status': $("#status option:selected").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -126,7 +127,10 @@ layui.use(['layer','element','table','form'], function(){
                         });
                     }
                     ,reset: function () {
-                        $("input").val('');
+                        $(".myself_search input").val('');
+                        //清除选中状态
+                        $("#status").val("");
+                        form.render("select");
                     }
                 };
                 $('.myself_search .layui-btn').on('click', function(){
@@ -164,20 +168,14 @@ layui.use(['layer','element','table','form'], function(){
                                     initMemberDataTable(xmCode);//主要成员情况
                                     initFundBudgetDataTable(xmCode);//经费预算
 
-                                    //填充表单数据,项目主持人信息：姓名、工号、职称、二级单位、专业默认为填报人信息
+                                    //填充表单数据
                                     form.val("editForm",{
                                         "leader" :function () {return $.cookie('userName');}
                                         ,"leaderId" : function () {return $.cookie('userId');}
-                                        ,"title" : '副教授'
-                                        ,"collegeOrDept" : '中科院'
-                                        ,"major" : '农业农村发展'
                                     });
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        /*layer.alert(JSON.stringify(data.field), {
-                                            title: '最终的提交信息'
-                                        });
-                                        return false;*/
+
                                         $.post(requestUrl+'/jiaoGaiXiangMu/insert.do',{
                                             "code":data.field.code
                                             ,"xmName": data.field.xmName
@@ -224,21 +222,16 @@ layui.use(['layer','element','table','form'], function(){
                             if(data.length === 0){
                                 layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
                             } else {
-                                if(data.length === 1&&data[0].isSubmit == '已提交' &&  data[0].status != '退回'){
+                                let isSubmit = false;
+                                $.each(data,function(index,item){
+                                    if(item.isSubmit== '已提交' &&  item.status != '退回'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
+                                    }
+                                });
+                                if(isSubmit){
                                     layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
                                     return;
-                                }else{
-                                    let isSubmit = false;
-                                    $.each(data,function(index,item){
-                                        if(item.isSubmit== '已提交' &&  item.status != '退回'){
-                                            isSubmit = true;
-                                            return false;//跳出循环
-                                        }
-                                    });
-                                    if(isSubmit){
-                                        layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
-                                        return;
-                                    }
                                 }
                                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                     layer.close(index);
@@ -382,16 +375,9 @@ layui.use(['layer','element','table','form'], function(){
             }
             if(data.isShenhe > 0){ //拥有审核权限
 
-                //监听Tab切换
-                element.on('tab(layTab)', function(data){
-                    if(data.index == 1){ //
-                        other_table.reload(); //重新加载表格数据
-                    }
-                });
-
                 var isJwcGly
                     ,isZjshAccount
-                    ,other_table = table.render({//数据表格
+                    ,other_table = table.render({ //数据表格
                     elem : '#other_table'
                     ,height : 440
                     ,id: "other_table_id"
@@ -432,21 +418,21 @@ layui.use(['layer','element','table','form'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'userId', title: '工号', width:120, sort: true}
-                        ,{field: 'userName', title: '姓名', width:120}
+                        ,{field: 'userId', title: '工号', width:120,hide:true, sort: true}
+                        ,{field: 'userName', title: '姓名', width:120, hide:true}
                         ,{field: 'xmName', title: '项目名称', width:120}
                         ,{field: 'xmType', title: '项目类型', width:120}
                         ,{field: 'leader', title: '主持人', width:120}
-                        ,{field: 'leaderId', title: '主持人工号', width:120}
+                        ,{field: 'leaderId', title: '主持人工号', width:120, hide:true}
                         ,{field: 'title', title: '职称', width:120}
-                        ,{field: 'collegeOrDept', title: '学院（部门）', width:120,hide:true}
+                        ,{field: 'collegeOrDept', title: '学院（部门）', width:120}
                         ,{field: 'major', title: '专业', width:120,hide:true}
-                        ,{field: 'mainTeachWork', title: '主要教学工作简历', width:120,hide:true}
-                        ,{field: 'mainTeachAchievement', title: '主要教育教学研究领域及成果', width:120,hide:true}
-                        ,{field: 'currentAndBackground', title: '现状与背景分析（包括已有研究实践基础）', width:120,hide:true}
-                        ,{field: 'questionAndTarget', title: '研究内容、目标、要解决的问题和主要特色', width:120,hide:true}
-                        ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120,hide:true}
-                        ,{field: 'planAndProcess', title: '进度安排', width:120,hide:true}
+                        ,{field: 'mainTeachWork', title: '主要教学工作简历', width:120, hide:true}
+                        ,{field: 'mainTeachAchievement', title: '主要教育教学研究领域及成果', width:120, hide:true}
+                        ,{field: 'currentAndBackground', title: '现状与背景分析（包括已有研究实践基础）', width:120, hide:true}
+                        ,{field: 'questionAndTarget', title: '研究内容、目标、要解决的问题和主要特色', width:120, hide:true}
+                        ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120, hide:true}
+                        ,{field: 'planAndProcess', title: '进度安排', width:120, hide:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -533,14 +519,10 @@ layui.use(['layer','element','table','form'], function(){
                     search: function(){
                         other_table.reload({
                             where: {
-                                /*'userId': $("input[ name='other_search_userId' ] ").val()
-                                ,'userName': $("input[ name='other_search_userName' ] ").val()*/
-                                'xmName': $("input[name='other_search_xmName']").val()
-                                ,'xmType': $("input[ name='other_search_xmType']").val()
-                                ,'leader': $("input[ name='other_search_leader']").val()
-                                ,'shenheStatus': $("input[ name='shenheStatus']").val()
-                                ,'shenheStatusFirst': $("input[ name='shenheStatusFirst']").val()
-                                ,'shenheStatusFinal': $("input[ name='shenheStatusFinal']").val()
+                                'xmName': $(".other_search input[name='xmName']").val()
+                                ,'xmType': $(".other_search input[ name='xmType']").val()
+                                ,'leader': $(".other_search input[ name='leader']").val()
+                                ,'shenheStatus': $("#shenheStatus").val()
                             }
                             ,page: {
                                 curr: 1 //重新从第 1 页开始
@@ -548,7 +530,10 @@ layui.use(['layer','element','table','form'], function(){
                         });
                     }
                     ,reset: function () {
-                        $("input").val('');
+                        $(".other_search input").val("");
+                        //清除选中状态
+                        $("#shenheStatus").val("");
+                        form.render("select");
                     }
                 };
                 $('.other_search .layui-btn').on('click', function(){
@@ -678,10 +663,324 @@ layui.use(['layer','element','table','form'], function(){
                         detail_zjsh(data);
                     }
                 });
+
+                //监听Tab切换
+                element.on('tab(layTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
+                    }
+                });
             } else{
                 $('#other').remove();
                 $('#other_item').remove();
             }
+
+            /**
+             * 查看详情
+             * @param data
+             */
+            let detail = function (rowData) {
+                layer.open({
+                    title : '教学研究-教改项目-查看详情'
+                    ,type : 1
+                    ,area : [ '1175px', '535px' ]
+                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
+                    ,content : $('#dataInfo_container')
+                    ,success: function(layero, index){
+                        let htmlStr = '';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>一、项目基本信息</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">项目名称：</td><td style="width: 416px;">'+rowData.xmName+'</td>' +
+                            '                    <td style="width: 120px; text-align: right">项目类型：</td><td style="width: 416px;">'+rowData.xmType+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>二、项目主持人信息</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">姓名：</td><td style="width: 416px;">'+rowData.leader+'</td>' +
+                            '                   <td style="width: 120px; text-align: right">工号：</td><td style="width: 416px;">'+rowData.leaderId+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">二级单位：</td><td style="width: 416px;">'+rowData.collegeOrDept+'</td>' +
+                            '                    <td style="width: 120px; text-align: right">专业：</td><td style="width: 416px;">'+rowData.major+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                    <td style="width: 120px; text-align: right">职称：</td><td colspan="3">'+rowData.title+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                    <td style="width: 120px; text-align: right">主要教学工作简历：</td><td colspan="3">'+rowData.mainTeachWork+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                    <td style="width: 120px; text-align: right">主要教育教学研究领域及成果：</td><td colspan="3">'+rowData.mainTeachAchievement+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>三、项目主要参加人员情况</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>' +
+                            '               <tr>\n' +
+                            '                      <th style="width: 120px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">主要成员情况：</th>' +
+                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
+                            '                      <th style="width: 150px; text-align: center">姓名</th>\n' +
+                            '                      <th style="width: 150px; text-align: center">工号</th>\n' +
+                            '                      <th style="text-align: center">任务分工</th>\n' +
+                            '                 </tr>';
+                        if(rowData.memberList.length>0){
+                            layui.each(rowData.memberList,function (idx,obj) {
+                                htmlStr += '<tr><td style="text-align: center">'+(idx+1)
+                                    +'</td><td style="text-align: center">'+obj.userName
+                                    +'</td><td style="text-align: center">'+obj.userId
+                                    +'</td><td style="text-align: center">'+obj.task
+                                    +'</td></tr>\n';
+                            });
+                        }else{
+                            htmlStr += '<tr>' +
+                                '      <td style="text-align: center" colspan="4">暂无相关数据</td>' +
+                                '  </tr>\n';
+                        }
+                        htmlStr +='</tbody>\n' +
+                            '   </table>' +
+                            '</fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>四、项目的研究背景与研究基础</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">现状与背景分析（包括已有研究实践基础）：</td><td>'+rowData.currentAndBackground+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">研究内容、目标、要解决的问题和主要特色：</td><td>'+rowData.questionAndTarget+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>五、项目的预期效果、具体成果和进度安排</legend>\n' +
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">预期效果与具体成果：</td><td>'+rowData.expectAndResult+'</td>' +
+                            '               </tr>\n' +
+                            '               <tr>' +
+                            '                   <td style="width: 120px; text-align: right">具体安排及进度：</td><td>'+rowData.planAndProcess+'</td>' +
+                            '               </tr>\n' +
+                            '           </tbody>\n' +
+                            '       </table>' +
+                            '   </fieldset>';
+                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            '       <legend>六、项目经费预算</legend>\n' +
+                            //经费预算
+                            '       <table class="layui-table">\n' +
+                            '           <tbody>' +
+                            '               <tr>\n' +
+                            '                      <th style="width: 120px; text-align: right" rowspan="'+rowData.fundBudgetList.length+2+'">经费预算：</th>' +
+                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
+                            '                      <th style="text-align: center">科目</th>\n' +
+                            '                      <th style="width: 150px; text-align: center">预算金额（元）</th>\n' +
+                            '                 </tr>';
+                        if(rowData.fundBudgetList.length>0){
+                            let totalBudgetAmount =0;
+                            layui.each(rowData.fundBudgetList,function (idx,obj) {
+                                totalBudgetAmount += parseInt(obj.budgetAmount);
+                                htmlStr += '<tr><td style="text-align: center">'+(idx+1)
+                                    +'</td><td style="text-align: center">'+obj.subject
+                                    +'</td><td style="text-align: center">'+obj.budgetAmount
+                                    +'</td></tr>\n';
+                            });
+                            htmlStr += '<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计</td><td style="text-align: center">'+totalBudgetAmount+'</td></tr>';
+                        }else{
+                            htmlStr += '<tr>' +
+                                '      <td style="text-align: center" colspan="3">暂无相关数据</td>' +
+                                '  </tr>\n';
+                        }
+                        htmlStr +='</tbody></table></fieldset>';
+                        $("#dataInfo_container").html(htmlStr);
+                    }
+                    ,end:function () {
+                        $("#dataInfo_container .layui-elem-field").empty();
+                    }
+                });
+            };
+
+            /**
+             * 查看审核流程
+             * @param rowData
+             */
+            var detail_shenheProcess = function (title,rowData) {
+                layer.open({
+                    title : title
+                    ,type : 1
+                    ,area : [ '1175px', '535px' ]
+                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
+                    ,content : $('#shenheProcess_container')
+                    ,success: function(layero, index){
+                        $.get(requestUrl+"/getShenheProcess.do" , {
+                            "relationCode": function () {
+                                return rowData.code;
+                            }
+                        } ,  function(data){
+                            if(data.code == 200){
+                                var data = data.data;
+                                if(data.length>0){
+                                    var htmlStr = '';
+                                    for (var i = 0; i < data.length; i++) {
+                                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                                            '<legend>开始</legend>\n' +
+                                            '               <div>' +
+                                            '                   <table class="layui-table">\n' +
+                                            '                        <tbody>\n' +
+                                            '                            <tr>' +
+                                            '                           <td style="width: 80px; text-align: center">提交人员</td><td style="width: 120px; text-align: center">'+data[i].userName+'</td>' +
+                                            '                           <td style="width: 80px; text-align: center">提交时间</td><td style="width: 120px; text-align: center">'+data[i].createDate+'</td>' +
+                                            '                       </tr>\n' +
+                                            '                       </tbody>\n' +
+                                            '                  </table>\n' +
+                                            '               </div>';
+                                        if(data[i].shenHeItemList.length>0){
+                                            for (let j = 0; j < data[i].shenHeItemList.length; j++) {
+                                                let item = data[i].shenHeItemList[j];
+                                                if(item.shenheType=='初审' || item.shenheType =='终审'){
+                                                    htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
+                                                        '               <div>' +
+                                                        '                   <table class="layui-table">\n' +
+                                                        '                        <tbody>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核类别</td><td style="width: 120px; text-align: center">'+item.shenheType+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
+                                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center" colspan="3">'+item.opinion+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                       </tbody>\n' +
+                                                        '                  </table>\n' +
+                                                        '               </div>';
+                                                }else{
+                                                    htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
+                                                        '               <div>' +
+                                                        '                   <table class="layui-table">\n' +
+                                                        '                        <tbody>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                            <tr>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
+                                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
+                                                        '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center">'+item.opinion+'</td>' +
+                                                        '                       </tr>\n' +
+                                                        '                       </tbody>\n' +
+                                                        '                  </table>\n' +
+                                                        '               </div>';
+                                                }
+                                            }
+                                        }
+                                        htmlStr +=  '</fieldset>';
+                                    }
+                                    if(rowData.status =='通过'){
+                                        htmlStr +=  '<h2 style="margin-left: 30px;">结束</h2>';
+                                    }
+                                    $("#shenheProcess_container").html(htmlStr);
+                                }else{
+                                    layer.msg('暂无审核数据', {time : 3000, offset: '100px'});
+                                }
+                            }else{
+                                layer.msg('获取数据出错', {time : 3000, offset: '100px'});
+                            }
+                        }, "json");
+                    }
+                    ,end:function () {
+                        $("#shenheProcess_container .layui-elem-field").empty();
+                    }
+                });
+            };
+
+            /**
+             * 查看专家审核意见
+             * @param rowData
+             */
+            let detail_zjsh = function (row_data) {
+                let zjshItemList = row_data.zjshItemList;
+                if(isEmpty(zjshItemList)){
+                    return;
+                }
+                layer.open({
+                    title : '教学研究-教改项目-查看专家审核意见'
+                    ,type : 1
+                    ,area : [ '1175px', '535px' ]
+                    ,offset : '10px' //只定义top坐标，水平保持居中
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['导出专家评审结果','关闭']
+                    ,yes: function(){
+                        // alert(JSON.stringify(row_data));
+                        let sheetData = new Array();
+                        $.each(zjshItemList,function (idx,obj) {
+                            let item = {
+                                xmName : row_data.xmName,
+                                leader : row_data.leader,
+                                userName : obj.userName,
+                                status : obj.status,
+                                opinion : obj.opinion,
+                                createDate : obj.createDate
+                            };
+                            sheetData[idx] = item;
+                        });
+                        let option={};
+                        option.fileName = row_data.xmName+'校外专家审核意见';
+                        option.datas=[
+                            {
+                                sheetHeader:['项目名称','主持人','专家','评审结果','评审意见','评审时间'],
+                                sheetData:sheetData
+                            }
+                        ];
+                        let toExcel=new ExportJsonExcel(option);
+                        toExcel.saveExcel();
+                    }
+                    ,btn2: function(){
+                        layer.closeAll();
+                    }
+                    ,content : $('#zjshContainer')
+                    ,success: function(layero, index){
+                        let htmlStr = '';
+                        for (let i = 0; i < zjshItemList.length; i++) {
+                            htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                                '       <legend>'+zjshItemList[i].userName+'</legend>\n' +
+                                '               <div>' +
+                                '                   <table class="layui-table">\n' +
+                                '                        <tbody>\n' +
+                                '                            <tr>' +
+                                '                           <td style="width: 80px; text-align: center">审核状态：</td><td style="width: 120px; text-align: center">'+zjshItemList[i].status+'</td>' +
+                                '                           <td style="width: 80px; text-align: center">审核意见：</td><td style="width: 120px; text-align: center">'+zjshItemList[i].opinion+'</td>' +
+                                '                       </tr>\n' +
+                                '                       </tbody>\n' +
+                                '                  </table>\n' +
+                                '               </div>';
+                            htmlStr +=  '</fieldset>';
+                        }
+                        $("#zjshContainer").html(htmlStr);
+                    }
+                    ,end:function () {
+                        $("#zjshContainer .layui-elem-field").empty();
+                    }
+                });
+            };
 
             /**
              * 初始化项目成员列表
@@ -872,315 +1171,9 @@ layui.use(['layer','element','table','form'], function(){
                 });
             };
 
-            /**
-             * 查看详情
-             * @param data
-             */
-            let detail = function (rowData) {
-                layer.open({
-                    title : '教学研究-教改项目-查看详情'
-                    ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px' //只定义top坐标，水平保持居中
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
-                    ,content : $('#dataInfo_container')
-                    ,success: function(layero, index){
-                        let htmlStr = '';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                                '       <legend>一、项目基本信息</legend>\n' +
-                                '       <table class="layui-table">\n' +
-                                '           <tbody>\n' +
-                                '               <tr>' +
-                                '                   <td style="width: 120px; text-align: right">项目名称：</td><td style="width: 416px;">'+rowData.xmName+'</td>' +
-                                '                    <td style="width: 120px; text-align: right">项目类型：</td><td style="width: 416px;">'+rowData.xmType+'</td>' +
-                                '               </tr>\n' +
-                                '           </tbody>\n' +
-                                '       </table>' +
-                                '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>二、项目主持人信息</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">姓名：</td><td style="width: 416px;">'+rowData.leader+'</td>' +
-                            '                   <td style="width: 120px; text-align: right">工号：</td><td style="width: 416px;">'+rowData.leaderId+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">二级单位：</td><td style="width: 416px;">'+rowData.collegeOrDept+'</td>' +
-                            '                    <td style="width: 120px; text-align: right">专业：</td><td style="width: 416px;">'+rowData.major+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                    <td style="width: 120px; text-align: right">职称：</td><td colspan="3">'+rowData.title+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                    <td style="width: 120px; text-align: right">主要教学工作简历：</td><td colspan="3">'+rowData.mainTeachWork+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                    <td style="width: 120px; text-align: right">主要教育教学研究领域及成果：</td><td colspan="3">'+rowData.mainTeachAchievement+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>三、项目主要参加人员情况</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>' +
-                            '               <tr>\n' +
-                            '                      <th style="width: 120px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">主要成员情况：</th>' +
-                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
-                            '                      <th style="width: 150px; text-align: center">姓名</th>\n' +
-                            '                      <th style="width: 150px; text-align: center">工号</th>\n' +
-                            '                      <th style="text-align: center">任务分工</th>\n' +
-                            '                 </tr>';
-                            if(rowData.memberList.length>0){
-                                layui.each(rowData.memberList,function (idx,obj) {
-                                    htmlStr += '<tr><td style="text-align: center">'+(idx+1)
-                                        +'</td><td style="text-align: center">'+obj.userName
-                                        +'</td><td style="text-align: center">'+obj.userId
-                                        +'</td><td style="text-align: center">'+obj.task
-                                        +'</td></tr>\n';
-                                });
-                            }else{
-                                htmlStr += '<tr>' +
-                                    '      <td style="text-align: center" colspan="4">暂无相关数据</td>' +
-                                    '  </tr>\n';
-                            }
-                        htmlStr +='</tbody>\n' +
-                            '   </table>' +
-                            '</fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>四、项目的研究背景与研究基础</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">现状与背景分析（包括已有研究实践基础）：</td><td>'+rowData.currentAndBackground+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">研究内容、目标、要解决的问题和主要特色：</td><td>'+rowData.questionAndTarget+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>五、项目的预期效果、具体成果和进度安排</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">预期效果与具体成果：</td><td>'+rowData.expectAndResult+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">具体安排及进度：</td><td>'+rowData.planAndProcess+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>六、项目经费预算</legend>\n' +
-                            //经费预算
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>' +
-                            '               <tr>\n' +
-                            '                      <th style="width: 120px; text-align: right" rowspan="'+rowData.fundBudgetList.length+2+'">经费预算：</th>' +
-                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
-                            '                      <th style="text-align: center">科目</th>\n' +
-                            '                      <th style="width: 150px; text-align: center">预算金额（元）</th>\n' +
-                            '                 </tr>';
-                            if(rowData.fundBudgetList.length>0){
-                                let totalBudgetAmount =0;
-                                layui.each(rowData.fundBudgetList,function (idx,obj) {
-                                    totalBudgetAmount += parseInt(obj.budgetAmount);
-                                    htmlStr += '<tr><td style="text-align: center">'+(idx+1)
-                                        +'</td><td style="text-align: center">'+obj.subject
-                                        +'</td><td style="text-align: center">'+obj.budgetAmount
-                                        +'</td></tr>\n';
-                                });
-                                htmlStr += '<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计</td><td style="text-align: center">'+totalBudgetAmount+'</td></tr>';
-                            }else{
-                                htmlStr += '<tr>' +
-                                    '      <td style="text-align: center" colspan="3">暂无相关数据</td>' +
-                                    '  </tr>\n';
-                            }
-                            htmlStr +='</tbody></table></fieldset>';
-                        $("#dataInfo_container").html(htmlStr);
-                    }
-                    ,end:function () {
-                        $("#dataInfo_container .layui-elem-field").empty();
-                    }
-                });
-            };
-
-            /**
-             * 查看审核流程
-             * @param rowData
-             */
-            var detail_shenheProcess = function (title,rowData) {
-                layer.open({
-                    title : title
-                    ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px' //只定义top坐标，水平保持居中
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
-                    ,content : $('#shenheProcess_container')
-                    ,success: function(layero, index){
-                        $.get(requestUrl+"/getShenheProcess.do" , {
-                            "relationCode": function () {
-                                return rowData.code;
-                            }
-                        } ,  function(data){
-                            if(data.code == 200){
-                                var data = data.data;
-                                if(data.length>0){
-                                    var htmlStr = '';
-                                    for (var i = 0; i < data.length; i++) {
-                                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                                            '<legend>开始</legend>\n' +
-                                            '               <div>' +
-                                            '                   <table class="layui-table">\n' +
-                                            '                        <tbody>\n' +
-                                            '                            <tr>' +
-                                            '                           <td style="width: 80px; text-align: center">提交人员</td><td style="width: 120px; text-align: center">'+data[i].userName+'</td>' +
-                                            '                           <td style="width: 80px; text-align: center">提交时间</td><td style="width: 120px; text-align: center">'+data[i].createDate+'</td>' +
-                                            '                       </tr>\n' +
-                                            '                       </tbody>\n' +
-                                            '                  </table>\n' +
-                                            '               </div>';
-                                        if(data[i].shenHeItemList.length>0){
-                                            for (let j = 0; j < data[i].shenHeItemList.length; j++) {
-                                                let item = data[i].shenHeItemList[j];
-                                                if(item.shenheType=='初审' || item.shenheType =='终审'){
-                                                    htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
-                                                        '               <div>' +
-                                                        '                   <table class="layui-table">\n' +
-                                                        '                        <tbody>\n' +
-                                                        '                            <tr>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
-                                                        '                       </tr>\n' +
-                                                        '                            <tr>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核类别</td><td style="width: 120px; text-align: center">'+item.shenheType+'</td>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
-                                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
-                                                        '                       </tr>\n' +
-                                                        '                            <tr>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center" colspan="3">'+item.opinion+'</td>' +
-                                                        '                       </tr>\n' +
-                                                        '                       </tbody>\n' +
-                                                        '                  </table>\n' +
-                                                        '               </div>';
-                                                }else{
-                                                    htmlStr += '<h4 style="margin-left: 30px;">'+item.nodeName+'</h4>\n' +
-                                                        '               <div>' +
-                                                        '                   <table class="layui-table">\n' +
-                                                        '                        <tbody>\n' +
-                                                        '                            <tr>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核人员</td><td style="width: 120px; text-align: center">'+item.userName+'</td>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核时间</td><td style="width: 120px; text-align: center">'+item.createDate+'</td>' +
-                                                        '                       </tr>\n' +
-                                                        '                            <tr>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核状态</td><td style="width: 120px; text-align: center">'
-                                                        +(item.status=='通过'?'<span style="color: green;font-weight: bold;">通过</span>':'<span style="color: red;font-weight: bold;">退回</span>')+'</td>' +
-                                                        '                           <td style="width: 80px; text-align: center">审核意见</td><td style="width: 120px; text-align: center">'+item.opinion+'</td>' +
-                                                        '                       </tr>\n' +
-                                                        '                       </tbody>\n' +
-                                                        '                  </table>\n' +
-                                                        '               </div>';
-                                                }
-                                            }
-                                        }
-                                        htmlStr +=  '</fieldset>';
-                                    }
-                                    if(rowData.status =='通过'){
-                                        htmlStr +=  '<h2 style="margin-left: 30px;">结束</h2>';
-                                    }
-                                    $("#shenheProcess_container").html(htmlStr);
-                                }else{
-                                    layer.msg('暂无审核数据', {time : 3000, offset: '100px'});
-                                }
-                            }else{
-                                layer.msg('获取数据出错', {time : 3000, offset: '100px'});
-                            }
-                        }, "json");
-                    }
-                    ,end:function () {
-                        $("#shenheProcess_container .layui-elem-field").empty();
-                    }
-                });
-            };
-
-            /**
-             * 查看专家审核意见
-             * @param rowData
-             */
-            let detail_zjsh = function (row_data) {
-                let zjshItemList = row_data.zjshItemList;
-                if(isEmpty(zjshItemList)){
-                    return;
-                }
-                layer.open({
-                    title : '教学研究-教改项目-查看专家审核意见'
-                    ,type : 1
-                    ,area : [ '1175px', '535px' ]
-                    ,offset : '10px' //只定义top坐标，水平保持居中
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['导出专家评审结果','关闭']
-                    ,yes: function(){
-                        // alert(JSON.stringify(row_data));
-                        let sheetData = new Array();
-                        $.each(zjshItemList,function (idx,obj) {
-                            let item = {
-                                xmName : row_data.xmName,
-                                leader : row_data.leader,
-                                userName : obj.userName,
-                                status : obj.status,
-                                opinion : obj.opinion,
-                                createDate : obj.createDate
-                            };
-                            sheetData[idx] = item;
-                        });
-                        let option={};
-                        option.fileName = row_data.xmName+'校外专家审核意见';
-                        option.datas=[
-                            {
-                                sheetHeader:['项目名称','主持人','专家','评审结果','评审意见','评审时间'],
-                                sheetData:sheetData
-                            }
-                        ];
-                        let toExcel=new ExportJsonExcel(option);
-                        toExcel.saveExcel();
-                    }
-                    ,btn2: function(){
-                        layer.closeAll();
-                    }
-                    ,content : $('#zjshContainer')
-                    ,success: function(layero, index){
-                        let htmlStr = '';
-                        for (let i = 0; i < zjshItemList.length; i++) {
-                            htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                                '       <legend>'+zjshItemList[i].userName+'</legend>\n' +
-                                '               <div>' +
-                                '                   <table class="layui-table">\n' +
-                                '                        <tbody>\n' +
-                                '                            <tr>' +
-                                '                           <td style="width: 80px; text-align: center">审核状态：</td><td style="width: 120px; text-align: center">'+zjshItemList[i].status+'</td>' +
-                                '                           <td style="width: 80px; text-align: center">审核意见：</td><td style="width: 120px; text-align: center">'+zjshItemList[i].opinion+'</td>' +
-                                '                       </tr>\n' +
-                                '                       </tbody>\n' +
-                                '                  </table>\n' +
-                                '               </div>';
-                            htmlStr +=  '</fieldset>';
-                        }
-                        $("#zjshContainer").html(htmlStr);
-                    }
-                    ,end:function () {
-                        $("#zjshContainer .layui-elem-field").empty();
-                    }
-                });
-            };
         }
         ,error:function() {
-            layer.msg('网络连接失败', {icon:7, time : 3000, offset: '100px'});
+            layer.msg('网络连接失败!', {icon:7, time : 3000, offset: '100px'});
         }
     });
 });
