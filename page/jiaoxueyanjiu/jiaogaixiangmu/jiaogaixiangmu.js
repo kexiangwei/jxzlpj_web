@@ -19,6 +19,7 @@ layui.use(['layer','element','table','form'], function(){
         dataType:'json'
         ,success:function(data) {
             var data = data.data;
+
             if(data.isSubmit > 0){ //拥有提交权限
 
                 //数据表格
@@ -118,7 +119,7 @@ layui.use(['layer','element','table','form'], function(){
                             where: {
                                 'xmName': $(".myself_search input[name='xmName']").val()
                                 ,'xmType': $(".myself_search input[ name='xmType']").val()
-                                ,'leader': $(".myself_search input[ name='leader']").val()
+                                // ,'leader': $(".myself_search input[ name='leader']").val()
                                 ,'status': $("#status option:selected").val()
                             }
                             ,page: {
@@ -373,12 +374,14 @@ layui.use(['layer','element','table','form'], function(){
                 $('#other').removeClass().addClass("layui-this");
                 $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
+
             if(data.isShenhe > 0){ //拥有审核权限
 
-                var isJwcGly
-                    ,isZjshAccount
+                var isJwcGly  //是否教务处管理员
+                    ,isZjshAccount //是否专家评审账号
                     ,other_table = table.render({ //数据表格
-                    elem : '#other_table'
+                    id: guid()
+                    ,elem : '#other_table'
                     ,height : 440
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jiaoGaiXiangMu/getPageList.do'
@@ -418,8 +421,8 @@ layui.use(['layer','element','table','form'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'userId', title: '工号', width:120,hide:true, sort: true}
-                        ,{field: 'userName', title: '姓名', width:120, hide:true}
+                        ,{field: 'userId', title: '工号', width:120}
+                        ,{field: 'userName', title: '姓名', width:120}
                         ,{field: 'xmName', title: '项目名称', width:120}
                         ,{field: 'xmType', title: '项目类型', width:120}
                         ,{field: 'leader', title: '主持人', width:120}
@@ -460,207 +463,227 @@ layui.use(['layer','element','table','form'], function(){
                                 }
                             }
                         } //【已审核 | 待审核 | 退回】
-                        ,{field: 'createDate', title: '创建时间', width:120,hide:true}
                         ,{field: 'isJwcGly_0',fixed: 'right', width:168, align:'center',templet: function(data){
                                 return '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>' +
                                     '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
                             }
                         }
                         ,{field: 'isJwcGly_1',fixed: 'right', width:288, align:'center',templet: function(data){
-                                let htmlStr = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>' +
+                                let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>' +
                                     '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
                                 if(data.zjshItemList.length>0){
-                                    htmlStr += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
+                                    html += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
                                 }else{
-                                    htmlStr += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
+                                    html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
                                 }
-                                return htmlStr;
+                                return html;
                             }
                         }
                     ]]
                     ,done: function(res, curr, count){
-                        $('#other').find('span').html(res.unShenHeNum);
-                        isJwcGly = res.isJwcGly;
-                        isZjshAccount = res.isZjshAccount;
-                        let htmlStr='';
+                        $('#other').find('span').html(res.unShenHeNum); //设置未审核数
+
+                        isJwcGly = res.isJwcGly; //是否教务处管理员
+                        isZjshAccount = res.isZjshAccount; //是否专家评审账号
+
+                        let html='';
                         if(isJwcGly==1){ //当前登录用户为教务处管理员
+                            $("[data-field='userId']").css('display','none'); //关键代码
+                            $("[data-field='userName']").css('display','none'); //关键代码
                             $("[data-field='shenheStatus']").css('display','none'); //关键代码
-                            // $("[data-field='leaderId']").css('display','none'); //关键代码
-                            // $("[data-field='title']").css('display','none'); //关键代码
                             $("[data-field='isJwcGly_0']").css('display','none'); //关键代码
                             //
-                            htmlStr = '初审状态：\n' +
-                                '          <div class="layui-inline">\n' +
-                                '              <input class="layui-input" name="shenheStatusFirst" autocomplete="off" style="width: 120px;">\n' +
-                                '          </div>\n' +
-                                '          终审状态：\n' +
-                                '          <div class="layui-inline">\n' +
-                                '               <input class="layui-input" name="shenheStatusFinal" autocomplete="off" style="width: 120px;">\n' +
-                                '          </div>';
+                            html = '&nbsp;&nbsp;初审状态：\n' +
+                                '                        <div class="layui-inline" style="width: 180px">\n' +
+                                '                            <select name="shenheStatusFirst" id="shenheStatusFirst">\n' +
+                                '                                <option value="">请选择</option>\n' +
+                                '                                <option value="已审核">已审核</option>\n' +
+                                '                                <option value="未审核">未审核</option>\n' +
+                                '                            </select>\n' +
+                                '                        </div>\n' +
+                                '                        &nbsp;&nbsp;终审状态：\n' +
+                                '                        <div class="layui-inline" style="width: 180px">\n' +
+                                '                            <select name="shenheStatusFinal" id="shenheStatusFinal">\n' +
+                                '                                <option value="">请选择</option>\n' +
+                                '                                <option value="已审核">已审核</option>\n' +
+                                '                                <option value="未审核">未审核</option>\n' +
+                                '                                <option value="待审核">待审核</option>\n' +
+                                '                            </select>\n' +
+                                '                        </div>';
 
                         }else{
                             $("[data-field='shenheStatusFirst']").css('display','none'); //关键代码
                             $("[data-field='shenheStatusFinal']").css('display','none'); //关键代码
                             $("[data-field='isJwcGly_1']").css('display','none'); //关键代码
                             //
-                            htmlStr = ' 审核状态：\n' +
-                                '           <div class="layui-inline">\n' +
-                                '               <input class="layui-input" name="shenheStatus" autocomplete="off" style="width: 120px;">\n' +
-                                '           </div>';
+                            html = '&nbsp;&nbsp;审核状态：\n' +
+                                '                            <div class="layui-inline">\n' +
+                                '                                <select name="shenheStatus" id="shenheStatus">\n' +
+                                '                                    <option value="">请选择</option>\n' +
+                                '                                    <option value="已审核">已审核</option>\n' +
+                                '                                    <option value="未审核">未审核</option>\n' +
+                                '                                </select>\n' +
+                                '                            </div>';
                         }
-                        if($('.other_search div').length==4){
-                            $('.other_search div:last').before(htmlStr);
-                        }
-                    }
-                });//table end.
 
-                //监听搜索框事件
-                let active = {
-                    search: function(){
-                        other_table.reload({
-                            where: {
-                                'xmName': $(".other_search input[name='xmName']").val()
-                                ,'xmType': $(".other_search input[ name='xmType']").val()
-                                ,'leader': $(".other_search input[ name='leader']").val()
-                                ,'shenheStatus': $("#shenheStatus").val()
+                        if($('.other_search div').length == 3){
+
+                            $('.other_search div:last').before(html); form.render("select");
+
+                        }
+
+                        //监听搜索框事件
+                        let active = {
+                            search: function(){
+                                other_table.reload({
+                                    where: {
+                                        'xmName': $(".other_search input[name='xmName']").val()
+                                        ,'xmType': $(".other_search input[ name='xmType']").val()
+                                        // ,'leader': $(".other_search input[ name='leader']").val()
+                                        ,'shenheStatus': $("#shenheStatus").val()
+                                        ,'shenheStatusFirst': $("#shenheStatusFirst").val()
+                                        ,'shenheStatusFinal': $("#shenheStatusFinal").val()
+                                    }
+                                    ,page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
                             }
-                            ,page: {
-                                curr: 1 //重新从第 1 页开始
+                            ,reset: function () {
+                                $(".other_search input").val("");
+                                //清除选中状态
+                                $("#shenheStatus").val("");
+                                $("#shenheStatusFirst").val("");
+                                $("#shenheStatusFinal").val("");
+                                form.render("select");
                             }
+                        };
+                        $('.other_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
                         });
-                    }
-                    ,reset: function () {
-                        $(".other_search input").val("");
-                        //清除选中状态
-                        $("#shenheStatus").val("");
-                        form.render("select");
-                    }
-                };
-                $('.other_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
 
-
-                //监听头工具栏事件
-                table.on('toolbar(other_table)', function(obj){
-                    var checkStatus = table.checkStatus(obj.config.id)
-                        ,data = checkStatus.data; //获取选中的数据
-                    switch(obj.event){
-                        case 'submit':
-                            if(data.length === 0){
-                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                return;
-                            } else {
-                                let flag = false
-                                    ,msg=''
-                                    ,shenheStatusFirst = null;
-                                $.each(data,function(index,item){
-                                    if(isJwcGly==1){ //当前登录用户为教务处管理员
-                                        if(item.shenheStatusFirst== '已审核' && item.shenheStatusFinal== '已审核'){
-                                            flag = true;
-                                            msg = '您选择了已审核的信息！';
-                                            return false;//跳出循环
-                                        } else if(item.shenheStatusFirst== '已审核' && isEmpty(item.zjshItemList)){
-                                            flag = true;
-                                            msg = '您选择了校外专家未审核的信息！';
-                                            return false;//跳出循环
-                                        } else if(item.shenheStatusFirst== '已审核' && item.isZjshAll !=1){
-                                            flag = true;
-                                            msg = '您选择了校外专家未审核的信息！！！';
-                                            return false;//跳出循环
-                                        } else{
-                                            if(index===0){
-                                                shenheStatusFirst = item.shenheStatusFirst;
-                                            }else{
-                                                if(shenheStatusFirst != item.shenheStatusFirst){
+                        //监听头工具栏事件
+                        table.on('toolbar(other_table)', function(obj){
+                            var checkStatus = table.checkStatus(obj.config.id)
+                                ,data = checkStatus.data; //获取选中的数据
+                            switch(obj.event){
+                                case 'submit':
+                                    if(data.length === 0){
+                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                        return;
+                                    } else {
+                                        let flag = false
+                                            ,msg=''
+                                            ,shenheStatusFirst = null;
+                                        $.each(data,function(index,item){
+                                            if(isJwcGly==1){ //当前登录用户为教务处管理员
+                                                if(item.shenheStatusFirst== '已审核' && item.shenheStatusFinal== '已审核'){
                                                     flag = true;
-                                                    msg = '您选择了不同审核类别的信息！';
+                                                    msg = '您选择了已审核的信息！';
+                                                    return false;//跳出循环
+                                                } else if(item.shenheStatusFirst== '已审核' && isEmpty(item.zjshItemList)){
+                                                    flag = true;
+                                                    msg = '您选择了校外专家未审核的信息！';
+                                                    return false;//跳出循环
+                                                } else if(item.shenheStatusFirst== '已审核' && item.isZjshAll !=1){
+                                                    flag = true;
+                                                    msg = '您选择了校外专家未审核的信息！！！';
+                                                    return false;//跳出循环
+                                                } else{
+                                                    if(index===0){
+                                                        shenheStatusFirst = item.shenheStatusFirst;
+                                                    }else{
+                                                        if(shenheStatusFirst != item.shenheStatusFirst){
+                                                            flag = true;
+                                                            msg = '您选择了不同审核类别的信息！';
+                                                            return false;//跳出循环
+                                                        }
+                                                    }
+                                                }
+                                            } else{
+                                                if(item.shenheStatus== '已审核'){
+                                                    flag = true;
+                                                    msg = '您选择了已审核的信息！';
                                                     return false;//跳出循环
                                                 }
                                             }
-                                        }
-                                    } else{
-                                        if(item.shenheStatus== '已审核'){
-                                            flag = true;
-                                            msg = '您选择了已审核的信息！';
-                                            return false;//跳出循环
-                                        }
-                                    }
-                                });
-                                if(flag){
-                                    layer.msg(msg, {time : 3000, offset: '100px'});
-                                    return;
-                                }
-                                //添加审核意见
-                                layer.open({
-                                    title : '教学研究-教改项目-审核'
-                                    ,type : 1
-                                    ,area : [ '700px', '440px' ]
-                                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '20px' //只定义top坐标，水平保持居中
-                                    ,shadeClose : true //点击遮罩关闭
-                                    // ,btn : ['关闭']
-                                    ,content : $('#shenHeForm_container')
-                                    ,success: function(layero, index){
-                                        if(isJwcGly==1){//当前登录用户为教务处管理员
-                                            $("#shenheType").css('display','block'); //关键代码
-                                            form.val("shenHeForm",{
-                                                "shenheType":shenheStatusFirst == '未审核'?'初审':'终审'
-                                            });
-                                        }
-                                        //
-                                        form.on('select(status)', function(data) {
-                                            if(data.value == '通过'){
-                                                $('#opinion').html('通过');
-                                            }
-                                            if(data.value == '退回'){
-                                                $('#opinion').empty();
-                                            }
                                         });
-                                        //
-                                        form.on('submit(toSubmitShenHeForm)', function(formData){
-                                            $.post(requestUrl+'/jiaoGaiXiangMu/toShenhe.do',{
-                                                'isZjshAccount':isZjshAccount
-                                                ,"jsonStr":JSON.stringify(data)
-                                                ,"shenheType":isJwcGly==1?formData.field.shenheType:null
-                                                ,"status":formData.field.status
-                                                ,"opinion":formData.field.opinion
-                                                ,"userId":function () {
-                                                    return $.cookie('userId');
+                                        if(flag){
+                                            layer.msg(msg, {time : 3000, offset: '100px'});
+                                            return;
+                                        }
+                                        //添加审核意见
+                                        layer.open({
+                                            title : '教学研究-教改项目-审核'
+                                            ,type : 1
+                                            ,area : [ '700px', '440px' ]
+                                            // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                                            ,offset : '20px' //只定义top坐标，水平保持居中
+                                            ,shadeClose : true //点击遮罩关闭
+                                            // ,btn : ['关闭']
+                                            ,content : $('#shenHeForm_container')
+                                            ,success: function(layero, index){
+                                                if(isJwcGly==1){//当前登录用户为教务处管理员
+                                                    $("#shenheType").css('display','block'); //关键代码
+                                                    form.val("shenHeForm",{
+                                                        "shenheType":shenheStatusFirst == '未审核'?'初审':'终审'
+                                                    });
                                                 }
-                                                ,"userName":function () {
-                                                    return $.cookie('userName');
-                                                }
-                                            },function (data) {
-                                                if(data.code === 200){
-                                                    other_table.reload();//重新加载表格数据
-                                                    // window.location.reload();//刷新页面，审核后页面状态未改变
-                                                    layer.msg('审核成功', {time : 3000, offset: '100px'});
-                                                }else{
-                                                    layer.msg('审核失败', {time : 3000, offset: '100px'});
-                                                }
-                                            },'json');
-                                        });
-                                    }
-                                    ,end:function () {
+                                                //
+                                                form.on('select(status)', function(data) {
+                                                    if(data.value == '通过'){
+                                                        $('#opinion').html('通过');
+                                                    }
+                                                    if(data.value == '退回'){
+                                                        $('#opinion').empty();
+                                                    }
+                                                });
+                                                //
+                                                form.on('submit(toSubmitShenHeForm)', function(formData){
+                                                    $.post(requestUrl+'/jiaoGaiXiangMu/toShenhe.do',{
+                                                        'isZjshAccount':isZjshAccount
+                                                        ,"jsonStr":JSON.stringify(data)
+                                                        ,"shenheType":isJwcGly==1?formData.field.shenheType:null
+                                                        ,"status":formData.field.status
+                                                        ,"opinion":formData.field.opinion
+                                                        ,"userId":function () {
+                                                            return $.cookie('userId');
+                                                        }
+                                                        ,"userName":function () {
+                                                            return $.cookie('userName');
+                                                        }
+                                                    },function (data) {
+                                                        if(data.code === 200){
+                                                            other_table.reload();//重新加载表格数据
+                                                            // window.location.reload();//刷新页面，审核后页面状态未改变
+                                                            layer.msg('审核成功', {time : 3000, offset: '100px'});
+                                                        }else{
+                                                            layer.msg('审核失败', {time : 3000, offset: '100px'});
+                                                        }
+                                                    },'json');
+                                                });
+                                            }
+                                            ,end:function () {
 
+                                            }
+                                        });
                                     }
-                                });
+                                    break;
                             }
-                            break;
-                    }
-                });
+                        });
 
-                //监听工具条
-                table.on('tool(other_table)', function(obj){
-                    var data = obj.data;
-                    if (obj.event === 'detail') {
-                        detail(data);
-                    } else if (obj.event === 'detail_shenheProcess') {
-                        detail_shenheProcess('教学研究-教改项目-查看审核流程',data);
-                    } else if (obj.event === 'detail-zjsh') {
-                        detail_zjsh(data);
+                        //监听工具条
+                        table.on('tool(other_table)', function(obj){
+                            var data = obj.data;
+                            if (obj.event === 'detail') {
+                                detail(data);
+                            } else if (obj.event === 'detail_shenheProcess') {
+                                detail_shenheProcess('教学研究-教改项目-查看审核流程',data);
+                            } else if (obj.event === 'detail-zjsh') {
+                                detail_zjsh(data);
+                            }
+                        });
                     }
                 });
 
@@ -674,6 +697,195 @@ layui.use(['layer','element','table','form'], function(){
                 $('#other').remove();
                 $('#other_item').remove();
             }
+
+            /**
+             * 初始化项目成员列表
+             * @param xmCode 项目编号
+             */
+            let initMemberDataTable = function (xmCode) {
+                let memberDataTable = table.render({
+                    elem : '#memberDataTable'
+                    ,url: requestUrl+'/jiaoGaiXiangMu/getMemberList.do'
+                    ,where: {
+                        "xmCode":xmCode
+                    }
+                    ,response: {
+                        statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": "", //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
+                    ,defaultToolbar:[]
+                    ,cols : [[ //表头
+                        {type:'numbers', title:'序号', width:100, fixed: 'left'}
+                        // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
+                        ,{field: 'userName', title: '姓名', width:200, align:'center'}
+                        ,{field: 'userId', title: '工号', width:200, align:'center'}
+                        ,{field: 'task', title: '任务分工', align:'center'}
+                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
+                    ]]
+                    ,text: {
+                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    }
+                    ,even: true //隔行背景
+                    ,done : function(res, curr, count) {
+
+                        //监听头工具栏事件
+                        table.on('toolbar(memberDataTable)', function(obj){
+                            let memberFormCntainer = layer.open({
+                                title : '项目主要参加人员'
+                                ,type : 1
+                                ,area : [ '700px', '350px' ] //宽高
+                                ,offset : '30px'
+                                ,content : $('#memberForm')
+                                ,success: function(layero, index){
+                                    //监听表单提交
+                                    form.on('submit(memberFormSubmitBtn)', function(data){
+                                        let formData = data.field;
+                                        $.post(requestUrl+'/jiaoGaiXiangMu/insertMember.do',{
+                                            "xmCode":xmCode,
+                                            "userName":formData.userName,
+                                            "userId":formData.userId,
+                                            "task":formData.task
+                                        },function (resultData) {
+                                            if(resultData.code == 200){
+                                                memberDataTable.reload();//重新加载数据
+                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
+                                            }else{
+                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
+                                            }
+                                        },'json');
+                                        layer.close(memberFormCntainer);
+                                        return false;
+                                    });
+                                },end:function () {
+                                    document.getElementById("memberForm").reset(); //清空表单数据
+                                }
+                            });
+                        });
+
+                        //监听右侧工具条
+                        table.on('tool(memberDataTable)', function(obj){
+                            let rowData = obj.data;
+                            if (obj.event === 'delete') {
+                                //执行删除
+                                $.post(requestUrl+'/jiaoGaiXiangMu/deleteMember.do'
+                                    , {
+                                        "xmCode": rowData.xmCode
+                                        ,"userId": rowData.userId
+                                    }
+                                    ,function(resultData){
+                                        if(resultData.code === 200){
+                                            memberDataTable.reload();//重新加载表格数据
+                                            layer.msg('删除成功', {time : 3000, offset: '100px'});
+                                        }else{
+                                            layer.msg('删除失败', {time : 3000, offset: '100px'});
+                                        }
+                                    }, "json");
+                            }
+                        });
+                    }
+                });
+            };
+
+            /**
+             * 初始化经费预算列表
+             * @param xmCode 项目编号
+             */
+            let initFundBudgetDataTable = function (xmCode) {
+                let fundBudgetDataTable = table.render({
+                    elem : '#fundBudgetDataTable'
+                    ,url: requestUrl+'/jiaoGaiXiangMu/getFundBudgetList.do'
+                    ,where: {
+                        "xmCode":xmCode
+                    }
+                    ,response: {
+                        statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,parseData: function(res){ //res 即为原始返回的数据
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": "", //解析提示文本
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    ,totalRow: true
+                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
+                    ,defaultToolbar:[]
+                    ,cols : [[ //表头
+                        {type:'numbers', title:'序号', width:100, fixed: 'left', totalRowText: '合计'}
+                        // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
+                        ,{field: 'subject', title: '科目', align:'center'}
+                        ,{field: 'budgetAmount', title: '预算金额（元）', sort: true, totalRow: true, width:200, align:'center'}
+                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
+                    ]]
+                    ,text: {
+                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+                    }
+                    ,even: true //隔行背景
+                    ,done : function(res, curr, count) {
+
+                        //监听头工具栏事件
+                        table.on('toolbar(fundBudgetDataTable)', function(obj){
+                            let fundBudgetFormCntainer = layer.open({
+                                title : '经费预算'
+                                ,type : 1
+                                ,area : [ '700px', '350px' ] //宽高
+                                ,offset : '30px'
+                                ,content : $('#fundBudgetForm')
+                                ,success: function(layero, index){
+                                    //监听表单提交
+                                    form.on('submit(fundBudgetFormSubmitBtn)', function(data){
+                                        let formData = data.field;
+                                        $.post(requestUrl+'/jiaoGaiXiangMu/insertFundBudget.do',{
+                                            "xmCode":xmCode,
+                                            "subject":formData.subject,
+                                            "budgetAmount":formData.budgetAmount,
+                                        },function (resultData) {
+                                            if(resultData.code == 200){
+                                                fundBudgetDataTable.reload();//重新加载数据
+                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
+                                            }else{
+                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
+                                            }
+                                        },'json');
+                                        layer.close(fundBudgetFormCntainer);
+                                        return false;
+                                    });
+                                },end:function () {
+                                    document.getElementById("fundBudgetForm").reset(); //清空表单数据
+                                }
+                            });
+                        });
+
+                        //监听右侧工具条
+                        table.on('tool(fundBudgetDataTable)', function(obj){
+                            let rowData = obj.data;
+                            if (obj.event === 'delete') {
+                                //执行删除
+                                $.post(requestUrl+'/jiaoGaiXiangMu/deleteFundBudget.do'
+                                    , {
+                                        "xmCode": rowData.xmCode
+                                        ,"subject": rowData.subject
+                                    }
+                                    ,function(resultData){
+                                        if(resultData.code === 200){
+                                            fundBudgetDataTable.reload();//重新加载表格数据
+                                            layer.msg('删除成功', {time : 3000, offset: '100px'});
+                                        }else{
+                                            layer.msg('删除失败', {time : 3000, offset: '100px'});
+                                        }
+                                    }, "json");
+                            }
+                        });
+                    }
+                });
+            };
 
             /**
              * 查看详情
@@ -958,9 +1170,9 @@ layui.use(['layer','element','table','form'], function(){
                     }
                     ,content : $('#zjshContainer')
                     ,success: function(layero, index){
-                        let htmlStr = '';
+                        let html = '';
                         for (let i = 0; i < zjshItemList.length; i++) {
-                            htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
+                            html += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
                                 '       <legend>'+zjshItemList[i].userName+'</legend>\n' +
                                 '               <div>' +
                                 '                   <table class="layui-table">\n' +
@@ -972,9 +1184,12 @@ layui.use(['layer','element','table','form'], function(){
                                 '                       </tbody>\n' +
                                 '                  </table>\n' +
                                 '               </div>';
-                            htmlStr +=  '</fieldset>';
+                            html +=  '</fieldset>';
                         }
-                        $("#zjshContainer").html(htmlStr);
+                        if(row_data.isZjshAll == 1){
+                            html +=  '<h2 style="margin-left: 30px;">专家评审完毕</h2>';
+                        }
+                        $("#zjshContainer").html(html);
                     }
                     ,end:function () {
                         $("#zjshContainer .layui-elem-field").empty();
@@ -982,198 +1197,9 @@ layui.use(['layer','element','table','form'], function(){
                 });
             };
 
-            /**
-             * 初始化项目成员列表
-             * @param xmCode 项目编号
-             */
-            let initMemberDataTable = function (xmCode) {
-                let memberDataTable = table.render({
-                    elem : '#memberDataTable'
-                    ,url: requestUrl+'/jiaoGaiXiangMu/getMemberList.do'
-                    ,where: {
-                        "xmCode":xmCode
-                    }
-                    ,response: {
-                        statusCode: 200 //规定成功的状态码，默认：0
-                    }
-                    ,parseData: function(res){ //res 即为原始返回的数据
-                        return {
-                            "code": res.code, //解析接口状态
-                            "msg": "", //解析提示文本
-                            "data": res.data //解析数据列表
-                        };
-                    }
-                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
-                    ,defaultToolbar:[]
-                    ,cols : [[ //表头
-                        {type:'numbers', title:'序号', width:100, fixed: 'left'}
-                        // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
-                        ,{field: 'userName', title: '姓名', width:200, align:'center'}
-                        ,{field: 'userId', title: '工号', width:200, align:'center'}
-                        ,{field: 'task', title: '任务分工', align:'center'}
-                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
-                    ]]
-                    ,text: {
-                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                    }
-                    ,even: true //隔行背景
-                    ,done : function(res, curr, count) {
-
-                        //监听头工具栏事件
-                        table.on('toolbar(memberDataTable)', function(obj){
-                            let memberFormCntainer = layer.open({
-                                title : '项目主要参加人员'
-                                ,type : 1
-                                ,area : [ '700px', '350px' ] //宽高
-                                ,offset : '30px'
-                                ,content : $('#memberForm')
-                                ,success: function(layero, index){
-                                    //监听表单提交
-                                    form.on('submit(memberFormSubmitBtn)', function(data){
-                                        let formData = data.field;
-                                        $.post(requestUrl+'/jiaoGaiXiangMu/insertMember.do',{
-                                            "xmCode":xmCode,
-                                            "userName":formData.userName,
-                                            "userId":formData.userId,
-                                            "task":formData.task
-                                        },function (resultData) {
-                                            if(resultData.code == 200){
-                                                memberDataTable.reload();//重新加载数据
-                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
-                                            }
-                                        },'json');
-                                        layer.close(memberFormCntainer);
-                                        return false;
-                                    });
-                                },end:function () {
-                                    document.getElementById("memberForm").reset(); //清空表单数据
-                                }
-                            });
-                        });
-
-                        //监听右侧工具条
-                        table.on('tool(memberDataTable)', function(obj){
-                            let rowData = obj.data;
-                            if (obj.event === 'delete') {
-                                //执行删除
-                                $.post(requestUrl+'/jiaoGaiXiangMu/deleteMember.do'
-                                    , {
-                                        "xmCode": rowData.xmCode
-                                        ,"userId": rowData.userId
-                                    }
-                                    ,function(resultData){
-                                    if(resultData.code === 200){
-                                        memberDataTable.reload();//重新加载表格数据
-                                        layer.msg('删除成功', {time : 3000, offset: '100px'});
-                                    }else{
-                                        layer.msg('删除失败', {time : 3000, offset: '100px'});
-                                    }
-                                }, "json");
-                            }
-                        });
-                    }
-                });
-            };
-
-            /**
-             * 初始化经费预算列表
-             * @param xmCode 项目编号
-             */
-            let initFundBudgetDataTable = function (xmCode) {
-                let fundBudgetDataTable = table.render({
-                    elem : '#fundBudgetDataTable'
-                    ,url: requestUrl+'/jiaoGaiXiangMu/getFundBudgetList.do'
-                    ,where: {
-                        "xmCode":xmCode
-                    }
-                    ,response: {
-                        statusCode: 200 //规定成功的状态码，默认：0
-                    }
-                    ,parseData: function(res){ //res 即为原始返回的数据
-                        return {
-                            "code": res.code, //解析接口状态
-                            "msg": "", //解析提示文本
-                            "data": res.data //解析数据列表
-                        };
-                    }
-                    ,totalRow: true
-                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
-                    ,defaultToolbar:[]
-                    ,cols : [[ //表头
-                        {type:'numbers', title:'序号', width:100, fixed: 'left', totalRowText: '合计'}
-                        // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
-                        ,{field: 'subject', title: '科目', align:'center'}
-                        ,{field: 'budgetAmount', title: '预算金额（元）', sort: true, totalRow: true, width:200, align:'center'}
-                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
-                    ]]
-                    ,text: {
-                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                    }
-                    ,even: true //隔行背景
-                    ,done : function(res, curr, count) {
-
-                        //监听头工具栏事件
-                        table.on('toolbar(fundBudgetDataTable)', function(obj){
-                            let fundBudgetFormCntainer = layer.open({
-                                title : '经费预算'
-                                ,type : 1
-                                ,area : [ '700px', '350px' ] //宽高
-                                ,offset : '30px'
-                                ,content : $('#fundBudgetForm')
-                                ,success: function(layero, index){
-                                    //监听表单提交
-                                    form.on('submit(fundBudgetFormSubmitBtn)', function(data){
-                                        let formData = data.field;
-                                        $.post(requestUrl+'/jiaoGaiXiangMu/insertFundBudget.do',{
-                                            "xmCode":xmCode,
-                                            "subject":formData.subject,
-                                            "budgetAmount":formData.budgetAmount,
-                                        },function (resultData) {
-                                            if(resultData.code == 200){
-                                                fundBudgetDataTable.reload();//重新加载数据
-                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
-                                            }
-                                        },'json');
-                                        layer.close(fundBudgetFormCntainer);
-                                        return false;
-                                    });
-                                },end:function () {
-                                    document.getElementById("fundBudgetForm").reset(); //清空表单数据
-                                }
-                            });
-                        });
-
-                        //监听右侧工具条
-                        table.on('tool(fundBudgetDataTable)', function(obj){
-                            let rowData = obj.data;
-                            if (obj.event === 'delete') {
-                                //执行删除
-                                $.post(requestUrl+'/jiaoGaiXiangMu/deleteFundBudget.do'
-                                    , {
-                                        "xmCode": rowData.xmCode
-                                        ,"subject": rowData.subject
-                                    }
-                                    ,function(resultData){
-                                        if(resultData.code === 200){
-                                            fundBudgetDataTable.reload();//重新加载表格数据
-                                            layer.msg('删除成功', {time : 3000, offset: '100px'});
-                                        }else{
-                                            layer.msg('删除失败', {time : 3000, offset: '100px'});
-                                        }
-                                    }, "json");
-                            }
-                        });
-                    }
-                });
-            };
-
         }
         ,error:function() {
-            layer.msg('网络连接失败!', {icon:7, time : 3000, offset: '100px'});
+            layer.msg('网络连接失败', {icon:7, time : 3000, offset: '100px'});
         }
     });
 });
