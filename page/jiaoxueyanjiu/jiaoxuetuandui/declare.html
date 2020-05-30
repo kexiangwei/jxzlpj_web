@@ -4,14 +4,6 @@
     <meta charset="utf-8">
     <title>教学研究-教学团队-申报</title>
     <link rel="stylesheet" href="../../../layui/css/layui.css">
-    <style type="text/css">
-        .myself_search .layui-inline {
-            width: 150px;
-        }
-        .other_search  .layui-inline {
-            width: 150px;
-        }
-    </style>
 </head>
 <body class="layui-layout-body">
     <div class="layui-tab" lay-filter="layTab">
@@ -62,14 +54,14 @@
                         <div class="layui-inline">
                             <input class="layui-input" name="teamName" placeholder="支持关键字查询">
                         </div>
-                        &nbsp;&nbsp;审核状态：
+                        <!--&nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
                             <select name="shenheStatus" id="shenheStatus">
                                 <option value="">请选择</option>
                                 <option value="已审核">已审核</option>
                                 <option value="未审核">未审核</option>
                             </select>
-                        </div>
+                        </div>-->
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
                             <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
@@ -120,30 +112,15 @@
             <legend>申报书</legend>
             <div id="declareInfo"></div>
         </fieldset>
-        <fieldset class="layui-elem-field">
-            <legend>证明材料</legend>
-            <div class="layui-upload-list">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th style="text-align: center;">文件名</th>
-                        <th style="width: 150px; text-align: center;">上传日期</th>
-                        <th style="width: 150px; text-align: center;">操作</th>
-                    </tr>
-                    </thead>
-                    <tbody id="fileList"></tbody>
-                </table>
-            </div>
-        </fieldset>
     </div>
 
     <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" id="editForm" lay-filter="editForm">
-            <!-- 声明一个隐藏域，信息编号是修改数据的依据-->
-            <input type="hidden" name="code"/>
-            <input type="hidden" name="userId"/>
-            <input type="hidden" name="userName"/>
+            <!-- 声明一个隐藏域 -->
+            <input type="hidden" name="code"/><!-- 信息编号是修改数据的依据 -->
+            <input type="hidden" name="type" value="declare"/>
+
             <!-- 业务字段 -->
             <fieldset class="layui-elem-field" style="margin-top: 20px;">
                 <legend>团队基本信息</legend>
@@ -166,20 +143,20 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">工号：</label>
                         <div class="layui-input-inline" style="width: 305px">
-                            <input type="text" name="teamLeaderId" class="layui-input">
+                            <input type="text" name="userId" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">姓名：</label>
                         <div class="layui-input-inline" style="width: 305px">
-                            <input type="text" name="teamLeader" class="layui-input">
+                            <input type="text" name="userName" class="layui-input">
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">单位：</label>
                     <div class="layui-input-block">
-                        <input type="text" name="teamLeaderUnit" lay-verify="required|userUnit" autocomplete="off" class="layui-input" style="width: 90%">
+                        <input type="text" name="userUnit" class="layui-input" style="width: 90%">
                     </div>
                 </div>
             </fieldset>
@@ -199,23 +176,7 @@
             </fieldset>
             <fieldset class="layui-elem-field">
                 <legend>申报书</legend>
-                <textarea id="sbs" name="sbs" class="layui-textarea" style="height: 150px;"></textarea>
-            </fieldset>
-            <fieldset class="layui-elem-field">
-                <legend>证明材料</legend>
-                <div class="layui-upload" style="margin-top: 20px;">
-                    <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
-                    <span style="color: #8D8D8D">请选择PDF 格式文件</span>
-                    <div class="layui-upload-list">
-                        <table class="layui-table">
-                            <thead><tr><th style="text-align: center;">文件名</th>
-                                <th style="width: 150px;text-align: center;">状态</th>
-                                <th style="width: 150px;text-align: center;">操作</th>
-                            </tr></thead>
-                            <tbody id="upfileList"><tr id="noData"><td colspan="3" style="text-align: center;">无数据</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
+                <textarea id="declareOrReport" name="declareOrReport" class="layui-textarea" style="height: 150px;"></textarea>
             </fieldset>
             <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
@@ -254,9 +215,24 @@
         </form>
     </div>
 
+
+    <!-- 查看审核流程 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
+    <!-- 查看专家审核意见 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="zjshContainer"></div>
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
+            <div class="layui-form-item" style="width: 320px; margin-top: 20px; display: none" id="shenheType">
+                <label class="layui-form-label">审核类别：</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <select name="shenheType" disabled lay-filter="shenheType">
+                        <option value="">请选择</option>
+                        <option value="初审">初审</option>
+                        <option value="终审">终审</option>
+                    </select>
+                </div>
+            </div>
             <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
                 <label class="layui-form-label">审核状态：</label>
                 <div class="layui-input-inline" style="width: 150px;">
@@ -271,11 +247,11 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">审核意见：</label>
                 <div class="layui-input-block">
-                    <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 200px;">通过</textarea>
+                    <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 150px;">通过</textarea>
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-input-block" align="center">
+                <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="toSubmitShenHeForm" id="toSubmitShenHeForm">提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
@@ -283,12 +259,11 @@
         </form>
     </div>
 
-    <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/JsonExportExcel.min.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="../../../js/shenheProcess.js"></script>
-    <script src="../../../js/previewFileInfo.js"></script>
+    <script src="../../../layui/layui.js"></script>
     <script src="declare.js"></script>
 
 </body>
