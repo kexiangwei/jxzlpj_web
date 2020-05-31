@@ -20,6 +20,7 @@ layui.use(['layer','element','table','form'], function(){
             var data = data.data;
 
             if(data.isSubmit > 0){
+
                 //初始化数据表格
                 var myself_table = table.render({
                     id : guid()
@@ -58,42 +59,34 @@ layui.use(['layer','element','table','form'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field:'stuYear', title:'学年', width:120, hide:true}
-                        ,{field:'stuTerm', title:'学期', width:120, hide:true}
-                        ,{field:'college', title:'学院', width:120, hide:true}
-                        ,{field:'major', title:'专业', width:120, hide:true}
-                        ,{field: 'courseCode', title: '课程编号', width:120}
-                        ,{field: 'courseName', title: '课程名称', width:120}
-                        ,{field: 'teachClass', title: '授课班级', width:120}
-                        ,{field: 'stuNum', title: '学生人数', width:120}
-                        ,{field: 'totalHours', title: '总学时', width:120}
-                        ,{field: 'theoryHours', title: '理论学时', width:120}
-                        ,{field: 'testHours', title: '实验学时', width:120}
-                        ,{field: 'days', title: '实习天数', width:120}
-                        ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){
+                        ,{field: 'courseName', title: '课程名称', width:150, event: 'courseName', templet: function (data) {
+                                if(data.isSubmit=='已提交'){
+                                    return '<span style="font-weight: bold;">'+data.courseName+'</span>';
+                                }
+                                return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
+                         }}
+                        ,{field: 'courseCode', title: '课程编号', width:150}
+                        ,{field: 'courseType', title: '课程性质', width:150}
+                        ,{field: 'stuHour', title: '学时', width:120}
+                        ,{field: 'stuScore', title: '学分', width:120}
+                        ,{field: 'college', title:'开课学院（部）', width:150}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, templet: function(data){
                                 let html='';
                                 if(data.isSubmit=='已提交'){
                                     html = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                        ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                        ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>' +
-                                        ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
+                                        ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
                                     $('#myself_bar').html(html);
                                     return '<span style="color: blue;font-weight: bold;">'+data.isSubmit+'</span>';
-                                }else{
-                                    if(data.isSubmit=='未提交' && data.status ==='退回'){
-                                        html =' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                            ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                            ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                        $('#myself_bar').html(html);
-                                        return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
-                                    }
+                                }
+                                if(data.isSubmit=='未提交' && data.status ==='退回'){
+                                    html =' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
+                                        ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    $('#myself_bar').html(html);
+                                    return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
                                 }
                                 html =
                                     ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                    ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                    ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                    ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
+                                    ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
                                 $('#myself_bar').html(html);
                                 return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
                             }
@@ -108,23 +101,17 @@ layui.use(['layer','element','table','form'], function(){
                                 return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
-                        ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
+                        ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'}
                     ]]
                     ,done: function(res, curr, count){ //数据渲染完的回调
 
                         //监听搜索框事件
-                        $('.myself_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
                         let active = {
                             search: function(){
                                 myself_table.reload({
                                     where: {
-                                        'courseCode': $(".myself_search input[name='courseCode']").val()
-                                        ,'courseName': $(".myself_search input[ name='courseName']").val()
-                                        ,'isSubmit': $(".myself_search input[ name='isSubmit']").val()
-                                        ,'status': $(".myself_search input[ name='status']").val()
+                                        'courseName': $(".myself_search input[name='courseName']").val()
+                                        ,'status': $("#status option:selected").val()
                                     }
                                     ,page: {
                                         curr: 1 //重新从第 1 页开始
@@ -134,60 +121,20 @@ layui.use(['layer','element','table','form'], function(){
                             ,reset: function () {
                                 $(".myself_search input").val('');
                                 //清除选中状态
-                                $("#isSubmit").val("");
                                 $("#status").val("");
                                 form.render("select");
                             }
                         };
+                        $('.myself_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                        });
 
                         //监听头工具栏事件
                         table.on('toolbar(myself_table)', function(obj){
                             let rowDatas = table.checkStatus(obj.config.id).data; //获取选中的数据
 
                             switch(obj.event){
-                                case 'insert':
-                                    //
-                                    var objCode = new Date().getTime(); //初始化业务数据编号
-                                    //
-                                    layer.open({
-                                        id : guid()
-                                        ,title : '教学设计-课程实施计划-新增'
-                                        ,type : 1
-                                        ,area : [ '1100px', '500px' ]
-                                        ,offset : '50px'
-                                        ,content : $('#editForm_container')
-                                        ,success: function(layero, index){
-
-                                            //初始化表单
-                                            initEditForm({
-                                                'code': objCode
-                                                ,'userId':$.cookie('userId')
-                                                ,'userName':$.cookie('userName')
-                                            });
-
-                                            //监听表单提交
-                                            form.on('submit(toSubmitEidtForm)', function(data){
-                                                $.post(requestUrl+'/skjh/insert.do', data.field, function (resultData) {
-                                                    if(resultData.code === 200){
-                                                        myself_table.reload();//重新加载表格数据
-                                                    }
-                                                    layer.msg(resultData.msg, {offset: '100px'},function () {
-                                                        layer.close(index);
-                                                    });
-                                                },'json');
-                                            });
-                                        }
-                                        ,cancel: function(index, layero){
-                                            layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                                layer.closeAll();
-                                            });
-                                            return false;
-                                        }
-                                        ,end:function () {
-
-                                        }
-                                    });
-                                    break;
                                 case 'submit':
                                     if(rowDatas.length === 0){
                                         layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
@@ -222,28 +169,21 @@ layui.use(['layer','element','table','form'], function(){
                                 }
                                 detail_shenheProcess('教学设计-课程实施计划-查看审核流程',rowData);
                             } else if (obj.event === 'update') {
+
+                                //
                                 if(rowData.isSubmit== '已提交'){
-                                    layer.confirm('已提交的数据不可修改，如需修改需提交申请？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                        $.post(requestUrl+'/skjh/toUpdate.do', {
-                                            code: rowData.code //待修改的数据编号
-                                            ,desc: '' //修改说明
-                                        },function(resultData){
-                                            layer.msg('提交成功', {offset: '100px'},function () {
-                                                layer.close(index);
-                                            });
-                                        }, "json");
-                                    });
                                     return;
                                 }
 
                                 //执行编辑
-                                layer.open({
+                                let layIndex = layer.open({
                                     id : guid()
                                     ,title : '教学设计-课程实施计划-编辑'
                                     ,type : 1
-                                    ,area : [ '1100px', '500px' ] // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                                    ,offset : '50px'
+                                    ,area : [ '900px', '500px' ] // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
+                                    ,offset : '30px'
                                     ,shadeClose : true //点击遮罩关闭
+                                    ,btn: ['关闭']
                                     ,content : $('#editForm_container')
                                     ,success: function(layero, index){
                                         //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
@@ -255,19 +195,20 @@ layui.use(['layer','element','table','form'], function(){
 
                                         //初始化表单
                                         initEditForm(rowData);
+
                                         //监听表单提交
                                         form.on('submit(toSubmitEidtForm)', function(formData){
                                             $.post(requestUrl+'/skjh/update.do', formData.field, function (resultData) {
-                                                if(resultData.code === 200){
-                                                    myself_table.reload();//重新加载表格数据
-                                                }
                                                 layer.msg(resultData.msg, {offset: '100px'},function () {
+                                                    if(resultData.code === 200){
+                                                        myself_table.reload();//重新加载表格数据
+                                                    }
                                                     layer.close(index);
                                                 });
                                             },'json');
                                         });
                                     },end:function () {
-                                        location.reload();
+                                        // window.location.reload();
                                     }
                                 });
                             } else if (obj.event === 'delete') {
@@ -276,14 +217,63 @@ layui.use(['layer','element','table','form'], function(){
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                     $.post(requestUrl+'/skjh/delete.do', { code: rowData.code},function(resultData){
-                                        if(resultData.code === 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
                                         layer.msg(resultData.msg, {offset: '100px'},function () {
+                                            if(resultData.code === 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }
                                             layer.close(index);
                                         });
                                     }, "json");
                                 });
+                            } else if (obj.event === 'courseName') {
+                                if(rowData.isSubmit == '已提交'){
+                                    return;
+                                } else {
+                                    // layer.msg('显示课程实施计划填写表', { offset: '100px'});
+                                    let layIndex = layer.open({
+                                        id : guid()
+                                        ,title : '教学设计-实施计划-新增'
+                                        ,type : 1
+                                        ,area : [ '1175px', '500px' ]
+                                        ,offset : '30px'
+                                        // ,maxmin: true
+                                        ,content : $('#editForm_container')
+                                        ,success: function(layero, index){
+
+                                            let ue_jxDesign = UE.getEditor("jxDesign") //课堂设计
+                                                ,ue_szElement = UE.getEditor("szElement"); //思政元素
+
+                                            //初始化表单
+                                            initEditForm({
+                                                'code': new Date().getTime() //初始化业务数据编号
+                                                ,'userId':$.cookie('userId')
+                                                ,'userName':$.cookie('userName')
+                                            });
+
+                                            //监听表单提交
+                                            form.on('submit(toSubmitEidtForm)', function(data){
+                                                $.post(requestUrl+'/skjh/insert.do', data.field, function (resultData) {
+                                                    layer.msg(resultData.msg, {offset: '100px'},function () {
+                                                        if(resultData.code === 200){
+                                                            myself_table.reload();//重新加载表格数据
+                                                        }
+                                                        layer.close(index);
+                                                    });
+                                                },'json');
+                                            });
+                                        }
+                                        ,cancel: function(index, layero){
+                                            layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                                layer.closeAll();
+                                            });
+                                            return false;
+                                        }
+                                        ,end:function () {
+
+                                        }
+                                    });
+                                    layer.full(layIndex); //默认以最大化方式打开
+                                }
                             }
                         });
                     }
@@ -442,227 +432,13 @@ layui.use(['layer','element','table','form'], function(){
 
             //初始化表单
             var initEditForm = function (data) {
-                //
-                $.get(requestUrl+'/getCollege.do',function(result_data){
-                    if(result_data.code == 200){
-                        // alert(JSON.stringify(result_data.data));
-                        // 加载下拉选项
-                        $("select[name='college']").empty(); //移除下拉选项
-                        let html = '<option value="">请选择</option>';
-                        for (let i = 0; i < result_data.data.length; i++) {
-                            if(data.college == result_data.data[i].CODE ){
-                                html += '<option value="' + result_data.data[i].CODE + '" selected="">' + result_data.data[i].NAME + '</option>';
-                            }else{
-                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                            }
-                        }
-                        $("select[name='college']").append(html);
-                        form.render('select');
-                    }
-                },'json');
-                // 监听学院下拉选项
-                form.on('select(college)', function(data) {
-                    $.get(requestUrl+'/getMajor.do',{
-                        'collegeCode': data.value
-                    },function(result_data){
-                        if(result_data.code == 200){
-                            // 加载下拉选项
-                            $("select[name='major']").empty(); //移除下拉选项
-                            let html = '<option value="">请选择</option>';
-                            for (let i = 0; i < result_data.data.length; i++) {
-                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                            }
-                            $("select[name='major']").append(html);
-                            form.render('select');
-                        }
-                    },'json');
-                });
-                //
-                $.get(requestUrl+'/getMajor.do',{
-                    'collegeCode': data.college !== undefined?data.college:null
-                },function(result_data){
-                    if(result_data.code == 200){
-                        // 加载下拉选项
-                        $("select[name='major']").empty(); //移除下拉选项
-                        let html = '<option value="">请选择</option>';
-                        for (let i = 0; i < result_data.data.length; i++) {
-                            if(data.major == result_data.data[i].CODE ){
-                                html += '<option value="' + result_data.data[i].CODE + '" selected="">' + result_data.data[i].NAME + '</option>';
-                            }else{
-                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                            }
-                        }
-                        $("select[name='major']").append(html);
-                        form.render('select');
-                    }
-                },'json');
-
-                //数据表格
-                let tableIns = table.render({
-                    id: guid()
-                    ,elem : '#datatable'
-                    ,width: $('#editForm_container').width()
-                    // ,height : 默认不填写,高度随数据列表而适应，表格容器不会出现纵向滚动条
-                    ,url: requestUrl+'/common/getStudentInfo.do'
-                    ,where: {
-                        "relationCode":'1582989725273'
-                    }
-                    ,response: {
-                        statusCode: 200 //规定成功的状态码，默认：0
-                    }
-                    ,parseData: function(res){ //res 即为原始返回的数据
-                        return {
-                            "code": res.code, //解析接口状态
-                            "msg": "", //解析提示文本
-                            "data": res.data //解析数据列表
-                        };
-                    }
-                    ,totalRow: true //开启合计行
-                    ,even: true //隔行背景
-                    ,toolbar: '#datatable_toolbar' //指向自定义工具栏模板选择器
-                    ,defaultToolbar:[]
-                    ,cols : [[ //表头
-                        {type:'numbers', title:'序号', width:80, align:'center', rowspan:2, totalRowText: '学时总计：', fixed: 'left'}
-                        ,{field: 'stuCode', title: '周次', width:120, align:'center', rowspan:2}
-                        ,{field: 'stuCode', title: '日期', width:120, align:'center', rowspan:2}
-                        ,{field: 'stuCode', title: '星期', width:120, align:'center', rowspan:2}
-                        ,{field: 'stuCode', title: '节次', width:120, align:'center', rowspan:2}
-                        ,{field: 'stuCode', title: '上课地点', width:150, align:'center', rowspan:2}
-                        ,{field: 'stuCode', title: '学时', width:120, align:'center', rowspan:2, sort:true, totalRow:true}
-                        ,{title: '课程设计', align:'center',colspan:4}
-                        ,{field: 'stuCode', title: '任课老师', width:120, align:'center',rowspan:2}
-                        ,{fixed: 'right', title: '操作', width:120, align:'center',rowspan:2, toolbar: '#datatable_bar'}
-                    ],[ //表头
-                        {field: 'stuCode', title: '内容', width:150, align:'center'}
-                        ,{field: 'stuCode', title: '授课类型', width:120, align:'center'}
-                        ,{field: 'stuCode', title: '教学方式', width:120, align:'center'}
-                        ,{field: 'stuCode', title: '考核方式', width:120, align:'center'}
-                    ]]
-                    ,done : function(res, curr, count) {
-
-                        //监听头工具栏事件
-                        table.on('toolbar(datatable)', function(obj){
-                            //
-                            layer.open({
-                                title : '参赛学生信息'
-                                ,type : 1
-                                ,area : [ '900px', '350px' ]
-                                ,offset : '50px'
-                                ,btn : ['关闭']
-                                ,content : $('#stu_container')
-                                ,success: function(layero, index){
-
-                                    //
-                                    $.get(requestUrl+'/getCollege.do',function(result_data){
-                                        if(result_data.code == 200){
-                                            // alert(JSON.stringify(result_data.data));
-                                            // 加载下拉选项
-                                            $("select[name='college']").empty(); //移除下拉选项
-                                            let html = '<option value="">请选择</option>';
-                                            for (let i = 0; i < result_data.data.length; i++) {
-                                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                                            }
-                                            $("select[name='college']").append(html);
-                                            form.render('select');
-                                        }
-                                    },'json');
-                                    // 监听学院下拉选项
-                                    form.on('select(college)', function(data) {
-                                        $.get(requestUrl+'/getMajor.do',{
-                                            'collegeCode': data.value
-                                        },function(result_data){
-                                            if(result_data.code == 200){
-                                                // 加载下拉选项
-                                                $("select[name='major']").empty(); //移除下拉选项
-                                                let html = '<option value="">请选择</option>';
-                                                for (let i = 0; i < result_data.data.length; i++) {
-                                                    html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
-                                                }
-                                                $("select[name='major']").append(html);
-                                                form.render('select');
-                                            }
-                                        },'json');
-                                    });
-
-                                    //监听表单提交
-                                    form.on('submit(toSubmitStuForm)', function(form_data){
-                                        $.post(requestUrl+'/xkzybs/addStuInfo.do',{
-                                            "relationCode":data.code,
-                                            "stuCode":form_data.field.stuCode,
-                                            "stuName":form_data.field.stuName,
-                                            "college":form_data.field.college,
-                                            "major":form_data.field.major
-                                        },function (result_data) {
-                                            if(result_data.code == 200){
-                                                tableIns.reload();//重新加载数据
-                                            }
-                                            layer.msg(result_data.msg, { offset: '100px'},function () {
-                                                layer.close(index);
-                                            });
-                                        },'json');
-                                        return false;
-                                    });
-                                },end:function () {
-                                    $("#stuForm input").val("");
-                                    //清除选中状态
-                                    $("#college").val("");
-                                    $("#major").val("");
-                                    form.render("select");
-                                }
-                            });
-                        });
-
-                        //监听右侧工具条
-                        table.on('tool(datatable)', function(obj){
-                            if (obj.event === 'delete') {
-                                $.post(parent.requestUrl+'/xkzybs/delStuInfo.do', {
-                                    "relationCode": obj.data.relationCode
-                                    ,"stuCode": obj.data.stuCode
-                                },function(result_data){
-                                    if(result_data.code === 200){
-                                        tableIns.reload();//重新加载表格数据
-                                    }
-                                    layer.msg(result_data.msg, { offset: '100px'});
-                                }, "json");
-                            }
-                        });
-                    }
-                });
-
-                //表单验证
-                form.verify({
-                    theoryHours: function(value){
-                        if(value > 128){
-                            return '当前字符长度'+value.length+'（最大值64）';
-                        }
-                    }
-                    ,testHours: function(value){
-                        if(value > 128){
-                            return '当前字符长度'+value.length+'（最大值64）';
-                        }
-                    }
-                    ,totalHours: function(value){
-                        if(value > 128){
-                            return '当前字符长度'+value.length+'（最大值64）';
-                        }
-                    }
-                });
 
                 //初始化表单数据
                 form.val("editForm",{
                     "code":data.code
-                    ,"stuYear": data.stuYear
-                    ,"stuTerm" : data.stuTerm
-                    ,"college" : data.college
-                    ,"major" : data.major
                     ,"courseCode" : data.courseCode
-                    ,"courseName" : data.courseName
+                    ,"mainTeacher" : data.mainTeacher
                     ,"teachClass" : data.teachClass
-                    ,"stuNum" : data.stuNum
-                    ,"totalHours" : data.totalHours
-                    ,"theoryHours" : data.theoryHours
-                    ,"testHours" : data.testHours
-                    ,"days" : data.days
                     ,"userId":data.userId
                     ,"userName":data.userName
                 });
@@ -675,46 +451,20 @@ layui.use(['layer','element','table','form'], function(){
              * @param isShenHe
              */
             var detail_dataInfo = function (rowData,isSubmit,isShenHe) {
+                //
                 let options = {
                     id :guid() //弹层唯一标识,一般用于页面层和iframe层模式,设置该值后，不管是什么类型的层，都只允许同时弹出一个。
                     ,title : '教学设计-课程实施计划-查看信息'
                     ,type : 1
                     ,area : [ '900px', '500px' ]
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,offset : '30px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : '<table class="layui-table">\n' +
                         '        <tbody>\n' +
                         '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">学年：</td><td style="width: 120px;">'+rowData.stuYear+'</td>' +
-                        '                <td style="width: 80px; text-align: right">学期：</td><td style="width: 120px;">'+rowData.stuTerm+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">学院：</td><td style="width: 120px;">'+rowData.college+'</td>' +
-                        '                <td style="width: 80px; text-align: right">专业：</td><td style="width: 120px;">'+rowData.major+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
                         '                <td style="width: 80px; text-align: right">课程编号：</td><td style="width: 120px;">'+rowData.courseCode+'</td>' +
                         '                <td style="width: 80px; text-align: right">课程名称：</td><td style="width: 120px;">'+rowData.courseName+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">授课班级：</td><td style="width: 120px;">'+rowData.teachClass+'</td>' +
-                        '                <td style="width: 80px; text-align: right">学生人数：</td><td style="width: 120px;">'+rowData.stuNum+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">总学时：</td><td style="width: 120px;">'+rowData.totalHours+'</td>' +
-                        '                <td style="width: 80px; text-align: right">理论学时：</td><td style="width: 120px;">'+rowData.theoryHours+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">实验学时：</td><td style="width: 120px;">'+rowData.testHours+'</td>' +
-                        '                <td style="width: 80px; text-align: right">实习天数：</td><td style="width: 120px;">'+rowData.days+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">教师工号：</td><td style="width: 120px;">'+rowData.userId+'</td>' +
-                        '                <td style="width: 80px; text-align: right">教师姓名：</td><td style="width: 120px;">'+rowData.userName+'</td>' +
-                        '              </tr>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;" colspan="3">'+rowData.createDate+'</td>' +
                         '              </tr>\n' +
                         '        </tbody>\n' +
                         '    </table>'
@@ -752,10 +502,10 @@ layui.use(['layer','element','table','form'], function(){
                         "menuId":$.cookie('currentMenuId'),
                         "jsonStr":JSON.stringify(rowDatas)
                     },function (resultData) {
-                        if(resultData.code === 200){
-                            myself_table.reload();//重新加载表格数据
-                        }
                         layer.msg(resultData.msg, {time : 3000, offset: '100px'},function () {
+                            if(resultData.code === 200){
+                                myself_table.reload();//重新加载表格数据
+                            }
                             layer.closeAll();
                         });
                     },'json');
@@ -763,29 +513,48 @@ layui.use(['layer','element','table','form'], function(){
             };
 
             //审核
-            var toShenHe = function (rowDatas) {
+            var toShenHe = function (row_dataArr) {
+                //
                 layer.open({
-                    id: guid()
-                    ,title : '教学设计-课程实施计划-添加审核意见'
-                    ,type : 2
-                    ,area : [ '700px', '300px' ]
-                    ,offset : '100px' //只定义top坐标，水平保持居中
+                    title : '教学设计-课程实施计划-审核'
+                    ,type : 1
+                    ,area : [ '900px', '450px' ]
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
-                    // ,btn: ['关闭']
-                    ,content : '../../common/common_shenHe.html'
+                    ,btn : ['关闭']
+                    ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
-                        var body = layer.getChildFrame('body', index);
-                        var iframeWin = window[layero.find('iframe')[0]['name']];
-                        iframeWin.params = {
-                            module : 'skjh'
-                            ,userId: $.cookie('userId')
-                            ,userName: $.cookie('userName')
-                            ,rowDatas : rowDatas
-                        };
-                    }
-                    ,end:function () {
-                        other_table.reload();//重新加载表格数据
+                        form.on('select(status)', function(data) {
+                            if(data.value == '通过'){
+                                $('#opinion').html('通过');
+                            }else{
+                                $('#opinion').empty();
+                            }
+                        });
+
+                        //
+                        form.on('submit(toSubmitShenHeForm)', function(formData){
+                            $.post(requestUrl+'/skjh/toShenhe.do',{
+                                "jsonStr":JSON.stringify(row_dataArr)
+                                ,"status":formData.field.status
+                                ,"opinion":formData.field.opinion
+                                ,"userId":function () {
+                                    return $.cookie('userId');
+                                }
+                                ,"userName":function () {
+                                    return $.cookie('userName');
+                                }
+                            },function (result_data) {
+
+                                layer.msg(result_data.msg, { offset: '100px'},function () {
+                                    if(result_data.code === 200){
+                                        other_table.reload();//重新加载表格数据
+                                    }
+                                    layer.close(index);
+                                });
+                            },'json');
+                        });
                     }
                 });
             };
