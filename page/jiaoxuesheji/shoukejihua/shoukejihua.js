@@ -1,8 +1,8 @@
 /*
 教学设计-课程实施计划
  */
-layui.use(['layer','element','table','form'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
+layui.use(['layer','element','table','form','laydate'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
     $.ajax({
         type: "get",
@@ -65,7 +65,7 @@ layui.use(['layer','element','table','form'], function(){
                                 }
                                 return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                          }}
-                        ,{field: 'courseCode', title: '课程编号', width:150}
+                        ,{field: 'courseCode', title: '课程编号', width:120}
                         ,{field: 'courseType', title: '课程性质', width:150}
                         ,{field: 'stuHour', title: '学时', width:120}
                         ,{field: 'stuScore', title: '学分', width:120}
@@ -101,7 +101,7 @@ layui.use(['layer','element','table','form'], function(){
                                 return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
-                        ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'}
+                        ,{fixed: 'right', width:168, align:'center', toolbar: '#myself_bar'}
                     ]]
                     ,done: function(res, curr, count){ //数据渲染完的回调
 
@@ -244,11 +244,14 @@ layui.use(['layer','element','table','form'], function(){
                                                 ,ue_szElement = UE.getEditor("szElement"); //思政元素
 
                                             //初始化表单
-                                            initEditForm({
-                                                'code': new Date().getTime() //初始化业务数据编号
-                                                ,'userId':$.cookie('userId')
-                                                ,'userName':$.cookie('userName')
-                                            });
+                                            if(rowData.code == null){
+                                                rowData.code =  new Date().getTime(); //初始化业务数据编号
+                                                rowData.userId = $.cookie('userId');
+                                                rowData.userName = $.cookie('userName');
+                                                rowData.mainTeacher = $.cookie('userName');
+                                            }
+                                            // alert(JSON.stringify(rowData));
+                                            initEditForm(rowData);
 
                                             //监听表单提交
                                             form.on('submit(toSubmitEidtForm)', function(data){
@@ -433,14 +436,22 @@ layui.use(['layer','element','table','form'], function(){
             //初始化表单
             var initEditForm = function (data) {
 
+                //日期选择器
+                laydate.render({
+                    elem: '#dates'
+                    //,type: 'date' //默认，可不填
+                });
+
                 //初始化表单数据
                 form.val("editForm",{
                     "code":data.code
                     ,"courseCode" : data.courseCode
+                    ,"courseName" : data.courseName
                     ,"mainTeacher" : data.mainTeacher
                     ,"teachClass" : data.teachClass
                     ,"userId":data.userId
                     ,"userName":data.userName
+                    ,"itemCode":new Date().getTime()
                 });
             };
 

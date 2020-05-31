@@ -94,12 +94,15 @@
 
     </div>
     <!-- 响应新增，编辑按钮 -->
-    <div class="layui-container" style="width: 90%; display: none" id="editForm_container">
+    <div class="layui-container" style="width: 80%; display: none" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
-
+            <!-- Skjh -->
             <input type="hidden" name="code"/>
+            <input type="hidden" name="mainTeacher"/>
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
+            <!-- SkjhItem -->
+            <input type="hidden" name="itemCode"/>
 
             <!-- 业务数据 -->
             <div class="layui-form-item" style="margin-top: 20px;">
@@ -119,7 +122,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">授课班级：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="teachClass" class="layui-input" style="width: 50%">
+                    <input type="text" name="teachClass" class="layui-input" style="width: 57%">
                 </div>
             </div>
 
@@ -133,7 +136,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">日期：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="date" class="layui-input">
+                        <input type="text" id="dates" name="dates" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -141,13 +144,13 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">星期：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="week" lay-verify="required|theoryHours" autocomplete="off" class="layui-input">
+                        <input type="text" name="week" lay-verify="required|theoryHours" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">节次：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="lessonNum" lay-verify="required|testHours" autocomplete="off" class="layui-input">
+                        <input type="text" name="lessonNum" lay-verify="required|testHours" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -155,7 +158,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">上课地点：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="teachAddr" lay-verify="required|totalHours" autocomplete="off" class="layui-input">
+                        <input type="text" name="teachAddr" lay-verify="required|totalHours" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
