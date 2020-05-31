@@ -17,7 +17,15 @@
                 <div class="layui-fluid">
                     <!-- 查询参数 -->
                     <div class="layui-form myself_search">
-                        课程名称：
+                        开课学院（部）：
+                        <div class="layui-inline">
+                            <input type="text" name="college" placeholder="" class="layui-input">
+                        </div>
+                        &nbsp;&nbsp;课程编号：
+                        <div class="layui-inline">
+                            <input type="text" name="courseCode" placeholder="" class="layui-input">
+                        </div>
+                        &nbsp;&nbsp;课程名称：
                         <div class="layui-inline">
                             <input type="text" name="courseName" placeholder="支持关键字查询" class="layui-input">
                         </div>
@@ -53,7 +61,15 @@
                 <div class="layui-fluid">
                     <!-- 查询参数 -->
                     <div class="layui-form other_search">
-                        课程名称：
+                        开课学院（部）：
+                        <div class="layui-inline">
+                            <input type="text" name="college" placeholder="" class="layui-input">
+                        </div>
+                        &nbsp;&nbsp;课程编号：
+                        <div class="layui-inline">
+                            <input type="text" name="courseCode" placeholder="" class="layui-input">
+                        </div>
+                        &nbsp;&nbsp;课程名称：
                         <div class="layui-inline">
                             <input type="text" name="courseName" placeholder="支持关键字查询" class="layui-input">
                         </div>
@@ -121,7 +137,7 @@
 
             <!-- 业务字段 -->
             <div class="layui-form-item" style="margin-top: 20px">
-                <label class="layui-form-label">开课学院：</label>
+                <label class="layui-form-label">开课学院(部)：</label>
                 <div class="layui-input-block">
                     <input type="text" name="college" class="layui-input">
                 </div>
@@ -153,7 +169,7 @@
                     <button type="button" class="layui-btn layui-btn-primary" style="width: 192px" id="upfile">请选择 PDF 格式文件</button>
                 </div>
             </div>
-            <div class="layui-btn-container" align="center">
+            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm" id="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
@@ -215,7 +231,6 @@
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
-    <script src="../../../js/pdfjs/build/pdf.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="../../../js/shenheProcess.js"></script>
     <script src="../../../js/previewFileInfo.js"></script>

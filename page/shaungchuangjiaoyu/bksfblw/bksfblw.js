@@ -440,7 +440,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,elem : '#teacher_datatable'
                     ,width: 750
                     // ,height : 200
-                    ,url: requestUrl+'/scjx/getTeacherInfo.do'
+                    ,url: requestUrl+'/common/getTeacherInfo.do'
                     ,where: {
                         "relationCode":data.code
                     }
@@ -481,7 +481,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                                     //监听表单提交
                                     form.on('submit(toSubmitTeacherForm)', function(form_data){
-                                        $.post(requestUrl+'/scjx/addTeacherInfo.do',{
+                                        $.post(requestUrl+'/common/addTeacherInfo.do',{
                                             "relationCode":data.code,
                                             "teacherCode":form_data.field.teacherCode,
                                             "teacherName":form_data.field.teacherName,
@@ -505,7 +505,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //监听右侧工具条
                         table.on('tool(teacher_datatable)', function(obj){
                             if (obj.event === 'delete') {
-                                $.post(parent.requestUrl+'/scjx/delTeacherInfo.do', {
+                                $.post(parent.requestUrl+'/common/delTeacherInfo.do', {
                                     "relationCode": obj.data.relationCode
                                     ,"teacherCode": obj.data.teacherCode
                                 },function(result_data){
@@ -523,7 +523,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 let student_datatable = table.render({
                     id: "student_datatable"
                     ,elem : '#student_datatable'
-                    ,url: requestUrl+'/scjx/getStudentInfo.do'
+                    ,url: requestUrl+'/common/getStudentInfo.do'
                     ,where: {
                         "relationCode":data.code
                     }
@@ -598,7 +598,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                                     //监听表单提交
                                     form.on('submit(toSubmitStuForm)', function(form_data){
-                                        $.post(requestUrl+'/scjx/addStudentInfo.do',{
+                                        $.post(requestUrl+'/common/addStudentInfo.do',{
                                             "relationCode":data.code,
                                             "college":form_data.field.college,
                                             "major":form_data.field.major,
@@ -628,7 +628,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //监听右侧工具条
                         table.on('tool(student_datatable)', function(obj){
                             if (obj.event === 'delete') {
-                                $.post(parent.requestUrl+'/scjx/delStudentInfo.do', {
+                                $.post(parent.requestUrl+'/common/delStudentInfo.do', {
                                     "relationCode": obj.data.relationCode
                                     ,"studentCode": obj.data.studentCode
                                 },function(result_data){
@@ -885,7 +885,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         $("#teacherInfo").html(htmlStr);
 
                         //其他指导教师信息
-                        $.get(requestUrl+'/scjx/getTeacherInfo.do',{
+                        $.get(requestUrl+'/common/getTeacherInfo.do',{
                             "relationCode":data.code
                         },function (result_data) {
                             if(result_data.code = 200){
@@ -903,7 +903,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         },'json');
 
                         //学生信息
-                        $.get(requestUrl+'/scjx/getStudentInfo.do',{
+                        $.get(requestUrl+'/common/getStudentInfo.do',{
                             "relationCode":data.code
                         },function (result_data) {
                             if(result_data.code = 200){

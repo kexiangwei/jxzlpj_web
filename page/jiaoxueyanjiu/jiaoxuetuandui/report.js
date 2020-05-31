@@ -673,7 +673,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 let teacher_datatable = table.render({
                     id: guid()
                     ,elem : '#teacher_datatable'
-                    ,url: requestUrl+'/scjx/getTeacherInfo.do'
+                    ,url: requestUrl+'/common/getTeacherInfo.do'
                     ,where: {
                         "relationCode": relationCode
                     }
@@ -716,7 +716,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     form.on('submit(toSubmitTeacherForm)', function(data){
                                         let form_data = data.field;
                                         form_data.relationCode = relationCode;
-                                        $.post(requestUrl+'/scjx/addTeacherInfo.do', form_data, function (result_data) {
+                                        $.post(requestUrl+'/common/addTeacherInfo.do', form_data, function (result_data) {
                                             layer.msg(result_data.msg, { offset: '100px'},function () {
                                                 if(result_data.code == 200){
                                                     teacher_datatable.reload();//重新加载数据
@@ -735,7 +735,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         //监听右侧工具条
                         table.on('tool(teacher_datatable)', function(obj){
                             if (obj.event === 'delete') {
-                                $.post(parent.requestUrl+'/scjx/delTeacherInfo.do', {
+                                $.post(parent.requestUrl+'/common/delTeacherInfo.do', {
                                     "relationCode": obj.data.relationCode
                                     ,"teacherCode": obj.data.teacherCode
                                 },function(result_data){
@@ -792,7 +792,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         $("#teamLeaderInfo").html(html);
 
                         //团队成员信息
-                        $.get(requestUrl+'/scjx/getTeacherInfo.do',{
+                        $.get(requestUrl+'/common/getTeacherInfo.do',{
                             "relationCode":data.code
                         },function (result_data) {
                             if(result_data.code = 200){

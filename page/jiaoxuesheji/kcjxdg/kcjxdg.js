@@ -59,7 +59,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'college', title: '开课学院', width:150, sort:true}
+                        ,{field: 'college', title: '开课学院（部）', width:150, sort:true}
                         ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
                         ,{field: 'courseName', title: '课程名称', width:150, sort:true}
                         ,{field: 'major', title: '适用专业', width:150, sort:true}
@@ -93,7 +93,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 if(val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
-                                return '<span style="font-weight: bold;">待审核</span>';
+                                return '<span style="font-weight: bold;">'+(val=="未通过"?"未通过":"待审核")+'</span>';
                             }
                         }
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
@@ -101,15 +101,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 });//table end.
 
                 //监听搜索框事件
-                $('.myself_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
+
                 let active = {
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'courseName': $(".myself_search input[name='courseName']").val()
+                                'college': $(".myself_search input[name='college']").val()
+                                ,'courseCode': $(".myself_search input[name='courseCode']").val()
+                                ,'courseName': $(".myself_search input[name='courseName']").val()
                                 ,'status': $("#status option:selected").val()
                             }
                             ,page: {
@@ -124,6 +123,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         form.render("select");
                     }
                 };
+                $('.myself_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
 
                 //监听头工具栏事件
                 table.on('toolbar(myself_table)', function(obj){
@@ -132,7 +135,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     switch(obj.event){
                         case 'insert':
                             let objCode = new Date().getTime(); //初始化业务数据编号
-                            layer.open({
+                            let layIndex = layer.open({
                                 title : '教学设计-课程教学大纲-新增'
                                 ,type : 1
                                 ,area : [ '900px', '450px' ]
@@ -150,11 +153,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         $.post(requestUrl+'/kcjxdg/insert.do' ,data.field ,function(result_data){
-                                            if(result_data.code == 200){
-                                                myself_table.reload();//重新加载表格数据
-                                            }
+
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                layer.close(index);
+                                                if(result_data.code == 200){
+                                                    myself_table.reload();//重新加载表格数据
+                                                }
+                                                layer.close(layIndex);
                                             });
                                         },'json');
                                     });
@@ -196,12 +200,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     if (obj.event === 'detail_dataInfo') {
                         detail_dataInfo(data,true);
                     } else if (obj.event === 'detail_shenheProcess') {
-                        if(data.isSubmit=='未提交'){
+                        if(data.isSubmit=='未提交' && data.status != '退回'){
                             return;
                         }
                         detail_shenheProcess('教学设计-课程教学大纲-查看审核流程',data);
                     } else if (obj.event === 'update') {
-                        if(data.isSubmit== '已提交' &&  data.status != '退回'){
+                        if(data.isSubmit== '已提交'){
                             return;
                         }
                         //执行编辑
@@ -225,10 +229,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 //监听表单提交
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     $.post(requestUrl+'/kcjxdg/update.do' ,data.field ,function(result_data){
-                                        if(result_data.code == 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
+
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            if(result_data.code == 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }
                                             layer.close(index);
                                         });
                                     },'json');
@@ -243,10 +248,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                             $.post(requestUrl+'/kcjxdg/delete.do', { 'code': data.code},function(result_data){
-                                if(result_data.code == 200){
-                                    myself_table.reload();//重新加载表格数据
-                                }
+
                                 layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                                    if(result_data.code == 200){
+                                        myself_table.reload();//重新加载表格数据
+                                    }
                                     layer.close(index);
                                 });
                             }, "json");
@@ -300,7 +306,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'college', title: '开课学院', width:150, sort:true}
+                        ,{field: 'college', title: '开课学院（部）', width:150, sort:true}
                         ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
                         ,{field: 'courseName', title: '课程名称', width:150, sort:true}
                         ,{field: 'major', title: '适用专业', width:150, sort:true}
@@ -318,15 +324,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         $('#other').find('span').html(res.unShenHeNum);
 
                         //监听搜索框事件
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
+
                         let active = {
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'courseName': $(".other_search input[name='courseName']").val()
+                                        'college': $(".other_search input[name='college']").val()
+                                        ,'courseCode': $(".other_search input[name='courseCode']").val()
+                                        ,'courseName': $(".other_search input[name='courseName']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
@@ -341,6 +346,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 form.render("select");
                             }
                         };
+                        $('.other_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                        });
 
                         //监听头工具栏事件
                         table.on('toolbar(other_table)', function(obj){
@@ -513,10 +522,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         "menuId":$.cookie('currentMenuId'),
                         "jsonStr":JSON.stringify(row_dataArr)
                     },function (result_data) {
-                        if(result_data.code === 200){
-                            myself_table.reload();//重新加载表格数据
-                        }
+
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            if(result_data.code === 200){
+                                myself_table.reload();//重新加载表格数据
+                            }
                             layer.closeAll();
                         });
                     },'json');
@@ -557,10 +567,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     return $.cookie('userName');
                                 }
                             },function (result_data) {
-                                if(result_data.code === 200){
-                                    other_table.reload();//重新加载表格数据
-                                }
+
                                 layer.msg(result_data.msg, { offset: '100px'},function () {
+                                    if(result_data.code === 200){
+                                        other_table.reload();//重新加载表格数据
+                                    }
                                     layer.close(index);
                                 });
                             },'json');

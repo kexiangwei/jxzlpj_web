@@ -503,7 +503,7 @@ layui.use(['layer','element','table','form'], function(){
                     ,elem : '#datatable'
                     ,width: $('#editForm_container').width()
                     // ,height : 默认不填写,高度随数据列表而适应，表格容器不会出现纵向滚动条
-                    ,url: requestUrl+'/scjx/getStudentInfo.do'
+                    ,url: requestUrl+'/common/getStudentInfo.do'
                     ,where: {
                         "relationCode":'1582989725273'
                     }

@@ -6,7 +6,7 @@ layui.use(['layer','upload'], function(){
     //
     $('#upfile').click(function(){
         layer.open({
-            title : '教学效果-试卷分析-证明材料'
+            title : '教学效果-试卷分析-上传附件'
             ,type : 1
             ,area : [ '700px', '300px' ]
             ,offset : '100px'
@@ -15,6 +15,7 @@ layui.use(['layer','upload'], function(){
             ,btn: ['关闭']
             ,content : $('#uploadFile_container')
             ,success: function(layero, index){
+                //
                 let upfileList = $('#upfileList');
                 $.get(requestUrl+"/getFileListByRelationCode.do" , {
                     "relationCode": $("#editForm input[ name='code' ] ").val()
@@ -51,6 +52,7 @@ layui.use(['layer','upload'], function(){
                         });
                     }
                 }, "json");
+
                 //上传附件
                 let upfileIns = upload.render({
                     elem: '#upfileIns'

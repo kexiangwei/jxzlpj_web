@@ -420,7 +420,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,elem : '#teacher_datatable'
                     ,width: 750
                     // ,height : 200
-                    ,url: requestUrl+'/scjx/getTeacherInfo.do'
+                    ,url: requestUrl+'/common/getTeacherInfo.do'
                     ,where: {
                         "relationCode":data.code
                     }
@@ -461,7 +461,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                                     //监听表单提交
                                     form.on('submit(toSubmitTeacherForm)', function(form_data){
-                                        $.post(requestUrl+'/scjx/addTeacherInfo.do',{
+                                        $.post(requestUrl+'/common/addTeacherInfo.do',{
                                             "relationCode":data.code,
                                             "teacherCode":form_data.field.teacherCode,
                                             "teacherName":form_data.field.teacherName,
@@ -485,7 +485,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         //监听右侧工具条
                         table.on('tool(teacher_datatable)', function(obj){
                             if (obj.event === 'delete') {
-                                $.post(parent.requestUrl+'/scjx/delTeacherInfo.do', {
+                                $.post(parent.requestUrl+'/common/delTeacherInfo.do', {
                                     "relationCode": obj.data.relationCode
                                     ,"teacherCode": obj.data.teacherCode
                                 },function(result_data){
@@ -562,7 +562,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         $("#teacherInfo").html(htmlStr);
 
                         //其他指导教师信息
-                        $.get(requestUrl+'/scjx/getTeacherInfo.do',{
+                        $.get(requestUrl+'/common/getTeacherInfo.do',{
                             "relationCode":data.code
                         },function (result_data) {
                             if(result_data.code = 200){
