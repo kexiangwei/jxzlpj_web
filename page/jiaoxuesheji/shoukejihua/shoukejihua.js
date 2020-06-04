@@ -290,13 +290,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
             if(data.isShenhe > 0){ //拥有审核权限
 
-                //监听Tab切换
-                element.on('tab(layuiTab)', function(data){
-                    if(data.index == 1){ //
-                        other_table.reload(); //重新加载表格数据
-                    }
-                });
-
                 //数据表格
                 var other_table = table.render({
                     id : guid()
@@ -336,19 +329,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field:'stuYear', title:'学年', width:120, hide:true}
-                        ,{field:'stuTerm', title:'学期', width:120, hide:true}
-                        ,{field:'college', title:'学院', width:120, hide:true}
-                        ,{field:'major', title:'专业', width:120, hide:true}
-                        ,{field: 'courseCode', title: '课程编号', width:120}
-                        ,{field: 'courseName', title: '课程名称', width:120}
-                        ,{field: 'teachClass', title: '授课班级', width:120}
-                        ,{field: 'stuNum', title: '学生人数', width:120}
-                        ,{field: 'totalHours', title: '总学时', width:120}
-                        ,{field: 'theoryHours', title: '理论学时', width:120}
-                        ,{field: 'testHours', title: '实验学时', width:120}
-                        ,{field: 'days', title: '实习天数', width:120}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'courseName', title: '课程名称', width:150, sort:true}
+                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
+                        ,{field: 'courseType', title: '课程性质', width:150, sort:true}
+                        ,{field: 'stuHour', title: '学时', width:120, sort:true}
+                        ,{field: 'stuScore', title: '学分', width:120, sort:true}
+                        ,{field: 'college', title:'开课学院（部）', width:150, sort:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -362,18 +349,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         $('#other').find('span').html(res.unShenHeNum); //设置未审核数
 
                         //监听搜索框事件
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
                         let active = {
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'userId': $(".other_search input[ name='userId' ] ").val()
-                                        ,'userName': $(".other_search input[ name='userName' ] ").val()
-                                        ,'courseCode': $(".other_search input[ name='courseCode' ] ").val()
-                                        ,'courseName': $(".other_search input[ name='courseName' ] ").val()
+                                        'courseName': $(".other_search input[ name='courseName' ] ").val()
                                         ,'shenheStatus': $(".other_search input[ name='shenheStatus' ] ").val()
                                     }
                                     ,page: {
@@ -388,6 +368,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 form.render("select");
                             }
                         };
+                        $('.other_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                        });
 
                         //监听头工具栏事件
                         table.on('toolbar(other_table)', function(obj){
@@ -426,6 +410,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 detail_shenheProcess('教学设计-课程实施计划-查看审核流程',rowData);
                             }
                         });
+                    }
+                });
+
+                //监听Tab切换
+                element.on('tab(layuiTab)', function(data){
+                    if(data.index == 1){ //
+                        other_table.reload(); //重新加载表格数据
                     }
                 });
             } else{
@@ -577,8 +568,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
             //审核
             var toShenHe = function (row_dataArr) {
                 //
-                layer.open({
-                    title : '教学设计-课程实施计划-审核'
+                let layIndex = layer.open({
+                    id: guid()
+                    ,title : '教学设计-课程实施计划-审核'
                     ,type : 1
                     ,area : [ '900px', '450px' ]
                     ,offset : '50px' //只定义top坐标，水平保持居中
@@ -608,7 +600,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     return $.cookie('userName');
                                 }
                             },function (result_data) {
-
                                 layer.msg(result_data.msg, { offset: '100px'},function () {
                                     if(result_data.code === 200){
                                         other_table.reload();//重新加载表格数据
