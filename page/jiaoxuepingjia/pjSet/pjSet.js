@@ -28,17 +28,15 @@ layui.use(['layer','element','table','form'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#pjSet_dataTable_toolbar'
+        ,toolbar: '#datatable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '编号', width:150}
-            ,{field: 'name', title: '名称', width:178}
-            ,{field: 'startDate', title: '开始日期', width:150}
-            ,{field: 'endDate', title: '结束日期', width:150}
-            // ,{field: 'templateCode', title: '模板编号', width:120}
-            ,{field: 'templateName', title: '模板名称', width:178}
-            ,{field: 'createDate', title: '创建日期', width:150}
-            ,{fixed: 'right', width:220, align:'center', toolbar: '#pjSet_dataTable_bar'}
+            ,{field: 'templateType', title: '模板类型', width:150}
+            ,{field: 'templateName', title: '模板名称', width:200}
+            ,{field: 'startDate', title: '开始日期', width:200}
+            ,{field: 'endDate', title: '结束日期', width:200}
+            ,{field: 'createDate', title: '创建日期', width:200}
+            ,{fixed: 'right', width:220, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -74,13 +72,15 @@ layui.use(['layer','element','table','form'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#template_dataTable_toolbar'
+        ,toolbar: '#datatable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'templateCode', title: '模板编号', width:150}
-            ,{field: 'templateName', title: '模板名称', width:150}
-            ,{field: 'templateDesc', title: '模板描述', width:660}
-            ,{fixed: 'right', width:220, align:'center', toolbar: '#template_dataTable_bar'}
+            // ,{field: 'templateCode', title: '编号', width:150}
+            ,{field: 'templateType', title: '类型', width:150}
+            ,{field: 'templateName', title: '名称', width:200}
+            ,{field: 'templateDesc', title: '描述', width:600}
+            // ,{field: 'createDate', title: '创建日期', width:150}
+            ,{fixed: 'right', width:220, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -109,45 +109,43 @@ layui.use(['layer','element','table','form'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#target_dataTable_toolbar'
+        ,toolbar: '#datatable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'targetCode', title: '指标编号', width:150}
-            ,{field: 'targetCategory', title: '类别', width:150}
-            ,{field: 'targetType', title: '类型', width:150,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
-                    if(data.targetType=='teacher'){
-                        return '对教师评价';
-                    }else if(data.targetType=='student'){
-                        return '自我学习评价';
-                    }
-                    return '';
-                }
-            }
-            ,{field: 'targetName', title: '指标名称', width:150, edit: 'text'}
-            ,{field: 'targetContent', title: '评价内容', width:450, edit: 'text'}
-            ,{field: 'targetScore', title: '指标分值', width:120, edit: 'text', sort: true}
+            // ,{field: 'targetCode', title: '编号', width:120}
+            ,{field: 'targetType', title: '类型', width:150}
+            ,{field: 'targetName', title: '名称', width:150}
+            ,{field: 'targetContent', title: '内容', width:450}
+            ,{field: 'targetScore', title: '分值', width:150, sort: true}
+            // ,{field: 'createDate', title: '创建日期', width:150}
+            ,{fixed: 'right', width:250, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,done : function(res, curr, count) {
+
             //监听头工具栏事件
             table.on('toolbar(target_dataTable)', function(obj){
-                layer.open({
+                //
+                let layIndex = layer.open({
                     title : '教学评价-评教设置-指标'
                     ,type : 1
-                    ,area : [ '700px', '500px' ]
-                    ,offset : '30px'
+                    ,area : [ '700px', '450px' ]
+                    ,offset : '50px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,content : $('#targetContainer')
+                    ,content : $('#target_container')
                     ,success: function(layero, index){
+
                         //监听提交
-                        form.on('submit(target_editForm)', function(data){
+                        form.on('submit(toSubmitEditForm)', function(data){
                             layer.msg(JSON.stringify(data.field));
                             return false;
                         });
+
                     },end:function () {
 
                     }
                 });
             });
+
         }
     });
 });
