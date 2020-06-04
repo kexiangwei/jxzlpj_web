@@ -1,8 +1,13 @@
 /**
  * 审核流程
  */
-layui.use(['layer','table','form','util'], function(){
-    var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,util = layui.util;
+layui.config({
+    base: "../../../layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
+}).extend({
+    treeSelect: "treeSelect/treeSelect"
+});
+layui.use(['layer','table','form','util',"treeSelect"], function(){
+    var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,util = layui.util,treeSelect = layui.treeSelect;
 
     // 初始化一级菜单项
     var parentMenuData;
@@ -161,12 +166,32 @@ layui.use(['layer','table','form','util'], function(){
                             ,content : $('#editContainer')
                             ,success: function(layero, index){
                                 // 初始化菜单选项
-                                reloadSelect('editFormMenu','请选择',childMenuData);
+                                /*reloadSelect('editFormMenu','请选择',childMenuData);*/
                                 // 监听菜单选项
-                                var menuId;
+                                /*var menuId;
                                 form.on('select(editFormMenu)', function(data) {
                                     menuId = data.value;
+                                });*/
+                                var menuId;
+                                treeSelect.render({
+                                    elem: '#editFormMenu', // 选择器
+                                    data: requestUrl+'/getShenHeSetEditFormMenuTree.do', // 数据
+                                    type: 'get', // 异步加载方式：get/post，默认get
+                                    placeholder: '请选择', // 修改默认提示信息
+                                    search: true, // 是否开启搜索功能：true/false，默认false
+                                    style: {  // 一些可定制的样式
+                                        line: {
+                                            enable: true
+                                        }
+                                    },
+                                    click: function(d){ // 点击回调
+                                        menuId = d.current.id;
+                                    },
+                                    success: function (d) { // 加载完成后的回调函数
+
+                                    }
                                 });
+
                                 //初始化审核流程编号
                                 var shenheCode = guid();
                                 //监听表单提交
@@ -247,10 +272,28 @@ layui.use(['layer','table','form','util'], function(){
                         ,btn : ['关闭']
                         ,content : $('#editContainer')
                         ,success: function(layero, index){
-                            // alert(JSON.stringify(rowData));
                             // 初始化菜单选项
-                            reloadSelect('editFormMenu','请选择',childMenuData,rowData.menuId);
-                            // $('#editFormMenu').find('option[value="'+rowData.menuId+'"]').prop("selected",true);//prop() 方法设置或返回被选元素的属性和值。
+                            // reloadSelect('editFormMenu','请选择',childMenuData,rowData.menuId);
+                            var menuId;
+                            treeSelect.render({
+                                elem: '#editFormMenu', // 选择器
+                                data: requestUrl+'/getShenHeSetEditFormMenuTree.do', // 数据
+                                type: 'get', // 异步加载方式：get/post，默认get
+                                // placeholder: rowData.menuName, // 修改默认提示信息
+                                search: true, // 是否开启搜索功能：true/false，默认false
+                                style: {  // 一些可定制的样式
+                                    line: {
+                                        enable: true
+                                    }
+                                },
+                                click: function(d){ // 点击回调
+                                    menuId = d.current.id;
+                                },
+                                success: function (d) { // 加载完成后的回调函数
+                                    treeSelect.checkNode('tree', rowData.menuId); //选中节点，根据id筛选
+                                }
+                            });
+
                             // 初始化表单数据
                             form.val("editForm",{
                                 "shenheCode":rowData.shenheCode,
