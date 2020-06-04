@@ -471,16 +471,67 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,offset : '30px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
-                    ,content : '<table class="layui-table">\n' +
-                        '        <tbody>\n' +
-                        '              <tr>' +
-                        '                <td style="width: 80px; text-align: right">课程编号：</td><td style="width: 120px;">'+rowData.courseCode+'</td>' +
-                        '                <td style="width: 80px; text-align: right">课程名称：</td><td style="width: 120px;">'+rowData.courseName+'</td>' +
-                        '              </tr>\n' +
-                        '        </tbody>\n' +
-                        '    </table>'
-                    ,success: function(layero, index){}
-                    ,end:function () {}
+                    ,content : $('#dataInfo_container')
+                    ,success: function(layero, index){
+                        if(!rowData.mainTeacher){ //JS 中如何判断 null
+                            rowData.mainTeacher = "";
+                        }
+                        if(!rowData.teachClass){
+                            rowData.teachClass = "";
+                        }
+                        var dataInfo = '<div style="margin-top: 20px;"><h2 style="font-weight: bold;" align="center">北京农学院</h2>\n' +
+                            '<h3 style="font-weight: bold;" align="center">XX学年第XX学期理论课教学实施计划</h3>' +
+                            '<table class="layui-table">' +
+                            '   <tr><td style="width: 133px; text-align: right">课程名称：</td><td>'+rowData.courseName+'</td></tr>' +
+                            '   <tr><td style="text-align: right">课程编号：</td><td>'+rowData.courseCode+'</td></tr>' +
+                            '   <tr><td style="text-align: right">课程性质：</td><td>'+rowData.courseType+'</td></tr>' +
+                            '   <tr><td style="text-align: right">学时/学分：</td><td>'+rowData.stuHour+'学时/'+rowData.stuScore+'学分'+'</td></tr>' +
+                            '   <tr><td style="text-align: right">主讲教师：</td><td>'+rowData.mainTeacher+'</td></tr>' +
+                            '   <tr><td style="text-align: right">授课班级：</td><td>'+rowData.teachClass+'</td></tr>' +
+                            '   <tr><td style="text-align: right">开课学院（部）：</td><td>'+rowData.college+'</td></tr>' +
+                            '</table></div>';
+
+                        $.get(requestUrl+"/skjh/getSkjhItemList.do" , {
+                            "relationCode": rowData.code
+                        } ,  function(itemList){ //alert(itemList.data.length);
+                            if(itemList.data.length > 0){ //alert(JSON.stringify(itemList.data));
+                                $.each(itemList.data,function(idx,item){
+                                    // alert(JSON.stringify(item));
+                                    dataInfo +=  '<table class="layui-table">\n' +
+                                        '              <tr>' +
+                                        '                <td style="width: 80px; text-align: right">周次：</td><td style="width: 120px;">'+item.weekNum+'</td>' +
+                                        '                <td style="width: 80px; text-align: right">日期：</td><td style="width: 120px;">'+item.dates+'</td>' +
+                                        '              </tr>\n' +
+                                        '               <tr>' +
+                                        '                <td style="text-align: right">星期：</td><td>'+item.week+'</td>' +
+                                        '                <td style="text-align: right">节次：</td><td>'+item.lessonNum+'</td>' +
+                                        '              </tr>\n' +
+                                        '               <tr>' +
+                                        '                <td style="text-align: right">授课老师：</td><td>'+item.teacher+'</td>' +
+                                        '                <td style="text-align: right">课程章节：</td><td>'+item.teachChapter+'</td>' +
+                                        '              </tr>\n' +
+                                        '               <tr>' +
+                                        '                <td style="text-align: right">学时：</td><td>'+item.lessonHour+'</td>' +
+                                        '                <td style="text-align: right">上课地点：</td><td>'+item.teachAddr+'</td>' +
+                                        '              </tr>\n' +
+                                        '               <tr>' +
+                                        '                <td style="text-align: right">课堂设计：</td><td colspan="3">'+item.jxDesign+'</td>' +
+                                        '              </tr>\n' +                                '               ' +
+                                        '               <tr>' +
+                                        '                <td style="text-align: right">思政元素：</td><td colspan="3">'+item.szElement+'</td>' +
+                                        '              </tr>\n' +
+                                        '    </table>';
+                                });
+                                //后执行
+                                $('#dataInfo_container').html(dataInfo);
+                            }
+                        }, "json");
+                        //先执行
+                        $('#dataInfo_container').html(dataInfo);
+                    }
+                    ,end:function () {
+                        $('#dataInfo_container').empty();
+                    }
                 };
                 //
                 if(isSubmit && rowData.isSubmit == '未提交'){
