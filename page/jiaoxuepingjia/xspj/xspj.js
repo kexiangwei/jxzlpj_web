@@ -86,7 +86,73 @@ layui.use(['layer','table','form'], function(){
             //监听右侧工具条
             table.on('tool(datatable)', function(obj){
                 if (obj.event === 'pj') {
-                    layer.msg(JSON.stringify(obj.data), {time : 3000, offset: '100px'});
+                    // layer.msg(JSON.stringify(obj.data), {time : 3000, offset: '100px'});
+
+                    $.get(requestUrl+'/getCurrentTemplate.do',{'templateType':'学生评教'},function (result_data) {
+                        if(result_data.code == 200){
+                            // alert(JSON.stringify(result_data.data.targetList[0]));
+                            let layIndex = layer.open({
+                                id: guid()
+                                ,title : '教学评价-学生评教'
+                                ,type : 1
+                                ,area : [ '900px', '500px' ]
+                                ,offset : '30px'
+                                ,content : $('#editForm_container')
+                                ,success: function(layero, index){
+                                    var html = '';
+                                    $.each(result_data.data.targetList,function(idx,obj){
+                                        html += ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
+                                            (parseInt(idx)+1)+'，'+obj.targetContent+'<br/>' +
+                                            // '            <div class="layui-input-block">\n' +
+                                            '                <input type="radio" name="'+obj.targetCode+'" value="非常同意" title="非常同意">\n' +
+                                            '                <input type="radio" name="'+obj.targetCode+'" value="比较同意" title="比较同意">\n' +
+                                            '                <input type="radio" name="'+obj.targetCode+'" value="一般" title="一般">\n' +
+                                            '                <input type="radio" name="'+obj.targetCode+'" value="不太同意" title="不太同意">\n' +
+                                            '                <input type="radio" name="'+obj.targetCode+'" value="不同意" title="不同意">\n' +
+                                            // '            </div>\n' +
+                                            '        </div>';
+                                    });
+                                    html += '<textarea name="suggest" placeholder="您对本课程的建议" class="layui-textarea"></textarea>';
+                                    html += '<div class="layui-btn-container" style="margin-top: 20px" align="center">\n' +
+                                        '       <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
+                                        '       <button type="reset" class="layui-btn layui-btn-primary">重置</button>\n' +
+                                        '    </div>';
+                                    $("#editForm").html(html);
+                                    form.render('radio'); //刷新radio单选框框渲染
+
+                                    //自定义验证规则
+                                    form.verify({
+                                        target: function(value,element){
+                                            let num = 0;
+                                            if(!$(element).find(".layui-form-radio").hasClass("layui-form-radioed")){ //若有未选择的指标项
+                                                $.each(result_data.data.targetList,function(idx,obj){
+                                                    if(!$("input[name="+obj.targetCode+"]").is(":checked")){ //则遍历出是哪一道题
+                                                        num = (parseInt(idx)+1);
+                                                        return false;//跳出循环
+                                                    }
+                                                });
+                                                return '您第'+num+'个问题没有回答';
+                                            }
+                                        }
+                                    });
+
+                                    //监听表单提交
+                                    form.on('submit(toSubmitEidtForm)', function(data){
+                                        layer.alert(JSON.stringify(data.field), {
+                                            title: '最终的提交信息'
+                                        });
+                                        return false;
+                                    });
+                                }
+                                ,cancel: function(index, layero){
+                                    layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                        layer.closeAll();
+                                    });
+                                    return false;
+                                }
+                            });
+                        }
+                    });
                 }
             });
         }
