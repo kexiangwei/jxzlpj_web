@@ -31,5 +31,32 @@
 <script src="../../../js/jquery.cookie.js"></script>
 <script src="../../../js/global.js"></script>
 <script src="xspj.js"></script>
+<script type="text/javascript">
+    //系统可以设定评教时间段，非时间段内，学生进入不了评教模块
+    /*if(1==1){
+        layer.msg('评教时间已过', {time : 3000, offset: '100px'});
+        return;
+    }*/
+
+    //显示评教要求
+    layer.open({
+        id: guid() //设定一个id，防止重复弹出
+        ,title: '评教说明'
+        ,type: 1
+        ,area : [ '700px', '400px' ]
+        ,offset : '50px' //只定义top坐标，水平保持居中
+        ,shade: 0.5
+        ,btn: ['确定']
+        ,btnAlign: 'c' //按钮居中显示
+        ,skin: 'layer-btn-skin'
+        ,closeBtn: false
+        ,content: '<div style="padding: 50px; line-height: 50px; background-color: lightslategray; color: #fff; font-weight: 300;">' +
+            '1.您的评价对于提高老师的教学能力非常有帮助。<br/>' +
+            '2.您的评价结果占教师教学质量评价结果的40%。<br/>' +
+            '3.您的评价为匿名评价，请选择您认为最贴近实际情况的选项。<br/>' +
+            '4.谢谢您对学校教学工作的支持与配合。<br/>' +
+            '</div>'
+    });
+</script>
 </body>
 </html>

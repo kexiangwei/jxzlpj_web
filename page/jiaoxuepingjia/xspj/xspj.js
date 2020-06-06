@@ -4,32 +4,6 @@
 layui.use(['layer','table','form'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form;
 
-    //系统可以设定评教时间段，非时间段内，学生进入不了评教模块
-    /*if(1==1){
-        layer.msg('评教时间已过', {time : 3000, offset: '100px'});
-        return;
-    }*/
-
-    //显示评教要求
-    layer.open({
-        id: guid() //设定一个id，防止重复弹出
-        ,title: '评教说明'
-        ,type: 1
-        ,area : [ '700px', '400px' ]
-        ,offset : '50px' //只定义top坐标，水平保持居中
-        ,shade: 0.5
-        ,btn: ['确定']
-        ,btnAlign: 'c' //按钮居中显示
-        ,skin: 'layer-btn-skin'
-        ,closeBtn: false
-        ,content: '<div style="padding: 50px; line-height: 50px; background-color: lightslategray; color: #fff; font-weight: 300;">' +
-            '1.您的评价对于提高老师的教学能力非常有帮助。<br/>' +
-            '2.您的评价结果占教师教学质量评价结果的40%。<br/>' +
-            '3.您的评价为匿名评价，请选择您认为最贴近实际情况的选项。<br/>' +
-            '4.谢谢您对学校教学工作的支持与配合。<br/>' +
-            '</div>'
-    });
-
     //数据表格
     let datatable = table.render({
         id: guid() //设定一个id，防止重复弹出
@@ -86,8 +60,11 @@ layui.use(['layer','table','form'], function(){
             //监听右侧工具条
             table.on('tool(datatable)', function(obj){
                 if (obj.event === 'pj') {
-                    // layer.msg(JSON.stringify(obj.data), {time : 3000, offset: '100px'});
-
+                    // alert(JSON.stringify(obj.data));
+                    if(obj.data.isPj === 1){
+                        // layer.msg('你已经评过了', {time : 3000, offset: '100px'});
+                        return;
+                    }
                     $.get(requestUrl+'/getCurrentTemplate.do',{'templateType':'学生评教'},function (result_data) {
                         if(result_data.code == 200){
                             // alert(JSON.stringify(result_data.data.targetList[0]));
@@ -99,7 +76,10 @@ layui.use(['layer','table','form'], function(){
                                 ,offset : '30px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
-                                    var html = '';
+                                    var html = /*'<input type="hidden" name="courseCode"/>\n' +
+                                        '        <input type="hidden" name="userId"/>\n' +
+                                        '        <input type="hidden" name="userName"/>';*/
+                                        '';
                                     $.each(result_data.data.targetList,function(idx,obj){
                                         html += ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
                                             (parseInt(idx)+1)+'，'+obj.targetContent+'<br/>' +
@@ -120,6 +100,13 @@ layui.use(['layer','table','form'], function(){
                                     $("#editForm").html(html);
                                     form.render('radio'); //刷新radio单选框框渲染
 
+                                    /*//表单赋值
+                                    form.val("editForm",{
+                                        "courseCode" : obj.data.courseCode
+                                        ,'userId':$.cookie('userId')
+                                        ,'userName':$.cookie('userName')
+                                    });*/
+
                                     //自定义验证规则
                                     form.verify({
                                         target: function(value,element){
@@ -138,10 +125,24 @@ layui.use(['layer','table','form'], function(){
 
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        layer.alert(JSON.stringify(data.field), {
+                                        /*layer.alert(JSON.stringify(data.field), {
                                             title: '最终的提交信息'
                                         });
-                                        return false;
+                                        return false;*/
+                                        $.post(requestUrl+'/xspj/insert.do' ,{
+                                            "courseCode" : obj.data.courseCode
+                                            ,'userId':$.cookie('userId')
+                                            ,'userName':$.cookie('userName')
+                                            ,'jsonStr':JSON.stringify(data.field)
+                                        } ,function(result_data){
+                                            // alert(JSON.stringify(result_data));
+                                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                if(result_data.code == 200){
+                                                    datatable.reload();//重新加载表格数据
+                                                }
+                                                layer.close(layIndex);
+                                            });
+                                        },'json');
                                     });
                                 }
                                 ,cancel: function(index, layero){
