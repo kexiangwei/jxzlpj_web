@@ -8,29 +8,11 @@
 <body class="layui-layout-body">
     <div class="layui-tab">
         <ul class="layui-tab-title">
-            <li class="layui-this">评教设置</li>
-            <li>模板设置</li>
+            <li class="layui-this">模板设置</li>
             <li>指标设置</li>
         </ul>
         <div class="layui-tab-content">
-
             <div class="layui-tab-item layui-show">
-                <div class="layui-fluid">
-                    <table class="layui-table" id="pjSet_dataTable" lay-filter="pjSet_dataTable">
-                        <script type="text/html" id="pjSet_toolbar">
-                            <div class="layui-btn-container">
-                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
-                            </div>
-                        </script>
-                        <script type="text/html" id="pjSet_bar">
-                            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
-                            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
-                        </script>
-                    </table>
-                </div>
-            </div>
-            <div class="layui-tab-item">
                 <div class="layui-fluid">
                     <table class="layui-table" id="template_dataTable" lay-filter="template_dataTable">
                         <script type="text/html" id="template_toolbar">
@@ -80,10 +62,18 @@
                     <input type="text" name="templateName" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">模板描述：</label>
-                <div class="layui-input-block">
-                    <textarea name="templateDesc" class="layui-textarea" style="height: 100px;"></textarea>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">开始时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="startDate" name="startDate" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结束时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="endDate" name="endDate" placeholder="" class="layui-input">
+                    </div>
                 </div>
             </div>
 
@@ -145,7 +135,6 @@
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="pjSet.js"></script>
     <script src="pjSetTemplate.js"></script>
     <script src="pjSetTarget.js"></script>
 </body>

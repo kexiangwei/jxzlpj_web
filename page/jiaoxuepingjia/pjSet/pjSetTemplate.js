@@ -1,8 +1,8 @@
 /**
  *教学评价-评教设置
  */
-layui.use(['layer','element','table','form'], function(){
-    let $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
+layui.use(['layer','element','table','form','laydate'], function(){
+    let $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
     //模板设置
     let template_dataTable = table.render({
@@ -33,8 +33,9 @@ layui.use(['layer','element','table','form'], function(){
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'templateCode', title: '编号', width:150}
             ,{field: 'templateType', title: '类型', width:150}
-            ,{field: 'templateName', title: '名称', width:200}
-            ,{field: 'templateDesc', title: '描述', width:600, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+            ,{field: 'templateName', title: '名称'}
+            ,{field: 'startDate', title: '开始时间', width:200}
+            ,{field: 'endDate', title: '结束时间', width:200, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                     let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     if(data.isExec == 1){ //模板已启用
                         html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>\n' +
@@ -44,7 +45,7 @@ layui.use(['layer','element','table','form'], function(){
                             '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>';
                     }
                     $('#template_bar').html(html);
-                    return data.templateDesc;
+                    return data.endDate;
                 }
             }
             // ,{field: 'createDate', title: '创建日期', width:150}
@@ -100,10 +101,10 @@ layui.use(['layer','element','table','form'], function(){
                                 '                <td style="width: 80px; text-align: right">模板名称：</td><td>'+data.templateName+'</td>' +
                                 '              </tr>\n' +
                                 '              <tr>' +
-                                '                <td style="width: 80px; text-align: right">模板描述：</td><td>'+data.templateDesc+'</td>' +
+                                '                <td style="width: 80px; text-align: right">开始时间：</td><td>'+data.startDate+'</td>' +
                                 '              </tr>\n' +
                                 '              <tr>' +
-                                '                <td style="width: 80px; text-align: right">创建时间：</td><td>'+data.createDate+'</td>' +
+                                '                <td style="width: 80px; text-align: right">结束时间：</td><td>'+data.endDate+'</td>' +
                                 '              </tr>\n' +
                                 '        </tbody>\n' +
                                 '    </table>';
@@ -137,7 +138,8 @@ layui.use(['layer','element','table','form'], function(){
                                 'templateCode' : data.templateCode
                                 ,'templateType' : data.templateType
                                 ,'templateName' : data.templateName
-                                ,'templateDesc' : data.templateDesc
+                                ,'startDate' : data.startDate
+                                ,'endDate' : data.endDate
                             });
                             //
                             initEditForm();
@@ -165,6 +167,16 @@ layui.use(['layer','element','table','form'], function(){
 
             var initEditForm = function () {
 
+                //时间选择器
+                laydate.render({
+                    elem: '#startDate'
+                    ,type: 'datetime'
+                });
+                laydate.render({
+                    elem: '#endDate'
+                    ,type: 'datetime'
+                });
+
                 form.on('select(templateType)', function(data){
                     /*console.log(data.elem); //得到select原始DOM对象
                     console.log(data.value); //得到被选中的值*/
@@ -177,7 +189,8 @@ layui.use(['layer','element','table','form'], function(){
                         'templateCode': data.field.templateCode,
                         'templateType': data.field.templateType,
                         'templateName': data.field.templateName,
-                        'templateDesc': data.field.templateDesc,
+                        'startDate': data.field.startDate,
+                        'endDate': data.field.endDate,
                         'targetCodes': layui.getSelectedTargetCodes()
                     } ,function(result_data){
                         layer.msg(result_data.msg, { offset: '100px'}, function () {
