@@ -16,38 +16,92 @@
 
             <div class="layui-tab-item layui-show">
                 <div class="layui-fluid">
-                    <table class="layui-table" id="pjSet_dataTable" lay-filter="pjSet_dataTable"></table>
+                    <table class="layui-table" id="pjSet_dataTable" lay-filter="pjSet_dataTable">
+                        <script type="text/html" id="pjSet_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="pjSet_bar">
+                            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
+                            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                        </script>
+                    </table>
                 </div>
             </div>
             <div class="layui-tab-item">
                 <div class="layui-fluid">
-                    <table class="layui-table" id="template_dataTable" lay-filter="template_dataTable"></table>
+                    <table class="layui-table" id="template_dataTable" lay-filter="template_dataTable">
+                        <script type="text/html" id="template_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="template_bar"></script>
+                    </table>
                 </div>
             </div>
             <div class="layui-tab-item">
                 <div class="layui-fluid">
-                    <table class="layui-table" id="target_dataTable" lay-filter="target_dataTable"></table>
+                    <table class="layui-table" id="target_dataTable" lay-filter="target_dataTable">
+                        <script type="text/html" id="target_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="target_bar"></script>
+                    </table>
                 </div>
             </div>
-
-            <!--  提取公共部分 -->
-            <script type="text/html" id="datatable_toolbar">
-                <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
-                </div>
-            </script>
-            <script type="text/html" id="datatable_bar">
-                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
-                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
-            </script>
         </div>
     </div>
 
+    <!-- 模板 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="template_dataInfo_container"></div>
+    <div class="layui-container" style="width: 90%;" id="template_editForm_container">
+        <form class="layui-form" action="" lay-filter="template_editForm"  id="template_editForm">
 
+            <input type="hidden" name="templateCode"/>
 
-    <div class="layui-container" style="width: 90%;" id="target_container">
-        <form class="layui-form" action="" id="target_editForm">
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">模板类别：</label>
+                <div class="layui-input-block">
+                    <select name="templateType" lay-filter="templateType">
+                        <option value="">请选择</option>
+                        <option value="同行评教">同行评教</option>
+                        <option value="学生评教">学生评教</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">模板名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="templateName" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">模板描述：</label>
+                <div class="layui-input-block">
+                    <textarea name="templateDesc" class="layui-textarea" style="height: 100px;"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <table class="layui-table" lay-filter="datatable" id="datatable" ></table>
+            </div>
+
+            <div class="layui-btn-container" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 指标 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="target_dataInfo_container"></div>
+    <div class="layui-container" style="width: 90%;" id="target_editForm_container">
+        <form class="layui-form" action="" lay-filter="target_editForm"  id="target_editForm">
 
             <input type="hidden" name="targetCode"/>
 
@@ -92,5 +146,7 @@
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="pjSet.js"></script>
+    <script src="pjSetTemplate.js"></script>
+    <script src="pjSetTarget.js"></script>
 </body>
 </html>
