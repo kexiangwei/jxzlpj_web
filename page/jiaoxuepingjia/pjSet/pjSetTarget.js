@@ -26,9 +26,9 @@ layui.use(['layer','element','table','form'], function(){
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'targetCode', title: '编号', width:120}
             ,{field: 'targetType', title: '类型', width:150}
-            ,{field: 'targetName', title: '名称', width:150}
+            ,{field: 'targetName', title: '名称', width:180}
             ,{field: 'targetContent', title: '内容', width:450}
-            ,{field: 'targetScore', title: '分值', width:150, sort: true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+            ,{field: 'targetScore', title: '分值', width:120, sort: true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                     let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     if(data.isBind == 1){ //已绑定模板
                         html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>\n' +
