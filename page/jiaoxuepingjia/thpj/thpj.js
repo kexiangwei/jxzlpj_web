@@ -77,8 +77,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             table.on('tool(datatable)', function(obj){
                 let data = obj.data;
                 if (obj.event === 'courseName') {
-
-
+                    //
                     let layIndex = layer.open({
                         id: guid() //设定一个id，防止重复弹出
                         ,title : '教学评价-课程质量评价'
@@ -102,7 +101,60 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,skin: 'demo-class'
                         ,content : $('#editForm_container')
                         ,success: function(layero, index){
+                            //
+                            $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
+                                if(result_data.code == 200){
+                                    let data = result_data.data;
+                                    let html = '';
+                                    for (let i = 0; i < data.length; i++) {
+                                        html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
+                                        for (let j = 0; j < data[i].num; j++) {
+                                            let obj = data[i].targetList[j];
+                                            html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                                                '<td>'+obj.targetScore+'</td>\n' +
+                                                '<td><input type="text" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                        }
+                                    }
+                                    html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
+                                        '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
+                                    $('#target').html(html);
+                                    //
+                                    let $inputs = $('.score');
+                                    $inputs.keyup(function() {
+                                        let totalScore = 0;
+                                        $inputs.each(function(){
+                                            totalScore += parseInt($(this).val());
+                                        });
+                                        $("input[name='totalScore']").val(totalScore);
+                                    });
 
+                                    /**
+                                     * 验证表单数据
+                                     */
+                                    form.verify({
+                                        score: function(value,item){ //value：表单的值、item：表单的DOM对象
+                                            if(parseInt($(item).attr('score')) < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                                return '超出预设分值范围';
+                                            }
+                                        },
+                                        totalScore: function(value,item){ //value：表单的值、item：表单的DOM对象
+                                            if(100 < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                                return '超出预设分值范围';
+                                            }
+                                        }
+                                    });
+                                }
+                            },'json');
+
+                            //
+                            form.val("editForm",{
+                                'teacher': data.teacher,
+                                'teacherCollege': data.teacherCollege,
+                                'courseName': data.courseName,
+                                'courseType': data.courseType,
+                                'stuClass': data.stuClass,
+                                'userName': $.cookie('userName')
+                            });
                         }
                         ,cancel: function(index, layero){
                             layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {

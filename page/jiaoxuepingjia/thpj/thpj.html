@@ -101,13 +101,16 @@
 
             <table class="layui-table" border="1">
                 <tr>
-                    <td style="width: 50%">任课教师：张三</td><td>学院/部：经济管理学院</td>
+                    <td style="width: 50%">任课教师：<input type="text" name="teacher" class="layui-form-input2" style="width: 50%" readonly></td>
+                    <td>学院/部：<input type="text" name="teacherCollege" class="layui-form-input2" style="width: 50% " readonly></td>
                 </tr>
                 <tr>
-                    <td style="width: 50%">课程名称：张三</td><td>课程类型：经济管理学院</td>
+                    <td style="width: 50%">课程名称：<input type="text" name="courseName" class="layui-form-input2" style="width: 50%" readonly></td>
+                    <td>课程类型：<input type="text" name="courseType" class="layui-form-input2" style="width: 50%" readonly></td>
                 </tr>
                 <tr>
-                    <td style="width: 50%">学生班级：张三</td><td>听课人：经济管理学院</td>
+                    <td style="width: 50%">学生班级：<input type="text" name="stuClass" class="layui-form-input2" style="width: 50%" readonly></td>
+                    <td>听课人：<input type="text" name="userName" class="layui-form-input2" style="width: 50%" readonly></td>
                 </tr>
 
                 <tr>
@@ -142,46 +145,7 @@
                         <th>打分</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td rowspan="5">一、教学研究（15分）</td>
-                        <td>
-                            1．教师近一年参加教学方面继续教育丰富，体会深刻。
-                        </td>
-                        <td>3</td>
-                        <td><input type="text" name="shijian" class="layui-form-input2"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            2．教师近三年主持或参与校级及以上教改项目，研究结果有推广示范作用。
-                        </td>
-                        <td>3</td>
-                        <td><input type="text" name="shijian" class="layui-form-input2"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            3．教师近三年发表过教改论文，收录期刊层次高且对改进教学有指导意义。
-                        </td>
-                        <td>3</td>
-                        <td><input type="text" name="shijian" class="layui-form-input2"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            4．教师出版过与本校专业相关的、用于本科生教学的高品质教材、专著。
-                        </td>
-                        <td>3</td>
-                        <td><input type="text" name="shijian" class="layui-form-input2"></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            5．教师参加教学团队并发挥团队成员应有作用。
-                        </td>
-                        <td>3</td>
-                        <td><input type="text" name="shijian" class="layui-form-input2"></td>
-                    </tr>
-
-                    <tr><td colspan="3" style="text-align: right">评分合计</td><td></td></tr>
-                </tbody>
+                <tbody id="target"></tbody>
             </table>
 
             <fieldset class="layui-elem-field">

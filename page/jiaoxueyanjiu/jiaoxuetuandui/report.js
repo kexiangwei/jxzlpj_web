@@ -1157,8 +1157,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     let totalScore = 0;
                                     $inputs.each(function(){
                                         totalScore += parseInt($(this).val());
-                                        $("input[name='totalScore']").val(totalScore);
                                     });
+                                    $("input[name='totalScore']").val(totalScore);
                                 });
 
                                 /**
