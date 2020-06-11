@@ -3,6 +3,54 @@
  */
 layui.use(['layer','element','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
+
+    //初始化学院下拉选项
+    $.get(requestUrl+'/getCollege.do',{},function(data){
+        if(data.code == 200){
+            let teacherCollegeList =  data.data;
+            if(teacherCollegeList.length > 0){
+                reloadSelect('teacherCollege',teacherCollegeList);
+            }
+        }
+    },'json');
+
+    //初始化专业下拉选项
+    var teacherMajorList;
+    $.get(requestUrl+'/getMajor.do',{},function(data){
+        if(data.code == 200){
+            teacherMajorList =  data.data;
+            if(teacherMajorList.length > 0){
+                reloadSelect('teacherMajor',teacherMajorList);
+            }
+        }
+    },'json');
+
+    // 监听学院选项
+    form.on('select(teacherCollege)', function(data) {
+        let collegeCode = data.value;
+        if(collegeCode == ''){
+            reloadSelect('teacherMajor',teacherMajorList);
+        }else{
+            $.get(requestUrl+'/getMajor.do',{"collegeCode":collegeCode},function(data){
+                if(data.code == 200){
+                    reloadSelect('teacherMajor',data.data);
+                }
+            },'json');
+        }
+    });
+
+    // 加载菜单选项
+    var reloadSelect = function(inputName,data){
+        $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
+        let htmlstr = '<option value="">请选择</option>';
+        for (var i = 0; i < data.length; i++) {
+            htmlstr += '<option value="' + data[i].CODE + '" >' + data[i].NAME + '</option>';
+        }
+        $("select[name='"+inputName+"']").append(htmlstr);
+        form.render('select');
+    };
+
+    //初始化日期控件
     laydate.render({
         elem: '#teachDate'
     });
@@ -13,7 +61,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
         ,elem : '#datatable'
         ,height : 460
         ,url: requestUrl+'/thpj/getPageList.do'
-        ,where:{}
         ,request: {//用于对分页请求的参数：page、limit重新设定名称
             pageName: 'pageIndex' //页码的参数名称，默认：page
             ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -57,7 +104,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 search: function(){
                     datatable.reload({
                         where: {
-                            'courseName': $(".search input[ name='courseName']").val()
+                            'teacherCollege': $("#teacherCollege option:selected").val(),
+                            'teacherMajor': $("#teacherMajor option:selected").val(),
+                            'teacher': $(".search input[ name='teacher']").val(),
+                            'teacherAge': $("#teacherAge option:selected").val(),
+                            'teacherTitle': $("#teacherTitle option:selected").val(),
+                            'courseName': $(".search input[ name='courseName']").val(),
+                            'courseType': $("#courseType option:selected").val(),
+                            'teachDate': $(".search input[ name='teachDate']").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -66,9 +120,16 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 }
                 ,reset: function () {
                     $(".search input").val('');
+                    //清除选中状态
+                    $("#teacherCollege").val("");
+                    $("#teacherMajor").val("");
+                    $("#teacherAge").val("");
+                    $("#teacherTitle").val("");
+                    $("#courseType").val("");
+                    form.render("select");
                 }
             };
-            $('.layui-search .layui-btn').on('click', function(){
+            $('.search .layui-btn').on('click', function(){
                 let type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
@@ -151,9 +212,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 'teacher': data.teacher,
                                 'teacherCollege': data.teacherCollege,
                                 'courseName': data.courseName,
-                                'courseType': data.courseType,
-                                'stuClass': data.stuClass,
-                                'userName': $.cookie('userName')
+                                'courseType': data.courseType
                             });
                         }
                         ,cancel: function(index, layero){

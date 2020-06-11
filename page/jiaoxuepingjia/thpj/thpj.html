@@ -35,11 +35,11 @@
         <div class="layui-form search">
             教师所属学院：
             <div class="layui-inline">
-                <input class="layui-input" name="teacherCollege" >
+                <select id="teacherCollege" name="teacherCollege" lay-filter="teacherCollege"></select>
             </div>
             &nbsp;&nbsp;教师所属专业：
             <div class="layui-inline">
-                <input class="layui-input" name="teacherMajor">
+                <select id="teacherMajor" name="teacherMajor" lay-filter="teacherMajor"></select>
             </div>
             &nbsp;&nbsp;教师姓名：
             <div class="layui-inline">
@@ -109,8 +109,8 @@
                     <td>课程类型：<input type="text" name="courseType" class="layui-form-input2" style="width: 50%" readonly></td>
                 </tr>
                 <tr>
-                    <td style="width: 50%">学生班级：<input type="text" name="stuClass" class="layui-form-input2" style="width: 50%" readonly></td>
-                    <td>听课人：<input type="text" name="userName" class="layui-form-input2" style="width: 50%" readonly></td>
+                    <td style="width: 50%">学生班级：<input type="text" name="stuClass" class="layui-form-input2" style="width: 50%"></td>
+                    <td>听课人：<input type="text" name="userName" class="layui-form-input2" style="width: 50%"></td>
                 </tr>
 
                 <tr>
