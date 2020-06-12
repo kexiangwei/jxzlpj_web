@@ -102,10 +102,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
             //监听搜索框事件
             let active = {
                 search: function(){
+                    let teacherCollege = $("#teacherCollege option:selected").text()
+                        ,teacherMajor = $("#teacherMajor option:selected").text();
                     datatable.reload({
                         where: {
-                            'teacherCollege': $("#teacherCollege option:selected").val(),
-                            'teacherMajor': $("#teacherMajor option:selected").val(),
+                            'teacherCollege': teacherCollege != '请选择'? teacherCollege:null,
+                            'teacherMajor':teacherMajor != '请选择'? teacherMajor:null,
                             'teacher': $(".search input[ name='teacher']").val(),
                             'teacherAge': $("#teacherAge option:selected").val(),
                             'teacherTitle': $("#teacherTitle option:selected").val(),
@@ -148,8 +150,17 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['教学研究','教学设计','教学效果','关闭']
                         ,yes: function(index, layero){
-                            layer.msg('教学研究');
-                            return false; //开启该代码可禁止点击该按钮关闭
+                            /*let layIdx = layer.open({
+                                title : ''
+                                ,type : 2
+                                ,shadeClose : true
+                                ,area : [ '1100px', '550px' ]
+                                ,offset : '30px'
+                                // ,btn:['关闭']
+                                ,content : '../echarts.html'
+                            });*/
+
+                            return false;
                         }
                         ,btn2: function(index, layero){
                             layer.msg('教学设计');
