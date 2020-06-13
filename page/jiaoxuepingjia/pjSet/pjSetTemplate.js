@@ -224,6 +224,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'targetName', title: '名称',width:150}
                         ,{field: 'targetContent', title: '内容'}
                         ,{field: 'targetScore', title: '分值', width:80}
                     ]]
