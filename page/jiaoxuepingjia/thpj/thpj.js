@@ -213,6 +213,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 'courseName': rowData.courseName,
                                 'courseType': rowData.courseType
                             });
+                            //监听表单提交
+                            form.on('submit(toSubmitEidtForm)', function(data){
+                                layer.alert(JSON.stringify(data.field), {
+                                    title: '最终的提交信息'
+                                });
+                                return false;
+                            });
                         }
                         ,cancel: function(index, layero){
                             layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
@@ -224,7 +231,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                         }
                     });
-
+                    //
                     var initTeacherBar = function (title,rowData) {
                         let layIdx = layer.open({
                             title : title
