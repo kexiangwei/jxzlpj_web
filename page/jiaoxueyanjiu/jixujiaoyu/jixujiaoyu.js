@@ -96,7 +96,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 if(val=='审核中' || val=='通过'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
-                                if(val=='退回'){
+                                if(val=='未通过' || val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                                 }
                                 return '<span style="font-weight: bold;">待审核</span>';
