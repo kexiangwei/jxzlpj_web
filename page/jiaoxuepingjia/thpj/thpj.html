@@ -176,9 +176,25 @@
         </form>
     </div>
 
+    <div class="layui-container" style="display: none;" id="teacherInfo_container">
+        <table>
+            <tr>
+                <td align="left">
+                    <div id="teacherBar" style="width: 400px; height: 250px; margin-top: 20px"></div>
+                    <div id="teacherPie" style="width: 400px; height: 250px"></div>
+                </td>
+                <td>
+                    <table class="layui-table" lay-filter="teacherInfo_datatable" id="teacherInfo_datatable" ></table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
     <script src="../../../layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
+    <script src="../../../js/echarts.js"></script>
     <script src="../../../js/global.js"></script>
     <script src="thpj.js"></script>
 </body>

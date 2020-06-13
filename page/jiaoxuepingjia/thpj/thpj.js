@@ -150,16 +150,165 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['教学研究','教学设计','教学效果','关闭']
                         ,yes: function(index, layero){
-                            /*let layIdx = layer.open({
-                                title : ''
-                                ,type : 2
+                            let layIdx = layer.open({
+                                title : '教学研究'
+                                ,type : 1
                                 ,shadeClose : true
-                                ,area : [ '1100px', '550px' ]
+                                ,area : [ '1100px']
                                 ,offset : '30px'
                                 // ,btn:['关闭']
-                                ,content : '../echarts.html'
-                            });*/
+                                ,content : $('#teacherInfo_container')
+                                ,success: function () {
+                                    //柱状图
+                                    var xAxisData = new Array()
+                                        ,seriesData = new Array();
+                                    $.get(requestUrl+'/thpj/getTeacherBar.do',{
+                                        'menuName':'教学研究',
+                                        'userId':112233
+                                    }, function (data) {
+                                        if(data.code == 200){
+                                            $.each(data.data,function (idx,obj) {
+                                                xAxisData.push(obj.TAB_COMMENT);
+                                                seriesData.push(obj.NUM);
+                                            });
+                                            // 指定图表的配置项和数据
+                                            var option = {
+                                                title: {
+                                                    text: '教学研究',
+                                                    left: 'center'
+                                                },
+                                                tooltip: {},
+                                                grid: {
+                                                    // left: '10%',
+                                                    bottom:'35%'
+                                                },
+                                                legend: {
+                                                    left: 'left',
+                                                    data:['发布数量']
+                                                },
+                                                xAxis: {
+                                                    axisLabel: {
+                                                        interval:0, //坐标轴刻度标签的显示间隔，默认会采用标签不重叠的方式显示标签（也就是默认会将部分文字显示不全）可以设置为0强制显示所有标签，如果设置为1，表示隔一个标签显示一个标签，如果为3，表示隔3个标签显示一个标签，以此类推
+                                                        rotate:40, //调整数值改变倾斜的幅度（范围-90到90）
+                                                    },
+                                                    data: xAxisData
+                                                },
+                                                yAxis: {},
+                                                series: [{
+                                                    name: '发布数量',
+                                                    type: 'bar',
+                                                    data: seriesData
+                                                }]
+                                            };
+                                            var myChart = echarts.init(document.getElementById('teacherBar'));
+                                            myChart.setOption(option);
+                                            myChart.on('click', function (params) {
+                                                teacherPie(params.name);
+                                                initDatatable(params.name);
+                                            });
+                                            teacherPie();
+                                            initDatatable();
+                                        }
+                                    },'json');
 
+                                    //饼图
+                                    var teacherPie = function (data) {
+                                        var menuName = data !=null?data:'继续教育';
+                                        var legendDate = new Array();
+                                        $.get(requestUrl+'/thpj/getTeacherPie.do',{
+                                            'menuName':menuName,
+                                            'userId':112233
+                                        },function (data) {
+                                            if(data.code == 200){
+                                                $.each(data.data,function (idx,obj) {
+                                                    legendDate.push(obj.name);
+                                                });
+                                                var option2 = {
+                                                    title: {
+                                                        text: menuName,
+                                                        left: 'center'
+                                                    },
+                                                    tooltip: {
+                                                        trigger: 'item',
+                                                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                                                    },
+                                                    grid: {
+                                                        left: '10%',
+                                                        bottom:'35%'
+                                                    },
+                                                    legend: {
+                                                        orient: 'vertical',
+                                                        left: 'left',
+                                                        data: legendDate
+                                                    },
+                                                    series: [
+                                                        {
+                                                            name: '审核状态',
+                                                            type: 'pie',
+                                                            radius: '55%',
+                                                            center: ['50%', '60%'],
+                                                            data: data.data,
+                                                            emphasis: {
+                                                                itemStyle: {
+                                                                    shadowBlur: 10,
+                                                                    shadowOffsetX: 0,
+                                                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                };
+                                                echarts.init(document.getElementById('teacherPie')).setOption(option2);
+                                            }
+                                        },'json');
+                                    };//teacherPie end.
+
+                                    //数据表
+                                    var initDatatable = function (data) {
+                                        var menuName = data !=null?data:'继续教育';
+                                        $.get(requestUrl+'/thpj/getTeacherTab.do',{
+                                            'menuName':menuName,
+                                            'userId':112233
+                                        },function (data) {
+                                            var colArr = new Array({type:'numbers', title:'序号', width:80, fixed: 'left'});
+                                            if(data.code == 200){
+                                                $.each(data.data,function (idx,obj) {
+                                                    colArr.push({field: obj.COLUMN_NAME, title: obj.COMMENTS, width:120});
+                                                });
+
+                                                // alert(JSON.stringify(colArr));
+                                                //
+                                                var teacherInfo_datatable = table.render({
+                                                    id: guid()
+                                                    ,elem : '#teacherInfo_datatable'
+                                                    ,width: 900
+                                                    ,height : 500
+                                                    ,url: requestUrl+'/thpj/getTeacherTabData.do'
+                                                    ,where: {
+                                                        'menuName':menuName,
+                                                        'userId':112233
+                                                    }
+                                                    ,response: {
+                                                        statusCode: 200 //规定成功的状态码，默认：0
+                                                    }
+                                                    ,parseData: function(res){ //res 即为原始返回的数据
+                                                        return {
+                                                            "code": res.code, //解析接口状态
+                                                            "msg": res.code, //解析提示文本
+                                                            "data": res.data //解析数据列表
+                                                        };
+                                                    }
+                                                    ,cols : [colArr]
+                                                    ,done : function(res, curr, count) {
+
+                                                    }
+                                                });
+                                            };
+                                        },'json');
+                                    };
+                                }
+                            });
+                            layer.full(layIdx); //默认以最大化方式打开
                             return false;
                         }
                         ,btn2: function(index, layero){
