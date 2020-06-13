@@ -138,7 +138,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
             //监听工具条
             table.on('tool(datatable)', function(obj){
-                let data = obj.data;
+                let rowData = obj.data;
                 if (obj.event === 'courseName') {
                     //
                     let layIndex = layer.open({
@@ -164,7 +164,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         ,seriesData = new Array();
                                     $.get(requestUrl+'/thpj/getTeacherBar.do',{
                                         'menuName':'教学研究',
-                                        'userId':112233
+                                        'userId':rowData.teacherCode
                                     }, function (data) {
                                         if(data.code == 200){
                                             $.each(data.data,function (idx,obj) {
@@ -217,7 +217,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         var legendDate = new Array();
                                         $.get(requestUrl+'/thpj/getTeacherPie.do',{
                                             'menuName':menuName,
-                                            'userId':112233
+                                            'userId':rowData.teacherCode
                                         },function (data) {
                                             if(data.code == 200){
                                                 $.each(data.data,function (idx,obj) {
@@ -258,17 +258,21 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                                         }
                                                     ]
                                                 };
-                                                echarts.init(document.getElementById('teacherPie')).setOption(option2);
+                                                var myChart2 = echarts.init(document.getElementById('teacherPie'));
+                                                myChart2.setOption(option2);
+                                                myChart2.on('click', function (params) {
+                                                    initDatatable(menuName,params.name);
+                                                });
                                             }
                                         },'json');
                                     };//teacherPie end.
 
                                     //数据表
-                                    var initDatatable = function (data) {
+                                    var initDatatable = function (data,status) {
                                         var menuName = data !=null?data:'继续教育';
                                         $.get(requestUrl+'/thpj/getTeacherTab.do',{
                                             'menuName':menuName,
-                                            'userId':112233
+                                            'userId':rowData.teacherCode
                                         },function (data) {
                                             var colArr = new Array({type:'numbers', title:'序号', width:80, fixed: 'left'});
                                             if(data.code == 200){
@@ -286,7 +290,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                                     ,url: requestUrl+'/thpj/getTeacherTabData.do'
                                                     ,where: {
                                                         'menuName':menuName,
-                                                        'userId':112233
+                                                        'userId':rowData.teacherCode,
+                                                        'status':status
                                                     }
                                                     ,response: {
                                                         statusCode: 200 //规定成功的状态码，默认：0
@@ -369,10 +374,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                             //
                             form.val("editForm",{
-                                'teacher': data.teacher,
-                                'teacherCollege': data.teacherCollege,
-                                'courseName': data.courseName,
-                                'courseType': data.courseType
+                                'teacher': rowData.teacher,
+                                'teacherCollege': rowData.teacherCollege,
+                                'courseName': rowData.courseName,
+                                'courseType': rowData.courseType
                             });
                         }
                         ,cancel: function(index, layero){
