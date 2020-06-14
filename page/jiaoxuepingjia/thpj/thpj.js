@@ -80,6 +80,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             ,{field:'courseName', title:'课程名称', width:200, sort:true, event: 'courseName', templet: function (data) {
+                    let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                    if(data.isPj == 2){
+                        html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                    }
+                    $('#datatable_bar').html(html);
                     return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
              }}
             ,{field:'courseType', title:'课程性质', width:150, sort:true}
@@ -88,6 +93,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
             ,{field:'teachDate', title:'上课时间', width:150, sort:true}
             ,{field:'teachAddr', title:'上课地点', sort:true}
+            ,{fixed: 'right', width:100, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -139,7 +145,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
             //监听工具条
             table.on('tool(datatable)', function(obj){
                 let rowData = obj.data;
-                if (obj.event === 'courseName') {
+                if (obj.event === 'detail') {
+                    if(rowData.isPj == 2){
+                        return;
+                    }
+                    layer.msg('查看详情');
+                } else if (obj.event === 'courseName') {
                     //
                     $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
                         if(result_data.code == 200){
