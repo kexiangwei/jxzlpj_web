@@ -149,7 +149,69 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     if(rowData.isPj == 2){
                         return;
                     }
-                    layer.msg('查看详情');
+                    $.get(requestUrl+'/thpj/detail.do',{'pjCode':rowData.pjCode}, function (result_data) {
+                        if(result_data.code == 200){
+                            let data = result_data.data;
+                            var thpjItemList = data.thpjItemList;
+                            ////////////////////////////////////////////////////////////////////////////////////////////
+                            $.get(requestUrl+'/thpj/getThpjTargetList.do',{'pjCode':rowData.pjCode},function (result_data) {
+                                let data = result_data.data;
+                                let html = '';
+                                for (let i = 0; i < data.length; i++) {
+                                    html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
+                                    for (let j = 0; j < data[i].num; j++) {
+                                        let obj = data[i].targetList[j];
+                                        html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                                            '<td>'+obj.targetScore+'</td>\n' +
+                                            '<td><input type="text" id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                    }
+                                }
+                                html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
+                                    '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
+                                $('#target').html(html);
+                                //
+                                $.each(thpjItemList,function (idx,obj) {
+                                    $('input[name="'+obj.targetCode+'"]').val(obj.answer);
+                                });
+                            },'json');
+                            ////////////////////////////////////////////////////////////////////////////////////////////
+                            let layIndex = layer.open({
+                                id: guid() //设定一个id，防止重复弹出
+                                ,title : '教学评价-课程质量评价'
+                                ,type : 1
+                                ,area : [ '1100px', '500px' ]
+                                ,offset : '30px' //只定义top坐标，水平保持居中
+                                ,shadeClose : true //点击遮罩关闭
+                                ,btn : ['教学研究','教学设计','教学效果','关闭']
+                                ,yes: function(index, layero){
+                                    initTeacherBar('教学研究',rowData);
+                                    return false;
+                                }
+                                ,btn2: function(index, layero){
+                                    initTeacherBar('教学设计',rowData);
+                                    return false;
+                                }
+                                ,btn3: function(index, layero){
+                                    initTeacherBar('教学效果',rowData);
+                                    return false;
+                                }
+                                ,skin: 'demo-class'
+                                ,content : $('#editForm_container')
+                                ,success: function(layero, index){
+                                    //
+                                    form.val("editForm",data);
+                                    //
+                                    $('#editForm .layui-btn-container').css('display','none');
+                                }
+                                ,end:function () {
+                                    $('#editForm')[0].reset(); //清空表单数据
+                                    form.render();
+                                    $('#editForm .layui-btn-container').css('display','block');
+                                }
+                            });
+                        }
+                    },'json');
+
                 } else if (obj.event === 'courseName') {
                     //
                     $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
