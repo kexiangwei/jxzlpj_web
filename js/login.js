@@ -22,11 +22,22 @@
                         if(resultData.code==200){
                             //保存用户信息
                             let obj = resultData.data;
+
                             $.cookie('userId', obj.userId, { path: '/' });
                             $.cookie('userName', obj.userName, { path: '/' });
                             $.cookie('userGroup', obj.userGroup, { path: '/' });
+                            $.cookie('accountType', obj.accountType, { path: '/' });
                             $.cookie('headImg', obj.headImg, { path: '/' });
                             $.cookie('phone', obj.phone, { path: '/' });
+
+                            $.cookie('sex', obj.sex, { path: '/' });
+                            $.cookie('eduDegree', obj.eduDegree, { path: '/' });
+                            $.cookie('title', obj.title, { path: '/' });
+                            $.cookie('className', obj.className, { path: '/' });
+                            $.cookie('grade', obj.grade, { path: '/' });
+                            $.cookie('majorName', obj.majorName, { path: '/' });
+                            $.cookie('collegeName', obj.collegeName, { path: '/' });
+
                             //跳转到主页面
                             window.location.href="index.html";
                         }else{
