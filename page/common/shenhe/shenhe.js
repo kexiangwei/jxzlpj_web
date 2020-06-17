@@ -2,7 +2,7 @@
  * 审核流程
  */
 layui.config({
-    base: "../../../layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
+    base: "../../../js/layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
 }).extend({
     treeSelect: "treeSelect/treeSelect"
 });

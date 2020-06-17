@@ -26,7 +26,7 @@ layui.use(['layer','upload'], function(){
                     if(data.data.length>0){
                         $.each(data.data,function(index,file){
                             let imgDiv = '<div id="imgDiv_'+file.code+'" class="imgDiv">' +
-                                '              <a href="javascript:void(0)"><img src="../../../layui/images/icon/delete.jpg" class="delete" /></a>\n' +
+                                '              <a href="javascript:void(0)"><img src="../../../js/layui/images/icon/delete.jpg" class="delete" /></a>\n' +
                                 '              <img id="'+file.code+'" data-id="'+file.code+'" src="'+requestUrl+file.filePath +'" alt="继续教育-附件" style="width: 150px; margin:5px;">\n' +
                                 '         </div>';
                             switch (file.fileType) {
@@ -131,7 +131,7 @@ layui.use(['layer','upload'], function(){
                     ,before: function(obj){
                         obj.preview(function(index, file, result){
                             let imgDiv = '<div id="imgDiv_'+index+'" class="imgDiv">' +
-                                '              <a href="javascript:void(0)"><img src="../../../layui/images/icon/delete.jpg" class="delete" /></a>\n' +
+                                '              <a href="javascript:void(0)"><img src="../../../js/layui/images/icon/delete.jpg" class="delete" /></a>\n' +
                                 '              <img src="'+result+'" style="width: 150px; margin:5px;">\n' +
                                 '         </div>';
                             $('#demo1').append(imgDiv);
@@ -193,7 +193,7 @@ layui.use(['layer','upload'], function(){
                         layer.load();
                         obj.preview(function(index, file, result){
                             let imgDiv = '<div id="imgDiv_'+index+'" class="imgDiv">' +
-                                '              <a href="javascript:void(0)"><img src="../../../layui/images/icon/delete.jpg" class="delete" /></a>\n' +
+                                '              <a href="javascript:void(0)"><img src="../../../js/layui/images/icon/delete.jpg" class="delete" /></a>\n' +
                                 '              <img src="'+result+'" style="width: 150px; margin:5px;">\n' +
                                 '         </div>';
                             $('#demo2').append(imgDiv);
