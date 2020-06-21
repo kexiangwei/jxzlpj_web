@@ -14,12 +14,15 @@ var previewFileInfo = function(file){
             img.src = requestUrl+file.filePath;
             img.onload = function(){
                 let idx = layer.open({
-                    title: file.fileName
+                    title: false //如果你不想显示标题栏，你可以title: false
                     , type: 1
-                    , offset: '20px'
+                    , area: [img.width, img.height] //使用图片真实宽高初始化组件
+                    // , area: 'auto'
+                    // ,maxWidth: 900
+                    // ,maxHeight : 500
+                    , offset: '30px'
                     , moveOut: true
                     , shadeClose: true //点击遮罩关闭
-                    , area: [img.width, img.height] //使用图片真实宽高初始化组件
                     , content: '<div class="layui-upload-list"><img src="'+requestUrl+file.filePath +'"></div>'
                     ,  success: function(layero, index){
                         // layer.msg('加载成功', {time : 3000, offset: '100px'});
