@@ -6,6 +6,13 @@
     <title>教学质量评价</title>
     <link rel="stylesheet" href="js/layui/css/layui.css">
     <style type="text/css">
+        .layui-layout-admin .layui-side {
+            width: 220px;
+        }
+        .layui-nav-tree {
+            width: 220px;
+            padding: 0;
+        }
         .layui-nav-tree .layui-nav-child a .l-line {
             width: 12px;
             display: inline-block;
@@ -15,6 +22,9 @@
             margin-right: 10px;
             margin-left: 30px;
             background: url("images/l-line-white.png") left center no-repeat;
+        }
+        .layui-layout-admin .layui-footer {
+            left: 220px;
         }
     </style>
 </head>
@@ -55,7 +65,7 @@
         </div>
 
         <!--tab标签-->
-        <div class="layui-tab" lay-filter="demo" lay-allowclose="true" style="margin-left: 200px;">
+        <div class="layui-tab" lay-filter="demo" lay-allowclose="true" style="margin-left: 220px;">
             <ul class="layui-tab-title"></ul>
             <div class="layui-tab-content"></div>
         </div>

@@ -2,7 +2,7 @@
  * 审核流程
  */
 layui.config({
-    base: "../../../js/layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
+    base: "../../js/layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
 }).extend({
     treeSelect: "treeSelect/treeSelect"
 });
@@ -97,7 +97,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
     var dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 450
+        ,height : 580
         ,url: requestUrl+'/getShenHeSetPageList.do'
         ,request: {
             pageName: 'pageIndex'
@@ -159,8 +159,8 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                         layer.open({
                             title : '通用设置-审核流程-新增'
                             ,type : 1
-                            ,area : [ '1175px', '535px' ] //宽高
-                            ,offset : '10px'
+                            ,area : [ '1200px', '450px' ] //宽高
+                            ,offset : '100px'
                             ,shadeClose : true //点击遮罩关闭
                             ,btn : ['关闭']
                             ,content : $('#editContainer')
@@ -266,8 +266,8 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                     layer.open({
                         title : '通用设置-审核流程-编辑'
                         ,type : 1
-                        ,area : [ '1175px', '535px' ] //宽高
-                        ,offset : '10px'
+                        ,area : [ '1200px', '450px' ] //宽高
+                        ,offset : '100px'
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['关闭']
                         ,content : $('#editContainer')
@@ -351,7 +351,6 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
         let nodeDataTable = table.render({
             id: guid()
             ,elem : '#nodeDataTable'
-            ,height : 360
             ,url: requestUrl+'/getShenHeNodeList.do'
             ,where: {
                 "shenheCode":shenheCode
@@ -435,8 +434,8 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                     var nodeContainer = layer.open({
                         title : '通用设置-审核流程-增加节点'
                         ,type : 1
-                        ,area : [ '700px', '450px' ] //宽高
-                        ,offset : '50px'
+                        ,area : [ '700px', '350px' ] //宽高
+                        ,offset : '100px'
                         ,btn : ['关闭']
                         ,content : $('#nodeContainer')
                         ,success: function(layero, index){

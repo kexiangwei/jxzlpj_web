@@ -16,7 +16,7 @@ var detail_shenheProcess  = function (title,rowData) {
                 var html = '<div class="layui-container" style="width: 90%;">';
                 for (var i = 0; i < data.length; i++) {
                     html += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                        '<legend>开始</legend>\n' +
+                        '<legend style="font-weight: bold">开始</legend>\n' +
                         '<div>' +
                         '   <table class="layui-table">\n' +
                         '      <tbody>\n' +
@@ -49,10 +49,11 @@ var detail_shenheProcess  = function (title,rowData) {
                         }
                     }
                     html +=  '</fieldset>';
+                    if(data[i].status =='通过' || data[i].status =='未通过' || data[i].status =='退回'){
+                        html +=  '<h2 style="margin-left: 33px; font-weight: bold">结束</h2>';
+                    }
                 }
-                if(rowData.status =='通过' || rowData.status =='未通过'){
-                    html +=  '<h2 style="margin-left: 30px;">结束</h2>';
-                }
+
                 html += '</div>';
                 //
                 layer.open({
@@ -60,7 +61,7 @@ var detail_shenheProcess  = function (title,rowData) {
                     ,title : title
                     ,type : 1
                     ,area : [ '1100px', '500px' ]
-                    ,offset : '30px' //只定义top坐标，水平保持居中
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     // ,maxmin: true
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']

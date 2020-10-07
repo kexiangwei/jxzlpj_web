@@ -120,7 +120,7 @@ layui.use(['layer','upload'], function(){
                     ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                     ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
                         "relationCode":function () {return $(" input[ name='code' ] ").val();}
-                        ,"fileCategory":"JXYJ_JXJY" // 固定值
+                        ,"fileCategory":"jxyj_jxjy" // 固定值
                         ,"fileType":"jyzs" // 固定值
                         ,"userId":function () {return $.cookie('userId');}
                         ,"userName":function () {return $.cookie('userName');}
@@ -173,7 +173,7 @@ layui.use(['layer','upload'], function(){
                     ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                     ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
                         "relationCode":function () { return $(" input[ name='code' ] ").val();}
-                        ,"fileCategory":"JXYJ_JXJY" // 固定值
+                        ,"fileCategory":"jxyj_jxjy" // 固定值
                         ,"fileType":"chzp" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
@@ -240,7 +240,7 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $(" input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"JXYJ_JXJY" // 固定值
+                        ,"fileCategory":"jxyj_jxjy" // 固定值
                         ,"fileType":"xdth" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
@@ -315,7 +315,7 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $(" input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"JXYJ_JXJY" // 固定值
+                        ,"fileCategory":"jxyj_jxjy" // 固定值
                         ,"fileType":"qtwj" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');

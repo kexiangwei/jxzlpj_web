@@ -24,9 +24,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 440
+                    ,height : 500
                     ,id: "myself_table_id"
-                    ,url: requestUrl+'/jiXuJiaoYu/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jxjy/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
@@ -93,15 +93,18 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         }
                         ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
-                                if(val=='审核中' || val=='通过'){
+                                if(val=='审核中'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
-                                }
-                                if(val=='未通过' || val=='退回'){
+                                } else if(val=='通过'){
+                                    return '<span style="color: green;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='未通过' || val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                                } else {
+                                    return '<span style="color: gray;font-weight: bold;">待审核</span>';
                                 }
-                                return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
@@ -142,7 +145,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.open({
                                         title : '教学研究-继续教育-新增'
                                         ,type : 1
-                                        ,area : [ '900px', '450px' ]
+                                        ,area : [ '900px', '500px' ]
                                         ,offset : '50px'
                                         ,content : $('#editForm_container')
                                         ,success: function(layero, index){
@@ -165,11 +168,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                     array.push('线上学习');
                                                 }
                                                 formData.peixunStyle = array.join(',');
-                                                $.post(requestUrl+'/jiXuJiaoYu/insert.do', formData, function (result_data) {
-                                                    if(result_data.code == 200){
-                                                        myself_table.reload();//重新加载表格数据
-                                                    }
+                                                $.post(requestUrl+'/jxyj_jxjy/insert.do', formData, function (result_data) {
                                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                        if(result_data.code == 200){
+                                                            myself_table.reload();//重新加载表格数据
+                                                        }
                                                         layer.close(index);
                                                     });
                                                 },'json');
@@ -224,7 +227,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 let editForm_idx= layer.open({
                                     title :  '教学研究-继续教育-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '450px' ]
+                                    ,area : [ '900px', '500px' ]
                                     ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')
@@ -264,7 +267,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 array.push('线上学习');
                                             }
                                             formData.peixunStyle = array.join(',');
-                                            $.post(requestUrl+'/jiXuJiaoYu/update.do', formData, function (result_data) {
+                                            $.post(requestUrl+'/jxyj_jxjy/update.do', formData, function (result_data) {
                                                 if(result_data.code == 200){
                                                     myself_table.reload();//重新加载表格数据
                                                 }
@@ -285,7 +288,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     return;
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    $.post(requestUrl+'/jiXuJiaoYu/delete.do', { 'code': data.code},function(result_data){
+                                    $.post(requestUrl+'/jxyj_jxjy/delete.do', { 'code': data.code},function(result_data){
                                         if(result_data.code == 200){
                                             myself_table.reload();//重新加载表格数据
                                         }
@@ -310,9 +313,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                 var other_table = table.render({ //数据表格
                     elem : '#other_table'
-                    ,height : 440
+                    ,height : 500
                     ,id: "other_table_id"
-                    ,url: requestUrl+'/jiXuJiaoYu/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jxjy/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -365,6 +368,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'}
                     ]]
                     ,done: function(res, curr, count){
@@ -629,7 +633,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             //提交
             var toSubmit = function (row_datas){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                    $.post(requestUrl+'/jiXuJiaoYu/toSubimt.do',{
+                    $.post(requestUrl+'/toSubimt.do',{
                         "menuId":$.cookie('currentMenuId'),
                         "jsonStr":JSON.stringify(row_datas)
                     },function (result_data) {
@@ -649,8 +653,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.open({
                     title : '教学研究-继续教育-审核'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
-                    ,offset : '50px'
+                    ,area : [ '700px', '350px' ]
+                    ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : $('#shenHeForm_container')
@@ -665,8 +669,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         });
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
-                            $.post(requestUrl+'/jiXuJiaoYu/toShenhe.do',{
-                                "jsonStr":JSON.stringify(row_datas)
+                            $.post(requestUrl+'/toShenhe.do',{
+                                'viewName':'V_JXYJ_JXJY_SHENHE'
+                                ,'jsonStr':JSON.stringify(row_datas)
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion
                                 ,"userId":function () {
