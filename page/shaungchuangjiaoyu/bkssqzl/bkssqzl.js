@@ -26,8 +26,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var myself_table = table.render({
                     id: "myself_table"
                     ,elem : '#myself_table'
-                    ,height : 440
-                    ,url: requestUrl+'/bkssqzl/getPageList.do'
+                    ,height : 500
+                    ,url: requestUrl+'/scjy_bkssqzl/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
@@ -62,49 +62,49 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'userId', title: '第一指导教师工号', width:160, sort:true, hide:true}
-                        ,{field: 'userName', title: '第一指导教师姓名', width:160, sort:true, hide:true}
-                        ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
                         ,{field: 'name', title: '专利名称', width:200, sort:true}
                         ,{field: 'type', title: '类型', width:150, sort:true}
                         ,{field: 'authNum', title: '授权号', width:150, sort:true}
                         ,{field: 'approvalTime', title: '获批时间', width:150, sort:true}
-                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){
-                                let htmlstr='';
-                                if(data.isSubmit=='未提交'){
-                                    if(data.status ==='退回'){
-                                        htmlstr =
-                                            ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                            ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                            ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                        $('#myself_bar').html(htmlstr);
-                                        return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
-                                    }
-                                    htmlstr =
-                                        ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                        ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                        ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                        ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                    $('#myself_bar').html(htmlstr);
-                                    return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
-                                } else if(data.isSubmit=='已提交'){
-                                    htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>' +
+                        ,{field: 'userId', title: '第一指导教师工号', width:160, sort:true, hide:true}
+                        ,{field: 'userName', title: '第一指导教师姓名', width:160, sort:true, hide:true}
+                        ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                var val = data.isSubmit;
+                                var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
+                                if(val=='已提交'){
+                                    html += '       <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
+                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>\n' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
-                                    $('#myself_bar').html(htmlstr);
-                                    return '<span style="color: blue;font-weight: bold;">'+data.isSubmit+'</span>';
+                                    $('#myself_bar').html(html);
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                }else{
+                                    if(data.status == '退回'){
+                                        html+= '    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    }else{
+                                        html+= '    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    }
+                                    html += '       <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
+                                        '           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
+                                    $('#myself_bar').html(html);
+                                    return '<span style="font-weight: bold;">'+val+'</span>';
                                 }
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){
-                                if(data.status==='退回'){
-                                    return '<span style="color: red;font-weight: bold;">'+data.status+'</span>';
+                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                var val = data.status;
+                                if(val=='审核中'){
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='通过'){
+                                    return '<span style="color: green;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='未通过' || val=='退回'){
+                                    return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                                } else {
+                                    return '<span style="color: gray;font-weight: bold;">待审核</span>';
                                 }
-                                return '<span style="color: blue;font-weight: bold;">'+(data.status != null ? data.status : '待审核')+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){ //数据渲染完的回调
@@ -159,15 +159,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 'code': objCode
                                                 ,'userId':$.cookie('userId')
                                                 ,'userName':$.cookie('userName')
+                                                ,'userUnit':$.cookie('userUnit')
                                             });
 
                                             //监听表单提交
                                             form.on('submit(toSubmitEidtForm)', function(data){
-                                                $.post(requestUrl+'/bkssqzl/insert.do' ,data.field ,function(result_data){
-                                                        if(result_data.code == 200){
-                                                            myself_table.reload();//重新加载表格数据
-                                                        }
+                                                $.post(requestUrl+'/scjy_bkssqzl/insert.do' ,data.field ,function(result_data){
                                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                            if(result_data.code == 200){
+                                                                myself_table.reload();//重新加载表格数据
+                                                            }
                                                             layer.close(index);
                                                         });
                                                     },'json');
@@ -241,11 +242,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                                         //监听表单提交
                                         form.on('submit(toSubmitEidtForm)', function(data){
-                                            $.post(requestUrl+'/bkssqzl/update.do' ,data.field ,function(result_data){
-                                                if(result_data.code == 200){
-                                                    myself_table.reload();//重新加载表格数据
-                                                }
+                                            $.post(requestUrl+'/scjy_bkssqzl/update.do' ,data.field ,function(result_data){
                                                 layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                    if(result_data.code == 200){
+                                                        myself_table.reload();//重新加载表格数据
+                                                    }
                                                     layer.close(index);
                                                 });
                                             },'json');
@@ -260,11 +261,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     return;
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    $.post(requestUrl+'/bkssqzl/delete.do', { "objCode": data.code},function(result_data){
-                                        if(result_data.code == 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
+                                    $.post(requestUrl+'/scjy_bkssqzl/delete.do', { "code": data.code},function(result_data){
                                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                                            if(result_data.code == 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }
                                             layer.close(index);
                                         });
                                     }, "json");
@@ -285,8 +286,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var other_table = table.render({//数据表格
                     id: "other_table"
                     ,elem : '#other_table'
-                    ,height : 440
-                    ,url: requestUrl+'/bkssqzl/getPageList.do'
+                    ,height : 500
+                    ,url: requestUrl+'/scjy_bkssqzl/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -322,21 +323,22 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'userId', title: '第一指导教师工号', width:160, sort:true, hide:true}
-                        ,{field: 'userName', title: '第一指导教师姓名', width:160, sort:true, hide:true}
-                        ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
                         ,{field: 'name', title: '专利名称', width:200, sort:true}
                         ,{field: 'type', title: '类型', width:150, sort:true}
                         ,{field: 'authNum', title: '授权号', width:150, sort:true}
                         ,{field: 'approvalTime', title: '获批时间', width:150, sort:true}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'userId', title: '第一指导教师工号', width:160, sort:true, hide:true}
+                        ,{field: 'userName', title: '第一指导教师姓名', width:160, sort:true, hide:true}
+                        ,{field: 'userUnit', title: '第一指导教师单位', width:160, sort:true, hide:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
-                                    return '<span style="color: #009688;font-weight: bold;">'+val+'</span>';
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
@@ -390,7 +392,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             }
                                         });
                                         if(isSubmit){
-                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                            layer.msg('您选择了已审核的信息', {time : 3000, offset: '100px'});
                                             return;
                                         } else {
                                             toShenHe(data); //添加审核意见
@@ -653,155 +655,19 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //表单赋值
                 form.val("editForm",{
                     "code":data.code
-                    ,"userId":data.userId
-                    ,"userName":data.userName
-                    ,"userUnit" : data.userUnit
                     ,"name" : data.name
                     ,"type" : data.type
                     ,"authNum" : data.authNum
                     ,"approvalTime" : data.approvalTime
+                    ,"userId":data.userId
+                    ,"userName":data.userName
+                    ,"userUnit" : data.userUnit
                 });
             };
 
-            //上传附件
-            $('#upfile').click(function(){
-                layer.open({
-                    title : '双创教育-本科生申请专利-上传证明材料'
-                    ,type : 1
-                    ,area : [ '700px', '300px' ]
-                    ,offset : '100px'
-                    ,moveOut:true
-                    ,shadeClose : true //点击遮罩关闭
-                    ,btn: ['关闭']
-                    ,content : $('#uploadFile_container')
-                    ,success: function(layero, index){
-                        let upfileList = $('#upfileList');
-                        //新增和修改都需要加载之前上传的文件
-                        $.get(requestUrl+"/getFileListByRelationCode.do" , {
-                            "relationCode": $("input[ name='code' ] ").val()
-                        } ,  function(data){
-                            if(data.data.length > 0){
-                                //
-                                upfileList.empty();
-                                //
-                                $.each(data.data,function(index,fileInfo){
-                                    let tr = $(['<tr id="'+ fileInfo.code +'">'
-                                        ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
-                                        ,'<td style="text-align: center;">已上传</td>'
-                                        ,'<td style="text-align: center;">' +
-                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
-                                        '   <button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>' +
-                                        '</td>'
-                                        ,'</tr>'].join(''));
-                                    upfileList.append(tr);
-                                    //预览
-                                    tr.find('a').on('click', function(){//点击文件名
-                                        previewFileInfo(fileInfo);
-                                    });
-                                    tr.find('.upfile_preview').on('click', function(){//点击预览按钮
-                                        previewFileInfo(fileInfo);
-                                    });
-                                    //删除
-                                    tr.find('.upfile_delete').on('click', function(){
-                                        $.post(requestUrl+"/deleteFileInfo.do" , {
-                                            "code": tr.attr("id")
-                                        } ,  function(data){
-                                            tr.remove();
-                                        }, "json");
-                                    });
-                                });
-                            }
-                        }, "json");
-
-                        //执行上传
-                        let upfileIns = upload.render({
-                            elem: $('#upfileIns')
-                            ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
-                            ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
-                                "relationCode":function () {
-                                    return $("input[ name='code' ] ").val();
-                                }
-                                ,"fileCategory":"scjy_bkssqzl" // 固定值
-                                ,"fileType":"证明材料" // 固定值
-                                ,"userId":function () {
-                                    return $.cookie('userId');
-                                }
-                                ,"userName":function () {
-                                    return $.cookie('userName');
-                                }
-                            }
-                            ,field:"file" //设定文件域的字段名
-                            ,multiple: true // 	是否允许多文件上传
-                            ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                            ,exts:'pdf|jpg'
-                            ,choose: function(obj){
-                                $('#noData').empty();
-                                let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-                                //读取本地文件
-                                obj.preview(function(index, file, result){
-                                    let tr = $(['<tr id="upfile_'+ index +'">'
-                                        ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ file.name +'</a></td>'
-                                        ,'<td style="text-align: center;">正在上传</td>'
-                                        ,'<td style="text-align: center;">'
-                                        // ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
-                                        ,'<button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
-                                        '<button class="layui-btn layui-btn-xs layui-btn-danger upfile_delete">删除</button>'
-                                        ,'</td>'
-                                        ,'</tr>'].join(''));
-                                    upfileList.append(tr);
-
-                                    //删除
-                                    tr.find('.upfile_delete').on('click', function(){
-                                        $.post(requestUrl+"/deleteFileInfo.do" , {
-                                            "code": $('#upfile_'+index).attr("data-id")
-                                        } ,  function(data){
-                                            // layer.msg(data.msg);
-                                            delete files[index]; //删除对应的文件
-                                            tr.remove();
-                                            upfileIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-                                        }, "json");
-                                    });
-                                });
-                            }
-                            ,done: function(res, index, upload){
-                                if(res.code == 200){ //上传成功
-                                    let tr =  upfileList.find('tr#upfile_'+ index)
-                                        ,tds = tr.children();
-                                    tr.attr("data-id",res.data.code);//
-                                    tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
-                                    // tds.eq(2).html(''); //清空操作
-
-                                    //预览
-                                    let fileInfo = res.data;
-                                    tr.find('a').on('click', function(){//点击文件名
-                                        previewFileInfo(fileInfo);
-                                    });
-                                    tr.find('.upfile_preview').on('click', function(){//点击预览按钮
-                                        previewFileInfo(fileInfo);
-                                    });
-                                    //
-                                    return delete this.files[index]; //删除文件队列已经上传成功的文件
-                                }
-                                this.error(index, upload);
-                            }
-                            ,error: function(index, upload){
-                                let tr =  upfileList.find('tr#upfile_'+ index)
-                                    ,tds = tr.children();
-                                tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
-                            }
-                        });
-                    },end:function () {
-
-                    }
-                });
-            });
-
             //查看详情
             var detail_dataInfo = function (data,isSubmit,isShenHe) {
-                if(isOpen){
-                    return;
-                }
-                var isOpen = false;
+
                 let options = {
                     title : '双创教育-本科生申请专利-查看详情'
                     ,type : 1
@@ -811,7 +677,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,btn : ['关闭']
                     ,content :  $('#dataInfo_container')
                     ,success: function(layero, index){
-                        isOpen = true;
 
                         //第一指导教师信息
                         let htmlStr = '<table class="layui-table">\n' +
@@ -926,7 +791,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         }, "json");
                     }
                     ,end:function () {
-                        isOpen = false;
                         $("#fileList").empty();
                     }
                 };
@@ -952,16 +816,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             };
 
             //提交
-           var toSubmit = function (row_dataArr){
+           var toSubmit = function (row_datas){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                    $.post(requestUrl+'/bkssqzl/toSubimt.do',{
+                    $.post(requestUrl+'/toSubimt.do',{
                         "menuId":$.cookie('currentMenuId'),
-                        "jsonStr":JSON.stringify(row_dataArr)
+                        "jsonStr":JSON.stringify(row_datas)
                     },function (result_data) {
-                        if(result_data.code === 200){
-                            myself_table.reload();//重新加载表格数据
-                        }
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            if(result_data.code === 200){
+                                myself_table.reload();//重新加载表格数据
+                            }
                             layer.closeAll();
                         });
                     },'json');
@@ -969,15 +833,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             };
 
             //审核
-            var toShenHe = function (row_dataArr) {
+            var toShenHe = function (row_datas) {
                 layer.open({
-                    title : '双创教育-本科生申请专利-审核'
+                    title : '教学研究-本科生申请专利-审核'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,area : [ '700px', '350px' ]
+                    ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
+                    // ,btn : ['关闭']
                     ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
@@ -988,11 +851,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 $('#opinion').empty();
                             }
                         });
-
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
-                            $.post(requestUrl+'/bkssqzl/toShenhe.do',{
-                                "jsonStr":JSON.stringify(row_dataArr)
+                            $.post(requestUrl+'/toShenhe.do',{
+                                'viewName':'v_scjy_bkssqzl_shenhe'
+                                ,'jsonStr':JSON.stringify(row_datas)
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion
                                 ,"userId":function () {
@@ -1002,10 +865,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     return $.cookie('userName');
                                 }
                             },function (result_data) {
-                                if(result_data.code === 200){
-                                    other_table.reload();//重新加载表格数据
-                                }
                                 layer.msg(result_data.msg, { offset: '100px'},function () {
+                                    if(result_data.code === 200){
+                                        other_table.reload();//重新加载表格数据
+                                    }
                                     layer.close(index);
                                 });
                             },'json');

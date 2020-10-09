@@ -3,12 +3,12 @@
  */
 layui.use(['layer','upload'], function(){
     var $ = layui.$,layer = layui.layer,upload = layui.upload;
-    //
+    //上传附件
     $('#upfile').click(function(){
         layer.open({
-            title : '教学研究-教改论文-证明材料'
+            title : '双创教育-本科生申请专利-上传证明材料'
             ,type : 1
-            ,area : [ '700px', '350px' ]
+            ,area : [ '700px', '300px' ]
             ,offset : '100px'
             ,moveOut:true
             ,shadeClose : true //点击遮罩关闭
@@ -16,8 +16,9 @@ layui.use(['layer','upload'], function(){
             ,content : $('#uploadFile_container')
             ,success: function(layero, index){
                 let upfileList = $('#upfileList');
+                //新增和修改都需要加载之前上传的文件
                 $.get(requestUrl+"/getFileListByRelationCode.do" , {
-                    "relationCode": $("#editForm input[ name='code' ] ").val()
+                    "relationCode": $("input[ name='code' ] ").val()
                 } ,  function(data){
                     if(data.data.length > 0){
                         //
@@ -51,16 +52,17 @@ layui.use(['layer','upload'], function(){
                         });
                     }
                 }, "json");
-                //上传附件
+
+                //执行上传
                 let upfileIns = upload.render({
-                    elem: '#upfileIns'
+                    elem: $('#upfileIns')
                     ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                     ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
                         "relationCode":function () {
-                            return $("#editForm input[ name='code' ] ").val();
+                            return $("input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"jxyj_jglw" // 固定值
-                        ,"fileType":"" //
+                        ,"fileCategory":"scjy_bkssqzl" // 固定值
+                        ,"fileType":"" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
                         }
@@ -71,7 +73,7 @@ layui.use(['layer','upload'], function(){
                     ,field:"file" //设定文件域的字段名
                     ,multiple: true // 	是否允许多文件上传
                     ,accept: 'file'//指定允许上传时校验的文件类型，可选值有：images（图片）、file（所有文件）、video（视频）、audio（音频）
-                    ,exts:'pdf'
+                    ,exts:'pdf|jpg'
                     ,choose: function(obj){
                         $('#noData').empty();
                         let files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
@@ -103,7 +105,7 @@ layui.use(['layer','upload'], function(){
                     }
                     ,done: function(res, index, upload){
                         if(res.code == 200){ //上传成功
-                            let tr = upfileList.find('tr#upfile_'+ index)
+                            let tr =  upfileList.find('tr#upfile_'+ index)
                                 ,tds = tr.children();
                             tr.attr("data-id",res.data.code);//
                             tds.eq(1).html('<span style="color: #5FB878;">已上传</span>');
@@ -123,13 +125,13 @@ layui.use(['layer','upload'], function(){
                         this.error(index, upload);
                     }
                     ,error: function(index, upload){
-                        let tr = upfileList.find('tr#upfile_'+ index)
+                        let tr =  upfileList.find('tr#upfile_'+ index)
                             ,tds = tr.children();
                         tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
                     }
                 });
             },end:function () {
-                $("#upfileList").empty();
+
             }
         });
     });

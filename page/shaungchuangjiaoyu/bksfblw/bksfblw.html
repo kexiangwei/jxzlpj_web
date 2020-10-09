@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="../../../js/layui/css/layui.css">
     <style type="text/css">
         .myself_search .layui-inline {
-            width: 150px;
+            width: 185px;
         }
         .other_search  .layui-inline {
-            width: 150px;
+            width: 185px;
         }
         .layui-form-label {
             width: 100px;
@@ -27,6 +27,7 @@
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show" id="myself_item">
                 <div class="layui-fluid">
+
                     <!-- 查询条件 -->
                     <div class="layui-form myself_search">
                         论文题目：
@@ -163,9 +164,11 @@
     <!-- 新增&修改，基础信息 -->
     <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
-            <!-- 业务数据编号 -->
+
+            <!-- /////////////////////////////////////-->
             <input type="hidden" name="code"/>
-            <!-- 业务属性 -->
+            <!-- /////////////////////////////////////-->
+
             <fieldset class="layui-elem-field" style="margin-top: 20px;">
                 <legend>第一指导教师信息</legend>
                 <div class="layui-form-item" style="margin-top: 20px;">
@@ -259,7 +262,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">证明材料：</label>
                         <div class="layui-input-inline">
-                            <button type="button" class="layui-btn layui-btn-primary" id="upfile">上传证明材料</button>
+                            <button type="button" id="upfile" class="layui-btn layui-btn-primary" style="width: 192px">上传证明材料</button>
                         </div>
                     </div>
                 </div>
@@ -306,22 +309,8 @@
     <!-- 新增&修改，学生信息 -->
     <div class="layui-container" style="width: 90%; display: none;" id="stu_container">
         <form class="layui-form" action="" lay-filter="stuForm" id="stuForm">
-            <div class="layui-form-item" style="margin-top: 20px;">
-                <div class="layui-inline">
-                    <label class="layui-form-label">学院：</label>
-                    <div class="layui-input-inline">
-                        <select id="college" name="college" lay-filter="college"><option value="">请选择</option></select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">专业：</label>
-                    <div class="layui-input-inline">
-                        <select id="major" name="major" lay-filter="major"><option value="">请选择</option></select>
-                    </div>
-                </div>
-            </div>
 
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="margin-top: 20px;">
                 <div class="layui-inline">
                     <label class="layui-form-label">学号：</label>
                     <div class="layui-input-inline">
@@ -332,6 +321,20 @@
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-inline">
                         <input type="text" name="studentName" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">学院：</label>
+                    <div class="layui-input-inline">
+                        <select id="college" name="college" lay-filter="college"><option value="">请选择</option></select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">专业：</label>
+                    <div class="layui-input-inline">
+                        <select id="major" name="major" lay-filter="major"><option value="">请选择</option></select>
                     </div>
                 </div>
             </div>
@@ -348,7 +351,7 @@
                     </select>
                 </div>
             </div>
-            <div class="layui-btn-container" align="center" style="margin-top: 50px;">
+            <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitStuForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
@@ -372,16 +375,13 @@
         </div>
     </div>
 
-    <!-- 查看审核流程
-    <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div> -->
-
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
-            <div class="layui-form-item" style="width: 320px; margin-top: 20px;">
-                <label class="layui-form-label">审核状态：</label>
-                <div class="layui-input-inline" style="width: 150px;">
-                    <select name="status" lay-filter="status">
+            <div class="layui-form-item" style="margin-top: 20px;">
+                <label class="layui-form-label" style="width: 80px;">审核状态：</label>
+                <div class="layui-input-inline">
+                    <select name="status" lay-filter="status" id="shenHeFormStatus">
                         <option value="">请选择</option>
                         <option value="通过" selected="">通过</option>
                         <option value="未通过">未通过</option>
@@ -390,14 +390,14 @@
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">审核意见：</label>
+                <label class="layui-form-label" style="width: 80px;">审核意见：</label>
                 <div class="layui-input-block">
-                    <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 200px;">通过</textarea>
+                    <textarea id="opinion" name="opinion" class="layui-textarea" style="width: 500px; height: 150px;">通过</textarea>
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-input-block" align="center">
-                    <button class="layui-btn" lay-submit="" lay-filter="toSubmitShenHeForm">提交</button>
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="toSubmitShenHeForm" id="toSubmitShenHeForm">提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -411,5 +411,6 @@
     <script src="../../../js/previewFileInfo.js"></script>
     <script src="../../../js/shenheProcess.js"></script>
     <script src="bksfblw.js"></script>
+    <script src="upfile.js"></script>
 </body>
 </html>

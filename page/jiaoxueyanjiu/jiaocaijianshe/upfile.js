@@ -8,7 +8,7 @@ layui.use(['layer','upload'], function(){
         layer.open({
             title : '教学研究-教材建设-证明材料'
             ,type : 1
-            ,area : [ '700px', '300px' ]
+            ,area : [ '700px', '350px' ]
             ,offset : '100px'
             ,moveOut:true
             ,shadeClose : true //点击遮罩关闭
@@ -59,8 +59,8 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $("#editForm input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"JXYJ_JCJS" // 固定值
-                        ,"fileType":"证明材料" // 固定值
+                        ,"fileCategory":"jxyj_jcjs" // 固定值
+                        ,"fileType":""
                         ,"userId":function () {
                             return $.cookie('userId');
                         }

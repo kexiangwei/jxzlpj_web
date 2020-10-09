@@ -155,6 +155,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 'code': objCode
                                                 ,'userId':$.cookie('userId')
                                                 ,'userName':$.cookie('userName')
+                                                ,'userUnit':$.cookie('userUnit')
                                             });
 
                                             //监听编辑页submit按钮提交
@@ -184,6 +185,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 layer.closeAll();
                                             });
                                             return false;
+                                        }
+                                        ,end:function () {
+                                            window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
                                         }
                                     });
                                     break;
@@ -252,6 +256,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         }
                                         data.peixunStyle_xsxx = peixunStyle_xsxx;
                                         data.peixunStyle_xxxx = peixunStyle_xxxx;
+
                                         //初始化表单
                                         initEditForm(data);
 
@@ -268,18 +273,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             }
                                             formData.peixunStyle = array.join(',');
                                             $.post(requestUrl+'/jxyj_jxjy/update.do', formData, function (result_data) {
-                                                if(result_data.code == 200){
-                                                    myself_table.reload();//重新加载表格数据
-                                                }
                                                 layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                    if(result_data.code == 200){
+                                                        myself_table.reload();//重新加载表格数据
+                                                    }
                                                     layer.close(index);
                                                 });
                                             },'json');
                                         });
-                                    },end:function () {
-                                        /*$("#demo1").empty();
-                                        $("#demo2").empty();
-                                        $("#demo3").empty();*/
+                                    }
+                                    ,end:function () {
                                         location.reload();//刷新页面，清空上传弹窗上传的文件内容
                                     }
                                 });
@@ -289,10 +292,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                                     $.post(requestUrl+'/jxyj_jxjy/delete.do', { 'code': data.code},function(result_data){
-                                        if(result_data.code == 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
-                                        layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            if(result_data.code == 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }
                                             layer.close(index);
                                         });
                                     }, "json");
@@ -637,10 +640,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         "menuId":$.cookie('currentMenuId'),
                         "jsonStr":JSON.stringify(row_datas)
                     },function (result_data) {
-                        if(result_data.code === 200){
-                            myself_table.reload();//重新加载表格数据
-                        }
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            if(result_data.code === 200){
+                                myself_table.reload();//重新加载表格数据
+                            }
                             layer.closeAll();
                         });
                     },'json');
@@ -656,7 +659,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,area : [ '700px', '350px' ]
                     ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
+                    // ,btn : ['关闭']
                     ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //

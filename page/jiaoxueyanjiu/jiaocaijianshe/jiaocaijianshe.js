@@ -24,9 +24,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 440
+                    ,height : 500
                     ,id: "myself_table_id"
-                    ,url: requestUrl+'/jiaoCaiJianShe/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jcjs/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
@@ -67,7 +67,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,{field: 'publishingTime', title: '出版时间', width:150, sort:true}
                         ,{field: 'selected', title: '教材入选情况', width:150, sort:true}
                         ,{field: 'selectedTime', title: '入选时间', width:150, sort:true}
-                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
                                 if(val=='已提交'){
@@ -91,15 +91,18 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                         ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
-                                if(val=='审核中' || val=='通过'){
+                                if(val=='审核中'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
-                                }
-                                if(val=='退回'){
+                                } else if(val=='通过'){
+                                    return '<span style="color: green;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='未通过' || val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                                } else {
+                                    return '<span style="color: gray;font-weight: bold;">待审核</span>';
                                 }
-                                return '<span style="font-weight: bold;">待审核</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                 });//table end.
@@ -149,15 +152,16 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         'code': objCode
                                         ,'userId':$.cookie('userId')
                                         ,'userName':$.cookie('userName')
+                                        ,'userUnit':$.cookie('userUnit')
                                     });
 
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        $.post(requestUrl+'/jiaoCaiJianShe/insert.do' ,data.field ,function(result_data){
-                                            if(result_data.code == 200){
-                                                myself_table.reload();//重新加载表格数据
-                                            }
+                                        $.post(requestUrl+'/jxyj_jcjs/insert.do' ,data.field ,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                if(result_data.code == 200){
+                                                    myself_table.reload();//重新加载表格数据
+                                                }
                                                 layer.close(index);
                                             });
                                         },'json');
@@ -200,12 +204,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     if (obj.event === 'detail_dataInfo') {
                         detail_dataInfo(data,true);
                     } else if (obj.event === 'detail_shenheProcess') {
-                        if(data.isSubmit=='未提交'){
+                        if(data.isSubmit=='未提交' && data.status !='退回'){
                             return;
                         }
                         detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
                     } else if (obj.event === 'update') {
-                        if(data.isSubmit== '已提交' &&  data.status != '退回'){
+                        if(data.isSubmit== '已提交'){
                             return;
                         }
                         //执行编辑
@@ -226,13 +230,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                                 //初始化表单
                                 initEditForm(data);
+
                                 //监听表单提交
                                 form.on('submit(toSubmitEidtForm)', function(data){
-                                    $.post(requestUrl+'/jiaoCaiJianShe/update.do' ,data.field ,function(result_data){
-                                        if(result_data.code == 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
+                                    $.post(requestUrl+'/jxyj_jcjs/update.do' ,data.field ,function(result_data){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            if(result_data.code == 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }
                                             layer.close(index);
                                         });
                                     },'json');
@@ -246,11 +251,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             return;
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            $.post(requestUrl+'/jiaoCaiJianShe/delete.do', { 'code': data.code},function(result_data){
-                                if(result_data.code == 200){
-                                    myself_table.reload();//重新加载表格数据
-                                }
-                                layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            $.post(requestUrl+'/jxyj_jcjs/delete.do', { 'code': data.code},function(result_data){
+                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                    if(result_data.code == 200){
+                                        myself_table.reload();//重新加载表格数据
+                                    }
                                     layer.close(index);
                                 });
                             }, "json");
@@ -263,13 +268,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 $('#other').removeClass().addClass("layui-this");
                 $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
+
             if(data.isShenhe > 0){ //拥有审核权限
 
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
-                    ,height : 440
+                    ,height : 500
                     ,id: "other_table_id"
-                    ,url: requestUrl+'/jiaoCaiJianShe/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jcjs/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -312,7 +318,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,{field: 'publishingTime', title: '出版时间', width:150, sort:true}
                         ,{field: 'selected', title: '教材入选情况', width:150, sort:true}
                         ,{field: 'selectedTime', title: '入选时间', width:150, sort:true}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -320,6 +326,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
@@ -429,9 +436,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,"selectedTime" : data.selectedTime
                     ,"userId":data.userId
                     ,"userName":data.userName
+                    ,"userUnit":data.userUnit
                 });
-
-
             };
 
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
@@ -538,14 +544,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
             //提交
             var toSubmit = function (row_dataArr){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                    $.post(requestUrl+'/jiaoCaiJianShe/toSubimt.do',{
+                    $.post(requestUrl+'/toSubimt.do',{
                         "menuId":$.cookie('currentMenuId'),
                         "jsonStr":JSON.stringify(row_dataArr)
                     },function (result_data) {
-                        if(result_data.code === 200){
-                            myself_table.reload();//重新加载表格数据
-                        }
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            if(result_data.code === 200){
+                                myself_table.reload();//重新加载表格数据
+                            }
                             layer.closeAll();
                         });
                     },'json');
@@ -553,15 +559,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
             };
 
             //审核
-            var toShenHe = function (row_dataArr) {
+            var toShenHe = function (row_datas) {
                 layer.open({
                     title : '教学研究-教材建设-审核'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,area : [ '700px', '350px' ]
+                    ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
+                    // ,btn : ['关闭']
                     ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
@@ -572,11 +577,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 $('#opinion').empty();
                             }
                         });
-
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
-                            $.post(requestUrl+'/jiaoCaiJianShe/toShenhe.do',{
-                                "jsonStr":JSON.stringify(row_dataArr)
+                            $.post(requestUrl+'/toShenhe.do',{
+                                'viewName':'V_JXYJ_JCJS_SHENHE'
+                                ,'jsonStr':JSON.stringify(row_datas)
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion
                                 ,"userId":function () {
@@ -586,10 +591,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     return $.cookie('userName');
                                 }
                             },function (result_data) {
-                                if(result_data.code === 200){
-                                    other_table.reload();//重新加载表格数据
-                                }
                                 layer.msg(result_data.msg, { offset: '100px'},function () {
+                                    if(result_data.code === 200){
+                                        other_table.reload();//重新加载表格数据
+                                    }
                                     layer.close(index);
                                 });
                             },'json');
