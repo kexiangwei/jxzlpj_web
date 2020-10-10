@@ -1,4 +1,9 @@
-
+.myself_search .layui-inline {
+    width: 185px;
+}
+.other_search  .layui-inline {
+    width: 185px;
+}
 .layui-form-label {
     width: 100px;
 }

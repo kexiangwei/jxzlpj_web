@@ -2,7 +2,7 @@
  * 审核流程
  */
 layui.config({
-    base: "../../js/layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
+    base: "../../../js/layui/lay/treeselect/module/" //你存放新模块的目录，注意，不是layui的模块目录
 }).extend({
     treeSelect: "treeSelect/treeSelect"
 });
@@ -97,7 +97,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
     var dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 580
+        ,height : 550
         ,url: requestUrl+'/getShenHeSetPageList.do'
         ,request: {
             pageName: 'pageIndex'
@@ -143,10 +143,10 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
             ,{fixed: 'right', width:166, align:'center', toolbar: '#dataTable_bar'}
         ]]
         ,even: true //隔行背景
-        ,limit: 10
+        ,limit: 20
         ,page: {
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
-            ,limits: [10,20,50,100]
+            ,limits: [20,50,100]
         }
         ,done : function(res, curr, count) {
 

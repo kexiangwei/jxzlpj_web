@@ -61,8 +61,8 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $("#editForm input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"JXJC_JYJXCGJ" // 固定值
-                        ,"fileType":"附件" // 固定值
+                        ,"fileCategory":"jxjc_jyjxcgj" // 固定值
+                        ,"fileType":"" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
                         }

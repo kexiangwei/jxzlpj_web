@@ -6,7 +6,7 @@ layui.use(['layer','upload'], function(){
     //
     $('#upfile').click(function(){
         layer.open({
-            title : '教学奖惩-课程获得的奖励-上传附件'
+            title : '教学奖惩-课程建设成果奖-上传附件'
             ,type : 1
             ,area : [ '700px', '300px' ]
             ,offset : '100px'
@@ -60,8 +60,8 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $("#editForm input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"jxjc_kchddjl" // 固定值
-                        ,"fileType":"附件" // 固定值
+                        ,"fileCategory":"jxjc_kcjscgj" // 固定值
+                        ,"fileType":"" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
                         }

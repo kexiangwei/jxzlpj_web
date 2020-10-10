@@ -23,3 +23,20 @@ var isEmpty = function(obj) {
     }
     return true;
 };
+
+/**
+ * 加载下拉选项
+ * @param defaultOptionVal
+ * @param inputName
+ * @param data
+ */
+var initSelect = function(defaultOptionVal, inputName, data){
+    //
+    $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
+    //
+    let html = '<option value="">'+defaultOptionVal+'</option>';
+    for (let i = 0; i < data.length; i++) {
+        html += '<option value="' + data[i]['NAME'] + '" >' + data[i]['NAME'] + '</option>';
+    }
+    $("select[name='"+inputName+"']").append(html);
+};

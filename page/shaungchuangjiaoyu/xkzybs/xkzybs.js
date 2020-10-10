@@ -21,7 +21,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             var data = data.data;
 
             // 初始化获得奖项下拉选项
-            $.get(requestUrl+'/hjLevel/getHjLevelSet.do',{
+            $.get(requestUrl+'/optionset/getOptionSetList.do',{
                 'menuId':function () {
                     return $.cookie('currentMenuId');
                 }
@@ -84,7 +84,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'name', title: '赛事名称', width:200, sort:true}
-                        ,{field: 'level1', title: '获奖等级', width:150, sort:true}
+                        ,{field: 'level1', title: '获奖级别', width:150, sort:true}
                         ,{field: 'level2', title: '获得奖项', width:150, sort:true}
                         ,{field: 'zsNum', title: '证书编号', width:150, sort:true}
                         ,{field: 'zsGrantUnit', title: '证书授予单位', width:150, sort:true}
@@ -361,7 +361,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
                         ,{field: 'name', title: '赛事名称', width:200, sort:true}
-                        ,{field: 'level1', title: '获奖等级', width:150, sort:true}
+                        ,{field: 'level1', title: '获奖级别', width:150, sort:true}
                         ,{field: 'level2', title: '获得奖项', width:150, sort:true}
                         ,{field: 'zsNum', title: '证书编号', width:150, sort:true}
                         ,{field: 'zsGrantUnit', title: '证书授予单位', width:150, sort:true}
@@ -608,7 +608,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 ,success: function(layero, index){
 
                                     //
-                                    $.get(requestUrl+'/getCollege.do',function(result_data){
+                                    $.get(requestUrl+'/common/getCollege.do',function(result_data){
                                         if(result_data.code == 200){
                                             // alert(JSON.stringify(result_data.data));
                                             // 加载下拉选项
@@ -623,7 +623,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     },'json');
                                     // 监听学院下拉选项
                                     form.on('select(college)', function(data) {
-                                        $.get(requestUrl+'/getMajor.do',{
+                                        $.get(requestUrl+'/common/getMajor.do',{
                                             'collegeCode': data.value
                                         },function(result_data){
                                             if(result_data.code == 200){
@@ -788,7 +788,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             '                 <td style="width: 80px; text-align: right">赛事名称：</td><td style="width: 120px;" colspan="3">'+data.name+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">获奖等级：</td><td style="width: 120px;">'+data.level1+'</td>' +
+                            '                <td style="width: 80px; text-align: right">获奖级别：</td><td style="width: 120px;">'+data.level1+'</td>' +
                             '                <td style="width: 80px; text-align: right">获得奖项：</td><td style="width: 120px;">'+data.level2+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +

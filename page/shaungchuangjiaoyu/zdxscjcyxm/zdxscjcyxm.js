@@ -580,7 +580,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,success: function(layero, index){
 
                                     //
-                                    $.get(requestUrl+'/getCollege.do',function(result_data){
+                                    $.get(requestUrl+'/common/getCollege.do',function(result_data){
                                         if(result_data.code == 200){
                                             // alert(JSON.stringify(result_data.data));
                                             // 加载下拉选项
@@ -595,7 +595,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     },'json');
                                     // 监听学院下拉选项
                                     form.on('select(college)', function(data) {
-                                        $.get(requestUrl+'/getMajor.do',{
+                                        $.get(requestUrl+'/common/getMajor.do',{
                                             'collegeCode': data.value
                                         },function(result_data){
                                             if(result_data.code == 200){

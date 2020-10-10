@@ -1,5 +1,5 @@
 /**
- * 获奖等级设置
+ * 获奖级别设置
  */
 layui.use(['layer','table','form','util'], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,util = layui.util;
@@ -8,8 +8,8 @@ layui.use(['layer','table','form','util'], function(){
     var datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 450
-        ,url: requestUrl+'/hjLevel/getHjLevelList.do'
+        ,height : 550
+        ,url: requestUrl+'/optionset/getOptionPageList.do'
         ,response: {
             statusCode: 200 //规定成功的状态码，默认：0
         }
@@ -32,7 +32,7 @@ layui.use(['layer','table','form','util'], function(){
         ,done : function(res, curr, count) {
 
             // 初始化一级菜单项
-            $.get(requestUrl+'/hjLevel/getParentMenuList.do',function(result_data){
+            $.get(requestUrl+'/optionset/getOptionSetMenuList.do',function(result_data){
                 if(result_data.code == 200){
                     if(result_data.data.length >0){
                         initSelect('请选择一级菜单','parentMenu',result_data.data);
@@ -41,7 +41,7 @@ layui.use(['layer','table','form','util'], function(){
             },'json');
             // 监听一级菜单项
             form.on('select(parentMenu)', function(selected_data) {
-                $.get(requestUrl+'/hjLevel/getMenuListByPid.do',{
+                $.get(requestUrl+'/optionset/getOptionSetMenuList.do',{
                     'pid': selected_data.value
                 },function(result_data){
                     if(result_data.code == 200){
@@ -53,7 +53,7 @@ layui.use(['layer','table','form','util'], function(){
             });
             // 监听二级菜单项
             form.on('select(menu)', function(selected_data) {
-                $.get(requestUrl+'/hjLevel/getHjLevelSet.do',{
+                $.get(requestUrl+'/optionset/getOptionSetList.do',{
                     'menuId': selected_data.value
                 },function(result_data){
                     if(result_data.code == 200){
@@ -75,14 +75,14 @@ layui.use(['layer','table','form','util'], function(){
                                 return;
                             }
                             if(obj.checked){ //当前是否选中状态
-                                $.post(requestUrl+'/hjLevel/addHjLevelSet.do',{
+                                $.post(requestUrl+'/optionset/addOptionSet.do',{
                                     'menuId':selected_data.value,
-                                    'hjLevelCode':obj.data.CODE
+                                    'optionCode':obj.data.CODE
                                 });
                             } else {
-                                $.post(requestUrl+'/hjLevel/delHjLevelSet.do',{
+                                $.post(requestUrl+'/optionset/delOptionSet.do',{
                                     'menuId':selected_data.value,
-                                    'hjLevelCode':obj.data.CODE
+                                    'optionCode':obj.data.CODE
                                 });
                             }
                         });
@@ -115,7 +115,7 @@ layui.use(['layer','table','form','util'], function(){
                 switch(layEvt){
                     case 'insert':
                         layer.open({
-                            title : '获奖等级设置-新增选项'
+                            title : '获奖级别设置-新增选项'
                             ,type : 1
                             ,area : [ '500px', '200px' ] //宽高
                             ,offset : '100px'
@@ -126,7 +126,7 @@ layui.use(['layer','table','form','util'], function(){
 
                                 //监听表单提交
                                 form.on('submit(toSubmit)', function(formData){
-                                    $.post(requestUrl+'/hjLevel/insertHjLevel.do',{
+                                    $.post(requestUrl+'/optionset/insertOption.do',{
                                         "name":formData.field.name
                                     },function (resultData) {
                                         layer.msg(resultData.msg, {offset: '100px'},function () {
@@ -149,7 +149,7 @@ layui.use(['layer','table','form','util'], function(){
                 if (layEvt === 'update') {
 
                     layer.open({
-                        title : '获奖等级设置-修改选项'
+                        title : '获奖级别设置-修改选项'
                         ,type : 1
                         ,area : [ '500px', '200px' ] //宽高
                         ,offset : '100px'
@@ -165,7 +165,7 @@ layui.use(['layer','table','form','util'], function(){
 
                             //监听表单提交
                             form.on('submit(toSubmit)', function(formData){
-                                $.post(requestUrl+'/hjLevel/updateHjLevel.do',{
+                                $.post(requestUrl+'/optionset/updateOption.do',{
                                     "code":rowData.CODE,
                                     "name":formData.field.name
                                 },function (resultData) {
@@ -180,8 +180,8 @@ layui.use(['layer','table','form','util'], function(){
                     });
                 } else if (layEvt === 'delete') {
                     //执行删除
-                    layer.confirm('删除后不可恢复，确认要删除么？', {icon: 3, title:'获奖等级设置-删除选项', offset: '100px'}, function(index) {
-                        $.post(requestUrl+'/hjLevel/deleteHjLevel.do', { "code": rowData.CODE},function(resultData){
+                    layer.confirm('删除后不可恢复，确认要删除么？', {icon: 3, title:'获奖级别设置-删除选项', offset: '100px'}, function(index) {
+                        $.post(requestUrl+'/optionset/deleteOption.do', { "code": rowData.CODE},function(resultData){
                             layer.msg(resultData.msg, {offset: '100px'},function () {
                                 if(resultData.code === 200){
                                     datatable.reload();//重新加载表格数据
