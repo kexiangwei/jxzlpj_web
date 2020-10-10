@@ -20,19 +20,20 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
 
-            /*// 初始化获得奖项下拉选项
+            // 初始化获奖类别下拉选项
             $.get(requestUrl+'/optionset/getOptionSetList.do',{
                 'menuId':function () {
                     return $.cookie('currentMenuId');
-                }
+                },
+                'attr': 'awardType'
             },function(result_data){
                 if(result_data.code == 200){
                     if(result_data.data.length > 0){
-                        initSelect('请选择','winAward',result_data.data);
+                        initSelect('请选择','awardType',result_data.data);
                         form.render('select');
                     }
                 }
-            },'json');*/
+            },'json');
 
             if(data.isSubmit > 0){ //拥有提交权限
                 //数据表格

@@ -24,7 +24,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             $.get(requestUrl+'/optionset/getOptionSetList.do',{
                 'menuId':function () {
                     return $.cookie('currentMenuId');
-                }
+                },
+                'attr': 'winAward'
             },function(result_data){
                 if(result_data.code == 200){
                     if(result_data.data.length >0){

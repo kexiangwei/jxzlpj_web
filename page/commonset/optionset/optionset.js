@@ -45,50 +45,74 @@ layui.use(['layer','table','form','util'], function(){
                     'pid': selected_data.value
                 },function(result_data){
                     if(result_data.code == 200){
-                        if(result_data.data.length >0){
-                            initSelect('请选择二级菜单','menu',result_data.data);
+                        if(result_data.data.length > 0){
+                            initSelect('请选择二级菜单','menu',result_data.data); //初始化二级菜单
                         }
                     }
                 },'json');
             });
             // 监听二级菜单项
             form.on('select(menu)', function(selected_data) {
-                $.get(requestUrl+'/optionset/getOptionSetList.do',{
+                $.get(requestUrl+'/optionset/getOptionSetAttrList.do',{
                     'menuId': selected_data.value
                 },function(result_data){
                     if(result_data.code == 200){
-                        //
-                        for (let i = 0; i < res.data.length; i++) {
-                            let index = res.data[i]['LAY_TABLE_INDEX'];
-                            $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', false);
-                            $('tr[data-index=' + index + '] input[type="checkbox"]').next().removeClass('layui-form-checked');
-                            for (let j = 0; j < result_data.data.length; j++) {
-                                if(result_data.data[j]['CODE'] == res.data[i]['CODE']){ //设置复选框选中
-                                    $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
-                                    $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
-                                }
-                            }
+                        if(result_data.data.length > 0){
+                            initSelect('请选择属性','attr',result_data.data); //初始化属性菜单
+                            // 监听属性菜单选择项
+                            form.on('select(attr)', function(selected_data2) {
+                                $.get(requestUrl+'/optionset/getOptionSetList.do',{
+                                    'menuId': selected_data.value,
+                                    'attr': selected_data2.value
+                                },function(result_data){
+                                    if(result_data.code == 200){
+                                       // alert(JSON.stringify(result_data));
+                                        //
+                                        setChecked(result_data); //设置选择状态
+
+                                        //监听复选框选择事件
+                                        table.on('checkbox(datatable)', function(obj){
+                                            if(obj.type === 'all'){ //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+                                                setChecked(result_data); //设置选择状态
+                                                layer.msg('非法操作，请按需勾选', {offset: '100px'});
+                                                return;
+                                            }
+                                            if(obj.checked){ //当前是否选中状态
+                                                $.post(requestUrl+'/optionset/addOptionSet.do',{
+                                                    'menuId': selected_data.value,
+                                                    'attr': selected_data2.value,
+                                                    'optionCode':obj.data.CODE
+                                                });
+                                            } else {
+                                                $.post(requestUrl+'/optionset/delOptionSet.do',{
+                                                    'menuId': selected_data.value,
+                                                    'attr': selected_data2.value,
+                                                    'optionCode':obj.data.CODE
+                                                });
+                                            }
+                                        });
+                                    }
+                                },'json');
+                            });
                         }
-                        //监听复选框选择事件
-                        table.on('checkbox(datatable)', function(obj){
-                            if(obj.type === 'all'){ //如果触发的是全选，则为：all，如果触发的是单选，则为：one
-                                return;
-                            }
-                            if(obj.checked){ //当前是否选中状态
-                                $.post(requestUrl+'/optionset/addOptionSet.do',{
-                                    'menuId':selected_data.value,
-                                    'optionCode':obj.data.CODE
-                                });
-                            } else {
-                                $.post(requestUrl+'/optionset/delOptionSet.do',{
-                                    'menuId':selected_data.value,
-                                    'optionCode':obj.data.CODE
-                                });
-                            }
-                        });
                     }
                 },'json');
             });
+
+            //设置选择状态
+            var setChecked = function (data) {
+                for (let i = 0; i < res.data.length; i++) {
+                    let index = res.data[i]['LAY_TABLE_INDEX'];
+                    $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', false);
+                    $('tr[data-index=' + index + '] input[type="checkbox"]').next().removeClass('layui-form-checked');
+                    for (let j = 0; j < data.data.length; j++) {
+                        if(data.data[j]['CODE'] == res.data[i]['CODE']){ //设置复选框选中
+                            $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                            $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                        }
+                    }
+                }
+            };
 
             /**
              * 加载下拉选项
@@ -102,7 +126,7 @@ layui.use(['layer','table','form','util'], function(){
                 //
                 let html = '<option value="">'+defaultOptionVal+'</option>';
                 for (let i = 0; i < data.length; i++) {
-                    html += '<option value="' + data[i].MENU_ID + '" >' + data[i].MENU_NAME + '</option>';
+                    html += '<option value="' + data[i].NAME + '" >' + data[i].VALUE + '</option>';
                 }
                 $("select[name='"+inputName+"']").append(html);
                 form.render('select');
