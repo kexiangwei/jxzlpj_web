@@ -135,9 +135,9 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                         $('#dataTable_bar').html(html);
                         //
                         if(data.status==1){
-                            return '<span style="color: green;font-weight: bold;">激活</span>';
+                            return '<span style="color: green;font-weight: bold;">正在使用</span>';
                         }
-                        return '<span style="color: gray;font-weight: bold;">禁用</span>';
+                        return '<span style="color: gray;font-weight: bold;">停用</span>';
                     }
              }
             ,{fixed: 'right', width:166, align:'center', toolbar: '#dataTable_bar'}
