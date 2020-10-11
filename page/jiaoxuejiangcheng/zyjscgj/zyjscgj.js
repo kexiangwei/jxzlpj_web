@@ -1,5 +1,5 @@
 /*
-教学奖惩-教学基本功比赛
+教学奖惩-专业建设成果奖
  */
 layui.use(['layer','element','table','form','laydate','upload'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,upload = layui.upload;
@@ -19,25 +19,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         dataType:'json'
         ,success:function(data) {
             var data = data.data;
+
             if(data.isSubmit > 0){ //拥有提交权限
-
-                laydate.render({
-                    elem: "#myself_datetimeYearStart" //指定元素
-                    ,type: 'year'
-                    ,max: new Date().getFullYear()+"-01-01"
-                });
-                laydate.render({
-                    elem: "#myself_datetimeYearEnd" //指定元素
-                    ,type: 'year'
-                    ,max: new Date().getFullYear()+"-01-01"
-                });
-
                 //数据表格
                 var myself_table = table.render({
                     id: "myself_table"
                     ,elem : '#myself_table'
-                    ,height : 440
-                    ,url: requestUrl+'/jxjbgbs/getPageList.do'
+                    ,height : 500
+                    ,url: requestUrl+'/jxjc_zyjscgj/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
@@ -72,49 +61,48 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'userId', title: '教师工号', width:150, sort:true}
-                        ,{field: 'userName', title: '教师姓名', width:150, sort:true}
-                        ,{field: 'userUnit', title: '教师单位', width:150, sort:true}
-                        ,{field: 'level1', title: '获奖级别', width:150, sort:true}
-                        ,{field: 'level2', title: '获得奖项', width:150, sort:true}
-                        ,{field: 'grantUnit', title: '证书授予机构', width:150, sort:true}
-                        ,{field: 'datetimeYear', title: '获奖时间', width:150, sort:true}
-                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true,templet: function(data){
-                                let htmlstr='';
-                                if(data.isSubmit=='未提交'){
-                                    if(data.status ==='退回'){
-                                        htmlstr =
-                                            ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                            ' <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                            ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                            ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                        $('#myself_bar').html(htmlstr);
-                                        return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
-                                    }
-                                    htmlstr =
-                                        ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                        ' <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                        ' <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
-                                        ' <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
-                                    $('#myself_bar').html(htmlstr);
-                                    return '<span style="font-weight: bold;">'+data.isSubmit+'</span>';
-                                } else if(data.isSubmit=='已提交'){
-                                    htmlstr = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>\n' +
-                                        '           <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
-                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>' +
+                        ,{field: 'majorName', title: '专业名称', width:150, sort:true}
+                        ,{field: 'majorCode', title: '专业代码', width:150, sort:true}
+                        ,{field: 'majorType', title: '专业类型', width:150, sort:true}
+                        ,{field: 'majorLeader', title: '专业负责人', width:150, sort:true}
+                        ,{field: 'leaderUnit', title: '所在单位', width:150, sort:true}
+                        ,{field: 'passTime', title: '获批/通过时间', width:150, sort:true}
+                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                var val = data.isSubmit;
+                                var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
+                                if(val=='已提交'){
+                                    html += '       <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>\n' +
+                                        '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="update">编辑</a>\n' +
                                         '           <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete">删除</a>';
-                                    $('#myself_bar').html(htmlstr);
-                                    return '<span style="color: blue;font-weight: bold;">'+data.isSubmit+'</span>';
+                                    $('#myself_bar').html(html);
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                }else{
+                                    if(data.status == '退回'){
+                                        html+= '    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    }else{
+                                        html+= '    <a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
+                                    }
+                                    html += '       <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>\n' +
+                                        '           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
+                                    $('#myself_bar').html(html);
+                                    return '<span style="font-weight: bold;">'+val+'</span>';
                                 }
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){
-                                if(data.status==='退回'){
-                                    return '<span style="color: red;font-weight: bold;">'+data.status+'</span>';
+                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                var val = data.status;
+                                if(val=='审核中'){
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='通过'){
+                                    return '<span style="color: green;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='未通过' || val=='退回'){
+                                    return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                                } else {
+                                    return '<span style="color: gray;font-weight: bold;">待审核</span>';
                                 }
-                                return '<span style="color: blue;font-weight: bold;">'+(data.status != null ? data.status : '待审核')+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){ //数据渲染完的回调
@@ -128,10 +116,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             search: function(){
                                 myself_table.reload({
                                     where: {
-                                        'level1': $(".myself_search select[name='level1']").val()
-                                        ,'level2': $(".myself_search select[name='level2']").val()
-                                        ,'datetimeYearStart': $(".myself_search input[name='datetimeYearStart']").val()
-                                        ,'datetimeYearEnd': $(".myself_search input[name='datetimeYearEnd']").val()
+                                        'majorName': $(".myself_search input[name='majorName']").val()
                                         ,'status': $("#status option:selected").val() //获取选中的值
                                     }
                                     ,page: {
@@ -142,8 +127,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,reset: function () {
                                 $(".myself_search input").val('');
                                 //清除选中状态
-                                $(".myself_search select[name='level1']").val("");
-                                $(".myself_search select[name='level2']").val("");
                                 $("#status").val("");
                                 form.render("select");
                             }
@@ -157,7 +140,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 case 'insert':
                                     let objCode = new Date().getTime(); //业务数据编号
                                     layer.open({
-                                        title : '教学奖惩-教学基本功比赛-新增'
+                                        title : '教学奖惩-专业建设成果奖-新增'
                                         ,type : 1
                                         ,area : [ '900px', '450px' ]
                                         ,offset : '50px'
@@ -169,15 +152,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 'code': objCode
                                                 ,'userId':$.cookie('userId')
                                                 ,'userName':$.cookie('userName')
+                                                ,'userUnit':$.cookie('userUnit')
                                             });
 
                                             //监听表单提交
                                             form.on('submit(toSubmitEidtForm)', function(data){
-                                                $.post(requestUrl+'/jxjbgbs/insert.do', data.field, function(result_data){
-                                                    if(result_data.code == 200){
-                                                        myself_table.reload();//重新加载表格数据
-                                                    }
+                                                $.post(requestUrl+'/jxjc_zyjscgj/insert.do', data.field, function(result_data){
                                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                        if(result_data.code == 200){
+                                                            myself_table.reload();//重新加载表格数据
+                                                        }
                                                         layer.close(index);
                                                     });
                                                 },'json');
@@ -207,7 +191,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             }
                                         });
                                         if(isSubmit){
-                                            layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
+                                            layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
                                             return;
                                         }else{
                                             toSubmit(data);
@@ -226,7 +210,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 if(data.isSubmit=='未提交' && data.status !='退回'){
                                     return;
                                 }
-                                detail_shenheProcess('教学奖惩-教学基本功比赛-查看审核流程',data);
+                                detail_shenheProcess('教学奖惩-专业建设成果奖-查看审核流程',data);
                             } else if (obj.event === 'update') {
                                 if(data.isSubmit== '已提交'){
                                     // layer.msg('信息已提交，不可编辑', {icon:7, time : 3000, offset: '100px'});
@@ -234,7 +218,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 }
                                 //执行编辑
                                 layer.open({
-                                    title : '教学奖惩-教学基本功比赛-编辑'
+                                    title : '教学奖惩-专业建设成果奖-编辑'
                                     ,type : 1
                                     ,area : [ '900px', '450px' ]
                                     ,offset : '50px'
@@ -250,13 +234,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                                         //初始化表单
                                         initEditForm(data);
+
                                         //监听表单提交
                                         form.on('submit(toSubmitEidtForm)', function(data){
-                                            $.post(requestUrl+'/jxjbgbs/update.do', data.field, function(result_data){
-                                                if(result_data.code == 200){
-                                                    myself_table.reload();//重新加载表格数据
-                                                }
+                                            $.post(requestUrl+'/jxjc_zyjscgj/update.do', data.field, function(result_data){
                                                 layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                    if(result_data.code == 200){
+                                                        myself_table.reload();//重新加载表格数据
+                                                    }
                                                     layer.close(index);
                                                 });
                                             },'json');
@@ -271,11 +256,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     return;
                                 }
                                 layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    $.post(requestUrl+'/jxjbgbs/delete.do', { "objCode": data.code},function(result_data){
-                                        if(result_data.code == 200){
-                                            myself_table.reload();//重新加载表格数据
-                                        }
-                                        layer.msg(result_data.msg, { offset: '100px'},function () {
+                                    $.post(requestUrl+'/jxjc_zyjscgj/delete.do', { "code": data.code},function(result_data){
+                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            if(result_data.code == 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }
                                             layer.close(index);
                                         });
                                     }, "json");
@@ -291,24 +276,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 $('#other').removeClass().addClass("layui-this");
                 $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
+
             if(data.isShenhe > 0){ //拥有审核权限
-
-                laydate.render({
-                    elem: "#other_datetimeYearStart" //指定元素
-                    ,type: 'year'
-                    ,max: new Date().getFullYear()+"-01-01"
-                });
-                laydate.render({
-                    elem: "#other_datetimeYearEnd" //指定元素
-                    ,type: 'year'
-                    ,max: new Date().getFullYear()+"-01-01"
-                });
-
+                //
                 var other_table = table.render({//数据表格
                     id: "other_table"
                     ,elem : '#other_table'
-                    ,height : 440
-                    ,url: requestUrl+'/jxjbgbs/getPageList.do'
+                    ,height : 500
+                    ,url: requestUrl+'/jxjc_zyjscgj/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -344,21 +319,21 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'userId', title: '教师工号', width:150, sort:true}
-                        ,{field: 'userName', title: '教师姓名', width:150, sort:true}
-                        ,{field: 'userUnit', title: '教师单位', width:150, sort:true}
-                        ,{field: 'level1', title: '获奖级别', width:150, sort:true}
-                        ,{field: 'level2', title: '获得奖项', width:150, sort:true}
-                        ,{field: 'grantUnit', title: '证书授予机构', width:150, sort:true}
-                        ,{field: 'datetimeYear', title: '获奖时间', width:150, sort:true}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'majorName', title: '专业名称', width:150, sort:true}
+                        ,{field: 'majorCode', title: '专业代码', width:150, sort:true}
+                        ,{field: 'majorType', title: '专业类型', width:150, sort:true}
+                        ,{field: 'majorLeader', title: '专业负责人', width:150, sort:true}
+                        ,{field: 'leaderUnit', title: '所在单位', width:150, sort:true}
+                        ,{field: 'passTime', title: '获批/通过时间', width:150, sort:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
-                                    return '<span style="color: #009688;font-weight: bold;">'+val+'</span>';
+                                    return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
                                 }
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
@@ -373,10 +348,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'level1': $(".other_search select[name='level1']").val()
-                                        ,'level2': $(".other_search select[name='level2']").val()
-                                        ,'datetimeYearStart': $(".other_search input[name='datetimeYearStart']").val()
-                                        ,'datetimeYearEnd': $(".other_search input[name='datetimeYearEnd']").val()
+                                        'majorName': $(".other_search input[name='majorName']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
@@ -387,8 +359,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             ,reset: function () {
                                 $(".other_search input").val("");
                                 //清除选中状态
-                                $(".other_search select[name='level1']").val("");
-                                $(".other_search select[name='level2']").val("");
                                 $("#shenheStatus").val("");
                                 form.render("select");
                             }
@@ -412,7 +382,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             }
                                         });
                                         if(isSubmit){
-                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                            layer.msg('您选择了已审核的信息', {time : 3000, offset: '100px'});
                                             return;
                                         } else { //添加审核意见
                                             toShenHe(data);
@@ -428,7 +398,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             if (obj.event === 'detail_dataInfo') {
                                 detail_dataInfo(row_data,false,true); //标识是从审核列表进入详情页面
                             } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学奖惩-教学基本功比赛-查看审核流程',row_data);
+                                detail_shenheProcess('教学奖惩-专业建设成果奖-查看审核流程',row_data);
                             }
                         });
                     }
@@ -450,15 +420,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                 //初始化laydate实例
                 laydate.render({
-                    elem: "#datetimeYear" //指定元素
-                    ,type: 'year'
-                    // ,min: ''
-                    ,max: new Date().getFullYear()+"-01-01" //直接设置年份还不行，格式“年-月-日”，参考链接：//https://www.layui.com/doc/modules/laydate.html#minmax
+                    elem: "#passTime" //指定元素
                 });
 
                 //自定义验证规则
                 form.verify({
-                    objName: function(value){
+                    majorName: function(value){
                         if(value.length > 64){
                             return '当前字符长度'+value.length+'（最大值64）';
                         }
@@ -468,10 +435,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //表单赋值
                 form.val("editForm",{
                     "code":data.code
-                    ,"level1" : data.level1
-                    ,"level2" : data.level2
-                    ,"grantUnit" : data.grantUnit
-                    ,"datetimeYear" : data.datetimeYear
+                    ,"majorCode": data.majorCode
+                    ,"majorName" : data.majorName
+                    ,"majorType": data.majorType
+                    ,"majorLeader" : data.majorLeader
+                    ,"leaderUnit" : data.leaderUnit
+                    ,"passTime" : data.passTime
                     ,"userId":data.userId
                     ,"userName":data.userName
                     ,"userUnit":data.userUnit
@@ -479,40 +448,35 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             };
 
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
-                if(isOpen){
-                    return;
-                }
-                var isOpen = false;
+
                 let options = {
-                    title : '教学奖惩-教学基本功比赛-查看详情'
+                    title : '教学奖惩-专业建设成果奖-查看详情'
                     ,type : 1
                     ,area : [ '900px', '450px' ]
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,offset : '50px'
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content :  $('#dataInfo_container')
                     ,success: function(layero, index){
-                        isOpen = true;
 
                         //基础信息
                         let html = '<table class="layui-table">\n' +
                             '           <tbody>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">工号：</td><td style="width: 120px;">'+data.userId+'</td>' +
-                            '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+data.userName+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">专业名称：</td><td style="width: 120px;" colspan="3">'+data.majorName+'</td>' +
+                            '              </tr>\n' +
+
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">专业代码：</td><td style="width: 120px;">'+data.majorCode+'</td>' +
+                            '                <td style="width: 80px; text-align: right">专业类型：</td><td style="width: 120px;">'+data.majorType+'</td>' +
+
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">单位：</td><td style="width: 120px;" colspan="3">'+data.userUnit+'</td>' +
+                            '                <td style="width: 80px; text-align: right">专业负责人：</td><td style="width: 120px;">'+data.majorLeader+'</td>' +
+                            '                <td style="width: 80px; text-align: right">所在单位：</td><td style="width: 120px;">'+data.leaderUnit+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">级别：</td><td style="width: 120px;">'+data.level1+'</td>' +
-                            '                <td style="width: 80px; text-align: right">奖项：</td><td style="width: 120px;">'+data.level2+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">证书授予机构：</td><td style="width: 120px;" colspan="3">'+data.grantUnit+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                 <td style="width: 80px; text-align: right">获奖时间：</td><td style="width: 120px;" colspan="3">'+data.datetimeYear+'</td>' +
+                            '                 <td style="width: 80px; text-align: right">获批/通过时间：</td><td style="width: 120px;" colspan="3">'+data.passTime+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
                             '                 <td style="width: 80px; text-align: right">数据录入时间：</td><td style="width: 120px;" colspan="3">'+data.createDate+'</td>' +
@@ -529,7 +493,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         } ,  function(result_data){
                             if(result_data.data.length ===0){
                                 let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
-                                $('#fileList').append(tr);
+                                $("#fileList").append(tr);
                             } else {
                                 $.each(result_data.data,function(index,fileInfo){
                                     let tr = $(['<tr id="'+ fileInfo.code +'">'
@@ -556,13 +520,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         downloadForm.submit();
                                         downloadForm.remove();
                                     });
-                                    $('#fileList').append(tr);
+                                    $("#fileList").append(tr);
                                 });
                             }
                         }, "json");
                     }
                     ,end:function () {
-                        isOpen = false;
                         $('#fileList').empty();
                     }
                 };
@@ -584,34 +547,36 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
-                layer.open(options); //返回一个当前层索引
+                //返回一个当前层索引
+                layer.open(options);
             };
 
-            let toSubmit = function (row_dataArr){
+            let toSubmit = function (row_datas){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                    $.post(requestUrl+'/jxjbgbs/toSubimt.do',{
+                    $.post(requestUrl+'/toSubimt.do',{
                         "menuId":$.cookie('currentMenuId'),
-                        "jsonStr":JSON.stringify(row_dataArr)
+                        "jsonStr":JSON.stringify(row_datas)
                     },function (result_data) {
-                        if(result_data.code === 200){
-                            myself_table.reload();//重新加载表格数据
-                        }
                         layer.msg(result_data.msg, { offset: '100px'},function () {
+                            if(result_data.code === 200){
+                                myself_table.reload();//重新加载表格数据
+                            }
                             layer.closeAll();
                         });
                     },'json');
                 });
             };
 
-            let toShenHe = function (row_dataArr) {
-                let index = layer.open({
-                    title : '教学奖惩-教学基本功比赛-审核'
+            //审核
+            var toShenHe = function (row_datas) {
+                layer.open({
+                    title : '教学研究-专业建设成果奖-审核'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,area : [ '700px', '350px' ]
+                    ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
-                    ,content : $('#shenHe_container')
+                    // ,btn : ['关闭']
+                    ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
                         form.on('select(status)', function(data) {
@@ -620,33 +585,29 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             }else{
                                 $('#opinion').empty();
                             }
-
                         });
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
-                            $.post(requestUrl+'/jxjbgbs/toShenhe.do'
-                                ,{
-                                    "jsonStr":JSON.stringify(row_dataArr)
-                                    ,"status":formData.field.status
-                                    ,"opinion":formData.field.opinion
-                                    ,"userId":function () {
-                                        return $.cookie('userId');
-                                    }
-                                    ,"userName":function () {
-                                        return $.cookie('userName');
-                                    }
-                                },function (result_data) {
+                            $.post(requestUrl+'/toShenhe.do',{
+                                'viewName':'v_jxjc_zyjscgj_shenhe'
+                                ,'jsonStr':JSON.stringify(row_datas)
+                                ,"status":formData.field.status
+                                ,"opinion":formData.field.opinion
+                                ,"userId":function () {
+                                    return $.cookie('userId');
+                                }
+                                ,"userName":function () {
+                                    return $.cookie('userName');
+                                }
+                            },function (result_data) {
+                                layer.msg(result_data.msg, { offset: '100px'},function () {
                                     if(result_data.code === 200){
                                         other_table.reload();//重新加载表格数据
                                     }
-                                    layer.msg(result_data.msg, { offset: '100px'},function () {
-                                        layer.closeAll();
-                                    });
-                                },'json');
+                                    layer.close(index);
+                                });
+                            },'json');
                         });
-                    }
-                    ,end:function () {
-
                     }
                 });
             };

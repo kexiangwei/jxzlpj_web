@@ -6,7 +6,7 @@ layui.use(['layer','upload'], function(){
     //
     $('#upfile').click(function(){
         layer.open({
-            title : '教学奖惩-教学基本功比赛-上传附件'
+            title : '教学奖惩-专业建设成果奖-上传附件'
             ,type : 1
             ,area : [ '700px', '300px' ]
             ,offset : '100px'
@@ -18,12 +18,12 @@ layui.use(['layer','upload'], function(){
                 let upfileList = $('#upfileList');
                 $.get(requestUrl+"/getFileListByRelationCode.do" , {
                     "relationCode": $("#editForm input[ name='code' ] ").val()
-                } ,  function(data){
-                    if(data.data.length > 0){
+                } ,  function(result_data){
+                    if(result_data.data.length > 0){
                         //
                         upfileList.empty();
                         //
-                        $.each(data.data,function(index,fileInfo){
+                        $.each(result_data.data,function(index,fileInfo){
                             let tr = $(['<tr id="'+ fileInfo.code +'">'
                                 ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
                                 ,'<td style="text-align: center;">已上传</td>'
@@ -51,6 +51,7 @@ layui.use(['layer','upload'], function(){
                         });
                     }
                 }, "json");
+
                 //上传附件
                 let upfileIns = upload.render({
                     elem: '#upfileIns'
@@ -59,8 +60,8 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $("#editForm input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"jxjc_jxjbgbs" // 固定值
-                        ,"fileType":"附件" // 固定值
+                        ,"fileCategory":"jxjc_zyjscgj" // 固定值
+                        ,"fileType":"" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
                         }
