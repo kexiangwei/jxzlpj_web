@@ -37,7 +37,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         let datatable = table.render({
             id: "datatable"
             ,elem : '#datatable'
-            ,height : 500
+            ,height : 550
             ,url: requestUrl+'/jxsg/getPageList.do'
             ,where: {
                 "userId":function () {

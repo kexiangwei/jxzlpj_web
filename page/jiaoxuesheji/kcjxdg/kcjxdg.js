@@ -24,9 +24,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 440
+                    ,height : 500
                     ,id: "myself_table_id"
-                    ,url: requestUrl+'/kcjxdg/getPageList.do'
+                    ,url: requestUrl+'/jxsj_kcjxdg/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
@@ -59,10 +59,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'college', title: '开课学院（部）', width:150, sort:true}
-                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
                         ,{field: 'courseName', title: '课程名称', width:150, sort:true}
+                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
+                        ,{field: 'courseAttr', title: '课程性质', width:150, sort:true}
                         ,{field: 'major', title: '适用专业', width:150, sort:true}
+                        ,{field: 'college', title: '开课学院', width:150, sort:true}
+                        ,{field: 'term', title: '开课学期', width:150, sort:true}
                         ,{field: 'isSubmit', title: '提交状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
@@ -87,28 +89,32 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                         ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
-                                if(val=='审核中' || val=='通过'){
+                                if(val=='审核中'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
-                                }
-                                if(val=='退回'){
+                                } else if(val=='通过'){
+                                    return '<span style="color: green;font-weight: bold;">'+val+'</span>';
+                                } else if(val=='未通过' || val=='退回'){
                                     return '<span style="color: red;font-weight: bold;">'+val+'</span>';
+                                } else {
+                                    return '<span style="color: gray;font-weight: bold;">待审核</span>';
                                 }
-                                return '<span style="font-weight: bold;">'+(val=="未通过"?"未通过":"待审核")+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:268, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                 });//table end.
 
                 //监听搜索框事件
-
+                $('.myself_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
                 let active = {
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'college': $(".myself_search input[name='college']").val()
-                                ,'courseCode': $(".myself_search input[name='courseCode']").val()
-                                ,'courseName': $(".myself_search input[name='courseName']").val()
+                                'courseName': $(".myself_search input[name='courseName']").val()
                                 ,'status': $("#status option:selected").val()
                             }
                             ,page: {
@@ -123,10 +129,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         form.render("select");
                     }
                 };
-                $('.myself_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
 
                 //监听头工具栏事件
                 table.on('toolbar(myself_table)', function(obj){
@@ -135,7 +137,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     switch(obj.event){
                         case 'insert':
                             let objCode = new Date().getTime(); //初始化业务数据编号
-                            let layIndex = layer.open({
+                            layer.open({
                                 title : '教学设计-课程教学大纲-新增'
                                 ,type : 1
                                 ,area : [ '900px', '450px' ]
@@ -148,17 +150,17 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         'code': objCode
                                         ,'userId':$.cookie('userId')
                                         ,'userName':$.cookie('userName')
+                                        ,'userUnit':$.cookie('userUnit')
                                     });
 
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        $.post(requestUrl+'/kcjxdg/insert.do' ,data.field ,function(result_data){
-
+                                        $.post(requestUrl+'/jxsj_kcjxdg/insert.do' ,data.field ,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 if(result_data.code == 200){
                                                     myself_table.reload();//重新加载表格数据
                                                 }
-                                                layer.close(layIndex);
+                                                layer.close(index);
                                             });
                                         },'json');
                                     });
@@ -184,7 +186,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     }
                                 });
                                 if(isSubmit){
-                                    layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
+                                    layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
                                     return;
                                 }else{
                                     toSubmit(data);
@@ -200,7 +202,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     if (obj.event === 'detail_dataInfo') {
                         detail_dataInfo(data,true);
                     } else if (obj.event === 'detail_shenheProcess') {
-                        if(data.isSubmit=='未提交' && data.status != '退回'){
+                        if(data.isSubmit=='未提交' && data.status !='退回'){
                             return;
                         }
                         detail_shenheProcess('教学设计-课程教学大纲-查看审核流程',data);
@@ -226,10 +228,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                                 //初始化表单
                                 initEditForm(data);
+
                                 //监听表单提交
                                 form.on('submit(toSubmitEidtForm)', function(data){
-                                    $.post(requestUrl+'/kcjxdg/update.do' ,data.field ,function(result_data){
-
+                                    $.post(requestUrl+'/jxsj_kcjxdg/update.do' ,data.field ,function(result_data){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             if(result_data.code == 200){
                                                 myself_table.reload();//重新加载表格数据
@@ -247,9 +249,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             return;
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            $.post(requestUrl+'/kcjxdg/delete.do', { 'code': data.code},function(result_data){
-
-                                layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
+                            $.post(requestUrl+'/jxsj_kcjxdg/delete.do', { 'code': data.code},function(result_data){
+                                layer.msg(result_data.msg, { offset: '100px'}, function () {
                                     if(result_data.code == 200){
                                         myself_table.reload();//重新加载表格数据
                                     }
@@ -265,13 +266,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 $('#other').removeClass().addClass("layui-this");
                 $('#other_item').removeClass().addClass("layui-tab-item layui-show");
             }
+
             if(data.isShenhe > 0){ //拥有审核权限
 
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
-                    ,height : 440
+                    ,height : 500
                     ,id: "other_table_id"
-                    ,url: requestUrl+'/kcjxdg/getPageList.do'
+                    ,url: requestUrl+'/jxsj_kcjxdg/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -306,11 +308,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'college', title: '开课学院（部）', width:150, sort:true}
-                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
                         ,{field: 'courseName', title: '课程名称', width:150, sort:true}
+                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
+                        ,{field: 'courseAttr', title: '课程性质', width:150, sort:true}
                         ,{field: 'major', title: '适用专业', width:150, sort:true}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'college', title: '开课学院', width:150, sort:true}
+                        ,{field: 'term', title: '开课学期', width:150, sort:true}
+                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -318,20 +322,22 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         }
+                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
                         ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
 
                         //监听搜索框事件
-
+                        $('.other_search .layui-btn').on('click', function(){
+                            let type = $(this).data('type');
+                            active[type] ? active[type].call(this) : '';
+                        });
                         let active = {
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'college': $(".other_search input[name='college']").val()
-                                        ,'courseCode': $(".other_search input[name='courseCode']").val()
-                                        ,'courseName': $(".other_search input[name='courseName']").val()
+                                        'courseName': $(".other_search input[name='courseName']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                     }
                                     ,page: {
@@ -346,10 +352,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 form.render("select");
                             }
                         };
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
 
                         //监听头工具栏事件
                         table.on('toolbar(other_table)', function(obj){
@@ -369,7 +371,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                             }
                                         });
                                         if(isSubmit){
-                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                            layer.msg('您选择了已审核的信息', {time : 3000, offset: '100px'});
                                             return;
                                         } else {
                                             toShenHe(data); //添加审核意见
@@ -409,15 +411,16 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //
                 form.val("editForm",{
                     "code":data.code
-                    ,"college": data.college
-                    ,"courseCode" : data.courseCode
+                    ,"courseCode": data.courseCode
                     ,"courseName" : data.courseName
+                    ,"courseAttr" : data.courseAttr
                     ,"major" : data.major
+                    ,"college" : data.college
+                    ,"term" : data.term
                     ,"userId":data.userId
                     ,"userName":data.userName
+                    ,"userUnit":data.userUnit
                 });
-
-
             };
 
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
@@ -435,14 +438,19 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         let html = '<table class="layui-table">\n' +
                             '        <tbody>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">开课学院：</td><td style="width: 120px;" colspan="3">'+data.college+'</td>' +
-                            '              </tr>\n' +
-                            '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">课程编号：</td><td style="width: 120px;">'+data.courseCode+'</td>' +
                             '                <td style="width: 80px; text-align: right">课程名称：</td><td style="width: 120px;">'+data.courseName+'</td>' +
+                            '                <td style="width: 80px; text-align: right">课程编号：</td><td style="width: 120px;">'+data.courseCode+'</td>' +
                             '              </tr>\n' +
                             '              <tr>' +
-                            '                <td style="width: 80px; text-align: right">适用专业：</td><td style="width: 120px;" colspan="3">'+data.major+'</td>' +
+                            '                <td style="width: 80px; text-align: right">课程性质：</td><td style="width: 120px;">'+data.courseAttr+'</td>' +
+                            '                <td style="width: 80px; text-align: right">适用专业：</td><td style="width: 120px;">'+data.major+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">开课学院：</td><td style="width: 120px;">'+data.college+'</td>' +
+                            '                <td style="width: 80px; text-align: right">开课学期：</td><td style="width: 120px;">'+data.term+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">录入时间：</td><td colspan="3">'+data.createDate+'</td>' +
                             '              </tr>\n' +
                             '        </tbody>\n' +
                             '    </table>';
@@ -518,11 +526,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
             //提交
             var toSubmit = function (row_dataArr){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                    $.post(requestUrl+'/kcjxdg/toSubimt.do',{
+                    $.post(requestUrl+'/toSubimt.do',{
                         "menuId":$.cookie('currentMenuId'),
                         "jsonStr":JSON.stringify(row_dataArr)
                     },function (result_data) {
-
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
                             if(result_data.code === 200){
                                 myself_table.reload();//重新加载表格数据
@@ -534,15 +541,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
             };
 
             //审核
-            var toShenHe = function (row_dataArr) {
+            var toShenHe = function (row_datas) {
                 layer.open({
                     title : '教学设计-课程教学大纲-审核'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
-                    // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
-                    ,offset : '50px' //只定义top坐标，水平保持居中
+                    ,area : [ '700px', '350px' ]
+                    ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
+                    // ,btn : ['关闭']
                     ,content : $('#shenHeForm_container')
                     ,success: function(layero, index){
                         //
@@ -553,11 +559,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 $('#opinion').empty();
                             }
                         });
-
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
-                            $.post(requestUrl+'/kcjxdg/toShenhe.do',{
-                                "jsonStr":JSON.stringify(row_dataArr)
+                            $.post(requestUrl+'/toShenhe.do',{
+                                'viewName':'v_jxsj_kcjxdg_shenhe'
+                                ,'jsonStr':JSON.stringify(row_datas)
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion
                                 ,"userId":function () {
@@ -567,7 +573,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     return $.cookie('userName');
                                 }
                             },function (result_data) {
-
                                 layer.msg(result_data.msg, { offset: '100px'},function () {
                                     if(result_data.code === 200){
                                         other_table.reload();//重新加载表格数据

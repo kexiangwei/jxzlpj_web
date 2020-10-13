@@ -6,16 +6,15 @@ layui.use(['layer','upload'], function(){
     //
     $('#upfile').click(function(){
         layer.open({
-            title : '教学设计-课程教学大纲-上传页面'
+            title : '教学设计-课程教学大纲-上传附件'
             ,type : 1
-            ,area : [ '700px', '300px' ]
+            ,area : [ '700px', '350px' ]
             ,offset : '100px'
             ,moveOut:true
             ,shadeClose : true //点击遮罩关闭
             ,btn: ['关闭']
             ,content : $('#uploadFile_container')
             ,success: function(layero, index){
-                //
                 let upfileList = $('#upfileList');
                 $.get(requestUrl+"/getFileListByRelationCode.do" , {
                     "relationCode": $("#editForm input[ name='code' ] ").val()
@@ -52,7 +51,6 @@ layui.use(['layer','upload'], function(){
                         });
                     }
                 }, "json");
-
                 //上传附件
                 let upfileIns = upload.render({
                     elem: '#upfileIns'
@@ -61,8 +59,8 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $("#editForm input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"JXSJ_KCJXDG" // 固定值
-                        ,"fileType":"教学大纲" // 固定值
+                        ,"fileCategory":"jxsj_kcjxdg" // 固定值
+                        ,"fileType":""
                         ,"userId":function () {
                             return $.cookie('userId');
                         }
