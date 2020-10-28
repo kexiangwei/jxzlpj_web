@@ -1,5 +1,5 @@
 /*
-教学效果-实验课成绩
+教学效果-实验报告
  */
 layui.use(['layer','element','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
@@ -136,7 +136,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         case 'insert':
                             let objCode = new Date().getTime(); //初始化业务数据编号
                             layer.open({
-                                title : '教学效果-实验课成绩-新增'
+                                title : '教学效果-实验报告-新增'
                                 ,type : 1
                                 ,area : [ '900px', '450px' ]
                                 ,offset : '50px'
@@ -203,14 +203,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         if(data.isSubmit=='未提交' &&  data.status != '退回'){
                             return;
                         }
-                        detail_shenheProcess('教学效果-实验课成绩-查看审核流程',data);
+                        detail_shenheProcess('教学效果-实验报告-查看审核流程',data);
                     } else if (obj.event === 'update') {
                         if(data.isSubmit== '已提交'){
                             return;
                         }
                         //执行编辑
                         layer.open({
-                            title : '教学效果-实验课成绩-编辑'
+                            title : '教学效果-实验报告-编辑'
                             ,type : 1
                             ,area : [ '900px', '450px' ]
                             ,offset : '50px'
@@ -383,7 +383,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             if (obj.event === 'detail_dataInfo') {
                                 detail_dataInfo(data,false,true);
                             } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学效果-实验课成绩-查看审核流程',data);
+                                detail_shenheProcess('教学效果-实验报告-查看审核流程',data);
                             }
                         });
 
@@ -422,7 +422,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
                 //
                 let options = {
-                    title : '教学效果-实验课成绩-查看详情'
+                    title : '教学效果-实验报告-查看详情'
                     ,type : 1
                     ,area : [ '900px', '450px' ]
                     ,offset : '50px' //只定义top坐标，水平保持居中
@@ -537,7 +537,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             //审核
             var toShenHe = function (row_dataArr) {
                 layer.open({
-                    title : '教学效果-实验课成绩-审核'
+                    title : '教学效果-实验报告-审核'
                     ,type : 1
                     ,area : [ '900px', '450px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的

@@ -1,12 +1,12 @@
 /**
- * 教学效果-实验课成绩-附件
+ * 教学效果-实验报告-附件
  */
 layui.use(['layer','upload'], function(){
     var $ = layui.$,layer = layui.layer,upload = layui.upload;
     //
     $('#upfile').click(function(){
         layer.open({
-            title : '教学效果-实验课成绩-实验报告上传页面'
+            title : '教学效果-实验报告-实验报告上传页面'
             ,type : 1
             ,area : [ '700px', '300px' ]
             ,offset : '100px'

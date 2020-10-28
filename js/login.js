@@ -35,9 +35,9 @@
                             $.cookie('eduDegree', obj.eduDegree, { path: '/' });
                             $.cookie('title', obj.title, { path: '/' });
                             $.cookie('className', obj.className, { path: '/' });
-                            $.cookie('grade', obj.grade, { path: '/' });
+                            $.cookie('grade', obj.grade, { path: '/' });*/
                             $.cookie('majorName', obj.majorName, { path: '/' });
-                            $.cookie('collegeName', obj.collegeName, { path: '/' });*/
+                            $.cookie('collegeName', obj.collegeName, { path: '/' });
 
                             //跳转到主页面
                             window.location.href="index.html";

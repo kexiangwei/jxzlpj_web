@@ -4,7 +4,7 @@
 layui.use(['layer','laytpl','table','form','laydate'], function(){
     let $ = layui.$,layer = layui.layer,laytpl = layui.laytpl,table = layui.table,form = layui.form,laydate = layui.laydate;
 
-    let isAdmin;
+    var isAdmin;
     $.get(requestUrl+'/jxsg/isAdmin.do'
     ,{
         "userId":function () {
@@ -12,6 +12,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         }
     },function (result_data) {
         isAdmin = result_data.data;
+
         let getTpl  = datatable_toolbar.innerHTML;
         laytpl(getTpl).render({"isAdmin": isAdmin},function (html) {
             $("#datatable_toolbar").html(html);
@@ -20,6 +21,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         laytpl(getTpl).render({"isAdmin": isAdmin},function (html) {
             $("#datatable_bar").html(html);
         });
+
         init_datatable();
     });
 
@@ -43,6 +45,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                 "userId":function () {
                     return $.cookie('userId');
                 }
+                ,'isAdmin':isAdmin
             }
             ,request: {
                 pageName: 'pageIndex'
