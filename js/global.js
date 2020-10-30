@@ -2,7 +2,9 @@
  * 全局变量声明文件
  **/
 
-var requestUrl="http://127.0.0.1:8080/jxzlpj";
+var requestUrl=
+    "http://127.0.0.1:8080/jxzlpj";
+    // "http://47.104.136.79:8088/jxzlpj";
 
 //全局唯一标识符
 var guid = function(){

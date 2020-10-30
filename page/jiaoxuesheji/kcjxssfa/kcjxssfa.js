@@ -100,7 +100,7 @@ layui.use(['layer','table','form','laydate'], function(){
                                 //初始化表单
                                 initEditForm();
 //
-                                $.get(requestUrl+'/jxsj_kcjxssfa/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
+                                $.get(requestUrl+'/common/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
                                     if(result_data.code === 200){
                                         //
                                         $("select[name='courseName']").empty(); //移除下拉框所有选项option

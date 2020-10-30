@@ -6,7 +6,7 @@ layui.use(['layer','upload'], function(){
     //
     $('#upfile').click(function(){
         layer.open({
-            title : '教学效果-实验报告-实验报告上传页面'
+            title : '教学效果-实验报告-文件上传'
             ,type : 1
             ,area : [ '700px', '300px' ]
             ,offset : '100px'
@@ -61,8 +61,8 @@ layui.use(['layer','upload'], function(){
                         "relationCode":function () {
                             return $("#editForm input[ name='code' ] ").val();
                         }
-                        ,"fileCategory":"JXXG_SYKCJ" // 固定值
-                        ,"fileType":"file" // 固定值
+                        ,"fileCategory":"jxxg_sybg" // 固定值
+                        ,"fileType":"" // 固定值
                         ,"userId":function () {
                             return $.cookie('userId');
                         }
