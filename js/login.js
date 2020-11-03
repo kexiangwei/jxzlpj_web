@@ -25,9 +25,10 @@
 
                             $.cookie('userId', obj.userId, { path: '/' });
                             $.cookie('userName', obj.userName, { path: '/' });
-                            $.cookie('userUnit', '农学院教工部', { path: '/' });
+                            $.cookie('userUnit', obj.userUnit, { path: '/' });
                             $.cookie('userGroup', obj.userGroup, { path: '/' });
                             $.cookie('accountType', obj.accountType, { path: '/' });
+                            $.cookie('maxAuthLevel', obj.maxAuthLevel, { path: '/' });
                             $.cookie('headImg', obj.headImg, { path: '/' });
                             $.cookie('phone', obj.phone, { path: '/' });
 
@@ -36,7 +37,9 @@
                             $.cookie('title', obj.title, { path: '/' });
                             $.cookie('className', obj.className, { path: '/' });
                             $.cookie('grade', obj.grade, { path: '/' });*/
+                            $.cookie('majorCode', obj.majorCode, { path: '/' });
                             $.cookie('majorName', obj.majorName, { path: '/' });
+                            $.cookie('collegeCode', obj.collegeCode, { path: '/' });
                             $.cookie('collegeName', obj.collegeName, { path: '/' });
 
                             //跳转到主页面

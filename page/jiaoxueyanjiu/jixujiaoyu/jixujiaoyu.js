@@ -7,7 +7,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
     //验证用户是否有继续教育的提交、审核权限
     $.ajax({
         type: "get",
-        url: requestUrl+'/getAuthority.do', //根据menuId,userId 查询用户是否拥有菜单的提交、审核权限
+        url: requestUrl+'/getUserAuth.do', //根据menuId,userId 查询用户是否拥有菜单的提交、审核权限
         data: {
             "menuId":function () {
                 return $.cookie('currentMenuId');

@@ -6,7 +6,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
     $.ajax({
         type: "get",
-        url: requestUrl+'/getAuthority.do',
+        url: requestUrl+'/getUserAuth.do',
         data: {
             "menuId":function () {
                 return $.cookie('currentMenuId');
