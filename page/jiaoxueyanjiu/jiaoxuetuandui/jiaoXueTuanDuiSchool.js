@@ -4,13 +4,15 @@
 layui.use(['layer','element','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
+    const currentMenuId = $.cookie('currentMenuId');
+
     //验证用户是否拥有提交、审核权限
     $.ajax({
         type: "get",
         url: requestUrl+'/getUserAuth.do', //查询用户是否拥有菜单的提交、审核权限
         data: {
             "menuId":function () {
-                return $.cookie('currentMenuId');
+                return currentMenuId;
             },
             "userId":function () {
                 return $.cookie('userId');
@@ -23,7 +25,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             // 初始化获得奖项下拉选项
             $.get(requestUrl+'/optionset/getOptionSetList.do',{
                 'menuId':function () {
-                    return $.cookie('currentMenuId');
+                    return currentMenuId;
                 },
                 'attr': 'batch'
             },function(result_data){
@@ -44,9 +46,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,height : 500
                     ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
                     ,where:{
-                        "menuId":function () {
-                            return $.cookie('currentMenuId');
-                        },
                         "userId":function () {
                             return $.cookie('userId');
                         }
@@ -168,8 +167,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                                     //初始化表单
                                     initEditForm({
-                                        "menuId":$.cookie('currentMenuId')
-                                        ,'code': objCode
+                                        'code': objCode
                                         ,'userId':$.cookie('userId')
                                         ,'userName':$.cookie('userName')
                                         ,"userUnit" : $.cookie('userUnit')
@@ -308,9 +306,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
                     ,where:{
-                        "menuId":function () {
-                            return $.cookie('currentMenuId');
-                        },
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
                         }
@@ -346,6 +341,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
+                        ,{field: 'userId', title: '教师工号', width:150, sort: true}
+                        ,{field: 'userName', title: '教师姓名', width:150, sort: true}
                         ,{field: 'teamName', title: '团队名称', width:150}
                         ,{field: 'teamLeader', title: '团队负责人', width:150}
                         ,{field: 'leaderUnit', title: '单位', width:150}
@@ -389,7 +386,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,{field: 'isJwcGly_1',fixed: 'right', width:288, align:'center',templet: function(data){
                                 let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>' +
                                     '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
-                                if(data.zjshItemList.length>0){
+                                if(isNotEmpty(data.zjshItemList)){
                                     html += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
                                 }else{
                                     html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
@@ -573,8 +570,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 });
                 //
                 form.val("editForm",{
-                    "menuId":data.menuId
-                    ,"code":data.code
+                    "code":data.code
                     ,"teamName": data.teamName
                     ,"teamLeader" : data.teamLeader
                     ,"leaderUnit" : data.leaderUnit
@@ -713,7 +709,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             var toSubmit = function (row_datas){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/toSubimt.do',{
-                        "menuId":$.cookie('currentMenuId'),
+                        "menuId":currentMenuId,
                         "jsonStr":JSON.stringify(row_datas)
                     },function (result_data) {
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {

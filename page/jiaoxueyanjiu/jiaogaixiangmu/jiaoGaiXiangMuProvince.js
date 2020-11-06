@@ -4,13 +4,15 @@
 layui.use(['layer','element','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
+    const currentMenuId = $.cookie('currentMenuId');
+
     //验证用户是否拥有提交、审核权限
     $.ajax({
         type: "get",
         url: requestUrl+'/getUserAuth.do', //查询用户是否拥有菜单的提交、审核权限
         data: {
             "menuId":function () {
-                return $.cookie('currentMenuId');
+                return currentMenuId;
             },
             "userId":function () {
                 return $.cookie('userId');
@@ -144,8 +146,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             let layIndex = layer.open({
                                 title : '教学研究-省部级教改项目-新增'
                                 ,type : 1
-                                ,area : [ '900px', '500px' ]
-                                ,offset : '100px'
+                                ,area : [ '900px', '580px' ]
+                                ,offset : '50px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
 
@@ -154,6 +156,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         'code': new Date().getTime()
                                         ,'userId':$.cookie('userId')
                                         ,'userName':$.cookie('userName')
+                                        ,'userUnit':$.cookie('userUnit')
                                     });
 
                                     //监听表单提交
@@ -216,8 +219,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         let layIndex = layer.open({
                             title : '教学研究-省部级教改项目-编辑'
                             ,type : 1
-                            ,area : [ '900px', '500px' ]
-                            ,offset : '100px'
+                            ,area : [ '900px', '580px' ]
+                            ,offset : '50px'
                             ,shadeClose : true //禁用点击遮罩关闭弹窗
                             ,content : $('#editForm_container')
                             ,success: function(layero, index){
@@ -312,6 +315,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{field: 'userId', title: '教师工号', width:150, sort: true}
+                        ,{field: 'userName', title: '教师姓名', width:150, sort: true}
                         ,{field: 'projectName', title: '项目名称', width:150, sort:true}
                         ,{field: 'projectLevel', title: '项目级别', width:150, sort:true}
                         ,{field: 'projectNum', title: '立项编号', width:150, sort:true}
@@ -643,7 +648,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             var toSubmit = function (row_dataArr){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/toSubimt.do',{
-                        "menuId":$.cookie('currentMenuId'),
+                        "menuId":currentMenuId,
                         "jsonStr":JSON.stringify(row_dataArr)
                     },function (result_data) {
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {

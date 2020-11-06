@@ -4,13 +4,15 @@
 layui.use(['layer','element','table','form','laydate'], function(){
     let $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
+    const currentMenuId = $.cookie('currentMenuId');
+
     //验证用户是否拥有提交、审核权限
     $.ajax({
         type: "get",
         url: requestUrl+'/getUserAuth.do', //查询用户是否拥有当前菜单的提交、审核权限
         data: {
             "menuId":function () {
-                return $.cookie('currentMenuId');
+                return currentMenuId;
             },
             "userId":function () {
                 return $.cookie('userId');
@@ -797,7 +799,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
            var toSubmit = function (row_datas){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/toSubimt.do',{
-                        "menuId":$.cookie('currentMenuId'),
+                        "menuId":currentMenuId,
                         "jsonStr":JSON.stringify(row_datas)
                     },function (result_data) {
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {

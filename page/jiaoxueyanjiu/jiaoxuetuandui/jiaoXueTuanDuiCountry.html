@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教学研究-省部级教改项目</title>
+    <title>教学研究-教学团队-国家级团队</title>
     <link rel="stylesheet" href="../../../js/layui/css/layui.css">
     <style type="text/css">
         .myself_search .layui-inline {
@@ -27,9 +27,9 @@
                 <div class="layui-fluid">
 
                     <div class="layui-form myself_search">
-                        项目名称：
+                        团队名称：
                         <div class="layui-inline">
-                            <input class="layui-input" name="projectName" placeholder="支持关键字查询">
+                            <input class="layui-input" name="teamName" placeholder="支持关键字查询">
                         </div>
                         &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
@@ -62,9 +62,9 @@
             <div class="layui-tab-item" id="other_item">
                 <div class="layui-fluid">
                     <div class="layui-form other_search">
-                        项目名称：
+                        团队名称：
                         <div class="layui-inline">
-                            <input class="layui-input" name="projectName" placeholder="支持关键字查询">
+                            <input class="layui-input" name="teamName" placeholder="支持关键字查询">
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
@@ -79,7 +79,7 @@
                             </div>
                         </script>
                         <script type="text/html" id="other_bar">
-                            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>
+                            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看信息</a>
                             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>
                         </script>
                     </table>
@@ -91,114 +91,115 @@
     <!-- 信息详情 -->
     <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
         <fieldset class="layui-elem-field" style="margin-top: 20px;">
-            <legend>主持人信息</legend>
-            <div id="teacherInfo"></div>
-        </fieldset>
-        <fieldset class="layui-elem-field">
-            <legend>项目信息</legend>
+            <legend>团队信息</legend>
             <div id="baseInfo"></div>
         </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>申报书</legend>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">文件名</th>
+                        <th style="text-align: center; width: 150px; ">上传日期</th>
+                        <th style="text-align: center; width: 150px; ">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="fileList"></tbody>
+                </table>
+            </div>
+        </fieldset>
     </div>
 
-    </div>
-    <!-- 新增&修改，基础信息 -->
+    <!-- 响应新增，编辑按钮 -->
     <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
-        <form class="layui-form" action="" lay-filter="editForm" id="editForm">
-            <!-- 业务数据编号 -->
-            <input type="hidden" name="code"/>
-            <!-- 业务属性 -->
-            <fieldset class="layui-elem-field" style="margin-top: 20px">
-                <legend>主持人信息</legend>
-                <div class="layui-form-item">
-                    <div class="layui-inline" style="margin-top: 20px">
-                        <label class="layui-form-label">工号：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="userId" readonly class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="margin-top: 20px">
-                        <label class="layui-form-label">姓名：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="userName" readonly class="layui-input">
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">单位：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="userUnit" lay-verify="required|userUnit" autocomplete="off" class="layui-input" style="width: 80%;">
-                    </div>
-                </div>
-            </fieldset>
-            <fieldset class="layui-elem-field">
-                <legend>项目信息</legend>
-                <div class="layui-form-item" style="margin-top: 20px">
-                    <label class="layui-form-label">项目名称：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="projectName" lay-verify="required|projectName" class="layui-input" style="width: 80%;">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">立项编号：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="projectNum" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">项目级别：</label>
-                        <div class="layui-input-inline">
-                            <select name="projectLevel">
-                                <option value="">请选择</option>
-                                <option value="重点">重点</option>
-                                <option value="面上">面上</option>
-                                <option value="自筹经费">自筹经费</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+        <form class="layui-form" lay-filter="editForm" id="editForm">
 
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">经费：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="fund" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">参与教师人数：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="memberNum" class="layui-input">
-                        </div>
+            <input type="hidden" name="menuId"/>
+            <input type="hidden" name="code"/>
+            <input type="hidden" name="userId"/>
+            <input type="hidden" name="userName"/>
+            <input type="hidden" name="userUnit"/>
+
+            <!-- 业务字段 -->
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">团队名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="teamName" required  lay-verify="required|teamName" class="layui-input" style="width: 80%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">团队负责人：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="teamLeader" required  lay-verify="required|teamLeader" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">立项时间：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="projectStartTime" name="projectStartTime" placeholder="" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">结题时间：</label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="projectEndTime" name="projectEndTime" placeholder="" class="layui-input">
-                        </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">单位：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="leaderUnit" required  lay-verify="required|leaderUnit" class="layui-input">
                     </div>
                 </div>
-            </fieldset>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">建设周期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="cycle" required  lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">批次：</label>
+                    <div class="layui-input-inline">
+                        <select name="batch">
+                            <!--<option value="">请选择</option>
+                            <option value="批次1">批次1</option>-->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">获批时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="commonDate" name="commonDate" placeholder="年-月-日" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">申报书：</label>
+                    <div class="layui-input-inline">
+                        <button type="button"  id="upfile" class="layui-btn layui-btn-primary" style="width: 190px">请选择 PDF 格式文件</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="layui-btn-container" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm" id="toSubmitEidtForm">保存</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
     </div>
 
+    <!-- 上传附件 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="uploadFile_container">
+        <div class="layui-upload" style="margin-top: 20px;">
+            <button type="button" class="layui-btn layui-btn-normal" id="upfileIns"><i class="layui-icon">&#xe67c;</i>&nbsp;&nbsp;上传附件</button>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th style="text-align: center;">文件名</th>
+                        <th style="text-align: center; width: 120px;">状态</th>
+                        <th style="text-align: center; width: 120px;">操作</th>
+                    </tr></thead>
+                    <tbody id="upfileList"><tr id="noData"><td colspan="3" style="text-align: center;">无数据</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- 查看审核流程 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenheProcess_container"></div>
-    <!-- 查看专家审核意见 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="zjshContainer"></div>
     <!-- 填写审核意见 -->
     <div class="layui-container" style="width: 90%; display: none;" id="shenHeForm_container">
         <form class="layui-form" action="" lay-filter="shenHeForm" id="shenHeForm">
@@ -238,12 +239,17 @@
         </form>
     </div>
 
+    <!-- 查看专家审核意见 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="zjshContainer"></div>
+
+    <script src="../../../js/layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/JsonExportExcel.min.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="../../../js/layui/layui.js"></script>
-    <script src="jiaoGaiXiangMuProvince.js"></script>
+    <script src="../../../js/previewFileInfo.js"></script>
+    <script src="jiaoXueTuanDuiCountry.js"></script>
+    <script src="upfile.js"></script>
 
 </body>
 </html>

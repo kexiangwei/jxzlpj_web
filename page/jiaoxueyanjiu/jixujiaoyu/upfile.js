@@ -10,7 +10,7 @@ layui.use(['layer','upload'], function(){
     $(document).on('click','#upload',function(data){
         // alert(JSON.stringify(data));
         layer.open({
-            title : '继续教育-附件'
+            title : '继续教育-文件上传'
             ,type : 1
             ,area : [ '900px', '450px' ]
             // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的

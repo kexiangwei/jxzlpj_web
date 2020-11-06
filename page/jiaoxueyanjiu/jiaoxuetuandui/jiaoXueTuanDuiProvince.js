@@ -1,8 +1,8 @@
 /*
-教学研究-教改项目
+教学研究-教学团队-省部级团队
  */
-layui.use(['layer','element','table','form'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form;
+layui.use(['layer','element','table','form','laydate'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
     const currentMenuId = $.cookie('currentMenuId');
 
@@ -22,6 +22,21 @@ layui.use(['layer','element','table','form'], function(){
         ,success:function(data) {
             var data = data.data;
 
+            // 初始化获得奖项下拉选项
+            $.get(requestUrl+'/optionset/getOptionSetList.do',{
+                'menuId':function () {
+                    return currentMenuId;
+                },
+                'attr': 'batch'
+            },function(result_data){
+                if(result_data.code == 200){
+                    if(result_data.data.length >0){
+                        initSelect('请选择','batch',result_data.data);
+                        form.render('select');
+                    }
+                }
+            },'json');
+
             if(data.isSubmit > 0){ //拥有提交权限
 
                 //数据表格
@@ -29,10 +44,10 @@ layui.use(['layer','element','table','form'], function(){
                     id: guid()
                     ,elem : '#myself_table'
                     ,height : 500
-                    ,url: requestUrl+'/jxyj_jgxm_school/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
                     ,where:{
                         "userId":function () {
-                            return  $.cookie('userId');
+                            return $.cookie('userId');
                         }
                     }
                     ,request: {//用于对分页请求的参数：page、limit重新设定名称
@@ -62,19 +77,12 @@ layui.use(['layer','element','table','form'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'xmName', title: '项目名称', width:120}
-                        ,{field: 'xmType', title: '项目类型', width:120}
-                        ,{field: 'leader', title: '主持人', width:120}
-                        ,{field: 'leaderId', title: '主持人工号', width:120,hide:true}
-                        ,{field: 'title', title: '职称', width:120}
-                        ,{field: 'collegeOrDept', title: '学院（部门）', width:120}
-                        ,{field: 'major', title: '专业', width:120,hide:true}
-                        ,{field: 'mainTeachWork', title: '主要教学工作简历', width:120,hide:true}
-                        ,{field: 'mainTeachAchievement', title: '主要教育教学研究领域及成果', width:120,hide:true}
-                        ,{field: 'currentAndBackground', title: '现状与背景分析（包括已有研究实践基础）', width:120,hide:true}
-                        ,{field: 'questionAndTarget', title: '研究内容、目标、要解决的问题和主要特色', width:120,hide:true}
-                        ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120,hide:true}
-                        ,{field: 'planAndProcess', title: '进度安排', width:120,hide:true}
+                        ,{field: 'teamName', title: '团队名称', width:150}
+                        ,{field: 'teamLeader', title: '团队负责人', width:150}
+                        ,{field: 'leaderUnit', title: '单位', width:150}
+                        ,{field: 'cycle', title: '建设周期', width:150}
+                        ,{field: 'batch', title: '批次', width:150}
+                        ,{field: 'commonDate', title: '获批时间', width:150}
                         ,{field: 'isSubmit', title: '提交状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
@@ -110,7 +118,7 @@ layui.use(['layer','element','table','form'], function(){
                                 }
                             }
                         }
-                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
+                        ,{field: 'createDate', title: '创建时间', width:120, sort:true}
                         ,{fixed: 'right', width:288, align:'center', toolbar: '#myself_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                 });//table end.
@@ -120,7 +128,7 @@ layui.use(['layer','element','table','form'], function(){
                     search: function(){
                         myself_table.reload({
                             where: {
-                                'xmName': $(".myself_search input[name='xmName']").val()
+                                'teamName': $(".myself_search input[name='teamName']").val()
                                 ,'status': $("#status option:selected").val()
                             }
                             ,page: {
@@ -147,29 +155,29 @@ layui.use(['layer','element','table','form'], function(){
                         ,data = checkStatus.data; //获取选中的数据
                     switch(obj.event){
                         case 'insert':
+                            var objCode = new Date().getTime(); //初始化业务数据编号
                             layer.open({
-                                title : '教学研究-教改项目-新增'
+                                title : '教学研究-教学团队-省部级团队-新增'
                                 ,type : 1
-                                ,area : [ '1200px', '550px' ]
+                                ,area : [ '900px', '450px' ]
                                 ,offset : '50px'
                                 // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                ,content : $('#editForm')
+                                ,content : $('#editForm_container')
                                 ,success: function(layero, index){
 
                                     //初始化表单
                                     initEditForm({
-                                        'code': new Date().getTime()
-                                        ,"leader" : $.cookie('userName')
-                                        ,"leaderId" : $.cookie('userId')
+                                        'code': objCode
                                         ,'userId':$.cookie('userId')
                                         ,'userName':$.cookie('userName')
+                                        ,"userUnit" : $.cookie('userUnit')
                                     });
 
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         let formData = data.field;
                                         // alert(JSON.stringify(formData));
-                                        $.post(requestUrl+'/jxyj_jgxm_school/insert.do',formData,function(result_data){
+                                        $.post(requestUrl+'/jxyj_jxtd_country/insert.do',formData,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 if(result_data.code == 200){
                                                     myself_table.reload();//重新加载表格数据
@@ -180,8 +188,9 @@ layui.use(['layer','element','table','form'], function(){
                                     });
                                 }
                                 ,cancel: function(index, layero){
-                                    layer.confirm('表单未提交，填写的信息将会清空', {icon: 3, title:'提示', offset: '100px'}, function() {
-                                        layer.close(index);
+                                    layer.confirm('表单未提交，填写的信息将会清空', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                        $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
+                                        layer.closeAll();
                                     });
                                     return false;
                                 }
@@ -202,7 +211,7 @@ layui.use(['layer','element','table','form'], function(){
                                     }
                                 });
                                 if(isSubmit){
-                                    layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
+                                    layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
                                     return;
                                 }else{
                                     toSubmit(data);
@@ -221,19 +230,19 @@ layui.use(['layer','element','table','form'], function(){
                         if(data.isSubmit=='未提交' && data.status !='退回'){
                             return;
                         }
-                        detail_shenheProcess('教学研究-教改项目-查看审核流程',rowData);
+                        detail_shenheProcess('教学研究-教学团队-省部级团队-查看审核流程',rowData);
                     } else if (obj.event === 'update') {
-                        if(rowData.isSubmit== '已提交' &&  rowData.status != '退回'){
+                        if(data.isSubmit== '已提交'){
                             return;
                         }
                         //执行编辑
                         layer.open({
-                            title : '教学研究-教改项目-编辑'
+                            title : '教学研究-教学团队-省部级团队-编辑'
                             ,type : 1
-                            ,area : [ '1200px', '550px' ]
+                            ,area : [ '900px', '450px' ]
                             ,offset : '50px'
                             ,shadeClose : true //禁用点击遮罩关闭弹窗
-                            ,content : $('#editForm')
+                            ,content : $('#editForm_container')
                             ,success: function(layero, index){
                                 //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                                 let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
@@ -249,7 +258,7 @@ layui.use(['layer','element','table','form'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     let formData = data.field;
                                     // alert(JSON.stringify(formData));
-                                    $.post(requestUrl+'/jxyj_jgxm_school/update.do', formData, function(resultData){
+                                    $.post(requestUrl+'/jxyj_jxtd_country/update.do', formData, function(resultData){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             if(result_data.code == 200){
                                                 myself_table.reload();//重新加载表格数据
@@ -264,12 +273,11 @@ layui.use(['layer','element','table','form'], function(){
                             }
                         });
                     } else if (obj.event === 'delete') {
-                        if(rowData.isSubmit== '已提交' &&  rowData.status != '退回'){
+                        if(rowData.isSubmit== '已提交'){
                             return;
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            layer.close(index);
-                            $.post(requestUrl+'/jxyj_jgxm_school/delete.do', { code: rowData.code},function(result_data){
+                            $.post(requestUrl+'/jxyj_jxtd_country/delete.do', { code: rowData.code},function(result_data){
                                 layer.msg(result_data.msg, { offset: '100px'}, function () {
                                     if(result_data.code == 200){
                                         myself_table.reload();//重新加载表格数据
@@ -296,7 +304,7 @@ layui.use(['layer','element','table','form'], function(){
                     ,elem : '#other_table'
                     ,height : 500
                     ,id: "other_table_id"
-                    ,url: requestUrl+'/jxyj_jgxm_school/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -335,19 +343,12 @@ layui.use(['layer','element','table','form'], function(){
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
                         ,{field: 'userId', title: '教师工号', width:150, sort: true}
                         ,{field: 'userName', title: '教师姓名', width:150, sort: true}
-                        ,{field: 'xmName', title: '项目名称', width:120}
-                        ,{field: 'xmType', title: '项目类型', width:120}
-                        ,{field: 'leader', title: '主持人', width:120}
-                        ,{field: 'leaderId', title: '主持人工号', width:120, hide:true}
-                        ,{field: 'title', title: '职称', width:120}
-                        ,{field: 'collegeOrDept', title: '学院（部门）', width:120}
-                        ,{field: 'major', title: '专业', width:120,hide:true}
-                        ,{field: 'mainTeachWork', title: '主要教学工作简历', width:120, hide:true}
-                        ,{field: 'mainTeachAchievement', title: '主要教育教学研究领域及成果', width:120, hide:true}
-                        ,{field: 'currentAndBackground', title: '现状与背景分析（包括已有研究实践基础）', width:120, hide:true}
-                        ,{field: 'questionAndTarget', title: '研究内容、目标、要解决的问题和主要特色', width:120, hide:true}
-                        ,{field: 'expectAndResult', title: '预期效果与具体成果', width:120, hide:true}
-                        ,{field: 'planAndProcess', title: '进度安排', width:120, hide:true}
+                        ,{field: 'teamName', title: '团队名称', width:150}
+                        ,{field: 'teamLeader', title: '团队负责人', width:150}
+                        ,{field: 'leaderUnit', title: '单位', width:150}
+                        ,{field: 'cycle', title: '建设周期', width:150}
+                        ,{field: 'batch', title: '批次', width:150}
+                        ,{field: 'commonDate', title: '获批时间', width:150}
                         ,{field: 'shenheStatus', title: '审核状态', width:120,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 let val = data.shenheStatus;
                                 if(val=='已审核'){
@@ -376,7 +377,7 @@ layui.use(['layer','element','table','form'], function(){
                                 }
                             }
                         }
-                        ,{field: 'createDate', title: '创建时间', width:150, sort:true}
+                        ,{field: 'createDate', title: '创建时间', width:120, sort:true}
                         ,{field: 'isJwcGly_0',fixed: 'right', width:168, align:'center',templet: function(data){
                                 return '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>' +
                                     '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
@@ -385,7 +386,7 @@ layui.use(['layer','element','table','form'], function(){
                         ,{field: 'isJwcGly_1',fixed: 'right', width:288, align:'center',templet: function(data){
                                 let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>' +
                                     '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_shenheProcess">查看流程</a>';
-                                if(data.zjshItemList.length>0){
+                                if(isNotEmpty(data.zjshItemList)){
                                     html += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
                                 }else{
                                     html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail-zjsh">查看专家审核意见</a>';
@@ -453,7 +454,7 @@ layui.use(['layer','element','table','form'], function(){
                             search: function(){
                                 other_table.reload({
                                     where: {
-                                        'xmName': $(".other_search input[name='xmName']").val()
+                                        'teamName': $(".other_search input[name='teamName']").val()
                                         ,'shenheStatus': $("#shenheStatus").val()
                                         ,'shenheStatusFirst': $("#shenheStatusFirst").val()
                                         ,'shenheStatusFinal': $("#shenheStatusFinal").val()
@@ -541,7 +542,7 @@ layui.use(['layer','element','table','form'], function(){
                             if (obj.event === 'detail_dataInfo') {
                                 detail_dataInfo(data,false,true);
                             } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学研究-教改项目-查看审核流程',data);
+                                detail_shenheProcess('教学研究-教学团队-省部级团队-查看审核流程',data);
                             } else if (obj.event === 'detail-zjsh') {
                                 detail_zjsh(data);
                             }
@@ -562,386 +563,123 @@ layui.use(['layer','element','table','form'], function(){
 
             //初始化表单
             var initEditForm = function (data) {
-                //
-                let ue_mainTeachWork = UE.getEditor("mainTeachWork") //主要教学工作简历
-                    ,ue_mainTeachAchievement = UE.getEditor("mainTeachAchievement") //主要教育教学研究领域及成果
-                    ,ue_currentAndBackground = UE.getEditor("currentAndBackground") //现状与背景分析（包括已有研究实践基础）
-                    ,ue_questionAndTarget = UE.getEditor("questionAndTarget") //研究内容、目标、要解决的问题和主要特色
-                    ,ue_expectAndResult = UE.getEditor("expectAndResult") //预期效果与具体成果
-                    ,ue_planAndProcess = UE.getEditor("planAndProcess"); //具体安排及进度
-                ue_mainTeachWork.ready(function () { ue_mainTeachWork.setContent(data.mainTeachWork); });
-                ue_mainTeachAchievement.ready(function () { ue_mainTeachAchievement.setContent(data.mainTeachAchievement); });
-                ue_currentAndBackground.ready(function () { ue_currentAndBackground.setContent(data.currentAndBackground); });
-                ue_questionAndTarget.ready(function () { ue_questionAndTarget.setContent(data.questionAndTarget); });
-                ue_expectAndResult.ready(function () { ue_expectAndResult.setContent(data.expectAndResult); });
-                ue_planAndProcess.ready(function () { ue_planAndProcess.setContent(data.planAndProcess); });
-                //
-                initMemberDataTable(data.code);//主要成员情况
-                initFundBudgetDataTable(data.code);//经费预算
+
+                //初始化laydate实例
+                laydate.render({
+                    elem: '#commonDate' //指定元素
+                });
                 //
                 form.val("editForm",{
                     "code":data.code
-                    ,"xmName": data.xmName
-                    ,"xmType" : data.xmType
-                    ,"leader" : data.leader
-                    ,"leaderId" : data.leaderId
-                    ,"title" : data.title
-                    ,"collegeOrDept" : data.collegeOrDept
-                    ,"major" : data.major
-                    ,"mainTeachWork" : data.mainTeachWork
-                    ,"mainTeachAchievement" : data.mainTeachAchievement
-                    ,"currentAndBackground" : data.currentAndBackground
-                    ,"questionAndTarget" : data.questionAndTarget
-                    ,"expectAndResult" : data.expectAndResult
-                    ,"planAndProcess" : data.planAndProcess
+                    ,"teamName": data.teamName
+                    ,"teamLeader" : data.teamLeader
+                    ,"leaderUnit" : data.leaderUnit
+                    ,"cycle" : data.cycle
+                    ,"batch" : data.batch
+                    ,"commonDate" : data.commonDate
                     ,"userId":data.userId
                     ,"userName":data.userName
+                    ,"userUnit":data.userUnit
                 });
             };
 
-            /**
-             * 初始化项目成员列表
-             * @param xmCode 项目编号
-             */
-            var initMemberDataTable = function (xmCode) {
-                let memberDataTable = table.render({
-                    elem : '#memberDataTable'
-                    ,url: requestUrl+'/jxyj_jgxm_school/getMemberList.do'
-                    ,where: {
-                        "xmCode":xmCode
-                    }
-                    ,response: {
-                        statusCode: 200 //规定成功的状态码，默认：0
-                    }
-                    ,parseData: function(res){ //res 即为原始返回的数据
-                        return {
-                            "code": res.code, //解析接口状态
-                            "msg": "", //解析提示文本
-                            "data": res.data //解析数据列表
-                        };
-                    }
-                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
-                    ,defaultToolbar:[]
-                    ,cols : [[ //表头
-                        {type:'numbers', title:'序号', width:100, fixed: 'left'}
-                        // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
-                        ,{field: 'userName', title: '姓名', width:200, align:'center'}
-                        ,{field: 'userId', title: '工号', width:200, align:'center'}
-                        ,{field: 'task', title: '任务分工', align:'center'}
-                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
-                    ]]
-                    ,text: {
-                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                    }
-                    ,even: true //隔行背景
-                    ,done : function(res, curr, count) {
-
-                        //监听头工具栏事件
-                        table.on('toolbar(memberDataTable)', function(obj){
-                            let memberFormCntainer = layer.open({
-                                title : '项目主要参加人员'
-                                ,type : 1
-                                ,area : [ '700px', '350px' ] //宽高
-                                ,offset : '100px'
-                                ,content : $('#memberForm')
-                                ,success: function(layero, index){
-                                    //监听表单提交
-                                    form.on('submit(memberFormSubmitBtn)', function(data){
-                                        let formData = data.field;
-                                        $.post(requestUrl+'/jxyj_jgxm_school/insertMember.do',{
-                                            "xmCode":xmCode,
-                                            "userName":formData.userName,
-                                            "userId":formData.userId,
-                                            "task":formData.task
-                                        },function (resultData) {
-                                            if(resultData.code == 200){
-                                                memberDataTable.reload();//重新加载数据
-                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
-                                            }
-                                        },'json');
-                                        layer.close(memberFormCntainer);
-                                        return false;
-                                    });
-                                },end:function () {
-                                    document.getElementById("memberForm").reset(); //清空表单数据
-                                }
-                            });
-                        });
-
-                        //监听右侧工具条
-                        table.on('tool(memberDataTable)', function(obj){
-                            let rowData = obj.data;
-                            if (obj.event === 'delete') {
-                                //执行删除
-                                $.post(requestUrl+'/jxyj_jgxm_school/deleteMember.do'
-                                    , {
-                                        "xmCode": rowData.xmCode
-                                        ,"userId": rowData.userId
-                                    }
-                                    ,function(resultData){
-                                        if(resultData.code === 200){
-                                            memberDataTable.reload();//重新加载表格数据
-                                            layer.msg('删除成功', {time : 3000, offset: '100px'});
-                                        }else{
-                                            layer.msg('删除失败', {time : 3000, offset: '100px'});
-                                        }
-                                    }, "json");
-                            }
-                        });
-                    }
-                });
-            };
-
-            /**
-             * 初始化经费预算列表
-             * @param xmCode 项目编号
-             */
-            var initFundBudgetDataTable = function (xmCode) {
-                let fundBudgetDataTable = table.render({
-                    elem : '#fundBudgetDataTable'
-                    ,url: requestUrl+'/jxyj_jgxm_school/getFundBudgetList.do'
-                    ,where: {
-                        "xmCode":xmCode
-                    }
-                    ,response: {
-                        statusCode: 200 //规定成功的状态码，默认：0
-                    }
-                    ,parseData: function(res){ //res 即为原始返回的数据
-                        return {
-                            "code": res.code, //解析接口状态
-                            "msg": "", //解析提示文本
-                            "data": res.data //解析数据列表
-                        };
-                    }
-                    ,totalRow: true
-                    ,toolbar: '#dataTable_toolbar' //指向自定义工具栏模板选择器
-                    ,defaultToolbar:[]
-                    ,cols : [[ //表头
-                        {type:'numbers', title:'序号', width:100, fixed: 'left', totalRowText: '合计'}
-                        // ,{field: 'xmCode', title: '项目编号', width:200, align:'center'}
-                        ,{field: 'subject', title: '科目', align:'center'}
-                        ,{field: 'budgetAmount', title: '预算金额（元）', sort: true, totalRow: true, width:200, align:'center'}
-                        ,{fixed: 'right', title: '操作', width:120, align:'center', toolbar: '#dataTable_bar'}
-                    ]]
-                    ,text: {
-                        none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
-                    }
-                    ,even: true //隔行背景
-                    ,done : function(res, curr, count) {
-
-                        //监听头工具栏事件
-                        table.on('toolbar(fundBudgetDataTable)', function(obj){
-                            let fundBudgetFormCntainer = layer.open({
-                                title : '经费预算'
-                                ,type : 1
-                                ,area : [ '700px', '300px' ] //宽高
-                                ,offset : '100px'
-                                ,content : $('#fundBudgetForm')
-                                ,success: function(layero, index){
-                                    //监听表单提交
-                                    form.on('submit(fundBudgetFormSubmitBtn)', function(data){
-                                        let formData = data.field;
-                                        $.post(requestUrl+'/jxyj_jgxm_school/insertFundBudget.do',{
-                                            "xmCode":xmCode,
-                                            "subject":formData.subject,
-                                            "budgetAmount":formData.budgetAmount,
-                                        },function (resultData) {
-                                            if(resultData.code == 200){
-                                                fundBudgetDataTable.reload();//重新加载数据
-                                                layer.msg('添加成功', {time : 3000, offset: '100px'});
-                                            }else{
-                                                layer.msg('添加失败', {time : 3000, offset: '100px'});
-                                            }
-                                        },'json');
-                                        layer.close(fundBudgetFormCntainer);
-                                        return false;
-                                    });
-                                },end:function () {
-                                    document.getElementById("fundBudgetForm").reset(); //清空表单数据
-                                }
-                            });
-                        });
-
-                        //监听右侧工具条
-                        table.on('tool(fundBudgetDataTable)', function(obj){
-                            let rowData = obj.data;
-                            if (obj.event === 'delete') {
-                                //执行删除
-                                $.post(requestUrl+'/jxyj_jgxm_school/deleteFundBudget.do'
-                                    , {
-                                        "xmCode": rowData.xmCode
-                                        ,"subject": rowData.subject
-                                    }
-                                    ,function(resultData){
-                                        if(resultData.code === 200){
-                                            fundBudgetDataTable.reload();//重新加载表格数据
-                                            layer.msg('删除成功', {time : 3000, offset: '100px'});
-                                        }else{
-                                            layer.msg('删除失败', {time : 3000, offset: '100px'});
-                                        }
-                                    }, "json");
-                            }
-                        });
-                    }
-                });
-            };
-
-            /**
-             * 查看详情
-             * @param data
-             */
-            var detail_dataInfo = function (rowData,isSubmit,isShenHe) {
+            let detail_dataInfo = function (data,isSubmit,isShenHe) {
+                //
                 let options = {
-                    title : '教学研究-教改项目-查看详情'
+                    title : '教学研究-教学团队-省部级团队-查看详情'
                     ,type : 1
-                    ,area : [ '1200px', '550px' ]
-                    ,offset : '50px'
+                    ,area : [ '900px', '450px' ]
+                    ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content : $('#dataInfo_container')
                     ,success: function(layero, index){
-                        let htmlStr = '';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>一、项目基本信息</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">项目名称：</td><td style="width: 416px;">'+rowData.xmName+'</td>' +
-                            '                    <td style="width: 120px; text-align: right">项目类型：</td><td style="width: 416px;">'+rowData.xmType+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>二、项目主持人信息</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">姓名：</td><td style="width: 416px;">'+rowData.leader+'</td>' +
-                            '                   <td style="width: 120px; text-align: right">工号：</td><td style="width: 416px;">'+rowData.leaderId+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">二级单位：</td><td style="width: 416px;">'+rowData.collegeOrDept+'</td>' +
-                            '                    <td style="width: 120px; text-align: right">专业：</td><td style="width: 416px;">'+rowData.major+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                    <td style="width: 120px; text-align: right">职称：</td><td colspan="3">'+rowData.title+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                    <td style="width: 120px; text-align: right">主要教学工作简历：</td><td colspan="3">'+rowData.mainTeachWork+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                    <td style="width: 120px; text-align: right">主要教育教学研究领域及成果：</td><td colspan="3">'+rowData.mainTeachAchievement+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>三、项目主要参加人员情况</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>' +
-                            '               <tr>\n' +
-                            '                      <th style="width: 120px; text-align: right" rowspan="'+(rowData.memberList.length>0?rowData.memberList.length+1:2)+'">主要成员情况：</th>' +
-                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
-                            '                      <th style="width: 150px; text-align: center">姓名</th>\n' +
-                            '                      <th style="width: 150px; text-align: center">工号</th>\n' +
-                            '                      <th style="text-align: center">任务分工</th>\n' +
-                            '                 </tr>';
-                        if(rowData.memberList.length>0){
-                            layui.each(rowData.memberList,function (idx,obj) {
-                                htmlStr += '<tr><td style="text-align: center">'+(idx+1)
-                                    +'</td><td style="text-align: center">'+obj.userName
-                                    +'</td><td style="text-align: center">'+obj.userId
-                                    +'</td><td style="text-align: center">'+obj.task
-                                    +'</td></tr>\n';
-                            });
-                        }else{
-                            htmlStr += '<tr>' +
-                                '      <td style="text-align: center" colspan="4">暂无相关数据</td>' +
-                                '  </tr>\n';
-                        }
-                        htmlStr +='</tbody>\n' +
-                            '   </table>' +
-                            '</fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>四、项目的研究背景与研究基础</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">现状与背景分析（包括已有研究实践基础）：</td><td>'+rowData.currentAndBackground+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">研究内容、目标、要解决的问题和主要特色：</td><td>'+rowData.questionAndTarget+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>五、项目的预期效果、具体成果和进度安排</legend>\n' +
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">预期效果与具体成果：</td><td>'+rowData.expectAndResult+'</td>' +
-                            '               </tr>\n' +
-                            '               <tr>' +
-                            '                   <td style="width: 120px; text-align: right">具体安排及进度：</td><td>'+rowData.planAndProcess+'</td>' +
-                            '               </tr>\n' +
-                            '           </tbody>\n' +
-                            '       </table>' +
-                            '   </fieldset>';
-                        htmlStr += '<fieldset class="layui-elem-field" style="margin-top: 10px;" >' +
-                            '       <legend>六、项目经费预算</legend>\n' +
-                            //经费预算
-                            '       <table class="layui-table">\n' +
-                            '           <tbody>' +
-                            '               <tr>\n' +
-                            '                      <th style="width: 120px; text-align: right" rowspan="'+rowData.fundBudgetList.length+2+'">经费预算：</th>' +
-                            '                      <th style="width: 100px; text-align: center">序号</th>\n' +
-                            '                      <th style="text-align: center">科目</th>\n' +
-                            '                      <th style="width: 150px; text-align: center">预算金额（元）</th>\n' +
-                            '                 </tr>';
-                        if(rowData.fundBudgetList.length>0){
-                            let totalBudgetAmount =0;
-                            layui.each(rowData.fundBudgetList,function (idx,obj) {
-                                totalBudgetAmount += parseInt(obj.budgetAmount);
-                                htmlStr += '<tr><td style="text-align: center">'+(idx+1)
-                                    +'</td><td style="text-align: center">'+obj.subject
-                                    +'</td><td style="text-align: center">'+obj.budgetAmount
-                                    +'</td></tr>\n';
-                            });
-                            htmlStr += '<tr><td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计</td><td style="text-align: center">'+totalBudgetAmount+'</td></tr>';
-                        }else{
-                            htmlStr += '<tr>' +
-                                '      <td style="text-align: center" colspan="3">暂无相关数据</td>' +
-                                '  </tr>\n';
-                        }
-                        htmlStr +='</tbody></table></fieldset>';
-                        $("#dataInfo_container").html(htmlStr);
+                        //
+                        let html = '<table class="layui-table">\n' +
+                            '        <tbody>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">团队名称：</td><td colspan="3">'+data.teamName+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">团队负责人：</td><td style="width: 120px;">'+data.teamLeader+'</td>' +
+                            '                <td style="width: 80px; text-align: right">单位：</td><td style="width: 120px;">'+data.leaderUnit+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">建设周期：</td><td style="width: 120px;">'+data.cycle+'</td>' +
+                            '                <td style="width: 80px; text-align: right">批次：</td><td style="width: 120px;">'+data.batch+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">获批时间：</td><td colspan="3">'+data.commonDate+'</td>' +
+                            '              </tr>\n' +
+                            '              <tr>' +
+                            '                <td style="width: 80px; text-align: right">录入时间：</td><td colspan="3">'+data.createDate+'</td>' +
+                            '              </tr>\n' +
+                            '        </tbody>\n' +
+                            '    </table>';
+                        $("#baseInfo").html(html);
+
+                        //申报书
+                        let fileList = $("#fileList");
+                        $.get(requestUrl+"/getFileListByRelationCode.do" , {
+                            "relationCode": function () {
+                                return data.code;
+                            }
+                        } ,  function(result_data){
+                            if(result_data.data.length ===0){
+                                let tr = '<tr><td colspan="3" style="text-align: center;">无数据</td></tr>';
+                                fileList.append(tr);
+                            } else {
+                                $.each(result_data.data,function(index,fileInfo){
+                                    let tr = $(['<tr id="'+ fileInfo.code +'">'
+                                        ,'<td style="text-align: center;">	<a href="javascript:void(0)">'+ fileInfo.fileName +'</a></td>'
+                                        ,'<td style="text-align: center;">'+ fileInfo.createDate +'</td>'
+                                        ,'<td style="text-align: center;">' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-normal upfile_preview">预览</button>' +
+                                        '   <button class="layui-btn layui-btn-xs layui-btn-primary upfile_download">下载</button>' +
+                                        '</td>'
+                                        ,'</tr>'].join(''));
+                                    //预览
+                                    tr.find('a').on('click', function(){
+                                        previewFileInfo(fileInfo);
+                                    });
+                                    tr.find('.upfile_preview').on('click', function(){
+                                        previewFileInfo(fileInfo);
+                                    });
+                                    //下载
+                                    tr.find('.upfile_download').on('click', function(){
+                                        let downloadForm = $("<form action='"+requestUrl+"/downloadFileInfo.do' method='post'></form>");
+                                        downloadForm.append("<input type='hidden' name='fileName' value='"+fileInfo.fileName+"'/>");
+                                        downloadForm.append("<input type='hidden' name='filePath' value='"+fileInfo.filePath+"'/>");
+                                        $(document.body).append(downloadForm);
+                                        // alert(downloadForm.serialize());
+                                        downloadForm.submit();
+                                        downloadForm.remove();
+                                    });
+                                    fileList.append(tr);
+                                });
+                            }
+                        }, "json");
                     }
                     ,end:function () {
-                        $("#dataInfo_container .layui-elem-field").empty();
+                        $("#fileList").empty();
                     }
                 };
-
-                if(isSubmit && rowData.isSubmit == '未提交'){
+                if(isSubmit && data.isSubmit == '未提交'){
                     options.btn = ['提交','关闭'];
                     options.yes = function(index, layero){
-                        toSubmit(new Array(rowData));
+                        toSubmit(new Array(data));
                     };
                     options.btn2 = function(index, layero){
-                        layer.close(index);
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
-
-                if(isShenHe && (rowData.shenheStatus == '未审核' || rowData.shenheStatusFirst == '未审核' ||　rowData.shenheStatusFinal == '未审核')){
+                if(isShenHe && (data.shenheStatus == '未审核' || data.shenheStatusFirst == '未审核' ||　data.shenheStatusFinal == '未审核')){
                     options.btn = ['审核','关闭'];
                     options.yes = function(index, layero){
-                        toShenHe(new Array(rowData));
+                        toShenHe(new Array(data));
                     };
                     options.btn2 = function(index, layero){
-                        layer.close(index);
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
                     };
                 }
                 layer.open(options);
@@ -968,7 +706,7 @@ layui.use(['layer','element','table','form'], function(){
             var toShenHe = function (row_datas) {
                 //添加审核意见
                 layer.open({
-                    title : '教学研究-教改项目-审核'
+                    title : '教学研究-教学团队-省部级团队-审核'
                     ,type : 1
                     ,area : [ '700px', '350px' ]
                     ,offset : '100px'
@@ -986,7 +724,6 @@ layui.use(['layer','element','table','form'], function(){
                                 "shenheType":row_datas[0].shenheStatusFirst == '未审核'?'初审':'终审'
                             });
                         }
-
                         //
                         form.on('select(status)', function(data) {
                             if(data.value == '通过'){
@@ -998,7 +735,7 @@ layui.use(['layer','element','table','form'], function(){
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
                             $.post(requestUrl+'/toShenhe.do',{
-                                'viewName':'V_JXYJ_JGXM_SCHOOL_SHENHE'
+                                'viewName':'v_jxyj_jxtd_country_shenhe'
                                 , 'isZjshAccount':isZjshAccount
                                 ,"jsonStr":JSON.stringify(row_datas)
                                 ,"shenheType":isJwcGly==1?formData.field.shenheType:null
@@ -1034,7 +771,7 @@ layui.use(['layer','element','table','form'], function(){
                 layer.open({
                     title : title
                     ,type : 1
-                    ,area : [ '1100px', '550px' ]
+                    ,area : [ '1100px', '500px' ]
                     ,offset : '50px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
@@ -1135,7 +872,7 @@ layui.use(['layer','element','table','form'], function(){
                     return;
                 }
                 layer.open({
-                    title : '教学研究-教改项目-查看专家审核意见'
+                    title : '教学研究-教学团队-省部级团队-查看专家审核意见'
                     ,type : 1
                     ,area : [ '900px', '450px' ]
                     ,offset : '100px' //只定义top坐标，水平保持居中
@@ -1146,20 +883,18 @@ layui.use(['layer','element','table','form'], function(){
                         let sheetData = new Array();
                         $.each(zjshItemList,function (idx,obj) {
                             let item = {
-                                xmName : row_data.xmName,
-                                leader : row_data.leader,
-                                userName : obj.userName,
-                                status : obj.status,
-                                opinion : obj.opinion,
-                                createDate : obj.createDate
+                                'userName' : obj.userName
+                                ,'status' : obj.status
+                                ,'opinion' : obj.opinion
+                                ,'createDate' : obj.createDate
                             };
                             sheetData[idx] = item;
                         });
                         let option={};
-                        option.fileName = row_data.xmName+'校外专家审核意见';
+                        option.fileName = row_data.teamName+'校外专家审核意见';
                         option.datas=[
                             {
-                                sheetHeader:['项目名称','主持人','专家','评审结果','评审意见','评审时间'],
+                                sheetHeader:['专家','评审结果','评审意见','评审时间'],
                                 sheetData:sheetData
                             }
                         ];

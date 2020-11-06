@@ -4,6 +4,8 @@
 layui.use(['layer','laytpl','table','form','laydate'], function(){
     let $ = layui.$,layer = layui.layer,laytpl = layui.laytpl,table = layui.table,form = layui.form,laydate = layui.laydate;
 
+    const currentMenuId = $.cookie('currentMenuId');
+
     var isAdmin;
     $.get(requestUrl+'/jxsg/isAdmin.do'
     ,{

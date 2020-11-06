@@ -4,13 +4,15 @@
 layui.use(['layer','element','table','form','laydate','upload'], function(){
     let $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,upload = layui.upload;
 
+    const currentMenuId = $.cookie('currentMenuId');
+
     //验证用户是否拥有提交、审核权限
     $.ajax({
         type: "get",
         url: requestUrl+'/getUserAuth.do', //查询用户是否拥有当前菜单的提交、审核权限
         data: {
             "menuId":function () {
-                return $.cookie('currentMenuId');
+                return currentMenuId;
             },
             "userId":function () {
                 return $.cookie('userId');
@@ -23,8 +25,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
             // 初始化获得奖项下拉选项
             $.get(requestUrl+'/optionset/getOptionSetList.do',{
                 'menuId':function () {
-                    return $.cookie('currentMenuId');
-                }
+                    return currentMenuId;
+                },
+                'attr': 'level2'
             },function(result_data){
                 if(result_data.code == 200){
                     if(result_data.data.length >0){
@@ -462,6 +465,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                 //监听Tab切换
                 element.on('tab(layTab)', function(data){
+                    // alert(JSON.stringify(data));
                     if(data.index == 1){ //
                         other_table.reload(); //重新加载表格数据
                     }
@@ -874,9 +878,10 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
             //提交
            var toSubmit = function (row_dataArr){
+               // alert(currentMenuId);
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/toSubimt.do',{
-                        "menuId":$.cookie('currentMenuId'),
+                        "menuId":currentMenuId,
                         "jsonStr":JSON.stringify(row_dataArr)
                     },function (result_data) {
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {

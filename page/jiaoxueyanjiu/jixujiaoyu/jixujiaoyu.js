@@ -145,7 +145,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.open({
                                         title : '教学研究-继续教育-新增'
                                         ,type : 1
-                                        ,area : [ '900px', '500px' ]
+                                        ,area : [ '900px', '580px' ]
                                         ,offset : '50px'
                                         ,content : $('#editForm_container')
                                         ,success: function(layero, index){
@@ -231,7 +231,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 let editForm_idx= layer.open({
                                     title :  '教学研究-继续教育-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '500px' ]
+                                    ,area : [ '900px', '580px' ]
                                     ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')
@@ -322,6 +322,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
+                        },
+                        "maxAuthLevel":function () {//用于区分是当前登录用户还是查询参数中的用户
+                            return $.cookie('maxAuthLevel');
+                        },
+                        "majorCode":function () {//用于区分是当前登录用户还是查询参数中的用户
+                            return $.cookie('majorCode');
+                        },
+                        "collegeCode":function () {//用于区分是当前登录用户还是查询参数中的用户
+                            return $.cookie('collegeCode');
                         }
                     }
                     ,request: {
@@ -353,8 +362,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'userId', title: '教师工号', width:150, sort: true, hide:true}
-                        ,{field: 'userName', title: '教师姓名', width:150, sort: true, hide:true}
+                        ,{field: 'userId', title: '教师工号', width:150, sort: true}
+                        ,{field: 'userName', title: '教师姓名', width:150, sort: true}
                         ,{field: 'peixunName', title: '培训名称', width:150, sort: true}
                         ,{field: 'peixunStyle', title: '培训形式', width:150, sort: true}
                         ,{field: 'peixunStartTime', title: '培训开始时间', width:150, sort: true}
@@ -487,7 +496,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 let options = {
                     title : '教学研究-继续教育-查看详情'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
+                    ,area : [ '900px', '580px' ]
                     ,offset : '50px'
                     ,shadeClose : true
                     ,btn : ['关闭']
