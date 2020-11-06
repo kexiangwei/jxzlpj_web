@@ -44,7 +44,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     id: guid()
                     ,elem : '#myself_table'
                     ,height : 500
-                    ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jxtd_school/getPageList.do'
                     ,where:{
                         "userId":function () {
                             return $.cookie('userId');
@@ -177,7 +177,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         let formData = data.field;
                                         // alert(JSON.stringify(formData));
-                                        $.post(requestUrl+'/jxyj_jxtd_country/insert.do',formData,function(result_data){
+                                        $.post(requestUrl+'/jxyj_jxtd_school/insert.do',formData,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 if(result_data.code == 200){
                                                     myself_table.reload();//重新加载表格数据
@@ -258,7 +258,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     let formData = data.field;
                                     // alert(JSON.stringify(formData));
-                                    $.post(requestUrl+'/jxyj_jxtd_country/update.do', formData, function(resultData){
+                                    $.post(requestUrl+'/jxyj_jxtd_school/update.do', formData, function(resultData){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             if(result_data.code == 200){
                                                 myself_table.reload();//重新加载表格数据
@@ -277,7 +277,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             return;
                         }
                         layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            $.post(requestUrl+'/jxyj_jxtd_country/delete.do', { code: rowData.code},function(result_data){
+                            $.post(requestUrl+'/jxyj_jxtd_school/delete.do', { code: rowData.code},function(result_data){
                                 layer.msg(result_data.msg, { offset: '100px'}, function () {
                                     if(result_data.code == 200){
                                         myself_table.reload();//重新加载表格数据
@@ -304,7 +304,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,elem : '#other_table'
                     ,height : 500
                     ,id: "other_table_id"
-                    ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
+                    ,url: requestUrl+'/jxyj_jxtd_school/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
@@ -755,7 +755,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
                             $.post(requestUrl+'/toShenhe.do',{
-                                'viewName':'v_jxyj_jxtd_country_shenhe'
+                                'viewName':'v_jxyj_jxtd_school_shenhe'
                                 , 'isZjshAccount':isZjshAccount
                                 ,"jsonStr":JSON.stringify(row_datas)
                                 ,"shenheType":isJwcGly==1?formData.field.shenheType:null
