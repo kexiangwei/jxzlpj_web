@@ -26,6 +26,10 @@ var isEmpty = function(obj) {
     return true;
 };
 
+var isNotEmpty = function(obj) {
+    return !isEmpty(obj);
+};
+
 /**
  * 加载下拉选项
  * @param defaultOptionVal
