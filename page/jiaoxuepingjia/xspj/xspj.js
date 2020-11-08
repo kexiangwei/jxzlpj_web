@@ -7,7 +7,7 @@ layui.use(['layer','table','form'], function(){
     var accountType = $.cookie('accountType');
     if(accountType == 'student'){
         //
-        $.get(requestUrl+'/getExecTemplate.do',{'templateType':'学生评教'},function (result_data) {
+        $.get(requestUrl+'/getActiveTemplate.do',{'templateType':'学生评教'},function (result_data) {
             //系统可以设定评教时间段，非时间段内，学生进入不了评教模块
             if(result_data.code != 200){ //是否评教时间
                 layer.msg('评教时间已过', {time : 3000, offset: '100px'});
@@ -96,7 +96,7 @@ layui.use(['layer','table','form'], function(){
                                 // layer.msg('你已经评过了', {time : 3000, offset: '100px'});
                                 return;
                             }
-                            $.get(requestUrl+'/getExecTemplate.do',{'templateType':'学生评教'},function (result_data) {
+                            $.get(requestUrl+'/getActiveTemplate.do',{'templateType':'学生评教'},function (result_data) {
                                 if(result_data.code == 200){
                                     let layIndex = layer.open({
                                         id: guid()

@@ -38,7 +38,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             ,{field: 'endDate', title: '结束时间', width:200, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                     let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
                         '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
-                    if(data.isExec == 1){ //模板已启用
+                    if(data.isActive == 1){ //模板已启用
                         html += '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>';
                     }else{
                         html += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>';
@@ -114,7 +114,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                     });
                 } else if (obj.event === 'update') {
-                    /*if(data.isExec == 1){
+                    /*if(data.isActive == 1){
                         return;
                     }*/
                     //执行编辑
@@ -148,7 +148,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                     });
                 } else if (obj.event === 'delete') {
-                    if(data.isExec == 1){
+                    if(data.isActive == 1){
                         return;
                     }
                     layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
