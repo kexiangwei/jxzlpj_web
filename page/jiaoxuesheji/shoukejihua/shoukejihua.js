@@ -275,7 +275,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                                         }
                                     });
-                                    layer.full(layIndex); //默认以最大化方式打开
+                                    // layer.full(layIndex); //默认以最大化方式打开
                                 }
                             }
                         });
