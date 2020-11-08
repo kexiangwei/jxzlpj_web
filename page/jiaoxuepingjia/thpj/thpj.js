@@ -60,7 +60,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
         id: guid()
         ,elem : '#datatable'
         ,height : 460
-        ,url: requestUrl+'/thpj/getPageList.do'
+        ,url: requestUrl+'/jxpj_thpj/getPageList.do'
         ,request: {//用于对分页请求的参数：page、limit重新设定名称
             pageName: 'pageIndex' //页码的参数名称，默认：page
             ,limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -149,12 +149,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     if(rowData.isPj == 2){
                         return;
                     }
-                    $.get(requestUrl+'/thpj/detail.do',{'pjCode':rowData.pjCode}, function (result_data) {
+                    $.get(requestUrl+'/jxpj_thpj/detail.do',{'pjCode':rowData.pjCode}, function (result_data) {
                         if(result_data.code == 200){
                             let data = result_data.data;
                             var thpjItemList = data.thpjItemList;
                             ////////////////////////////////////////////////////////////////////////////////////////////
-                            $.get(requestUrl+'/thpj/getThpjTargetList.do',{'pjCode':rowData.pjCode},function (result_data) {
+                            $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'pjCode':rowData.pjCode},function (result_data) {
                                 let data = result_data.data;
                                 let html = '';
                                 for (let i = 0; i < data.length; i++) {
@@ -214,7 +214,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                 } else if (obj.event === 'courseName') {
                     //
-                    $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
+                    $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',function (result_data) {
                         if(result_data.code == 200){
                             let data = result_data.data;
 
@@ -304,7 +304,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         var formData = data.field;
                                         formData.templateCode = templateCode;
                                         formData.jsonStr = JSON.stringify(formData);
-                                        $.post(requestUrl+'/thpj/insert.do' ,formData ,function(result_data){
+                                        $.post(requestUrl+'/jxpj_thpj/insert.do' ,formData ,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 if(result_data.code == 200){
                                                     datatable.reload();//重新加载表格数据
@@ -348,7 +348,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //柱状图
                 var xAxisData = new Array()
                     ,seriesData = new Array();
-                $.get(requestUrl+'/thpj/getTeacherBar.do',{
+                $.get(requestUrl+'/jxpj_thpj/getTeacherBar.do',{
                     'menuName':title,
                     'userId':rowData.teacherCode
                 }, function (data) {
@@ -408,7 +408,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //饼图
                 var initTeacherPie = function (menuName) {
                     var legendDate = new Array();
-                    $.get(requestUrl+'/thpj/getTeacherPie.do',{
+                    $.get(requestUrl+'/jxpj_thpj/getTeacherPie.do',{
                         'menuName':menuName,
                         'userId':rowData.teacherCode
                     },function (data) {
@@ -462,7 +462,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                 //数据表
                 var initDatatable = function (menuName,status) {
-                    $.get(requestUrl+'/thpj/getTeacherTab.do',{
+                    $.get(requestUrl+'/jxpj_thpj/getTeacherTab.do',{
                         'menuName':menuName,
                         'userId':rowData.teacherCode
                     },function (data) {
@@ -479,7 +479,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,elem : '#teacherInfo_datatable'
                                 ,width: 900
                                 ,height : 500
-                                ,url: requestUrl+'/thpj/getTeacherTabData.do'
+                                ,url: requestUrl+'/jxpj_thpj/getTeacherTabData.do'
                                 ,where: {
                                     'menuName':menuName,
                                     'userId':rowData.teacherCode,

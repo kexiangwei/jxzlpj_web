@@ -9,10 +9,10 @@ layui.use(['layer','table','form'], function(){
         id: guid() //设定一个id，防止重复弹出
         ,elem : '#datatable'
         ,height : 520
-        ,url: requestUrl+'/xspj/getCourseList.do'
+        ,url: requestUrl+'/xspj/getPageList.do'
         ,where:{
             "userId":function () {
-                return /*$.cookie('userId');*/ 556677
+                return $.cookie('userId');
             }
         }
         ,request: {
@@ -33,13 +33,11 @@ layui.use(['layer','table','form'], function(){
         ,toolbar: '#table_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'code', title: '课程编号', width:120}
-            ,{field: 'nameZh', title: '课程中文名称'}
-            ,{field: 'nameEn', title: '课程英文名称'}
+            ,{field: 'courseCode', title: '课程编号', width:120}
+            ,{field: 'courseName', title: '课程名称', width:120}
+            ,{field: 'courseAttr', title: '课程类别', width:120}
             ,{field: 'stuHour', title: '学时', width:120, sort: true}
             ,{field: 'stuScore', title: '学分', width:120, sort: true}
-            ,{field: 'courseType', title: '课程类别', width:120}
-            ,{field: 'courseDept', title: '开课部门'}
             ,{fixed: 'right', width:120, align:'center', toolbar: '#row_toolbar'}
         ]]
         ,even: true //隔行背景
@@ -58,9 +56,9 @@ layui.use(['layer','table','form'], function(){
                 switch(layEvent){
                     case 'kcpf':
                         //
-                        $.get(requestUrl+"/getXspjTemplate.do",  function(resultData){
+                        $.get(requestUrl+"/getActiveTemplate.do", {'templateType':'学生评教'}, function(resultData){
                             if(resultData.code == 200){
-                                if(resultData.data.isPj){
+                                if(1==1){
                                     //
                                     let idx = 1 //题号
                                         ,data=null //题目
@@ -75,7 +73,7 @@ layui.use(['layer','table','form'], function(){
                                         ,closeBtn: false
                                         ,content : $('#kcpf_container')
                                         ,success: function(layero, index){
-                                            data = resultData.data.targetList;
+                                            data = resultData.data;
                                             pjQuestion(idx,data,courseData);
                                         }
                                         ,yes: function(index, layero){
