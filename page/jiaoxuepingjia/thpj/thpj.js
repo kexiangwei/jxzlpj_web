@@ -59,7 +59,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
     var datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 460
+        ,height : 500
         ,url: requestUrl+'/jxpj_thpj/getPageList.do'
         ,request: {//用于对分页请求的参数：page、limit重新设定名称
             pageName: 'pageIndex' //页码的参数名称，默认：page
@@ -79,6 +79,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+
             ,{field:'courseName', title:'课程名称', width:200, sort:true, event: 'courseName', templet: function (data) {
                     let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     if(data.isPj == 2){
@@ -87,8 +88,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     $('#datatable_bar').html(html);
                     return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
              }}
-            ,{field:'courseType', title:'课程性质', width:150, sort:true}
-            ,{field:'teacher', title:'任课教师姓名', width:150, sort:true}
+            ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
+            ,{field:'teacher', title:'教师姓名', width:150, sort:true}
             ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
             ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
             ,{field:'teachDate', title:'上课时间', width:150, sort:true}
@@ -106,20 +107,23 @@ layui.use(['layer','element','table','form','laydate'], function(){
         ,done: function(res, curr, count){ //数据渲染完的回调
 
             //监听搜索框事件
+            $('.search .layui-btn').on('click', function(){
+                let type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
             let active = {
                 search: function(){
-                    let teacherCollege = $("#teacherCollege option:selected").text()
-                        ,teacherMajor = $("#teacherMajor option:selected").text();
                     datatable.reload({
                         where: {
-                            'teacherCollege': teacherCollege != '请选择'? teacherCollege:null,
-                            'teacherMajor':teacherMajor != '请选择'? teacherMajor:null,
+                            'teacherCollege': $("#teacherCollege option:selected").val(),
+                            'teacherMajor': $("#teacherMajor option:selected").val(),
                             'teacher': $(".search input[ name='teacher']").val(),
                             'teacherAge': $("#teacherAge option:selected").val(),
                             'teacherTitle': $("#teacherTitle option:selected").val(),
                             'courseName': $(".search input[ name='courseName']").val(),
-                            'courseType': $("#courseType option:selected").val(),
-                            'teachDate': $(".search input[ name='teachDate']").val()
+                            'courseAttr': $("#courseAttr option:selected").val(),
+                            'teachDate': $(".search input[ name='teachDate']").val(),
+                            'teachDate': $(".search input[ name='teachAddr']").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -133,14 +137,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     $("#teacherMajor").val("");
                     $("#teacherAge").val("");
                     $("#teacherTitle").val("");
-                    $("#courseType").val("");
+                    $("#courseAttr").val("");
                     form.render("select");
                 }
             };
-            $('.search .layui-btn').on('click', function(){
-                let type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
-            });
 
             //监听工具条
             table.on('tool(datatable)', function(obj){
@@ -149,12 +149,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     if(rowData.isPj == 2){
                         return;
                     }
-                    $.get(requestUrl+'/jxpj_thpj/detail.do',{'pjCode':rowData.pjCode}, function (result_data) {
+                    $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
                         if(result_data.code == 200){
                             let data = result_data.data;
                             var thpjItemList = data.thpjItemList;
                             ////////////////////////////////////////////////////////////////////////////////////////////
-                            $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'pjCode':rowData.pjCode},function (result_data) {
+                            $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
                                 let data = result_data.data;
                                 let html = '';
                                 for (let i = 0; i < data.length; i++) {
@@ -175,7 +175,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 });
                             },'json');
                             ////////////////////////////////////////////////////////////////////////////////////////////
-                            let layIndex = layer.open({
+                            layer.open({
                                 id: guid() //设定一个id，防止重复弹出
                                 ,title : '教学评价-课程质量评价'
                                 ,type : 1
@@ -238,17 +238,20 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             $inputs.keyup(function() {
                                 let totalScore = 0;
                                 $inputs.each(function(){
-                                    totalScore += parseInt($(this).val());
+                                    let value = parseInt($(this).val());
+                                    if(value.toString() != "NaN"){
+                                        totalScore += value;
+                                    }
                                 });
                                 $("input[name='totalScore']").val(totalScore);
                             });
                             //
-                            let layIndex = layer.open({
+                            layer.open({
                                 id: guid() //设定一个id，防止重复弹出
                                 ,title : '教学评价-课程质量评价'
                                 ,type : 1
                                 ,area : [ '1100px', '500px' ]
-                                ,offset : '30px' //只定义top坐标，水平保持居中
+                                ,offset : '50px' //只定义top坐标，水平保持居中
                                 ,shadeClose : true //点击遮罩关闭
                                 ,btn : ['教学研究','教学设计','教学效果','关闭']
                                 ,yes: function(index, layero){
@@ -290,9 +293,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         'teacherCollege': rowData.teacherCollege,
                                         'courseCode': rowData.courseCode,
                                         'courseName': rowData.courseName,
-                                        'courseType': rowData.courseType,
+                                        'courseAttr': rowData.courseAttr,
                                         'userId': $.cookie('userId'),
-                                        'userName':$.cookie('userName')
+                                        'userName':$.cookie('userName'),
+                                        'userUnit':$.cookie('userUnit')
                                     });
 
                                     //监听表单提交
@@ -309,7 +313,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                                 if(result_data.code == 200){
                                                     datatable.reload();//重新加载表格数据
                                                 }
-                                                layer.close(layIndex);
+                                                layer.close(index);
                                             });
                                         },'json');
                                     });
@@ -336,6 +340,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
     //
     var initTeacherBar = function (title,rowData) {
+
         let layIdx = layer.open({
             title : title
             ,type : 1

@@ -8,7 +8,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
     let template_dataTable = table.render({
         id: "template_dataTable"
         ,elem : '#template_dataTable'
-        ,height : 470
+        ,height : 550
         ,url: requestUrl+'/getPjSetTemplateList.do'
         ,where:{
         }
@@ -63,15 +63,15 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 switch(obj.event){
                     case 'insert':
                         //
-                        let layIndex = layer.open({
+                        layer.open({
                             title : '教学评价-评教设置-模板'
                             ,type : 1
                             ,area : [ '900px', '450px' ]
-                            ,offset : '50px'
+                            ,offset : '100px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#template_editForm_container')
                             ,success: function(layero, index){
-                                initEditForm();
+                                initEditForm(index);
                             }
                         });
                      break;
@@ -82,17 +82,20 @@ layui.use(['layer','element','table','form','laydate'], function(){
             table.on('tool(template_dataTable)', function(obj){
                 var data = obj.data;
                 if (obj.event === 'detail') {
-                    let layIndex = layer.open({
+                    layer.open({
                         title : '教学评价-评教设置-模板'
                         ,type : 1
                         ,area : [ '700px', '300px' ]
-                        ,offset : '50px'
+                        ,offset : '100px'
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#template_dataInfo_container')
                         ,success: function(layero, index){
                             //
                             let html = '<table class="layui-table">\n' +
                                 '        <tbody>\n' +
+                                '              <tr>' +
+                                '                <td style="width: 80px; text-align: right">模板编号：</td><td>'+data.templateCode+'</td>' +
+                                '              </tr>\n' +
                                 '              <tr>' +
                                 '                <td style="width: 80px; text-align: right">模板类别：</td><td>'+data.templateType+'</td>' +
                                 '              </tr>\n' +
@@ -104,6 +107,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 '              </tr>\n' +
                                 '              <tr>' +
                                 '                <td style="width: 80px; text-align: right">结束时间：</td><td>'+data.endDate+'</td>' +
+                                '              </tr>\n' +
+                                '              <tr>' +
+                                '                <td style="width: 80px; text-align: right">创建时间：</td><td>'+data.createDate+'</td>' +
                                 '              </tr>\n' +
                                 '        </tbody>\n' +
                                 '    </table>';
@@ -118,20 +124,22 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         return;
                     }*/
                     //执行编辑
-                    let layIndex = layer.open({
+                    layer.open({
                         title : '教学评价-评教设置-模板'
                         ,type : 1
                         ,area : [ '900px', '450px' ]
-                        ,offset : '50px'
+                        ,offset : '100px'
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#template_editForm_container')
                         ,success: function(layero, index){
+
                             //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                             let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
                             $("#template_editForm .layui-btn-container").append(cancelBtn);
                             cancelBtn.click(function (event) {
                                 layer.close(index);
                             });
+
                             //初始化表单数据
                             form.val("template_editForm",{
                                 'templateCode' : data.templateCode
@@ -140,11 +148,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,'startDate' : data.startDate
                                 ,'endDate' : data.endDate
                             });
+
                             //
-                            initEditForm();
+                            initEditForm(index);
                             initDatatable(data.templateType);
+
                         },end:function () {
-                            window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
+
                         }
                     });
                 } else if (obj.event === 'delete') {
@@ -164,7 +174,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 }
             });
 
-            var initEditForm = function () {
+            var initEditForm = function (layIndex) {
 
                 //时间选择器
                 laydate.render({
@@ -176,9 +186,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,type: 'datetime'
                 });
 
+                //根据模板类型初始化表格数据
                 form.on('select(templateType)', function(data){
-                    /*console.log(data.elem); //得到select原始DOM对象
-                    console.log(data.value); //得到被选中的值*/
                     initDatatable(data.value);
                 });
 
@@ -202,7 +211,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 });
             };
 
+            /**
+             * 根据模板类型初始化表格数据
+             * @param data 模板类型，可选值[同行评教，学生评教]
+             */
             var initDatatable = function (data) {
+
                 //指标设置
                 var datatable = table.render({
                     id: guid()
@@ -234,7 +248,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         var table_data = res.data;
                         var targetCodes = new Array();
                         table.on('checkbox(datatable)', function(obj){
-                            if(obj.checked==true){
+                            if(obj.checked==true){ //勾选
                                 if(obj.type=='one'){
                                     targetCodes.push(obj.data.targetCode);
                                 }else{
@@ -242,7 +256,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                         targetCodes.push(table_data[i].targetCode);
                                     }
                                 }
-                            }else{
+                            }else{ //取消勾选
                                 if(obj.type=='one'){
                                     for(var i=0;i<targetCodes.length;i++){
                                         if(targetCodes[i] == obj.data.targetCode){

@@ -6,9 +6,8 @@
     <link rel="stylesheet" href="../../../js/layui/css/layui.css">
     <style type="text/css">
         .search .layui-inline{
-            width: 150px;
+            width: 180px;
         }
-
         .layui-form-input {
             width: 50px;
             height: 30px;
@@ -22,7 +21,6 @@
             border-width:0px 0px 0px 0px;
             text-align: center;
         }
-
         body .demo-class .layui-layer-btn a:not(:last-child){
             background:#1E9FFF;
             color: #fff;
@@ -33,61 +31,69 @@
     <div class="layui-fluid">
         <!-- 查询参数 -->
         <div class="layui-form search">
-            教师所属学院：
-            <div class="layui-inline">
-                <select id="teacherCollege" name="teacherCollege" lay-filter="teacherCollege"></select>
+            <div class="layui-form-item">
+                教师所属学院：
+                <div class="layui-inline">
+                    <select id="teacherCollege" name="teacherCollege" lay-filter="teacherCollege"></select>
+                </div>
+                &nbsp;&nbsp;教师所属专业：
+                <div class="layui-inline">
+                    <select id="teacherMajor" name="teacherMajor" lay-filter="teacherMajor"></select>
+                </div>
+                &nbsp;&nbsp;教师姓名：
+                <div class="layui-inline">
+                    <input class="layui-input" name="teacher">
+                </div>
+                &nbsp;&nbsp;教师年龄：
+                <div class="layui-inline">
+                    <select name="teacherAge" id="teacherAge">
+                        <option value="">请选择</option>
+                        <option value="55岁及以上">55岁及以上</option>
+                        <option value="45-54岁">45-54岁</option>
+                        <option value="35-44岁">35-44岁</option>
+                        <option value="34岁及以下">34岁及以下</option>
+                    </select>
+                </div>
+                &nbsp;&nbsp;教师职称：
+                <div class="layui-inline">
+                    <select name="teacherTitle" id="teacherTitle">
+                        <option value="">请选择</option>
+                        <option value="教授">教授</option>
+                        <option value="副教授">副教授</option>
+                        <option value="讲师">讲师</option>
+                        <option value="助教">助教</option>
+                    </select>
+                </div><br/>
             </div>
-            &nbsp;&nbsp;教师所属专业：
-            <div class="layui-inline">
-                <select id="teacherMajor" name="teacherMajor" lay-filter="teacherMajor"></select>
-            </div>
-            &nbsp;&nbsp;教师姓名：
-            <div class="layui-inline">
-                <input class="layui-input" name="teacher">
-            </div>
-            &nbsp;&nbsp;教师年龄：
-            <div class="layui-inline">
-                <select name="teacherAge" id="teacherAge">
-                    <option value="">请选择</option>
-                    <option value="55岁及以上">55岁及以上</option>
-                    <option value="45-54岁">45-54岁</option>
-                    <option value="35-44岁">35-44岁</option>
-                    <option value="34岁及以下">34岁及以下</option>
-                </select>
-            </div>
-            &nbsp;&nbsp;教师职称：
-            <div class="layui-inline">
-                <select name="teacherTitle" id="teacherTitle">
-                    <option value="">请选择</option>
-                    <option value="教授">教授</option>
-                    <option value="副教授">副教授</option>
-                    <option value="讲师">讲师</option>
-                    <option value="助教">助教</option>
-                </select>
-            </div><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;课程名称：
-            <div class="layui-inline" style="margin-top: 5px">
-                <input class="layui-input" name="courseName" placeholder="支持关键字查询">
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;课程性质：
-            <div class="layui-inline" style="margin-top: 5px">
-                <select id="courseType" name="courseType">
-                    <option value="">请选择</option>
-                    <option value="公共必修课">公共必修课</option>
-                    <option value="专业基础课">专业基础课</option>
-                    <option value="专业核心课">专业核心课</option>
-                    <option value="专业选修课">专业选修课</option>
-                    <option value="公共选修课">公共选修课</option>
-                </select>
-            </div>
-            &nbsp;&nbsp;上课时间：
-            <div class="layui-inline" style="margin-top: 5px">
-                <input class="layui-input" id="teachDate" name="teachDate">
-            </div>
-            &nbsp;&nbsp;
-            <div class="layui-inline" style="margin-top: 5px">
-                <button class="layui-btn" data-type="search">搜索</button>
-                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+            <div class="layui-form-item">
+                课程名称：
+                <div class="layui-inline">
+                    <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+                </div>
+                &nbsp;&nbsp;课程性质：
+                <div class="layui-inline">
+                    <select id="courseType" name="courseType">
+                        <option value="">请选择</option>
+                        <option value="公共必修课">公共必修课</option>
+                        <option value="专业基础课">专业基础课</option>
+                        <option value="专业核心课">专业核心课</option>
+                        <option value="专业选修课">专业选修课</option>
+                        <option value="公共选修课">公共选修课</option>
+                    </select>
+                </div>
+                &nbsp;&nbsp;上课时间：
+                <div class="layui-inline">
+                    <input class="layui-input" id="teachDate" name="teachDate">
+                </div>
+                &nbsp;&nbsp;上课地点：
+                <div class="layui-inline">
+                    <input class="layui-input" name="teachAddr">
+                </div>
+                &nbsp;&nbsp;
+                <div class="layui-inline">
+                    <button class="layui-btn" data-type="search">搜索</button>
+                    <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                </div>
             </div>
         </div>
         <!-- 数据表格 -->
@@ -97,13 +103,18 @@
     </div>
 
     <div class="layui-container" style="width: 90%; display: none" id="editForm_container">
-        <h2 style="margin-top: 20px; font-weight: bold" align="center">理论课——课程质量评价表（督导同行用）</h2>
+
+        <h2 style="margin-top: 20px; font-weight: bold" align="center">理论课——课程教学质量评价表（督导同行用）</h2>
 
         <form class="layui-form" style="margin-top: 20px" action="" lay-filter="editForm" id="editForm">
 
             <input type="hidden" name="code"/>
             <input type="hidden" name="teacherCode"/>
+            <input type="hidden" name="teacher"/>
+            <input type="hidden" name="teacherCollege"/>
             <input type="hidden" name="courseCode"/>
+            <input type="hidden" name="courseName"/>
+            <input type="hidden" name="courseAttr"/>
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
             <input type="hidden" name="userUnit"/>
@@ -115,7 +126,7 @@
                 </tr>
                 <tr>
                     <td style="width: 50%">课程名称：<input type="text" name="courseName" class="layui-form-input2" style="width: 50%" readonly></td>
-                    <td>课程类型：<input type="text" name="courseType" class="layui-form-input2" style="width: 50%" readonly></td>
+                    <td>课程类型：<input type="text" name="courseAttr" class="layui-form-input2" style="width: 50%" readonly></td>
                 </tr>
                 <tr>
                     <td style="width: 50%">学生班级：<input type="text" name="stuClass" class="layui-form-input2" style="width: 50%"></td>
@@ -185,8 +196,8 @@
         </form>
     </div>
 
-    <!-- 编辑页面按钮 -->
-    <div class="layui-container" style="display: none;" id="teacherInfo_container">
+    <!-- 响应编辑页面的按钮 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="teacherInfo_container">
         <table>
             <tr>
                 <td align="left">

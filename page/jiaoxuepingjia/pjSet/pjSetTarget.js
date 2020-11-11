@@ -8,7 +8,7 @@ layui.use(['layer','element','table','form'], function(){
     var target_dataTable = table.render({
         id: "target_dataTable"
         ,elem : '#target_dataTable'
-        ,height : 470
+        ,height : 550
         ,url: requestUrl+'/getPjSetTargetList.do'
         ,response: {
             statusCode: 200 //规定成功的状态码，默认：0
@@ -25,9 +25,9 @@ layui.use(['layer','element','table','form'], function(){
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'targetCode', title: '编号', width:120}
-            ,{field: 'targetType', title: '类型', width:150}
-            ,{field: 'targetName', title: '名称', width:180}
-            ,{field: 'targetContent', title: '内容', width:450}
+            ,{field: 'targetType', title: '类型', width:150, sort: true}
+            ,{field: 'targetName', title: '名称', width:180, sort: true}
+            ,{field: 'targetContent', title: '内容', width:450, sort: true}
             ,{field: 'targetScore', title: '分值', width:120, sort: true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                     let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     if(data.isBindTemplate == 1){ //已绑定模板
@@ -41,8 +41,8 @@ layui.use(['layer','element','table','form'], function(){
                     return data.targetScore;
                 }
             }
-            // ,{field: 'createDate', title: '创建日期', width:150}
-            ,{fixed: 'right', width:250, align:'center', toolbar: '#target_bar'}
+            ,{field: 'createDate', title: '创建日期', width:180, sort: true}
+            ,{fixed: 'right', width:220, align:'center', toolbar: '#target_bar'}
         ]]
         ,done : function(res, curr, count) {
 
@@ -51,11 +51,11 @@ layui.use(['layer','element','table','form'], function(){
                 switch(obj.event){
                     case 'insert':
                         //
-                        let layIndex = layer.open({
+                        layer.open({
                             title : '教学评价-评教设置-指标'
                             ,type : 1
                             ,area : [ '700px', '450px' ]
-                            ,offset : '50px'
+                            ,offset : '100px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#target_editForm_container')
                             ,success: function(layero, index){
@@ -67,7 +67,7 @@ layui.use(['layer','element','table','form'], function(){
                                             if(result_data.code == 200){
                                                 target_dataTable.reload();//重新加载表格数据
                                             }
-                                            layer.close(layIndex);
+                                            layer.close(index);
                                         });
                                     },'json');
                                 });
@@ -89,7 +89,7 @@ layui.use(['layer','element','table','form'], function(){
                         title : '教学评价-评教设置-指标'
                         ,type : 1
                         ,area : [ '700px', '300px' ]
-                        ,offset : '50px'
+                        ,offset : '100px'
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#target_dataInfo_container')
                         ,success: function(layero, index){
@@ -124,11 +124,11 @@ layui.use(['layer','element','table','form'], function(){
                         return;
                     }
                     //执行编辑
-                    let layIndex = layer.open({
+                    layer.open({
                         title : '教学评价-评教设置-指标'
                         ,type : 1
                         ,area : [ '700px', '450px' ]
-                        ,offset : '50px'
+                        ,offset : '100px'
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#target_editForm_container')
                         ,success: function(layero, index){
@@ -155,12 +155,12 @@ layui.use(['layer','element','table','form'], function(){
                                         if(result_data.code == 200){
                                             target_dataTable.reload();//重新加载表格数据
                                         }
-                                        layer.close(layIndex);
+                                        layer.close(index);
                                     });
                                 },'json');
                             });
                         },end:function () {
-                            window.location.reload();//刷新页面，清空上传弹窗上传的文件内容
+
                         }
                     });
                 } else if (obj.event === 'delete') {
