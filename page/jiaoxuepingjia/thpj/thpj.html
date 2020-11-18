@@ -109,12 +109,15 @@
         <form class="layui-form" style="margin-top: 20px" action="" lay-filter="editForm" id="editForm">
 
             <input type="hidden" name="code"/>
+
             <input type="hidden" name="teacherCode"/>
             <input type="hidden" name="teacher"/>
             <input type="hidden" name="teacherCollege"/>
+
             <input type="hidden" name="courseCode"/>
             <input type="hidden" name="courseName"/>
             <input type="hidden" name="courseAttr"/>
+
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
             <input type="hidden" name="userUnit"/>
@@ -191,12 +194,11 @@
 
             <div class="layui-btn-container" align="center">
                 <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
     </div>
 
-    <!-- 响应编辑页面的按钮 -->
+    <!-- 响应编辑页面['教学研究','教学设计','教学效果']按钮
     <div class="layui-container" style="width: 90%; display: none;" id="teacherInfo_container">
         <table>
             <tr>
@@ -209,13 +211,19 @@
                 </td>
             </tr>
         </table>
+    </div> -->
+    <div class="layui-container" style="width: 90%; display: none;" id="relation_container">
+        <table class="layui-table" lay-filter="relation_datatable" id="relation_datatable" >
+            <!--<script type="text/html" id="relation_datatable_bar">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>
+            </script>-->
+        </table>
     </div>
-
 
     <script src="../../../js/layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
-    <script src="../../../js/echarts.js"></script>
+    <!--<script src="../../../js/echarts.js"></script>-->
     <script src="../../../js/global.js"></script>
     <script src="thpj.js"></script>
 </body>

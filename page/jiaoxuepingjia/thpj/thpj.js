@@ -146,7 +146,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             table.on('tool(datatable)', function(obj){
                 let rowData = obj.data;
                 if (obj.event === 'detail') {
-                    if(rowData.isPj == 2){
+                    if(rowData.isPj == 2){ //1是2否（即未评价，查看按钮不可点击）
                         return;
                     }
                     $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
@@ -182,17 +182,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,area : [ '1100px', '500px' ]
                                 ,offset : '30px' //只定义top坐标，水平保持居中
                                 ,shadeClose : true //点击遮罩关闭
-                                ,btn : ['教学研究','教学设计','教学效果','关闭']
+                                ,btn : ['教学设计','教学效果','关闭']
                                 ,yes: function(index, layero){
-                                    initTeacherBar('教学研究',rowData);
+                                    initRelationDatatable('教学设计',rowData);
                                     return false;
                                 }
                                 ,btn2: function(index, layero){
-                                    initTeacherBar('教学设计',rowData);
-                                    return false;
-                                }
-                                ,btn3: function(index, layero){
-                                    initTeacherBar('教学效果',rowData);
+                                    initRelationDatatable('教学效果',rowData);
                                     return false;
                                 }
                                 ,skin: 'demo-class'
@@ -217,8 +213,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',function (result_data) {
                         if(result_data.code == 200){
                             let data = result_data.data;
-
-                            var templateCode = '';
+                            let templateCode = '';
                             let html = '';
                             for (let i = 0; i < data.length; i++) {
                                 html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
@@ -245,7 +240,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 });
                                 $("input[name='totalScore']").val(totalScore);
                             });
-                            //
+
+                            ///////////////////////////////////////////////////////////////////////////////////////////////
+
                             layer.open({
                                 id: guid() //设定一个id，防止重复弹出
                                 ,title : '教学评价-课程质量评价'
@@ -253,17 +250,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,area : [ '1100px', '500px' ]
                                 ,offset : '50px' //只定义top坐标，水平保持居中
                                 ,shadeClose : true //点击遮罩关闭
-                                ,btn : ['教学研究','教学设计','教学效果','关闭']
+                                ,btn : ['教学设计','教学效果','关闭']
                                 ,yes: function(index, layero){
-                                    initTeacherBar('教学研究',rowData);
+                                    initRelationDatatable('教学设计',rowData);
                                     return false;
                                 }
                                 ,btn2: function(index, layero){
-                                    initTeacherBar('教学设计',rowData);
-                                    return false;
-                                }
-                                ,btn3: function(index, layero){
-                                    initTeacherBar('教学效果',rowData);
+                                    initRelationDatatable('教学效果',rowData);
                                     return false;
                                 }
                                 ,skin: 'demo-class'
@@ -338,7 +331,62 @@ layui.use(['layer','element','table','form','laydate'], function(){
         }
     });
 
-    //
+    var initRelationDatatable = function (menuName,rowData) {
+        $.get(requestUrl+'/jxpj_thpj/getTableCols.do',{
+            'tableName':'JXSJ_KCJXDG'
+        },function (result_data) {
+            //
+            if(result_data.code == 200){
+                //
+                let cols = new Array({type:'numbers', title:'序号', width:80, fixed: 'left'});
+                $.each(result_data.data,function (idx,obj) {
+                    cols.push({field: obj.COLUMN_NAME, title: obj.COMMENTS, width:150});
+                });
+                //
+                var layIdx = layer.open({
+                    title : ''
+                    ,type : 1
+                    ,shadeClose : true
+                    ,area : [ '1300px', '580px' ]
+                    ,offset : '50px'
+                    // ,btn:['关闭']
+                    ,content : $('#relation_container')
+                    ,success: function () {
+                        table.render({
+                            id: guid()
+                            ,elem : '#relation_datatable'
+                            ,height : 500
+                            ,url: requestUrl+'/jxpj_thpj/getTableDatas.do'
+                            ,where: {
+                                'viewName':'v_JXSJ_KCJXDG',
+                                'userId':rowData.teacherCode
+                            }
+                            ,response: {
+                                statusCode: 200 //规定成功的状态码，默认：0
+                            }
+                            ,parseData: function(res){ //res 即为原始返回的数据
+                                return {
+                                    "code": res.code, //解析接口状态
+                                    "msg": res.code, //解析提示文本
+                                    "data": res.data //解析数据列表
+                                };
+                            }
+                            ,cols : [cols]
+                            ,done : function(res, curr, count) {
+                                //监听行双击事件
+                                table.on('rowDouble(relation_datatable)', function(obj){
+                                    layer.msg(JSON.stringify(obj.data));
+                                });
+                            }
+                        });
+                    }
+                }); //layer.full(layIdx); //默认以最大化方式打开
+
+            };
+        },'json');
+    };
+
+    /*//
     var initTeacherBar = function (title,rowData) {
 
         let layIdx = layer.open({
@@ -350,6 +398,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             // ,btn:['关闭']
             ,content : $('#teacherInfo_container')
             ,success: function () {
+
                 //柱状图
                 var xAxisData = new Array()
                     ,seriesData = new Array();
@@ -479,9 +528,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                             // alert(JSON.stringify(colArr));
                             //
-                            var teacherInfo_datatable = table.render({
+                            var relation_datatable = table.render({
                                 id: guid()
-                                ,elem : '#teacherInfo_datatable'
+                                ,elem : '#relation_datatable'
                                 ,width: 900
                                 ,height : 500
                                 ,url: requestUrl+'/jxpj_thpj/getTeacherTabData.do'
@@ -510,6 +559,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 }; //datatable end.
             }
         });
-        layer.full(layIdx); //默认以最大化方式打开
-    }
+
+        // layer.full(layIdx); //默认以最大化方式打开
+    }*/
 });

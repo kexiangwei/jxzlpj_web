@@ -19,7 +19,7 @@ layui.use(['layer','element'], function(){
                 html += '<li class="layui-nav-item">\n' +
                     '        <a href="javascript:;"><i class="layui-icon '+item.icon+'" style="font-size: 20px;"></i>&nbsp;&nbsp;'+item.menuName+'<span class="layui-nav-more"></span></a>';
                 $.each(item.children,function(index,item2){ //教学团队
-                    if(item2.menuName == '教学团队' || item2.menuName == '教改项目'){
+                    if(item2.menuName == '教学团队' || item2.menuName == '教改项目' || item2.menuName == '同行评教'){
                         html += '<dl class="layui-nav-child"><dd><a href="javascript:;"><span class="l-line"></span>'+item2.menuName+'</a>';
                         $.each(item2.children,function(index,item3){
                             html += '<dl class="layui-nav-child"><dd><a class="site-demo-active" href="javascript:;" data-id="'+item3.menuId+'" data-title="'+item3.menuName+'" data-url="'+item3.url+'" data-type="tabAdd"><span class="l-line" style="margin-left: 52px"></span>'+item3.menuName+'</a></dd></dl>';
