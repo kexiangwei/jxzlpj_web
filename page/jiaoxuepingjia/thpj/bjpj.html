@@ -109,6 +109,7 @@
         <form class="layui-form" style="margin-top: 20px" action="" lay-filter="editForm" id="editForm">
 
             <input type="hidden" name="code"/>
+            <input type="hidden" name="templateCode"/>
 
             <input type="hidden" name="teacherCode"/>
             <input type="hidden" name="teacher"/>
@@ -161,12 +162,12 @@
                     <col>
                 </colgroup>
                 <thead>
-                    <tr>
-                        <th>评价指标</th>
-                        <th>指标内容</th>
-                        <th>分值</th>
-                        <th>打分</th>
-                    </tr>
+                <tr>
+                    <th>评价指标</th>
+                    <th>指标内容</th>
+                    <th>分值</th>
+                    <th>打分</th>
+                </tr>
                 </thead>
                 <tbody id="target"></tbody>
             </table>
@@ -200,13 +201,17 @@
 
     <!-- 响应编辑页面'教学设计','教学效果'按钮 -->
     <div class="layui-container" style="width: 90%; display: none;" id="relation_container">
-        <table class="layui-table" lay-filter="relation_datatable" id="relation_datatable" ></table>
+        <table class="layui-table" lay-filter="relation_datatable" id="relation_datatable" >
+            <!--<script type="text/html" id="relation_datatable_bar">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>                改为双击查看详情信息
+            </script>-->
+        </table>
     </div>
 
     <script src="../../../js/layui/layui.js"></script>
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>
     <script src="../../../js/global.js"></script>
-    <script src="thpj.js"></script>
+    <script src="bjpj.js"></script>
 </body>
 </html>

@@ -80,21 +80,26 @@ layui.use(['layer','element','table','form','laydate'], function(){
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
 
-            ,{field:'courseName', title:'课程名称', width:200, sort:true, event: 'courseName', templet: function (data) {
-                    let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+            ,{field:'courseName', title:'课程名称', width:180, sort:true, event: 'courseName', templet: function (data) {
+                    let html = '';
                     if(data.isPj == 2){
-                        html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                        html = '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                            '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+                        $('#datatable_bar').html(html);
+                        return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                     }
+                    html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                        '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
                     $('#datatable_bar').html(html);
-                    return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
-             }}
+                    return data.courseName;
+                }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
             ,{field:'teacher', title:'教师姓名', width:150, sort:true}
             ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
             ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
             ,{field:'teachDate', title:'上课时间', width:150, sort:true}
-            ,{field:'teachAddr', title:'上课地点', sort:true}
-            ,{fixed: 'right', width:100, align:'center', toolbar: '#datatable_bar'}
+            ,{field:'teachAddr', title:'上课地点', width:180, sort:true}
+            ,{fixed: 'right', title:'操作', align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -146,9 +151,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
             table.on('tool(datatable)', function(obj){
                 let rowData = obj.data;
                 if (obj.event === 'detail') {
-                    if(rowData.isPj == 2){ //1是2否（即未评价，查看按钮不可点击）
-                        return;
-                    }
                     $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
                         if(result_data.code == 200){
                             let data = result_data.data;
@@ -208,7 +210,127 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                     },'json');
 
+                } else if (obj.event === 'update') {
+
+                    $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
+                        if(result_data.code == 200){
+                            let data = result_data.data;
+                            var thpjItemList = data.thpjItemList;
+                            ////////////////////////////////////////////////////////////////////////////////////////////
+                            $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
+                                let data = result_data.data;
+                                let html = '';
+                                for (let i = 0; i < data.length; i++) {
+                                    html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
+                                    for (let j = 0; j < data[i].num; j++) {
+                                        let obj = data[i].targetList[j];
+                                        html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                                            '<td>'+obj.targetScore+'</td>\n' +
+                                            '<td><input type="text" id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                    }
+                                }
+                                html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
+                                    '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
+                                $('#target').html(html);
+                                //
+                                $.each(thpjItemList,function (idx,obj) {
+                                    $('input[name="'+obj.targetCode+'"]').val(obj.answer);
+                                });
+                                //
+                                let $inputs = $('.score');
+                                $inputs.keyup(function() {
+                                    let totalScore = 0;
+                                    $inputs.each(function(){
+                                        let value = parseInt($(this).val());
+                                        if(value.toString() != "NaN"){
+                                            totalScore += value;
+                                        }
+                                    });
+                                    $("input[name='totalScore']").val(totalScore);
+                                });
+                            },'json');
+                            ////////////////////////////////////////////////////////////////////////////////////////////
+                            layer.open({
+                                id: guid() //设定一个id，防止重复弹出
+                                ,title : '教学评价-课程质量评价'
+                                ,type : 1
+                                ,area : [ '1100px', '500px' ]
+                                ,offset : '30px' //只定义top坐标，水平保持居中
+                                ,shadeClose : true //点击遮罩关闭
+                                ,btn : ['教学设计','教学效果','关闭']
+                                ,yes: function(index, layero){
+                                    initRelationDatatable('教学设计',rowData);
+                                    return false;
+                                }
+                                ,btn2: function(index, layero){
+                                    initRelationDatatable('教学效果',rowData);
+                                    return false;
+                                }
+                                ,skin: 'demo-class'
+                                ,content : $('#editForm_container')
+                                ,success: function(layero, index){
+                                    /**
+                                     * 验证表单数据
+                                     */
+                                    form.verify({
+                                        score: function(value,item){ //value：表单的值、item：表单的DOM对象
+                                            if(parseInt($(item).attr('score')) < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                                return '超出预设分值范围';
+                                            }
+                                        },
+                                        totalScore: function(value,item){ //value：表单的值、item：表单的DOM对象
+                                            if(100 < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                                return '超出预设分值范围';
+                                            }
+                                        }
+                                    });
+                                    //
+                                    form.val("editForm",data);
+                                    //
+                                    //监听表单提交
+                                    form.on('submit(toSubmitEidtForm)', function(data){
+                                        //只有本次评分在90分及以上才进行优秀率校验
+                                        /*if(100 >= 90){
+                                            $.get(requestUrl+'/jxpj_thpj/isFull.do' , {'userId': data.field.userId}, function(result_data){
+                                                if(result_data.code == 200 && result_data.data == 2){ //优秀名额已满
+                                                    layer.confirm("优秀率超过30%，是否对本学期被评课程进行调整？", { offset: '100px'},{
+                                                        btn: ['确认', '取消']
+                                                    }, function () {
+                                                        layer.closeAll();
+                                                    }, function(){
+                                                        layer.msg('取消');
+                                                    });
+                                                    return false;
+                                                }
+                                            });
+                                        }*/
+
+                                        //执行提交操作
+                                        var formData = data.field;
+                                        formData.jsonStr = JSON.stringify(formData);
+                                        $.post(requestUrl+'/jxpj_thpj/update.do' ,formData ,function(result_data){
+                                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                if(result_data.code == 200){
+                                                    datatable.reload();//重新加载表格数据
+                                                }
+                                                layer.close(index);
+                                            });
+                                        },'json');
+
+                                    });
+                                }
+                                ,end:function () {
+                                    $('#editForm')[0].reset(); //清空表单数据
+                                    form.render();
+                                }
+                            });
+                        }
+                    },'json');
+
                 } else if (obj.event === 'courseName') {
+                    if(rowData.isPj != 2){
+                        return false;
+                    }
                     //
                     $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',function (result_data) {
                         if(result_data.code == 200){
@@ -294,6 +416,23 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
+                                        //只有本次评分在90分及以上才进行优秀率校验
+                                        if(100 >= 90){
+                                            $.get(requestUrl+'/jxpj_thpj/isFull.do' , {'userId': data.field.userId}, function(result_data){
+                                                if(result_data.code == 200 && result_data.data == 2){ //优秀名额已满
+                                                    layer.confirm("优秀率超过30%，是否对本学期被评课程进行调整？", { offset: '100px'},{
+                                                        btn: ['确认', '取消']
+                                                    }, function () {
+                                                        layer.closeAll();
+                                                    }, function(){
+                                                        layer.msg('取消');
+                                                    });
+                                                    return false;
+                                                }
+                                            });
+                                        }
+
+                                        //执行提交操作
                                         var formData = data.field;
                                         formData.templateCode = templateCode;
                                         formData.jsonStr = JSON.stringify(formData);
@@ -305,6 +444,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                                 layer.close(index);
                                             });
                                         },'json');
+
                                     });
                                 }
                                 ,cancel: function(index, layero){
@@ -327,10 +467,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
         }
     });
 
-    function renderTime(date) {
-        return
-    }
-
     var initRelationDatatable = function (menuName,rowData) {
         $.get(requestUrl+'/common/getTableCols.do',{
             'tableName':'JXSJ_KCJXDG'
@@ -342,10 +478,10 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 $.each(result_data.data,function (idx,obj) {
                     let col = {field: obj.COLUMN_NAME, title: obj.COMMENTS, width:150, align:'center'};
                     if(obj.COLUMN_NAME == 'CREATE_DATE'){
-                         col = {field:'CREATE_DATE', title:'录入时间', width:180, align:'center', sort:true, templet: function (data) {
-                                 return new Date(+new Date(new Date(data.CREATE_DATE).toJSON()) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
+                        col = {field:'CREATE_DATE', title:'录入时间', width:180, align:'center', sort:true, templet: function (data) {
+                                return new Date(+new Date(new Date(data.CREATE_DATE).toJSON()) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '');
                             }
-                         }
+                        }
                     }
                     cols.push(col);
                 });
@@ -387,7 +523,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             }
                         });
                     }
-                });
+                }); //layer.full(layIdx); //默认以最大化方式打开
+
             };
         },'json');
     };
