@@ -84,21 +84,28 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     let html = '';
                     if(data.isPj == 2){
                         html = '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看</a>' +
-                            '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+                            '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-edit"></i>编辑</a>' +
+                            '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-ok"></i>提交</a>';
                         $('#datatable_bar').html(html);
                         return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
+                    } else {
+                        html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                            '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+                        if(data.isSubmit == 1){
+                            html += '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        } else {
+                            html += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        }
+                        $('#datatable_bar').html(html);
+                        return data.courseName;
                     }
-                    html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
-                        '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
-                    $('#datatable_bar').html(html);
-                    return data.courseName;
                 }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
             ,{field:'teacher', title:'教师姓名', width:150, sort:true}
             ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
             ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
             ,{field:'teachDate', title:'上课时间', width:150, sort:true}
-            ,{field:'teachAddr', title:'上课地点', width:180, sort:true}
+            ,{field:'teachAddr', title:'上课地点', width:150, sort:true}
             ,{fixed: 'right', title:'操作', align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
@@ -289,21 +296,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     //
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        //只有本次评分在90分及以上才进行优秀率校验
-                                        /*if(100 >= 90){
-                                            $.get(requestUrl+'/jxpj_thpj/isFull.do' , {'userId': data.field.userId}, function(result_data){
-                                                if(result_data.code == 200 && result_data.data == 2){ //优秀名额已满
-                                                    layer.confirm("优秀率超过30%，是否对本学期被评课程进行调整？", { offset: '100px'},{
-                                                        btn: ['确认', '取消']
-                                                    }, function () {
-                                                        layer.closeAll();
-                                                    }, function(){
-                                                        layer.msg('取消');
-                                                    });
-                                                    return false;
-                                                }
-                                            });
-                                        }*/
 
                                         //执行提交操作
                                         var formData = data.field;
@@ -327,8 +319,37 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                     },'json');
 
+                } else if (obj.event === 'submit') {
+                    //只有本次评分在90分及以上才进行优秀率校验
+                    if(rowData.isTop == 1){
+                        $.get(requestUrl+'/jxpj_thpj/isTopFull.do' , {'userId': $.cookie('userId')}, function(result_data){
+                            if(result_data.code == 200 && result_data.data == 1){ //优秀名额已满
+                                layer.msg('优秀率超过30%，需对本学期被评课程进行调整', {offset: '100px'});
+                                return false;
+                            } else {
+                                //执行提交操作
+                                $.get(requestUrl+'/jxpj_thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
+                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                        if(result_data.code == 200){
+                                            datatable.reload();//重新加载表格数据
+                                        }
+                                    });
+                                });
+                            }
+                        });
+                    } else {
+                        //执行提交操作
+                        $.get(requestUrl+'/jxpj_thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
+                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                if(result_data.code == 200){
+                                    datatable.reload();//重新加载表格数据
+                                }
+                            });
+                        });
+                    }
+
                 } else if (obj.event === 'courseName') {
-                    if(rowData.isPj != 2){
+                    if(rowData.isPj == 1){
                         return false;
                     }
                     //
@@ -416,22 +437,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
-                                        //只有本次评分在90分及以上才进行优秀率校验
-                                        if(100 >= 90){
-                                            $.get(requestUrl+'/jxpj_thpj/isFull.do' , {'userId': data.field.userId}, function(result_data){
-                                                if(result_data.code == 200 && result_data.data == 2){ //优秀名额已满
-                                                    layer.confirm("优秀率超过30%，是否对本学期被评课程进行调整？", { offset: '100px'},{
-                                                        btn: ['确认', '取消']
-                                                    }, function () {
-                                                        layer.closeAll();
-                                                    }, function(){
-                                                        layer.msg('取消');
-                                                    });
-                                                    return false;
-                                                }
-                                            });
-                                        }
-
                                         //执行提交操作
                                         var formData = data.field;
                                         formData.templateCode = templateCode;
