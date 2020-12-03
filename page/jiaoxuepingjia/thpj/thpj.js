@@ -81,12 +81,15 @@ layui.use(['layer','element','table','form','laydate'], function(){
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
 
             ,{field:'courseName', title:'课程名称', width:200, sort:true, event: 'courseName', templet: function (data) {
-                    let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                    let html = '';
                     if(data.isPj == 2){
                         html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                        $('#datatable_bar').html(html);
+                        return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                     }
+                    html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     $('#datatable_bar').html(html);
-                    return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
+                    return data.courseName;
              }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
             ,{field:'teacher', title:'教师姓名', width:150, sort:true}
@@ -209,6 +212,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     },'json');
 
                 } else if (obj.event === 'courseName') {
+                    if(rowData.isPj == 1){
+                        return false;
+                    }
                     //
                     $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',function (result_data) {
                         if(result_data.code == 200){
