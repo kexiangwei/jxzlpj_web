@@ -30,7 +30,7 @@ layui.use(['layer','table','form'], function(){
                     ,content: '<div style="padding: 50px; line-height: 50px; background-color: lightslategray; color: #fff; font-weight: 300;">' +
                         '1.您的评价对于提高老师的教学能力非常有帮助。<br/>' +
                         '2.您的评价结果占教师教学质量评价结果的40%。<br/>' +
-                        '3.您的评价为匿名评价，请根据实际情况给课程排序。<br/>' +
+                        '3.您的评价为匿名评价，请选择您认为最贴近实际情况的选项。<br/>' +
                         '4.谢谢您对学校教学工作的支持与配合。<br/>' +
                         '</div>'
                 });
@@ -115,9 +115,6 @@ layui.use(['layer','table','form'], function(){
                             if (obj.event === 'view') {
                                 layer.msg('查看评教', {time : 3000, offset: '100px'});
                             } else  if (obj.event === 'pj') {
-
-                                var datas = result_data.data
-                                    ,currentIndex = 0;
                                 //
                                 layer.open({
                                     id: guid()
@@ -125,66 +122,64 @@ layui.use(['layer','table','form'], function(){
                                     ,type : 1
                                     ,area : [ '900px', '500px' ]
                                     ,offset : '50px'
-                                    ,btn: ['上一步', '下一步']
-                                    ,yes: function(){
-                                        if(currentIndex > 0){
-                                            currentIndex -= 1;
-                                            layer.msg('上一步'+currentIndex);
-                                            let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                                '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
-                                                '</div>';
-                                            $("#editForm").html(html);
-                                        }
-                                    }
-                                    ,btn2: function(){
-                                        if(currentIndex < datas.length - 1){
-                                            currentIndex += 1;
-                                            layer.msg('下一步'+currentIndex);
-                                            let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                                '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
-                                                '</div>';
-                                            $("#editForm").html(html);
-                                        } else if(currentIndex < datas.length){
-                                            currentIndex += 1;
-                                            //课程信息列表
-
-                                            //最喜欢的教师
-                                            let html = '<div class="layui-form-item" style="margin-top: 20px;">\n' +
-                                                '          <div class="layui-inline">\n' +
-                                                '             <label class="layui-form-label" style="width: 100px;">最喜欢的教师：</label>\n' +
-                                                '             <div class="layui-input-inline">\n' +
-                                                '                <select name="level2" lay-filter="level2"></select>\n' +
-                                                '             </div>\n' +
-                                                '           </div>\n' +
-                                                '       </div>';
-                                            // 初始化获得奖项下拉选项
-                                            $.get(requestUrl+'/optionset/getOptionSetList.do',{
-                                                'menuId': 62,
-                                                'attr': 'level2'
-                                            },function(result_data){
-                                                if(result_data.code == 200){
-                                                    if(result_data.data.length >0){
-                                                        initSelect('请选择','level2',result_data.data);
-                                                        form.render('select');
-                                                    }
-                                                }
-                                            },'json');
-                                            //
-                                            html += '<div class="layui-btn-container" style="margin-top: 20px" align="center">\n' +
-                                                '       <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
-                                                '    </div>';
-                                            $("#editForm").html(html);
-                                        }
-                                        return false;
-                                    }
                                     ,content : $('#editForm_container')
                                     ,success: function(layero, index){
-
-                                        let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                            '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
-                                            '</div>';
+                                        var templateCode;
+                                        var html = '';
+                                        $.each(result_data.data,function(idx,obj){
+                                            templateCode = obj.templateCode;
+                                            html += ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
+                                                (parseInt(idx)+1)+'，'+obj.targetContent+'<br/>' +
+                                                // '            <div class="layui-input-block">\n' +
+                                                '                <input type="radio" name="'+obj.targetCode+'" value="非常同意" title="非常同意">\n' +
+                                                '                <input type="radio" name="'+obj.targetCode+'" value="比较同意" title="比较同意">\n' +
+                                                '                <input type="radio" name="'+obj.targetCode+'" value="一般" title="一般">\n' +
+                                                '                <input type="radio" name="'+obj.targetCode+'" value="不太同意" title="不太同意">\n' +
+                                                '                <input type="radio" name="'+obj.targetCode+'" value="不同意" title="不同意">\n' +
+                                                // '            </div>\n' +
+                                                '        </div>';
+                                        });
+                                        html += '<textarea name="suggest" placeholder="您对本课程的建议" class="layui-textarea"></textarea>';
+                                        html += '<div class="layui-btn-container" style="margin-top: 20px" align="center">\n' +
+                                            '       <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
+                                            '    </div>';
                                         $("#editForm").html(html);
+                                        form.render('radio'); //刷新radio单选框框渲染
 
+                                        //自定义验证规则
+                                        form.verify({
+                                            target: function(value,element){
+                                                let num = 0;
+                                                if(!$(element).find(".layui-form-radio").hasClass("layui-form-radioed")){ //若有未选择的指标项
+                                                    $.each(result_data.data,function(idx,obj){
+                                                        if(!$("input[name="+obj.targetCode+"]").is(":checked")){ //则遍历出是哪一道题
+                                                            num = (parseInt(idx)+1);
+                                                            return false;//跳出循环
+                                                        }
+                                                    });
+                                                    return '您第'+num+'个问题没有回答';
+                                                }
+                                            }
+                                        });
+
+                                        //监听表单提交
+                                        form.on('submit(toSubmitEidtForm)', function(data){
+                                            $.post(requestUrl+'/xspj/insert.do' ,{
+                                                "courseCode" : obj.data.courseCode,
+                                                "templateCode" : templateCode
+                                                ,'userId':$.cookie('userId')
+                                                ,'userName':$.cookie('userName')
+                                                ,'userUnit':$.cookie('userUnit')
+                                                ,'jsonStr':JSON.stringify(data.field)
+                                            } ,function(result_data){
+                                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                    if(result_data.code == 200){
+                                                        datatable.reload();//重新加载表格数据
+                                                    }
+                                                    layer.close(index);
+                                                });
+                                            },'json');
+                                        });
                                     }
                                     ,cancel: function(index, layero){
                                         layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
@@ -200,8 +195,8 @@ layui.use(['layer','table','form'], function(){
 
             }
         },'json');
-
     } else{
+
         //数据表格
         let datatable = table.render({
             id: guid() //设定一个id，防止重复弹出
