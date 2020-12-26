@@ -39,13 +39,10 @@ layui.use(['layer','table','form'], function(){
                 let datatable = table.render({
                     id: guid() //设定一个id，防止重复弹出
                     ,elem : '#datatable'
-                    ,height : 580
-                    ,url: requestUrl+'/xspj/getPageList.do'
+                    ,height : 600
+                    ,url: requestUrl+'/getPjSetTemplateList.do'
                     ,where:{
-                        "accountType":accountType,
-                        "userId":function () {
-                            return $.cookie('userId');
-                        }
+                        "templateType": '学生评教'
                     }
                     ,request: {
                         pageName: 'pageIndex'
@@ -64,19 +61,19 @@ layui.use(['layer','table','form'], function(){
                     }
                     ,cols : [[ //表头
                         {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field:'courseName', title:'课程名称', width:180, sort:true, templet: function (data) {
-                                let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看</a>';
-                                if(data.isPj === 2){
-                                    html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="pj">评教</a>';
+                        ,{field: 'templateName', title: '名称'}
+                        ,{field: 'startDate', title: '开始时间', width:200}
+                        ,{field: 'endDate', title: '结束时间', width:200, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                                let html = '';
+                                if(data.isActive === 1){
+                                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">评教</a>';
+                                } else {
+                                    html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">评教</a>';
                                 }
                                 $('#datatable_bar').html(html);
-                                return data.courseName;
-                            }}
-                        ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                        ,{field:'stuScore', title:'学分', width:150, sort:true}
-                        ,{field:'stuHour', title:'学时', width:150, sort:true}
-                        ,{field:'majorName', title:'适用专业', width:180, sort:true}
-                        ,{field:'collegeName', title:'开课学院', width:180, sort:true}
+                                return data.endDate;
+                            }
+                        }
                         ,{fixed: 'right', width:80, align:'center', toolbar: '#datatable_bar'}
                     ]]
                     ,even: true //隔行背景
@@ -89,32 +86,9 @@ layui.use(['layer','table','form'], function(){
                     }
                     ,done : function(res, curr, count) {
 
-                        //监听搜索框事件
-                        $('.search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
-                        let active = {
-                            search: function(){
-                                datatable.reload({
-                                    where: {
-                                        'courseName': $(".search input[ name='courseName']").val()
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
-                            }
-                            ,reset: function () {
-                                $(".search input").val('');
-                            }
-                        };
-
                         //监听右侧工具条
                         table.on('tool(datatable)', function(obj){
-                            if (obj.event === 'view') {
-                                layer.msg('查看评教', {time : 3000, offset: '100px'});
-                            } else  if (obj.event === 'pj') {
+                            if (obj.event === 'pj') {
 
                                 var datas = result_data.data
                                     ,currentIndex = 0;
@@ -129,7 +103,7 @@ layui.use(['layer','table','form'], function(){
                                     ,yes: function(){
                                         if(currentIndex > 0){
                                             currentIndex -= 1;
-                                            layer.msg('上一步'+currentIndex);
+                                            // layer.msg('上一步'+currentIndex);
                                             let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
                                                 '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                                 '</div>';
@@ -139,7 +113,7 @@ layui.use(['layer','table','form'], function(){
                                     ,btn2: function(){
                                         if(currentIndex < datas.length - 1){
                                             currentIndex += 1;
-                                            layer.msg('下一步'+currentIndex);
+                                            // layer.msg('下一步'+currentIndex);
                                             let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
                                                 '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                                 '</div>';
