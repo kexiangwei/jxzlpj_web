@@ -2,7 +2,7 @@
     let $ = layui.$, layer = layui.layer, form = layui.form;
 
     //获取图形验证码
-    let getCaptcha = function () {
+    (function () {
         $.ajax({
             url:requestUrl+'/getCaptcha.do',
             type:'get',
@@ -55,8 +55,7 @@
                 layer.msg('网络连接失败！', {time : 3000, offset: '100px'});
             }
         });
-    };
-    getCaptcha();
+    })();
     $("img").click(function(){
         getCaptcha();
     });
