@@ -100,7 +100,7 @@ layui.use(['layer','element'], function(){
             });*/
         },
         error:function () {
-            layer.msg("页面加载错误！", {time : 3000, offset: '100px'});
+            layer.msg("页面加载错误", {time : 3000, offset: '100px'});
         }
     });
 });
