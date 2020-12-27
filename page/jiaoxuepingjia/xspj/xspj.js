@@ -12,7 +12,7 @@ layui.use(['layer','table','form','transfer'], function(){
             if(result_data.code != 200){ //是否评教时间
                 layer.msg('评教功能暂未开放', {time : 3000, offset: '100px'});
                 return;
-            } else {
+            } /*else {
                 //显示评教要求
                 layer.open({
                     id: guid() //设定一个id，防止重复弹出
@@ -32,7 +32,7 @@ layui.use(['layer','table','form','transfer'], function(){
                         '4.谢谢您对学校教学工作的支持与配合。<br/>' +
                         '</div>'
                 });
-            }
+            }*/
 
             //数据表格
             let datatable = table.render({
@@ -91,6 +91,7 @@ layui.use(['layer','table','form','transfer'], function(){
                             //根据userId 获取本学期课程及授课教师信息
                             $.get(requestUrl+'/xspj/getPjInfoTransferData.do', { 'userId': $.cookie('userId') }, function(result_data2){
                                 if(result_data2.code == 200){
+                                    //提取穿梭框初始数据
                                     var transferData = new Array();
                                     $.each(result_data2.data,function (idx,obj) {
                                         transferData.push({
@@ -101,6 +102,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                     //
                                     var datas = result_data.data
                                         ,currentIndex = 0;
+                                    var transferDataArr = [] //待选列表集合
+                                        ,transferSelectedDataArr = [];  //已选列表集合
                                     layer.open({
                                         id: guid()
                                         ,title : '教学评价-学生评教'
@@ -112,6 +115,19 @@ layui.use(['layer','table','form','transfer'], function(){
                                             if(currentIndex >= 0 ){
                                                 //
                                                 if(currentIndex <= datas.length){
+                                                    let getData = transfer.getData('demo_'+currentIndex);
+                                                    if (getData.length != transferData.length ){
+                                                        layer.msg("本题您还没有完成！");
+                                                        return false;
+                                                    } else {
+                                                        transferDataArr[currentIndex] = getData;
+                                                        //
+                                                        let tempArr = [];
+                                                        getData.forEach(obj => {
+                                                            tempArr.push(obj.value);
+                                                        });
+                                                        transferSelectedDataArr[currentIndex] = tempArr;
+                                                    }
 //
                                                     if(currentIndex > 0 ){
                                                         currentIndex -= 1;
@@ -126,7 +142,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                                         id: 'demo_'+ currentIndex //定义索引
                                                         , elem: '#test_'+ currentIndex
                                                         ,title: ['初始排序', '已选排序']  //自定义标题
-                                                        ,data: transferData
+                                                        ,data: transferDataArr[currentIndex]
+                                                        ,value: transferSelectedDataArr[currentIndex]
                                                         ,width: 320 //定义宽度
                                                         ,height: 280 //定义高度
                                                     });
@@ -139,6 +156,19 @@ layui.use(['layer','table','form','transfer'], function(){
                                         }
                                         ,btn2: function(){
                                             if(currentIndex < datas.length - 1){
+                                                let getData = transfer.getData('demo_'+currentIndex);
+                                                if (getData.length != transferData.length ){
+                                                    layer.msg("本题您还没有完成！");
+                                                    return false;
+                                                } else {
+                                                    transferDataArr[currentIndex] = getData;
+                                                    //
+                                                    let tempArr = [];
+                                                    getData.forEach(obj => {
+                                                        tempArr.push(obj.value);
+                                                    });
+                                                    transferSelectedDataArr[currentIndex] = tempArr;
+                                                }
                                                 currentIndex += 1;
                                                 layer.msg('下一步'+currentIndex);
                                                 let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
@@ -150,7 +180,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     id: 'demo_'+ currentIndex //定义索引
                                                     , elem: '#test_'+ currentIndex
                                                     ,title: ['初始排序', '已选排序']  //自定义标题
-                                                    ,data: transferData
+                                                    ,data: transferDataArr[currentIndex] != null ? transferDataArr[currentIndex] : transferData
+                                                    ,value: transferSelectedDataArr[currentIndex]
                                                     ,width: 320 //定义宽度
                                                     ,height: 280 //定义高度
                                                 })
@@ -213,11 +244,8 @@ layui.use(['layer','table','form','transfer'], function(){
 
                                                 //监听提交
                                                 form.on('submit(toSubmitEidtForm)', function(formData){
-                                                    //获得右侧数据
-                                                    var transferDataArrList = new Array();
-                                                    for (let i = 0; i < datas.length; i++) {
-                                                        transferDataArrList.push(transfer.getData('demo_'+i));
-                                                    }
+                                                    alert(JSON.stringify(transferDataArr));
+                                                    alert(JSON.stringify(transferSelectedDataArr));
                                                 });
                                             }
                                             return false;
@@ -235,6 +263,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 , elem: '#test_0'
                                                 ,title: ['初始排序', '已选排序']  //自定义标题
                                                 ,data: transferData
+                                                // ,value: ["1111110101", "1111110102"] 默认摆放顺序以data 属性值的顺序为依据
                                                 ,width: 320 //定义宽度
                                                 ,height: 280 //定义高度
                                             })
