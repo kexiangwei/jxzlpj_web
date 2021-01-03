@@ -244,8 +244,26 @@ layui.use(['layer','table','form','transfer'], function(){
 
                                                 //监听提交
                                                 form.on('submit(toSubmitEidtForm)', function(formData){
-                                                    alert(JSON.stringify(transferDataArr));
-                                                    alert(JSON.stringify(transferSelectedDataArr));
+                                                    // alert(JSON.stringify(transferDataArr));
+                                                    // alert(JSON.stringify(transferSelectedDataArr));
+
+                                                    $.ajax({
+                                                        url: requestUrl+'/xspj/insertBjpj.do',
+                                                        type: 'POST',
+                                                        async: false,
+                                                        dataType: "json",
+                                                        data: {
+                                                            'userId': '112233',
+                                                            'templateCode': '123',
+                                                            'courseCodes': JSON.stringify(transferSelectedDataArr)
+                                                        },
+                                                        success: function (result_data) {
+                                                            alert(result_data.msg);
+                                                        },
+                                                        error: function (result_data) {
+                                                            alert(result_data.msg);
+                                                        }
+                                                    });
                                                 });
                                             }
                                             return false;
