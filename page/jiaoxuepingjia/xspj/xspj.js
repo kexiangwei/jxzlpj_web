@@ -160,13 +160,10 @@ layui.use(['layer','table','form'], function(){
                                     });
 
                                     //监听表单提交
-                                    form.on('submit(toSubmitEidtForm)', function(data){ // alert(JSON.stringify(data.field));
-                                        let suggest = data.field.suggest;
-                                        delete data.field.suggest; //JS 删除对象中的某个属性
+                                    form.on('submit(toSubmitEidtForm)', function(data){
                                         $.post(requestUrl+'/xspj/insert.do' ,{
-                                            "templateCode" : result_data.data[0].templateCode
-                                            ,"courseCode" : obj.data.courseCode
-                                            ,"suggest" : suggest
+                                            "courseCode" : obj.data.courseCode
+                                            ,"templateCode" : result_data.data[0].templateCode
                                             ,'userId':$.cookie('userId')
                                             ,'userName':$.cookie('userName')
                                             ,'jsonString':JSON.stringify(data.field)
