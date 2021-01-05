@@ -103,7 +103,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                     var datas = result_data.data
                                         ,currentIndex = 0;
                                     var transferDataArr = [] //待选列表集合
-                                        ,transferSelectedDataArr = [];  //已选列表集合
+                                        ,transferSelectedData = [] //已选列表集合
+                                        ,transferSelectedDataArr = []; //发送到后台的
                                     layer.open({
                                         id: guid()
                                         ,title : '教学评价-学生评教'
@@ -115,6 +116,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             if(currentIndex >= 0 ){
                                                 //
                                                 if(currentIndex <= datas.length){
+
                                                     let getData = transfer.getData('demo_'+currentIndex);
                                                     if (getData.length != transferData.length ){
                                                         layer.msg("本题您还没有完成！");
@@ -126,9 +128,15 @@ layui.use(['layer','table','form','transfer'], function(){
                                                         getData.forEach(obj => {
                                                             tempArr.push(obj.value);
                                                         });
-                                                        transferSelectedDataArr[currentIndex] = tempArr;
+                                                        transferSelectedData[currentIndex] = tempArr;
+                                                        let tempObj = {
+                                                            'targetCode': datas[currentIndex].targetCode,
+                                                            'targetScore': datas[currentIndex].targetScore,
+                                                            'arr': tempArr
+                                                        };
+                                                        transferSelectedDataArr[currentIndex] = tempObj;
                                                     }
-//
+                                                    ////////////////////////////////////////////////////////////////////
                                                     if(currentIndex > 0 ){
                                                         currentIndex -= 1;
                                                     }
@@ -137,13 +145,14 @@ layui.use(['layer','table','form','transfer'], function(){
                                                         '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                                         '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
                                                     $("#editForm").html(html);
+
                                                     //
                                                     transfer.render({
                                                         id: 'demo_'+ currentIndex //定义索引
                                                         , elem: '#test_'+ currentIndex
                                                         ,title: ['初始排序', '已选排序']  //自定义标题
                                                         ,data: transferDataArr[currentIndex]
-                                                        ,value: transferSelectedDataArr[currentIndex]
+                                                        ,value: transferSelectedData[currentIndex]
                                                         ,width: 320 //定义宽度
                                                         ,height: 280 //定义高度
                                                     });
@@ -155,6 +164,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                             }
                                         }
                                         ,btn2: function(){
+                                            let code = new Date().getTime(); //初始化业务数据编号
+                                            //
                                             if(currentIndex < datas.length - 1){
                                                 let getData = transfer.getData('demo_'+currentIndex);
                                                 if (getData.length != transferData.length ){
@@ -167,7 +178,13 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     getData.forEach(obj => {
                                                         tempArr.push(obj.value);
                                                     });
-                                                    transferSelectedDataArr[currentIndex] = tempArr;
+                                                    transferSelectedData[currentIndex] = tempArr;
+                                                    let tempObj = {
+                                                        'targetCode': datas[currentIndex].targetCode,
+                                                        'targetScore': datas[currentIndex].targetScore,
+                                                        'arr': tempArr
+                                                    };
+                                                    transferSelectedDataArr[currentIndex] = tempObj;
                                                 }
                                                 currentIndex += 1;
                                                 layer.msg('下一步'+currentIndex);
@@ -181,7 +198,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     , elem: '#test_'+ currentIndex
                                                     ,title: ['初始排序', '已选排序']  //自定义标题
                                                     ,data: transferDataArr[currentIndex] != null ? transferDataArr[currentIndex] : transferData
-                                                    ,value: transferSelectedDataArr[currentIndex]
+                                                    ,value: transferSelectedData[currentIndex]
                                                     ,width: 320 //定义宽度
                                                     ,height: 280 //定义高度
                                                 })
@@ -224,7 +241,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     '          <div class="layui-inline">\n' +
                                                     '             <label class="layui-form-label" style="width: 100px;">最喜欢的教师：</label>\n' +
                                                     '             <div class="layui-input-inline">\n' +
-                                                    '                <select name="teacherNames" lay-filter="teacherNames"></select>\n' +
+                                                    '                <select id="preferTeacher" name="preferTeacher" lay-filter="preferTeacher"></select>\n' +
                                                     '             </div>\n' +
                                                     '           </div>\n' +
                                                     '       </div>';
@@ -239,23 +256,23 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 $.each(result_data2.data,function (idx,obj) {
                                                     html2 += '<option value="' + obj.teacherCode + '" >' + obj.teacherName + '</option>';
                                                 });
-                                                $("select[name='teacherNames']").empty().append(html2);
+                                                $("select[name='preferTeacher']").empty().append(html2);
                                                 form.render('select');
 
                                                 //监听提交
                                                 form.on('submit(toSubmitEidtForm)', function(formData){
-                                                    // alert(JSON.stringify(transferDataArr));
-                                                    // alert(JSON.stringify(transferSelectedDataArr));
 
                                                     $.ajax({
                                                         url: requestUrl+'/xspj/insertBjpj.do',
                                                         type: 'POST',
-                                                        async: false,
                                                         dataType: "json",
                                                         data: {
-                                                            'userId': '112233',
-                                                            'templateCode': '123',
-                                                            'courseCodes': JSON.stringify(transferSelectedDataArr)
+                                                            'code': code,
+                                                            'templateCode': obj.data.templateCode,
+                                                            'transferSelectedDataArr': JSON.stringify(transferSelectedDataArr),
+                                                            'preferTeacher': $("#preferTeacher").val(),
+                                                            'userId': $.cookie('userId'),
+                                                            'userName': $.cookie('userName')
                                                         },
                                                         success: function (result_data) {
                                                             alert(result_data.msg);
@@ -264,6 +281,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                             alert(result_data.msg);
                                                         }
                                                     });
+
                                                 });
                                             }
                                             return false;
