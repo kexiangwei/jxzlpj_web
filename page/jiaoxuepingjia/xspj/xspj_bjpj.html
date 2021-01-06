@@ -27,6 +27,22 @@
         </form>
     </div>
 
+    <!-- 填写评教意见 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="suggest_container">
+        <form class="layui-form" action="" lay-filter="suggestForm" id="suggestForm">
+            <div class="layui-form-item layui-form-text" style="margin-top: 20px;">
+                <div class="layui-input-block" style="margin-left: 50px;">
+                    <textarea id="suggest" name="suggest" class="layui-textarea" style="width: 500px; height: 150px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" align="center">
+                    <button class="layui-btn" lay-submit="" lay-filter="toSubmitSuggestForm" id="toSubmitSuggestForm">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!--教师查看学生评教-->
     <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
 

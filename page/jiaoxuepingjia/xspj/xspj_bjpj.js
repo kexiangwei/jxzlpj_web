@@ -41,7 +41,10 @@ layui.use(['layer','table','form','transfer'], function(){
                 ,height : 600
                 ,url: requestUrl+'/getPjSetTemplateList.do'
                 ,where:{
-                    "templateType": '学生评教'
+                    "templateType": '学生评教',
+                    "userId":function () {
+                        return $.cookie('userId');
+                    }
                 }
                 ,request: {
                     pageName: 'pageIndex'
@@ -65,7 +68,11 @@ layui.use(['layer','table','form','transfer'], function(){
                     ,{field: 'endDate', title: '结束时间', width:200, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                             let html = '';
                             if(data.isActive === 1){
-                                html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">评教</a>';
+                                if(data.isPj === 1){
+                                    html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">已评</a>';
+                                } else {
+                                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">评教</a>';
+                                }
                             } else {
                                 html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">评教</a>';
                             }
@@ -105,6 +112,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                     var transferDataArr = [] //待选列表集合
                                         ,transferSelectedData = [] //已选列表集合
                                         ,transferSelectedDataArr = []; //发送到后台的
+                                    var code = new Date().getTime(); //初始化业务数据编号
                                     layer.open({
                                         id: guid()
                                         ,title : '教学评价-学生评教'
@@ -201,7 +209,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             }
                                         }
                                         ,btn2: function(){ layer.msg('下一步'+currentIndex);
-                                            let code = new Date().getTime(); //初始化业务数据编号
+
                                             //
                                             if(currentIndex < datas.length - 1){
                                                 let getData = transfer.getData('demo_'+currentIndex);
@@ -263,7 +271,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 //课程信息列表
                                                 let html = '<table class="layui-table" id="course_datatable" lay-filter="course_datatable">\n' +
                                                     '           <script type="text/html" id="course_datatable_bar">\n' +
-                                                    '               <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pjjy">评教建议</a>\n' +
+                                                    '               <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="suggest">评教建议</a>\n' +
                                                     '           </script>\n' +
                                                     '       </table>';
                                                 $("#editForm").html(html);
@@ -284,8 +292,45 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     ,done : function(res, curr, count) {
                                                         //监听右侧工具条
                                                         table.on('tool(course_datatable)', function(obj){
-                                                            if (obj.event === 'pjjy') {
-                                                                layer.msg(111);
+                                                            if (obj.event === 'suggest') {
+                                                                layer.open({
+                                                                    title : '填写评教意见或建议'
+                                                                    ,type : 1
+                                                                    ,area : [ '700px', '300px' ]
+                                                                    ,offset : '100px'
+                                                                    ,content : $('#suggest_container')
+                                                                    ,success: function(layero, index){
+
+                                                                        //表单赋值
+                                                                        $.get(requestUrl+'/xspj/selectBjpjSuggest.do',{
+                                                                            "relationCode": code,
+                                                                            "courseCode": obj.data.courseCode
+                                                                        },function (result_data) {
+                                                                            if(result_data.code == 200){
+                                                                                form.val("suggestForm",{
+                                                                                    "suggest":result_data.data
+                                                                                });
+                                                                            }
+                                                                        },'json');
+
+                                                                        //监听表单提交
+                                                                        form.on('submit(toSubmitSuggestForm)', function(form_data){
+                                                                            $.post(requestUrl+'/xspj/insertBjpjSuggest.do',{
+                                                                                "relationCode": code,
+                                                                                "courseCode": obj.data.courseCode,
+                                                                                "suggest": form_data.field.suggest
+                                                                            },function (result_data) {
+                                                                                layer.msg(result_data.msg, { offset: '100px' },function () {
+                                                                                    layer.close(index);
+                                                                                });
+                                                                            },'json');
+                                                                            return false;
+                                                                        });
+
+                                                                    },end:function () {
+                                                                        $("#suggest").val("");
+                                                                    }
+                                                                });
                                                             }
                                                         });
                                                     }
@@ -384,7 +429,7 @@ layui.use(['layer','table','form','transfer'], function(){
             id: guid() //设定一个id，防止重复弹出
             ,elem : '#datatable'
             ,height : 580
-            ,url: requestUrl+'/xspj/getPageList.do'
+            ,url: requestUrl+'/xspj/getBjpjPageList.do'
             ,where:{
                 "accountType":accountType,
                 "userId":function () {
@@ -436,7 +481,7 @@ layui.use(['layer','table','form','transfer'], function(){
                 //监听右侧工具条
                 table.on('tool(datatable)', function(obj){
                     if (obj.event === 'pj') {
-                        $.get(requestUrl+'/xspj/getPjInfo.do',{
+                        $.get(requestUrl+'/xspj/getBjpjPjInfo.do',{
                             'courseCode':obj.data.courseCode
                         },function (result_data) {
                             layer.open({
