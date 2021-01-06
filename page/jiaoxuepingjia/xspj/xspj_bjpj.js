@@ -112,10 +112,10 @@ layui.use(['layer','table','form','transfer'], function(){
                                         ,area : [ '900px', '500px' ]
                                         ,offset : '50px'
                                         ,btn: ['上一步', '下一步']
-                                        ,yes: function(){
+                                        ,yes: function(){ layer.msg('上一步'+currentIndex);
                                             if(currentIndex >= 0 ){
                                                 //
-                                                if(currentIndex <= datas.length){
+                                                if(currentIndex < datas.length){
 
                                                     let getData = transfer.getData('demo_'+currentIndex);
                                                     if (getData.length != transferData.length ){
@@ -136,11 +136,48 @@ layui.use(['layer','table','form','transfer'], function(){
                                                         };
                                                         transferSelectedDataArr[currentIndex] = tempObj;
                                                     }
-                                                    ////////////////////////////////////////////////////////////////////
+
                                                     if(currentIndex > 0 ){
                                                         currentIndex -= 1;
                                                     }
-                                                    layer.msg('上一步'+currentIndex);
+
+                                                    let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
+                                                        '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                                        '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
+                                                    $("#editForm").html(html);
+
+                                                    //
+                                                    transfer.render({
+                                                        id: 'demo_'+ currentIndex //定义索引
+                                                        , elem: '#test_'+ currentIndex
+                                                        ,title: ['初始排序', '已选排序']  //自定义标题
+                                                        ,data: transferDataArr[currentIndex]
+                                                        ,value: transferSelectedData[currentIndex]
+                                                        ,width: 320 //定义宽度
+                                                        ,height: 280 //定义高度
+                                                    });
+
+                                                } else if(currentIndex == datas.length){
+                                                    currentIndex -= 1;
+                                                    let getData = transfer.getData('demo_'+currentIndex);
+                                                    if (getData.length != transferData.length ){
+                                                        layer.msg("本题您还没有完成！");
+                                                        return false;
+                                                    } else {
+                                                        transferDataArr[currentIndex] = getData;
+                                                        //
+                                                        let tempArr = [];
+                                                        getData.forEach(obj => {
+                                                            tempArr.push(obj.value);
+                                                        });
+                                                        transferSelectedData[currentIndex] = tempArr;
+                                                        let tempObj = {
+                                                            'targetCode': datas[currentIndex].targetCode,
+                                                            'targetScore': datas[currentIndex].targetScore,
+                                                            'arr': tempArr
+                                                        };
+                                                        transferSelectedDataArr[currentIndex] = tempObj;
+                                                    }
                                                     let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
                                                         '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                                         '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
@@ -163,7 +200,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 }
                                             }
                                         }
-                                        ,btn2: function(){
+                                        ,btn2: function(){ layer.msg('下一步'+currentIndex);
                                             let code = new Date().getTime(); //初始化业务数据编号
                                             //
                                             if(currentIndex < datas.length - 1){
@@ -187,7 +224,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     transferSelectedDataArr[currentIndex] = tempObj;
                                                 }
                                                 currentIndex += 1;
-                                                layer.msg('下一步'+currentIndex);
+
                                                 let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
                                                     '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                                     '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
@@ -203,6 +240,25 @@ layui.use(['layer','table','form','transfer'], function(){
                                                     ,height: 280 //定义高度
                                                 })
                                             } else if(currentIndex < datas.length){
+                                                let getData = transfer.getData('demo_'+currentIndex);
+                                                if (getData.length != transferData.length ){
+                                                    layer.msg("本题您还没有完成！");
+                                                    return false;
+                                                } else {
+                                                    transferDataArr[currentIndex] = getData;
+                                                    //
+                                                    let tempArr = [];
+                                                    getData.forEach(obj => {
+                                                        tempArr.push(obj.value);
+                                                    });
+                                                    transferSelectedData[currentIndex] = tempArr;
+                                                    let tempObj = {
+                                                        'targetCode': datas[currentIndex].targetCode,
+                                                        'targetScore': datas[currentIndex].targetScore,
+                                                        'arr': tempArr
+                                                    };
+                                                    transferSelectedDataArr[currentIndex] = tempObj;
+                                                }
                                                 currentIndex += 1;
                                                 //课程信息列表
                                                 let html = '<table class="layui-table" id="course_datatable" lay-filter="course_datatable">\n' +
