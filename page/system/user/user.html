@@ -4,21 +4,12 @@
     <meta charset="utf-8">
     <title>系统管理-用户</title>
     <link rel="stylesheet" href="../../../js/layui/css/layui.css">
-    <style type="text/css">
-        .search-container .layui-inline {
-            width: 150px;
-        }
-    </style>
 </head>
 <body class="layui-layout-body">
     <div class="layui-fluid">
         <!-- 条件查询-->
         <div class="layui-form search-container">
-            学院(部门)：
-            <div class="layui-inline">
-                <input class="layui-input" name="collegeOrDept" autocomplete="off">
-            </div>
-            &nbsp;&nbsp;工号(学号)：
+            工号/学号：
             <div class="layui-inline">
                 <input class="layui-input" name="userId" autocomplete="off">
             </div>
@@ -30,10 +21,6 @@
             <div class="layui-inline">
                 <input class="layui-input" name="userGroup" autocomplete="off">
             </div>
-            <!--&nbsp;&nbsp;手机号：
-            <div class="layui-inline">
-                <input class="layui-input" name="phone" autocomplete="off">
-            </div>-->
             <div class="layui-inline">
                 <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
                 <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
@@ -42,12 +29,12 @@
 
         <!-- 数据表格 -->
         <table class="layui-table" id="dataTable" lay-filter="dataTable">
-            <!-- 数据表格头部工具栏 -->
+            <!-- 数据表格头部工具栏
             <script type="text/html" id="dataTable_toolbar">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
                 </div>
-            </script>
+            </script> -->
             <!-- 数据表格右侧工具栏 -->
             <script type="text/html" id="dataTable_bar">
                 <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>

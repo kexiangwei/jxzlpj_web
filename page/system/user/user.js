@@ -23,11 +23,10 @@ layui.use(['layer','table','form','transfer','util'], function(){
                 "data": res.data.pageList //解析数据列表
             };
         }
-        ,toolbar: '#dataTable_toolbar'
+        // ,toolbar: '#dataTable_toolbar'
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'collegeOrDept', title: '学院(部门)', width:200, sort: true}
             ,{field: 'userId', title: '工号(学号)', width:150, sort: true}
             ,{field: 'userName', title: '姓名', width:150, sort: true}
             ,{field: 'userGroup', title: '用户组', sort: true}
@@ -44,15 +43,17 @@ layui.use(['layer','table','form','transfer','util'], function(){
             let data = res.data;
 
             //监听搜索框
+            $('.search-container .layui-btn').on('click', function(){
+                let type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
             let active = {
                 search: function(){
                     dataTable.reload({
                         where: { //设定异步数据接口的额外参数，任意设
-                            'collegeOrDept': $(".search-container input[ name='collegeOrDept' ] ").val()
-                            ,'userId': $(".search-container input[ name='userId' ] ").val()
+                            'userId': $(".search-container input[ name='userId' ] ").val()
                             ,'userName': $(".search-container input[ name='userName' ] ").val()
                             ,'userGroup': $(".search-container input[ name='userGroup' ] ").val()
-                            // ,'phone': $(".search-container input[ name='phone' ] ").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -63,47 +64,21 @@ layui.use(['layer','table','form','transfer','util'], function(){
                     $(".search-container input").val('');
                 }
             };
-            $('.search-container .layui-btn').on('click', function(){
-                let type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
-            });
 
-            //监听头工具栏事件
+            /*//监听头工具栏事件
             table.on('toolbar(dataTable)', function(obj){
                 switch(obj.event){
                     case 'insert':
                         layer.msg('新增', {time : 3000, offset: '100px'});
                         break;
                 }
-            });
+            });*/
 
             //监听右侧工具条
             table.on('tool(dataTable)', function(obj){
                 var rowData = obj.data;
                 if (obj.event === 'detail') {
                     layer.msg('查看', {time : 3000, offset: '100px'});
-                    /* $.get(requestUrl+'/getUserDetail.do', {"userId":rowData.userId},function (resultData) {
-                         if(resultData.code == 200){
-                             let data = resultData.data;
-                             layer.open({
-                                 title : '系统管理-用户-详情'
-                                 ,type : 1
-                                 ,area : [ '700px', '535px' ]
-                                 ,offset : '20px'
-                                 ,shadeClose : true
-                                 ,btn : ['关闭']
-                                 ,content : '<table class="layui-table">\n' +
-                                     '        <tbody>\n' +
-                                     '            <tr><td style="width: 150px; text-align: right">学院(部门)</td><td>'+data.collegeOrDept+'</td></tr>\n' +
-                                     '            <tr><td style="width: 150px; text-align: right">工号</td><td>'+data.userId+'</td></tr>\n' +
-                                     '            <tr><td style="width: 150px; text-align: right">姓名</td><td>'+data.userName+'</td></tr>\n' +
-                                     '        </tbody>\n' +
-                                     '    </table>'
-                             });
-                         }else{
-                             layer.msg('数据加载失败', {time : 3000, offset: '100px'});
-                         }
-                     },'json');*/
                 } else if (obj.event === 'grant') {
                     var layIndex = layer.open({
                         title : '系统管理-用户-授权'
