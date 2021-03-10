@@ -120,7 +120,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                         ,area : [ '900px', '500px' ]
                                         ,offset : '50px'
                                         ,btn: ['上一步', '下一步']
-                                        ,yes: function(){ layer.msg('上一步'+currentIndex);
+                                        ,yes: function(){
                                             if(currentIndex >= 0 ){
                                                 //
                                                 if(currentIndex < datas.length){
@@ -208,7 +208,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 }
                                             }
                                         }
-                                        ,btn2: function(){ layer.msg('下一步'+currentIndex);
+                                        ,btn2: function(){
 
                                             //
                                             if(currentIndex < datas.length - 1){
