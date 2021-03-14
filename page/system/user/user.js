@@ -6,7 +6,7 @@ layui.use(['layer','table','form','transfer','util'], function(){
     let dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 500
+        ,height : 580
         ,url: requestUrl+'/getUserPageList.do'
         ,request: {
             pageName: 'pageIndex'
@@ -23,21 +23,20 @@ layui.use(['layer','table','form','transfer','util'], function(){
                 "data": res.data.pageList //解析数据列表
             };
         }
-        // ,toolbar: '#dataTable_toolbar'
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+            ,{field: 'college', title: '学院（部）', width:150, sort: true}
             ,{field: 'userId', title: '工号(学号)', width:150, sort: true}
             ,{field: 'userName', title: '姓名', width:150, sort: true}
             ,{field: 'userGroup', title: '用户组', sort: true}
-            ,{field: 'phone', title: '电话', width:150, sort: true}
-            ,{fixed: 'right', width:210, align:'center', toolbar: '#dataTable_bar'}
+            ,{fixed: 'right', width:150, align:'center', toolbar: '#dataTable_bar'}
         ]]
         ,even: true //隔行背景
-        ,limit: 10
+        ,limit: 20
         ,page: {
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
-            ,limits: [10,20,50,100]
+            ,limits: [20,50,100]
         }
         ,done : function(res, curr, count) {
             let data = res.data;
@@ -51,7 +50,8 @@ layui.use(['layer','table','form','transfer','util'], function(){
                 search: function(){
                     dataTable.reload({
                         where: { //设定异步数据接口的额外参数，任意设
-                            'userId': $(".search-container input[ name='userId' ] ").val()
+                            'college': $(".search-container input[ name='college' ] ").val()
+                            ,'userId': $(".search-container input[ name='userId' ] ").val()
                             ,'userName': $(".search-container input[ name='userName' ] ").val()
                             ,'userGroup': $(".search-container input[ name='userGroup' ] ").val()
                         }
@@ -64,15 +64,6 @@ layui.use(['layer','table','form','transfer','util'], function(){
                     $(".search-container input").val('');
                 }
             };
-
-            /*//监听头工具栏事件
-            table.on('toolbar(dataTable)', function(obj){
-                switch(obj.event){
-                    case 'insert':
-                        layer.msg('新增', {time : 3000, offset: '100px'});
-                        break;
-                }
-            });*/
 
             //监听右侧工具条
             table.on('tool(dataTable)', function(obj){
@@ -113,7 +104,6 @@ layui.use(['layer','table','form','transfer','util'], function(){
 
                                         util.event('lay-event', {
                                             submit: function(othis){
-                                                // alert(111);
                                                 //
                                                 $.post(requestUrl+'/grant.do',{
                                                     "userId":rowData.userId,
@@ -136,10 +126,10 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                                     }
                                                 },function (result_data) {
                                                     if(result_data.code == 200){
-                                                        // dataTable.reload({});//重新加载数据
-                                                        layer.msg('授权成功', {time : 3000, offset: '100px'});
+                                                        layer.msg('授权成功！', {time : 3000, offset: '100px'});
+                                                        dataTable.reload();
                                                     }else{
-                                                        layer.msg('授权失败', {time : 3000, offset: '100px'});
+                                                        layer.msg('授权失败！', {time : 3000, offset: '100px'});
                                                     }
                                                     layer.close(layIndex);
                                                 },'json');
@@ -155,13 +145,9 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                 },'json');
 
                         },end:function () {
-                            window.location.reload();
+
                         }
                     });
-                } else if (obj.event === 'update') {
-                    layer.msg('编辑', {time : 3000, offset: '100px'});
-                } else if (obj.event === 'delete') {
-                    layer.msg('删除', {time : 3000, offset: '100px'});
                 }
             });
         }

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教学评价-学生评教</title>
+    <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
+    <style type="text/css">
+        .layer-btn-skin .layui-layer-btn .layui-layer-btn0 {
+            border-color: white;
+            background-color: #c5c1c1;
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-fluid">
+        <!-- 查询参数 -->
+        <div class="layui-form search">
+            课程名称：
+            <div class="layui-inline">
+                <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn" data-type="search">搜索</button>
+                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+            </div>
+        </div>
+        <!-- 数据表格 -->
+        <table class="layui-table" lay-filter="datatable" id="datatable">
+            <script type="text/html" id="datatable_bar"></script>
+        </table>
+    </div>
+
+    <!--学生评教-->
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
+        <h2 style="margin-top: 20px; font-weight: bold" align="center">北京农学院课程教学质量评价表（学生用）</h2><br/>
+        <h3>您的评价对于提高老师的教学能力非常有帮助。请认真、客观地回答以下问题，谢谢您的配合。</h3>
+        <form class="layui-form" lay-filter="editForm" id="editForm">
+
+        </form>
+    </div>
+
+    <!--教师查看学生评教-->
+    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
+
+        <table class="layui-table" style="margin-top: 20px;">
+            <colgroup>
+                <col width="80">
+                <col>
+                <col width="80">
+                <col width="80">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>指标项</th>
+                <th>分值</th>
+                <th>平均分</th>
+            </tr>
+            </thead>
+            <tbody id="pjInfo">
+            </tbody>
+        </table>
+
+        <!--<h3 style="margin-top: 20px;">说明：学生评教详情页面展示每一道题（指标项）的平均分和总平均分以及对课程的建议。对每一项指标的评分算法，参考如下：</h3>
+        <table class="layui-table">
+            <colgroup>
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>非常同意</th>
+                <th>比较同意</th>
+                <th>一般</th>
+                <th>不太同意</th>
+                <th>不同意</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>指标分值*100%</td>
+                <td>指标分值*80%</td>
+                <td>指标分值*60%</td>
+                <td>指标分值*40%</td>
+                <td>指标分值*20%</td>
+            </tr>
+            </tbody>
+        </table>-->
+    </div>
+
+    <script src="../../../../js/layui/layui.js"></script>
+    <script src="../../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../../js/jquery.cookie.js"></script>
+    <script src="../../../../js/global.js"></script>
+    <script src="xspj.js"></script>
+
+</body>
+</html>

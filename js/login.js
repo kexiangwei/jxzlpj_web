@@ -9,34 +9,32 @@
             dataType:'json',
             success:function(data) {
                 //图形验证码
-                $("#verCode").attr('src',data.data.image);
+                $("#imgCode").attr('src',data.data.image);
                 //监听提交
                 form.on('submit(loginForm)', function(formData){
 
                     $.post(requestUrl+"/login.do" , {
-                        'userId': formData.field.userId,
-                        'password': formData.field.password,
                         'token': data.data.token,
-                        'verifyCode': formData.field.verifyCode
+                        'imageCode': formData.field.imageCode,
+                        'userId': formData.field.userId,
+                        'password': formData.field.password
                     } ,  function(resultData){
                         if(resultData.code==200){
-                            //保存用户信息
-                            let obj = resultData.data;
 
+                            let obj = resultData.data;
+                            //保存用户信息
                             $.cookie('userId', obj.userId, { path: '/' });
                             $.cookie('userName', obj.userName, { path: '/' });
-                            $.cookie('userUnit', obj.userUnit, { path: '/' });
-                            $.cookie('userGroup', obj.userGroup, { path: '/' });
                             $.cookie('accountType', obj.accountType, { path: '/' });
-                            $.cookie('maxAuthLevel', obj.maxAuthLevel, { path: '/' });
                             $.cookie('headImg', obj.headImg, { path: '/' });
-                            $.cookie('phone', obj.phone, { path: '/' });
-
-                            /*$.cookie('sex', obj.sex, { path: '/' });
-                            $.cookie('eduDegree', obj.eduDegree, { path: '/' });
+                            //
+                            $.cookie('maxAuthLevel', obj.maxAuthLevel, { path: '/' });
+                            $.cookie('userGroup', obj.userGroup, { path: '/' });
+                            //
+                            $.cookie('sex', obj.sex, { path: '/' });
+                            $.cookie('age', obj.age, { path: '/' });
                             $.cookie('title', obj.title, { path: '/' });
-                            $.cookie('className', obj.className, { path: '/' });
-                            $.cookie('grade', obj.grade, { path: '/' });*/
+                            $.cookie('classes', obj.classes, { path: '/' });
                             $.cookie('majorCode', obj.majorCode, { path: '/' });
                             $.cookie('majorName', obj.majorName, { path: '/' });
                             $.cookie('collegeCode', obj.collegeCode, { path: '/' });
@@ -52,7 +50,7 @@
                 });
             },
             error:function() {
-                layer.msg('网络连接失败', {time : 3000, offset: '100px'});
+                layer.msg('网络连接失败！', {time : 3000, offset: '100px'});
             }
         });
     };

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>教学评价-评教设置</title>
+    <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">模板设置</li>
+            <li>指标设置</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-fluid">
+                    <table class="layui-table" id="template_dataTable" lay-filter="template_dataTable">
+                        <script type="text/html" id="template_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="template_bar"></script>
+                    </table>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-fluid">
+                    <table class="layui-table" id="target_dataTable" lay-filter="target_dataTable">
+                        <script type="text/html" id="target_toolbar">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="target_bar"></script>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模板 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="template_dataInfo_container">
+
+    </div>
+    <div class="layui-container" style="width: 90%; display: none;" id="template_editForm_container">
+        <form class="layui-form" action="" lay-filter="template_editForm"  id="template_editForm">
+
+            <input type="hidden" name="templateCode"/>
+
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">模板类别：</label>
+                <div class="layui-input-block">
+                    <select name="templateType" lay-filter="templateType">
+                        <option value="">请选择</option>
+                        <option value="同行评教">同行评教</option>
+                        <option value="学生评教">学生评教</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">模板名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="templateName" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">开始时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="startDate" name="startDate" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">结束时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="endDate" name="endDate" placeholder="" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <table class="layui-table" lay-filter="datatable" id="datatable" ></table>
+            </div>
+
+            <div class="layui-btn-container" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 指标 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="target_dataInfo_container">
+
+    </div>
+    <div class="layui-container" style="width: 90%; display: none" id="target_editForm_container">
+        <form class="layui-form" action="" lay-filter="target_editForm"  id="target_editForm">
+
+            <input type="hidden" name="targetCode"/>
+
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">指标类别：</label>
+                <div class="layui-input-block">
+                    <select name="targetType" lay-filter="targetType">
+                        <option value="">请选择</option>
+                        <option value="同行评教">同行评教</option>
+                        <option value="学生评教">学生评教</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">指标名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="targetName" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">指标内容：</label>
+                <div class="layui-input-block">
+                    <textarea name="targetContent" class="layui-textarea" style="height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">预设分值：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="targetScore" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-btn-container" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../../js/layui/layui.js"></script>
+    <script src="../../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../../js/jquery.cookie.js"></script>
+    <script src="../../../../js/global.js"></script>
+    <script src="pjSetTemplate.js"></script>
+    <script src="pjSetTarget.js"></script>
+</body>
+</html>

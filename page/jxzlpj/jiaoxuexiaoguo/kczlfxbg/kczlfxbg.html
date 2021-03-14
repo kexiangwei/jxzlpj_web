@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教学效果-课程质量分析报告</title>
+    <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+
+<div class="layui-fluid">
+
+    <!-- 查询参数 -->
+    <div class="layui-form search">
+        课程名称：
+        <div class="layui-inline">
+            <input type="text" name="courseName" placeholder="支持关键字查询" class="layui-input">
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+        </div>
+    </div>
+
+    <!-- 数据表格 -->
+    <table class="layui-table" lay-filter="datatable" id="datatable" >
+        <script type="text/html" id="datatable_toolbar">
+            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>
+        </script>
+    </table>
+
+</div>
+
+<!-- 信息详情 -->
+<div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container"></div>
+
+<!-- 响应新增，编辑按钮 -->
+<div class="layui-container" style="width: 90%; display: none" id="editForm_container">
+    <form class="layui-form" action="" lay-filter="editForm" id="editForm">
+
+        <!-- 业务数据 -->
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+
+            <div class="layui-form-item" style="margin-top: 20px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程名称：</label>
+                    <div class="layui-input-inline">
+                        <select id="courseName" name="courseName" lay-filter="courseName"></select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程编号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="courseCode" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程性质：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="courseAttr" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">授课班级：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="teachClass" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">学生人数：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="studentNum" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">上课地点：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="classLocation" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程负责人：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="courseLeader" readonly class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 140px;">开课学院（部）名称：</label>
+                    <div class="layui-input-inline" style="width: 495px;">
+                        <input type="text" name="openCollege" readonly class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+            <div class="layui-form-item" style="margin-top: 20px;">
+                <div class="layui-inline">
+                    <label class="layui-form-label">课次：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="courseNum" required class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">周次：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="weekNum" required class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="commonDate" name="commonDate" required class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">星期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="week" required class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">节次：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="lessonNum" required class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">学时：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="lessonHour" required class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">授课教师：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="teacher" required class="layui-input" style="width: 92%;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">授课目标：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="teachTarget" required placeholder="填写本次授课的目标。" autocomplete="off" style="width: 92%;"></textarea>
+                    <!--<script type="text/plain" id="teachTarget" name="teachTarget" placeholder="填写本次授课的目标。"></script>-->
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">教学组织：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="teachDesign" required placeholder="围绕教学目标，教师采用什么方式？讲授什么内容？培养学生什么知识、能力和素养？" autocomplete="off" style="width: 92%;"></textarea>
+                    <!--<script type="text/plain" id="teachDesign" name="teachDesign" placeholder="围绕教学目标，教师采用什么方式？讲授什么内容？培养学生什么知识、能力和素养？"></script>-->
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">课程思政点：</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="politicElement" required placeholder="若本次课有课程思政点，填写；若没有，则不填写。" autocomplete="off" style="width: 92%;"></textarea>
+                    <!--<script type="text/plain" id="politicElement" name="politicElement" placeholder="若本次课有课程思政点，填写；若没有，则不填写。"></script>-->
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="layui-btn-container" align="center">
+            <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </form>
+</div>
+
+<script src="../../../../js/layui/layui.js"></script>
+<script src="../../../../js/jquery-3.3.1.js"></script>
+<script src="../../../../js/jquery.cookie.js"></script>
+<script src="../../../../js/global.js"></script>
+<script src="kczlfxbg.js"></script>
+</body>
+</html>

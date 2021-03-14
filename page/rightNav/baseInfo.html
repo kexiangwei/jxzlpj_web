@@ -14,22 +14,22 @@
     <script src="../../js/jquery.cookie.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var html = '<tr><td>编号：'+$.cookie('userId')+'</td></tr>\n' +
-                '<tr><td>姓名：'+$.cookie('userName')+'</td></tr>\n' +
-                '<tr><td>所属用户组：'+$.cookie('userGroup')+'</td></tr>';
-                var accountType = $.cookie('accountType');
+            let html = '<tr><td>工号/学号：'+$.cookie('userId')+'</td></tr>\n' +
+                '<tr><td>姓名：'+$.cookie('userName')+'</td></tr>';
+                let accountType = $.cookie('accountType');
                 if(accountType != "null"){ //万恶的cookie，cookie返回值类型为string,不能使用（!accountType）或者（typeof(accountType) !=null）进行判断
+                    html += '<tr><td>性别：'+$.cookie('sex')+'</td></tr>\n' +
+                        '<tr><td>年龄：'+$.cookie('age')+'</td></tr>';
                     if(accountType === 'teacher'){
-                        html += '<tr><td>受教育程度：'+$.cookie('eduDegree')+'</td></tr>\n' +
-                            '<tr><td>职称：'+$.cookie('title')+'</td></tr>';
+                        html += '<tr><td>职称：'+$.cookie('title')+'</td></tr>';
                     }
                     if(accountType === 'student'){
-                        html += '<tr><td>班级：'+$.cookie('className')+'</td></tr>\n' +
-                            '<tr><td>年级：'+$.cookie('grade')+'</td></tr>';
+                        html += '<tr><td>班级：'+$.cookie('classes')+'</td></tr>';
                     }
-                    html += '<tr><td>专业：'+$.cookie('majorName')+'</td></tr>\n' +
+                    html += '<tr><td>专业：'+$.cookie('majorName')+'</td></tr>' +
                         '<tr><td>学院：'+$.cookie('collegeName')+'</td></tr>';
                 }
+                html += '<tr><td>所属用户组：'+$.cookie('userGroup')+'</td></tr>';
             $('#baseInfo').html(html);
         });
     </script>
