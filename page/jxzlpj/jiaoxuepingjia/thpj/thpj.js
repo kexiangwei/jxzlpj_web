@@ -5,7 +5,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
     //初始化学院下拉选项
-    $.get(requestUrl+'/common/getCollege.do',{},function(data){
+    $.get(requestUrl+'/common/getXyList.do',{},function(data){
         if(data.code == 200){
             let teacherCollegeList =  data.data;
             if(teacherCollegeList.length > 0){
@@ -16,7 +16,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
     //初始化专业下拉选项
     var teacherMajorList;
-    $.get(requestUrl+'/common/getMajor.do',{},function(data){
+    $.get(requestUrl+'/common/getZyList.do',{},function(data){
         if(data.code == 200){
             teacherMajorList =  data.data;
             if(teacherMajorList.length > 0){
@@ -31,7 +31,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
         if(collegeCode == ''){
             reloadSelect('teacherMajor',teacherMajorList);
         }else{
-            $.get(requestUrl+'/common/getMajor.do',{"collegeCode":collegeCode},function(data){
+            $.get(requestUrl+'/common/getZyList.do',{"collegeCode":collegeCode},function(data){
                 if(data.code == 200){
                     reloadSelect('teacherMajor',data.data);
                 }
@@ -302,7 +302,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         var formData = data.field;
                                         formData.templateCode = templateCode;
-                                        formData.jsonStr = JSON.stringify(formData);
+                                        formData.jsonString = JSON.stringify(formData);
                                         $.post(requestUrl+'/jxpj_thpj/insert.do' ,formData ,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 if(result_data.code == 200){

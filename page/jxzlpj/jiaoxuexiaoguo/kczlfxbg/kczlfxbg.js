@@ -98,7 +98,7 @@ layui.use(['layer','table','form'], function(){
                                 //初始化表单
                                 initEditForm();
 //
-                                $.get(requestUrl+'/common/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
+                                $.get(requestUrl+'/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
                                     if(result_data.code === 200){
                                         //
                                         $("select[name='courseName']").empty(); //移除下拉框所有选项option
@@ -394,7 +394,7 @@ layui.use(['layer','table','form'], function(){
 
             /*$.post(requestUrl+'/toSubimt.do',{
                 "menuId":$.cookie('currentMenuId'),
-                "jsonStr":JSON.stringify(row_datas)
+                "jsonString":JSON.stringify(row_datas)
             },function (result_data) {
                 layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
                     if(result_data.code === 200){

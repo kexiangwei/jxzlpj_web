@@ -2,11 +2,39 @@
 layui.use(['layer','table','form','transfer','util'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,transfer = layui.transfer,util = layui.util;
 
+    //初始化学院下拉选项
+    $.get(requestUrl+'/common/getXyList.do',{},function(result_data){
+        if(result_data.code == 200){
+            let data = result_data.data;
+            let html = '<option value="">请选择</option>';
+            if(data.length > 0){
+                for (let i = 0; i < data.length; i++) {
+                    html += '<option value="' + data[i]['NAME'] + '" >' + data[i]['NAME'] + '</option>';
+                }
+            }
+            $("select[name='xyName']").append(html);
+            form.render('select');
+        }
+    },'json');
+    //初始化用户组下拉选项
+    $.get(requestUrl+'/getRoleList.do',{},function(result_data){
+        if(result_data.code == 200){
+            let data = result_data.data;
+            let html = '<option value="">请选择</option>';
+            if(data.length > 0){
+                for (let i = 0; i < data.length; i++) {
+                    html += '<option value="' + data[i]['roleName'] + '" >' + data[i]['roleName'] + '</option>';
+                }
+            }
+            $("select[name='userGroup']").append(html);
+            form.render('select');
+        }
+    },'json');
     //数据表格
     let dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 580
+        ,height : 480
         ,url: requestUrl+'/getUserPageList.do'
         ,request: {
             pageName: 'pageIndex'
@@ -26,17 +54,17 @@ layui.use(['layer','table','form','transfer','util'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'college', title: '学院（部）', width:150, sort: true}
+            ,{field: 'xyName', title: '学院（部）', width:150, sort: true}
             ,{field: 'userId', title: '工号(学号)', width:150, sort: true}
             ,{field: 'userName', title: '姓名', width:150, sort: true}
             ,{field: 'userGroup', title: '用户组', sort: true}
             ,{fixed: 'right', width:150, align:'center', toolbar: '#dataTable_bar'}
         ]]
         ,even: true //隔行背景
-        ,limit: 20
+        ,limit: 10
         ,page: {
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
-            ,limits: [20,50,100]
+            ,limits: [10,20,50,100]
         }
         ,done : function(res, curr, count) {
             let data = res.data;
@@ -50,10 +78,10 @@ layui.use(['layer','table','form','transfer','util'], function(){
                 search: function(){
                     dataTable.reload({
                         where: { //设定异步数据接口的额外参数，任意设
-                            'college': $(".search-container input[ name='college' ] ").val()
+                            'xyName': $("#xyName option:selected").val() //获取选中的值
                             ,'userId': $(".search-container input[ name='userId' ] ").val()
                             ,'userName': $(".search-container input[ name='userName' ] ").val()
-                            ,'userGroup': $(".search-container input[ name='userGroup' ] ").val()
+                            ,'userGroup': $("#userGroup option:selected").val() //获取选中的值
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -62,6 +90,10 @@ layui.use(['layer','table','form','transfer','util'], function(){
                 }
                 ,reset: function () {
                     $(".search-container input").val('');
+                    //清除选中状态
+                    $("#xyName").val("");
+                    $("#userGroup").val("");
+                    form.render("select");
                 }
             };
 
@@ -87,16 +119,16 @@ layui.use(['layer','table','form','transfer','util'], function(){
                         ,success: function(layero, index){
                             //
                             $.get(requestUrl+'/toGrant.do', {"userId":rowData.userId}, function(data){
-                                    let roleArr = data.data.roleArr,
-                                     userRoleIdArr = data.data.userRoleIdArr;
+                                    let transferData = data.data.transferData,
+                                     selectedRoleIdList = data.data.selectedRoleIdList;
 
                                     //实例调用
                                     transfer.render({
                                         id: 'grantId' //定义唯一索引
                                         ,elem: '#grant'
                                         ,title: ['待选用户组列表', '已选用户组列表']
-                                        ,data: roleArr
-                                        ,value: userRoleIdArr
+                                        ,data: transferData
+                                        ,value: selectedRoleIdList
                                         ,showSearch: true
                                     });
 
@@ -107,8 +139,8 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                                 //
                                                 $.post(requestUrl+'/grant.do',{
                                                     "userId":rowData.userId,
-                                                    "roleIdArr":function (){
-                                                        let arr=[],roleIdArr = [];
+                                                    "roleIds":function (){
+                                                        let arr=[],roleIds = [];
                                                         //获取选择的角色id
                                                         $.each(transfer.getData('grantId'),function(index,item){
                                                             arr.push(item.value);
@@ -120,9 +152,9 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                                                     ++i;
                                                                 }
                                                             }
-                                                            roleIdArr.push(arr[i]);
+                                                            roleIds.push(arr[i]);
                                                         }
-                                                        return roleIdArr;
+                                                        return roleIds;
                                                     }
                                                 },function (result_data) {
                                                     if(result_data.code == 200){
@@ -137,7 +169,7 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                             ,reload:function(){
                                                 //实例重载
                                                 transfer.reload('grantId', {
-                                                    value: userRoleIdArr
+                                                    value: selectedRoleIdList
                                                 })
                                             }
                                         });

@@ -308,7 +308,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         });
 
         //
-        $.get(requestUrl+'/common/getCollege.do',function(result_data){
+        $.get(requestUrl+'/common/getXyList.do',function(result_data){
             if(result_data.code == 200){
                 // alert(JSON.stringify(result_data.data));
                 // 加载下拉选项
@@ -327,7 +327,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         },'json');
         // 监听学院下拉选项
         form.on('select(teacherCollege)', function(data) {
-            $.get(requestUrl+'/common/getMajor.do',{
+            $.get(requestUrl+'/common/getZyList.do',{
                 'collegeCode': data.value
             },function(result_data){
                 if(result_data.code == 200){
@@ -343,7 +343,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
             },'json');
         });
         //
-        $.get(requestUrl+'/common/getMajor.do',{
+        $.get(requestUrl+'/common/getZyList.do',{
             'collegeCode': data.teacherCollege !== undefined?data.teacherCollege:null
         },function(result_data){
             if(result_data.code == 200){

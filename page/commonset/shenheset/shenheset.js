@@ -135,9 +135,9 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                         $('#dataTable_bar').html(html);
                         //
                         if(data.status==1){
-                            return '<span style="color: green;font-weight: bold;">正在使用</span>';
+                            return '<span style="color: green;font-weight: bold;">已启用</span>';
                         }
-                        return '<span style="color: gray;font-weight: bold;">停用</span>';
+                        return '<span style="color: gray;font-weight: bold;">已禁用</span>';
                     }
              }
             ,{fixed: 'right', width:166, align:'center', toolbar: '#dataTable_bar'}
@@ -227,9 +227,9 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                         if(data.length === 0){
                             layer.msg('请选择需要删除的信息', {time : 3000, offset: '100px'});
                         } else {
-                            let codeArr = [], isDelete = true;
+                            let shenheCodes = [], isDelete = true;
                             $.each(data,function(idx,obj){
-                                codeArr.push(obj.shenheCode);
+                                shenheCodes.push(obj.shenheCode);
                                 if(obj.isDelete === 0){
                                     isDelete = false;
                                     return false;//跳出循环
@@ -241,7 +241,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                             }
                             //执行删除
                             layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                $.post(requestUrl+'/batchDeleteShenHeSet.do', { "codeArr": codeArr.join(",")},function(data){
+                                $.post(requestUrl+'/batchDeleteShenHeSet.do', { "shenheCodes": shenheCodes.join(",")},function(data){
                                     if(data.code === 200){
                                         dataTable.reload();//重新加载表格数据
                                         layer.msg('删除成功', {time : 3000, offset: '100px'});
@@ -329,7 +329,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                     }
                     //执行删除
                     layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                        $.post(requestUrl+'/batchDeleteShenHeSet.do', { "codeArr": rowData.shenheCode},function(data){
+                        $.post(requestUrl+'/batchDeleteShenHeSet.do', { "shenheCodes": rowData.shenheCode},function(data){
                             if(data.code === 200){
                                 dataTable.reload();//重新加载表格数据
                                 layer.msg('删除成功', {time : 3000, offset: '100px'});

@@ -126,6 +126,9 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 if(currentIndex < datas.length){
 
                                                     let getData = transfer.getData('demo_'+currentIndex);
+                                                    getData = getData.filter(function(item, index, arr) {
+                                                        return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
+                                                    });
                                                     if (getData.length != transferData.length ){
                                                         layer.msg("本题您还没有完成！");
                                                         return false;
@@ -168,6 +171,9 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 } else if(currentIndex == datas.length){
                                                     currentIndex -= 1;
                                                     let getData = transfer.getData('demo_'+currentIndex);
+                                                    getData = getData.filter(function(item, index, arr) {
+                                                        return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
+                                                    });
                                                     if (getData.length != transferData.length ){
                                                         layer.msg("本题您还没有完成！");
                                                         return false;
@@ -213,6 +219,9 @@ layui.use(['layer','table','form','transfer'], function(){
                                             //
                                             if(currentIndex < datas.length - 1){
                                                 let getData = transfer.getData('demo_'+currentIndex);
+                                                getData = getData.filter(function(item, index, arr) {
+                                                    return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
+                                                });
                                                 if (getData.length != transferData.length ){
                                                     layer.msg("本题您还没有完成！");
                                                     return false;
@@ -249,6 +258,9 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 })
                                             } else if(currentIndex < datas.length){
                                                 let getData = transfer.getData('demo_'+currentIndex);
+                                                getData = getData.filter(function(item, index, arr) {
+                                                    return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
+                                                });
                                                 if (getData.length != transferData.length ){
                                                     layer.msg("本题您还没有完成！");
                                                     return false;
@@ -462,8 +474,8 @@ layui.use(['layer','table','form','transfer'], function(){
                         return data.courseName;
                     }}
                 ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                ,{field:'stuScore', title:'学分', width:150, sort:true}
-                ,{field:'stuHour', title:'学时', width:150, sort:true}
+                ,{field:'xf', title:'学分', width:150, sort:true}
+                ,{field:'xs', title:'学时', width:150, sort:true}
                 ,{field:'majorName', title:'适用专业', width:180, sort:true}
                 ,{field:'collegeName', title:'开课学院', width:180, sort:true}
                 ,{fixed: 'right', width:80, align:'center', toolbar: '#datatable_bar'}

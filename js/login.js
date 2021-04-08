@@ -25,21 +25,23 @@
                             //保存用户信息
                             $.cookie('userId', obj.userId, { path: '/' });
                             $.cookie('userName', obj.userName, { path: '/' });
-                            $.cookie('accountType', obj.accountType, { path: '/' });
-                            $.cookie('headImg', obj.headImg, { path: '/' });
-                            //
-                            $.cookie('maxAuthLevel', obj.maxAuthLevel, { path: '/' });
-                            $.cookie('userGroup', obj.userGroup, { path: '/' });
-                            //
                             $.cookie('sex', obj.sex, { path: '/' });
                             $.cookie('age', obj.age, { path: '/' });
+                            $.cookie('accountType', obj.accountType, { path: '/' });
+                            $.cookie('maxAuthLevel', obj.maxAuthLevel, { path: '/' });
+                            $.cookie('userGroup', obj.userGroup, { path: '/' });
+                            $.cookie('headImg', obj.headImg, { path: '/' });
+                            //
+                            $.cookie('xyCode', obj.xyCode, { path: '/' });
+                            $.cookie('xyName', obj.xyName, { path: '/' });
+                            $.cookie('zyCode', obj.zyCode, { path: '/' });
+                            $.cookie('zyName', obj.zyName, { path: '/' });
+                            //
+                            $.cookie('userUnit', obj.userUnit, { path: '/' });
                             $.cookie('title', obj.title, { path: '/' });
-                            $.cookie('classes', obj.classes, { path: '/' });
-                            $.cookie('majorCode', obj.majorCode, { path: '/' });
-                            $.cookie('majorName', obj.majorName, { path: '/' });
-                            $.cookie('collegeCode', obj.collegeCode, { path: '/' });
-                            $.cookie('collegeName', obj.collegeName, { path: '/' });
-
+                            //
+                            $.cookie('nj', obj.nj, { path: '/' });
+                            $.cookie('bj', obj.bj, { path: '/' });
                             //跳转到主页面
                             window.location.href="index.html";
                         }else{

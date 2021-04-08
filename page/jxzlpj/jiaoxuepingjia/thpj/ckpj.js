@@ -42,8 +42,8 @@ layui.use(['layer','element','table'], function(){
                     return data.courseName;
              }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-            ,{field:'stuScore', title:'学分', width:150, sort:true}
-            ,{field:'stuHour', title:'学时', width:150, sort:true}
+            ,{field:'xf', title:'学分', width:150, sort:true}
+            ,{field:'xs', title:'学时', width:150, sort:true}
             ,{field:'majorName', title:'适用专业', width:180, sort:true}
             ,{field:'collegeName', title:'开课学院', width:180, sort:true}
             ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}

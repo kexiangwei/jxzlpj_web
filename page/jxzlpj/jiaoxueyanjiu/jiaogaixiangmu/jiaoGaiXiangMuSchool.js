@@ -162,8 +162,8 @@ layui.use(['layer','element','table','form'], function(){
                                         ,"leader" : $.cookie('userName')
                                         ,"leaderId" : $.cookie('userId')
                                         ,"title" : $.cookie('title')
-                                        ,"collegeOrDept" : $.cookie('collegeName')
-                                        ,"major" : $.cookie('majorName')
+                                        ,"collegeOrDept" : $.cookie('userUnit')
+                                        ,"major" : $.cookie('zyName')
                                         ,'userId':$.cookie('userId')
                                         ,'userName':$.cookie('userName')
                                     });
@@ -955,7 +955,7 @@ layui.use(['layer','element','table','form'], function(){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/toSubimt.do',{
                         "menuId":currentMenuId,
-                        "jsonStr":JSON.stringify(row_datas)
+                        "jsonString":JSON.stringify(row_datas)
                     },function (result_data) {
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
                             if(result_data.code === 200){
@@ -1003,7 +1003,7 @@ layui.use(['layer','element','table','form'], function(){
                             $.post(requestUrl+'/toShenhe.do',{
                                 'viewName':'V_JXYJ_JGXM_SCHOOL_SHENHE'
                                 , 'isZjshAccount':isZjshAccount
-                                ,"jsonStr":JSON.stringify(row_datas)
+                                ,"jsonString":JSON.stringify(row_datas)
                                 ,"shenheType":isJwcGly==1?formData.field.shenheType:null
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion

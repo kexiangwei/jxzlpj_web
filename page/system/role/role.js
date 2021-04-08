@@ -50,7 +50,7 @@ layui.use(['layer','table','form','tree','util'], function(){
                     ,area : [ '700px', '480px' ]
                     ,offset : '20px'
                     ,shadeClose : true //点击遮罩关闭
-                    ,content : $('#insertOrUpdate_container')
+                    ,content : $('#insertOrUpdateContainer')
                     ,success: function(layero, index){
 
                         //获取菜单数据
@@ -72,17 +72,17 @@ layui.use(['layer','table','form','tree','util'], function(){
                                         exec_flag = true;
 
                                         //提取选择的节点数据
-                                        let menuIdArr = [];
+                                        let menuIds = [];
                                         let selectDataArr = tree.getChecked('menuTreeId');//选择的节点数据
                                         $.each(selectDataArr,function(index,item){
-                                            menuIdArr.push(item.id);
+                                            menuIds.push(item.id);
                                             $.each(item.children,function(index,item){
-                                                menuIdArr.push(item.id);
+                                                menuIds.push(item.id);
                                                 $.each(item.children,function(index,item){
-                                                    menuIdArr.push(item.id);
+                                                    menuIds.push(item.id);
                                                     if(item.children.length > 0){
                                                         $.each(item.children,function(index,item){
-                                                            menuIdArr.push(item.id);
+                                                            menuIds.push(item.id);
                                                         });
                                                     }
                                                 });
@@ -94,7 +94,7 @@ layui.use(['layer','table','form','tree','util'], function(){
                                             url: requestUrl+'/insertOrUpdateRoleMenu.do',
                                             data: {
                                                 "roleName":$("input[ name='roleName']").val(),
-                                                "menuIdArr":menuIdArr
+                                                "menuIds":menuIds
                                             },
                                             dataType: "json",
                                             traditional:true ,
@@ -136,13 +136,13 @@ layui.use(['layer','table','form','tree','util'], function(){
                         ,area : [ '700px', '480px' ]
                         ,offset : '20px'
                         ,shadeClose : true //点击遮罩关闭
-                        ,content : $('#insertOrUpdate_container')
+                        ,content : $('#insertOrUpdateContainer')
                         ,success: function(layero, index){
                             //
                             $("input[name='roleId']").val(rowData.roleId);
                             $("input[name='roleName']").val(rowData.roleName);
                             //
-                            var menuIdArr = [];
+                            var menuIds = [];
                             $.each(rowData.menuList,function(index,item){ //一级节点 [{id:'',children:[{id:'',children:[{id:'',children:[]}]}]}]教学研究
                                 //选择父节点会把所有子节点都勾选
                                 if(item.children.length > 0){
@@ -151,21 +151,21 @@ layui.use(['layer','table','form','tree','util'], function(){
                                             $.each(item.children,function(index,item){ //三级节点 [{id:'',children:[]}]申报
                                                 if(item.children.length > 0){
                                                     $.each(item.children,function(index,item){ //三级节点 [{id:'',children:[]}]提交&审核
-                                                        menuIdArr.push(item.menuId);
+                                                        menuIds.push(parseInt(item.menuId));
                                                     });
                                                 }else{
-                                                    menuIdArr.push(item.menuId);
+                                                    menuIds.push(parseInt(item.menuId));
                                                 }
                                             });
                                         }else{
-                                            menuIdArr.push(item.menuId);
+                                            menuIds.push(parseInt(item.menuId));
                                         }
                                     });
                                 }else{
-                                    menuIdArr.push(item.menuId);
+                                    menuIds.push(parseInt(item.menuId));
                                 }
                             });
-                            // alert(menuIdArr);
+                            // alert(menuIds);
                             //获取菜单数据
                             $.get(requestUrl+'/getMenuTree.do', {},function(data){
                                 //初始化菜单树
@@ -176,21 +176,21 @@ layui.use(['layer','table','form','tree','util'], function(){
                                     ,showCheckbox: true  //是否显示复选框
                                 });
                                 //勾选角色拥有的菜单节点
-                                tree.setChecked('menuTreeId', menuIdArr);
+                                tree.setChecked('menuTreeId', menuIds);
                                 //按钮事件
                                 util.event('lay-event', {
                                     commit: function(othis){//提交
-                                        menuIdArr = [];
+                                        menuIds = [];
                                         var selectDataArr = tree.getChecked('menuTreeId');//选择的节点数据  alert(JSON.stringify(item));
                                         $.each(selectDataArr,function(index,item){
-                                            menuIdArr.push(item.id);
+                                            menuIds.push(item.id);
                                             $.each(item.children,function(index,item){
-                                                menuIdArr.push(item.id);
+                                                menuIds.push(item.id);
                                                 $.each(item.children,function(index,item){
-                                                    menuIdArr.push(item.id);
+                                                    menuIds.push(item.id);
                                                     if(item.children.length > 0){
                                                         $.each(item.children,function(index,item){
-                                                            menuIdArr.push(item.id);
+                                                            menuIds.push(item.id);
                                                         });
                                                     }
                                                 });
@@ -203,17 +203,17 @@ layui.use(['layer','table','form','tree','util'], function(){
                                             data: {
                                                 "roleId":rowData.roleId,
                                                 "roleName":$("input[name='roleName']").val(),
-                                                "menuIdArr":menuIdArr
+                                                "menuIds":menuIds
                                             },
                                             dataType: "json",
                                             traditional:true ,
                                             success: function(data){
                                                 dataTable.reload({});//重新加载数据
-                                                layer.msg('设置成功', {time : 3000, offset: '100px'});
+                                                layer.msg('设置成功！', {time : 3000, offset: '100px'});
                                                 layer.close(layIndex);
                                             },
                                             error:function () {
-                                                layer.msg('设置失败', {time : 3000, offset: '100px'});
+                                                layer.msg('设置失败！', {time : 3000, offset: '100px'});
                                                 layer.close(layIndex);
                                             }
                                         });
@@ -222,7 +222,7 @@ layui.use(['layer','table','form','tree','util'], function(){
                                         $("input[name='roleName']").val(rowData.roleName);//重置角色名称
                                         //重载菜单树实例
                                         tree.reload('menuTreeId');
-                                        tree.setChecked('menuTreeId', menuIdArr); //重置选中的节点数据
+                                        tree.setChecked('menuTreeId', menuIds); //重置选中的节点数据
                                     }
                                 });
                             },'json');

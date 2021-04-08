@@ -57,7 +57,7 @@ layui.use(['layer','table','form','laydate'], function(){
             ,{field: 'classLocation', title:'上课地点', width:150, sort:true}
             ,{field: 'openCollege', title:'开课学院（部）', width:150, sort:true}
             ,{field: 'isSubmit', title: '提交状态', width:150, sort:true}
-            ,{fixed: 'right', width:120, align:'center', toolbar: '#myself_bar'}
+            ,{fixed: 'right', width:110, align:'center', toolbar: '#myself_bar'}
         ]]
         ,done: function(res, curr, count){ //数据渲染完的回调
 
@@ -94,13 +94,13 @@ layui.use(['layer','table','form','laydate'], function(){
                             ,type : 1
                             ,area : [ '1175px', '500px' ]
                             ,offset : '50px'
-                            ,content : $('#editForm_container')
+                            ,content : $('#editFormContainer')
                             ,success: function(layero, index){
 
                                 //初始化表单
                                 initEditForm();
 //
-                                $.get(requestUrl+'/common/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
+                                $.get(requestUrl+'/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
                                     if(result_data.code === 200){
                                         //
                                         $("select[name='courseName']").empty(); //移除下拉框所有选项option
@@ -122,12 +122,14 @@ layui.use(['layer','table','form','laydate'], function(){
                                                             // "code":obj.code
                                                             "courseCode": item.courseCode
                                                             ,"courseName" : item.courseName
-                                                            ,"courseAttr" : item.courseType
-                                                            ,"courseLeader" : item.courseLeader
-                                                            ,"teachClass" : item.teachClass
-                                                            ,"studentNum" : item.studentNum
-                                                            ,"classLocation" : item.classLocation
-                                                            ,"openCollege" : item.collegeName
+                                                            ,"courseAttr" : item.courseAttr
+                                                            ,"courseLeader" : item.skjsName
+                                                            ,"teachClass" : item.skBj
+                                                            ,"studentNum" : item.xsrs
+                                                            ,"classLocation" : item.skDd
+                                                            ,"openCollege" : item.xyName
+                                                            ,"xn" : item.xn
+                                                            ,"xq" : item.xq
                                                             ,"userId":$.cookie('userId')
                                                             ,"userName":$.cookie('userName')
                                                             ,"userUnit":$.cookie('userUnit')
@@ -137,7 +139,7 @@ layui.use(['layer','table','form','laydate'], function(){
                                             });
                                         }
                                     } else {
-                                        layer.msg('加载数据失败', {time : 3000, offset: '100px'});
+                                        layer.msg('加载数据失败！', {time : 3000, offset: '100px'});
                                     }
                                 }, "json");
                                 //监听表单提交
@@ -165,7 +167,7 @@ layui.use(['layer','table','form','laydate'], function(){
                         break;
                     case 'submit':
                         if(rowDatas.length === 0){
-                            layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
+                            layer.msg('请选择需要提交的信息！', {time : 3000, offset: '100px'});
                         } else {
                             //
                             let isSubmit = false;
@@ -176,7 +178,7 @@ layui.use(['layer','table','form','laydate'], function(){
                                 }
                             });
                             if(isSubmit){
-                                layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
+                                layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
                                 return;
                             } else {
                                 toSubmit(rowDatas);
@@ -206,7 +208,7 @@ layui.use(['layer','table','form','laydate'], function(){
                             ,offset : '30px'
                             ,shadeClose : true //点击遮罩关闭
                             ,btn: ['关闭']
-                            ,content : $('#editForm_container')
+                            ,content : $('#editFormContainer')
                             ,success: function(layero, index){
                                 //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                                 let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
@@ -253,7 +255,7 @@ layui.use(['layer','table','form','laydate'], function(){
                             ,type : 1
                             ,area : [ '1175px', '500px' ]
                             ,offset : '50px'
-                            ,content : $('#editForm_container')
+                            ,content : $('#editFormContainer')
                             ,success: function(layero, index){
                                 //
                                 initEditForm();
@@ -315,11 +317,11 @@ layui.use(['layer','table','form','laydate'], function(){
             ,offset : '50px'
             ,shadeClose : true //点击遮罩关闭
             ,btn : ['关闭']
-            ,content : $('#dataInfo_container')
+            ,content : $('#dataInfoContainer')
             ,success: function(layero, index){
                 //
                 var html = '<div style="margin-top: 20px;"><h2 style="font-weight: bold;" align="center">北京农学院</h2>' +
-                    '<h3 style="font-weight: bold;" align="center">XX学年第XX学期理论课教学实施计划</h3></div>' +
+                    '<h3 style="font-weight: bold;" align="center">'+_row_data.xn+'学年第'+_row_data.xq+'学期理论课教学实施计划</h3></div>' +
                     '<table class="layui-table" style="margin-top: 20px;">' +
                     '   <tr>' +
                     '       <td style="width:120px; text-align: right">课程名称：</td><td style="width: 150px;">'+_row_data.courseName+'</td>' +
@@ -327,9 +329,9 @@ layui.use(['layer','table','form','laydate'], function(){
                     '       <td style="width:120px; text-align: right">课程性质：</td><td style="width: 150px;">'+_row_data.courseAttr+'</td>' +
                     '   </tr>' +
                     '   <tr>' +
-                    '       <td style="text-align: right">课程名称：</td><td>'+_row_data.teachClass+'</td>' +
-                    '       <td style="text-align: right">课程编号：</td><td>'+_row_data.studentNum+'</td>' +
-                    '       <td style="text-align: right">课程性质：</td><td>'+_row_data.classLocation+'</td>' +
+                    '       <td style="text-align: right">授课班级：</td><td>'+_row_data.teachClass+'</td>' +
+                    '       <td style="text-align: right">学生人数：</td><td>'+_row_data.studentNum+'</td>' +
+                    '       <td style="text-align: right">上课地点：</td><td>'+_row_data.classLocation+'</td>' +
                     '   </tr>' +
                     '   <tr>' +
                     '       <td style="text-align: right">课程负责人：</td><td>'+_row_data.courseLeader+'</td>' +
@@ -369,14 +371,14 @@ layui.use(['layer','table','form','laydate'], function(){
                                 '    </table>';
                         });
                         //后执行
-                        $('#dataInfo_container').html(html);
+                        $('#dataInfoContainer').html(html);
                     }
                 }, "json");
                 //先执行
-                $('#dataInfo_container').html(html);
+                $('#dataInfoContainer').html(html);
             }
             ,end:function () {
-                $('#dataInfo_container').empty();
+                $('#dataInfoContainer').empty();
             }
         };
         //
@@ -398,18 +400,6 @@ layui.use(['layer','table','form','laydate'], function(){
         layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
 
             layer.msg('执行提交', {time : 3000, offset: '100px'});
-
-            /*$.post(requestUrl+'/toSubimt.do',{
-                "menuId":$.cookie('currentMenuId'),
-                "jsonStr":JSON.stringify(row_datas)
-            },function (result_data) {
-                layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
-                    if(result_data.code === 200){
-                        myself_table.reload();//重新加载表格数据
-                    }
-                    layer.closeAll();
-                });
-            },'json');*/
 
         });
     };

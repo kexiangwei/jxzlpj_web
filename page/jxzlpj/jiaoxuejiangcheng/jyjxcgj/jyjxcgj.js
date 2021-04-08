@@ -589,7 +589,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/toSubimt.do',{
                         "menuId":currentMenuId,
-                        "jsonStr":JSON.stringify(row_datas)
+                        "jsonString":JSON.stringify(row_datas)
                     },function (result_data) {
                         layer.msg(result_data.msg, { offset: '100px'},function () {
                             if(result_data.code === 200){
@@ -624,7 +624,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         form.on('submit(toSubmitShenHeForm)', function(formData){
                             $.post(requestUrl+'/toShenhe.do',{
                                 'viewName':'v_jxjc_jyjxcgj_shenhe'
-                                ,'jsonStr':JSON.stringify(row_datas)
+                                ,'jsonString':JSON.stringify(row_datas)
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion
                                 ,"userId":function () {

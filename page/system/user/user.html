@@ -10,20 +10,20 @@
         <!-- 条件查询-->
         <div class="layui-form search-container">
             学院（部）：
-            <div class="layui-inline">
-                <input class="layui-input" name="college" autocomplete="off">
+            <div class="layui-input-inline">
+                <select id="xyName" name="xyName" lay-filter="xyName"></select>
             </div>
             &nbsp;&nbsp;工号/学号：
-            <div class="layui-inline">
+            <div class="layui-input-inline">
                 <input class="layui-input" name="userId" autocomplete="off">
             </div>
             &nbsp;&nbsp;姓名：
-            <div class="layui-inline">
+            <div class="layui-input-inline">
                 <input class="layui-input" name="userName" autocomplete="off">
             </div>
             &nbsp;&nbsp;用户组：
-            <div class="layui-inline">
-                <input class="layui-input" name="userGroup" autocomplete="off">
+            <div class="layui-input-inline">
+                <select id="userGroup" name="userGroup" lay-filter="userGroup"></select>
             </div>
             <div class="layui-inline">
                 <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>

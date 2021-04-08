@@ -853,7 +853,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/jiaoXueTuanDui/toSubimt.do',{
                         "menuId":currentMenuId,
-                        "jsonStr":JSON.stringify(row_dataArr)
+                        "jsonString":JSON.stringify(row_dataArr)
                     },function (result_data) {
                         layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
                             if(result_data.code === 200){
@@ -897,7 +897,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         form.on('submit(toSubmitShenHeForm)', function(formData){
                             $.post(requestUrl+'/jiaoXueTuanDui/toShenhe.do',{
                                 'isZjshAccount':isZjshAccount
-                                ,"jsonStr":JSON.stringify(row_dataArr)
+                                ,"jsonString":JSON.stringify(row_dataArr)
                                 ,"shenheType":isJwcGly==1?formData.field.shenheType:null
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion

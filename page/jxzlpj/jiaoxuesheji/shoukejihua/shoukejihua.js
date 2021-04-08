@@ -67,8 +67,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                          }}
                         ,{field: 'courseCode', title: '课程编号', width:120}
                         ,{field: 'courseType', title: '课程性质', width:150}
-                        ,{field: 'stuHour', title: '学时', width:120}
-                        ,{field: 'stuScore', title: '学分', width:120}
+                        ,{field: 'xs', title: '学时', width:120}
+                        ,{field: 'xf', title: '学分', width:120}
                         ,{field: 'college', title:'开课学院（部）', width:150}
                         ,{field: 'isSubmit', title: '提交状态', width:120, templet: function(data){
                                 let html='';
@@ -332,8 +332,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,{field: 'courseName', title: '课程名称', width:150, sort:true}
                         ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
                         ,{field: 'courseType', title: '课程性质', width:150, sort:true}
-                        ,{field: 'stuHour', title: '学时', width:120, sort:true}
-                        ,{field: 'stuScore', title: '学分', width:120, sort:true}
+                        ,{field: 'xs', title: '学时', width:120, sort:true}
+                        ,{field: 'xf', title: '学分', width:120, sort:true}
                         ,{field: 'college', title:'开课学院（部）', width:150, sort:true}
                         ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
@@ -476,7 +476,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             '   <tr><td style="width: 133px; text-align: right">课程名称：</td><td>'+rowData.courseName+'</td></tr>' +
                             '   <tr><td style="text-align: right">课程编号：</td><td>'+rowData.courseCode+'</td></tr>' +
                             '   <tr><td style="text-align: right">课程性质：</td><td>'+rowData.courseType+'</td></tr>' +
-                            '   <tr><td style="text-align: right">学时/学分：</td><td>'+rowData.stuHour+'学时/'+rowData.stuScore+'学分'+'</td></tr>' +
+                            '   <tr><td style="text-align: right">学时/学分：</td><td>'+rowData.xs+'学时/'+rowData.xf+'学分'+'</td></tr>' +
                             '   <tr><td style="text-align: right">主讲教师：</td><td>'+rowData.mainTeacher+'</td></tr>' +
                             '   <tr><td style="text-align: right">授课班级：</td><td>'+rowData.teachClass+'</td></tr>' +
                             '   <tr><td style="text-align: right">开课学院（部）：</td><td>'+rowData.college+'</td></tr>' +
@@ -553,7 +553,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                     $.post(requestUrl+'/skjh/toSubimt.do',{
                         "menuId":$.cookie('currentMenuId'),
-                        "jsonStr":JSON.stringify(rowDatas)
+                        "jsonString":JSON.stringify(rowDatas)
                     },function (resultData) {
                         layer.msg(resultData.msg, {time : 3000, offset: '100px'},function () {
                             if(resultData.code === 200){
@@ -590,7 +590,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         //
                         form.on('submit(toSubmitShenHeForm)', function(formData){
                             $.post(requestUrl+'/skjh/toShenhe.do',{
-                                "jsonStr":JSON.stringify(row_dataArr)
+                                "jsonString":JSON.stringify(row_dataArr)
                                 ,"status":formData.field.status
                                 ,"opinion":formData.field.opinion
                                 ,"userId":function () {
