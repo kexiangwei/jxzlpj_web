@@ -1,14 +1,14 @@
 /*
 教学效果-课程质量分析报告
  */
-layui.use(['layer','table','form'], function(){
-    var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form;
+layui.use(['layer','table','form','laydate'], function(){
+    var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,laydate = layui.laydate;
 
-    //数据表格
-    var datatable = table.render({
+    //初始化数据表格
+    var myself_table = table.render({
         id : guid()
-        ,elem : '#datatable'
-        ,height : 600
+        ,elem : '#myself_table'
+        ,height : 550
         ,url: requestUrl+'/jxsj_kcjxssfa/getPageList.do'
         ,where:{
             "userId":function () {
@@ -38,6 +38,7 @@ layui.use(['layer','table','form'], function(){
         }
         ,limit: 10
         ,even: true //隔行背景
+        ,toolbar: '#myself_toolbar' //指向自定义工具栏模板选择器
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
@@ -55,20 +56,21 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'studentNum', title:'学生人数', width:150, sort:true}
             ,{field: 'classLocation', title:'上课地点', width:150, sort:true}
             ,{field: 'openCollege', title:'开课学院（部）', width:150, sort:true}
-            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
+            ,{field: 'isSubmit', title: '提交状态', width:150, sort:true}
+            ,{fixed: 'right', width:110, align:'center', toolbar: '#myself_bar'}
         ]]
         ,done: function(res, curr, count){ //数据渲染完的回调
 
             //监听搜索框事件
-            $('.search .layui-btn').on('click', function(){
+            $('.myself_search .layui-btn').on('click', function(){
                 let type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
             let active = {
                 search: function(){
-                    datatable.reload({
+                    myself_table.reload({
                         where: {
-                            'courseName': $(".search input[name='courseName']").val()
+                            'courseName': $(".myself_search input[name='courseName']").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
@@ -76,23 +78,23 @@ layui.use(['layer','table','form'], function(){
                     });
                 }
                 ,reset: function () {
-                    $(".search input").val('');
+                    $(".myself_search input").val('');
                 }
             };
 
             //监听头工具栏事件
-            table.on('toolbar(datatable)', function(obj){
+            table.on('toolbar(myself_table)', function(obj){
                 let rowDatas = table.checkStatus(obj.config.id).data; //获取选中的数据
 
                 switch(obj.event){
                     case 'insert':
                         layer.open({
                             id : guid()
-                            ,title : '教学设计-课程教学实施方案-新增'
+                            ,title : '教学效果-课程质量分析报告-新增'
                             ,type : 1
                             ,area : [ '1175px', '500px' ]
                             ,offset : '50px'
-                            ,content : $('#editForm_container')
+                            ,content : $('#editFormContainer')
                             ,success: function(layero, index){
 
                                 //初始化表单
@@ -120,12 +122,14 @@ layui.use(['layer','table','form'], function(){
                                                             // "code":obj.code
                                                             "courseCode": item.courseCode
                                                             ,"courseName" : item.courseName
-                                                            ,"courseAttr" : item.courseType
-                                                            ,"courseLeader" : item.courseLeader
-                                                            ,"teachClass" : item.teachClass
-                                                            ,"studentNum" : item.studentNum
-                                                            ,"classLocation" : item.classLocation
-                                                            ,"openCollege" : item.collegeName
+                                                            ,"courseAttr" : item.courseAttr
+                                                            ,"courseLeader" : item.skjsName
+                                                            ,"teachClass" : item.skBj
+                                                            ,"studentNum" : item.xsrs
+                                                            ,"classLocation" : item.skDd
+                                                            ,"openCollege" : item.xyName
+                                                            ,"xn" : item.xn
+                                                            ,"xq" : item.xq
                                                             ,"userId":$.cookie('userId')
                                                             ,"userName":$.cookie('userName')
                                                             ,"userUnit":$.cookie('userUnit')
@@ -135,7 +139,7 @@ layui.use(['layer','table','form'], function(){
                                             });
                                         }
                                     } else {
-                                        layer.msg('加载数据失败', {time : 3000, offset: '100px'});
+                                        layer.msg('加载数据失败！', {time : 3000, offset: '100px'});
                                     }
                                 }, "json");
                                 //监听表单提交
@@ -143,7 +147,7 @@ layui.use(['layer','table','form'], function(){
                                     $.post(requestUrl+'/jxsj_kcjxssfa/insert.do', data.field, function (result_data) {
                                         layer.msg(result_data.msg, {offset: '100px'},function () {
                                             if(result_data.code === 200){
-                                                datatable.reload();//重新加载表格数据
+                                                myself_table.reload();//重新加载表格数据
                                             }
                                             layer.close(index);
                                         });
@@ -163,7 +167,7 @@ layui.use(['layer','table','form'], function(){
                         break;
                     case 'submit':
                         if(rowDatas.length === 0){
-                            layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
+                            layer.msg('请选择需要提交的信息！', {time : 3000, offset: '100px'});
                         } else {
                             //
                             let isSubmit = false;
@@ -174,7 +178,7 @@ layui.use(['layer','table','form'], function(){
                                 }
                             });
                             if(isSubmit){
-                                layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
+                                layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
                                 return;
                             } else {
                                 toSubmit(rowDatas);
@@ -185,7 +189,7 @@ layui.use(['layer','table','form'], function(){
             });
 
             //监听工具条
-            table.on('tool(datatable)', function(obj){
+            table.on('tool(myself_table)', function(obj){
                 let row_data = obj.data;
                 if (obj.event === 'detail_dataInfo') {
                     detail_dataInfo(row_data);
@@ -198,13 +202,13 @@ layui.use(['layer','table','form'], function(){
 
                         layer.open({
                             id : guid()
-                            ,title : '教学设计-课程教学实施方案-编辑'
+                            ,title : '教学效果-课程质量分析报告-编辑'
                             ,type : 1
                             ,area : [ '900px', '500px' ] // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                             ,offset : '30px'
                             ,shadeClose : true //点击遮罩关闭
                             ,btn: ['关闭']
-                            ,content : $('#editForm_container')
+                            ,content : $('#editFormContainer')
                             ,success: function(layero, index){
                                 //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
                                 let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
@@ -221,7 +225,7 @@ layui.use(['layer','table','form'], function(){
                                     $.post(requestUrl+'/skjh/update.do', formData.field, function (resultData) {
                                         layer.msg(resultData.msg, {offset: '100px'},function () {
                                             if(resultData.code === 200){
-                                                datatable.reload();//重新加载表格数据
+                                                myself_table.reload();//重新加载表格数据
                                             }
                                             layer.close(index);
                                         });
@@ -237,7 +241,7 @@ layui.use(['layer','table','form'], function(){
                             $.post(requestUrl+'/skjh/delete.do', { code: row_data.code},function(resultData){
                                 layer.msg(resultData.msg, {offset: '100px'},function () {
                                     if(resultData.code === 200){
-                                        datatable.reload();//重新加载表格数据
+                                        myself_table.reload();//重新加载表格数据
                                     }
                                     layer.close(index);
                                 });
@@ -247,11 +251,11 @@ layui.use(['layer','table','form'], function(){
 
                         layer.open({
                             id : guid()
-                            ,title : '教学设计-课程教学实施方案-新增'
+                            ,title : '教学效果-课程质量分析报告-新增'
                             ,type : 1
                             ,area : [ '1175px', '500px' ]
                             ,offset : '50px'
-                            ,content : $('#editForm_container')
+                            ,content : $('#editFormContainer')
                             ,success: function(layero, index){
                                 //
                                 initEditForm();
@@ -278,7 +282,7 @@ layui.use(['layer','table','form'], function(){
                                     $.post(requestUrl+'/jxsj_kcjxssfa/insert.do', _form_data.field, function (_result_data) {
                                         layer.msg(_result_data.msg, {offset: '100px'},function () {
                                             if(_result_data.code === 200){
-                                                datatable.reload();//重新加载表格数据
+                                                myself_table.reload();//重新加载表格数据
                                             }
                                             layer.close(index);
                                         });
@@ -307,17 +311,17 @@ layui.use(['layer','table','form'], function(){
         //
         let options = {
             id :guid() //弹层唯一标识,一般用于页面层和iframe层模式,设置该值后，不管是什么类型的层，都只允许同时弹出一个。
-            ,title : '教学设计-课程教学实施方案-查看信息'
+            ,title : '教学效果-课程质量分析报告-查看信息'
             ,type : 1
             ,area : [ '1175px', '500px' ]
             ,offset : '50px'
             ,shadeClose : true //点击遮罩关闭
             ,btn : ['关闭']
-            ,content : $('#dataInfo_container')
+            ,content : $('#dataInfoContainer')
             ,success: function(layero, index){
                 //
                 var html = '<div style="margin-top: 20px;"><h2 style="font-weight: bold;" align="center">北京农学院</h2>' +
-                    '<h3 style="font-weight: bold;" align="center">XX学年第XX学期理论课教学实施计划</h3></div>' +
+                    '<h3 style="font-weight: bold;" align="center">'+_row_data.xn+'学年第'+_row_data.xq+'学期理论课教学实施计划</h3></div>' +
                     '<table class="layui-table" style="margin-top: 20px;">' +
                     '   <tr>' +
                     '       <td style="width:120px; text-align: right">课程名称：</td><td style="width: 150px;">'+_row_data.courseName+'</td>' +
@@ -325,15 +329,15 @@ layui.use(['layer','table','form'], function(){
                     '       <td style="width:120px; text-align: right">课程性质：</td><td style="width: 150px;">'+_row_data.courseAttr+'</td>' +
                     '   </tr>' +
                     '   <tr>' +
-                    '       <td style="text-align: right">课程名称：</td><td>'+_row_data.teachClass+'</td>' +
-                    '       <td style="text-align: right">课程编号：</td><td>'+_row_data.studentNum+'</td>' +
-                    '       <td style="text-align: right">课程性质：</td><td>'+_row_data.classLocation+'</td>' +
+                    '       <td style="text-align: right">授课班级：</td><td>'+_row_data.teachClass+'</td>' +
+                    '       <td style="text-align: right">学生人数：</td><td>'+_row_data.studentNum+'</td>' +
+                    '       <td style="text-align: right">上课地点：</td><td>'+_row_data.classLocation+'</td>' +
                     '   </tr>' +
                     '   <tr>' +
                     '       <td style="text-align: right">课程负责人：</td><td>'+_row_data.courseLeader+'</td>' +
                     '       <td style="text-align: right">开课学院（部）：</td><td colspan="3">'+_row_data.openCollege+'</td>' +
                     '   </tr>' +
-                '</table>';
+                    '</table>';
 
                 //
                 $.get(requestUrl+"/jxsj_kcjxssfa/getItemListByRelationCode.do", {
@@ -367,14 +371,14 @@ layui.use(['layer','table','form'], function(){
                                 '    </table>';
                         });
                         //后执行
-                        $('#dataInfo_container').html(html);
+                        $('#dataInfoContainer').html(html);
                     }
                 }, "json");
                 //先执行
-                $('#dataInfo_container').html(html);
+                $('#dataInfoContainer').html(html);
             }
             ,end:function () {
-                $('#dataInfo_container').empty();
+                $('#dataInfoContainer').empty();
             }
         };
         //
@@ -384,6 +388,11 @@ layui.use(['layer','table','form'], function(){
     //初始化表单
     var initEditForm = function (data) {
 
+        //初始化laydate实例
+        laydate.render({
+            elem: '#commonDate' //指定元素
+        });
+
     };
 
     //提交
@@ -391,18 +400,6 @@ layui.use(['layer','table','form'], function(){
         layer.confirm('信息提交后不可进行编辑、删除操作，是否继续提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
 
             layer.msg('执行提交', {time : 3000, offset: '100px'});
-
-            /*$.post(requestUrl+'/toSubimt.do',{
-                "menuId":$.cookie('currentMenuId'),
-                "jsonString":JSON.stringify(row_datas)
-            },function (result_data) {
-                layer.msg(result_data.msg, {time : 3000, offset: '100px'},function () {
-                    if(result_data.code === 200){
-                        datatable.reload();//重新加载表格数据
-                    }
-                    layer.closeAll();
-                });
-            },'json');*/
 
         });
     };
