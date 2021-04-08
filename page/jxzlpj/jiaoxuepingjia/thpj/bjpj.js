@@ -4,6 +4,17 @@
 layui.use(['layer','element','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
 
+    // 加载菜单选项
+    var reloadSelect = function(inputName,data){
+        $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
+        let htmlstr = '<option value="">请选择</option>';
+        for (var i = 0; i < data.length; i++) {
+            htmlstr += '<option value="' + data[i].CODE + '" >' + data[i].NAME + '</option>';
+        }
+        $("select[name='"+inputName+"']").append(htmlstr);
+        form.render('select');
+    };
+
     //初始化学院下拉选项
     $.get(requestUrl+'/common/getXyList.do',{},function(data){
         if(data.code == 200){
@@ -27,32 +38,16 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
     // 监听学院选项
     form.on('select(teacherCollege)', function(data) {
-        let collegeCode = data.value;
-        if(collegeCode == ''){
+        let xyCode = data.value;
+        if(xyCode == ''){
             reloadSelect('teacherMajor',teacherMajorList);
         }else{
-            $.get(requestUrl+'/common/getZyList.do',{"collegeCode":collegeCode},function(data){
+            $.get(requestUrl+'/common/getZyList.do',{"xyCode":xyCode},function(data){
                 if(data.code == 200){
                     reloadSelect('teacherMajor',data.data);
                 }
             },'json');
         }
-    });
-
-    // 加载菜单选项
-    var reloadSelect = function(inputName,data){
-        $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
-        let htmlstr = '<option value="">请选择</option>';
-        for (var i = 0; i < data.length; i++) {
-            htmlstr += '<option value="' + data[i].CODE + '" >' + data[i].NAME + '</option>';
-        }
-        $("select[name='"+inputName+"']").append(htmlstr);
-        form.render('select');
-    };
-
-    //初始化日期控件
-    laydate.render({
-        elem: '#teachDate'
     });
 
     //初始化数据表格
@@ -102,11 +97,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
             ,{field:'teacher', title:'教师姓名', width:150, sort:true}
-            ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
-            ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
+            ,{field:'teacherAge', title:'教师年龄', width:120, sort:true}
+            ,{field:'teacherTitle', title:'教师职称', width:120, sort:true}
             ,{field:'teachDate', title:'上课时间', width:150, sort:true}
             ,{field:'teachAddr', title:'上课地点', width:150, sort:true}
-            ,{fixed: 'right', title:'操作', align:'center', toolbar: '#datatable_bar'}
+            ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
+            ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
+            ,{fixed: 'right', title:'操作', width:210, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -135,7 +132,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             'courseName': $(".search input[ name='courseName']").val(),
                             'courseAttr': $("#courseAttr option:selected").val(),
                             'teachDate': $(".search input[ name='teachDate']").val(),
-                            'teachDate': $(".search input[ name='teachAddr']").val()
+                            'teachAddr': $(".search input[ name='teachAddr']").val()
                         }
                         ,page: {
                             curr: 1 //重新从第 1 页开始
