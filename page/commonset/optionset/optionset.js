@@ -26,7 +26,17 @@ layui.use(['layer','table','form','util'], function(){
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'CODE', title: '选项编号'}
-            ,{field: 'NAME', title: '选项名称'}
+            ,{field: 'NAME', title: '选项名称', templet: function(data) {
+                    let html = '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update">编辑</a>';
+                    if(data.IS_BIND == 1){
+                        html += '<a class="layui-btn layui-btn-disabled layui-btn-xs">删除</a>';
+                    } else {
+                        html += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>';
+                    }
+                    $('#datatable_bar').html(html);
+                    return data.NAME;
+                }
+            }
             ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,done : function(res, curr, count) {
