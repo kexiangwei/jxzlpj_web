@@ -56,6 +56,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
         ,elem : '#datatable'
         ,height : 500
         ,url: requestUrl+'/jxpj_thpj/getPageList.do'
+        ,where:{
+            "userId":function () {
+                return $.cookie('userId');
+            }
+        }
         ,request: {//用于对分页请求的参数：page、limit重新设定名称
             pageName: 'pageIndex' //页码的参数名称，默认：page
             ,limitName: 'pageSize' //每页数据量的参数名，默认：limit

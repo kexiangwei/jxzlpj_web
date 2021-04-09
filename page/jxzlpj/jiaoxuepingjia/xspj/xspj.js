@@ -11,7 +11,7 @@ layui.use(['layer','table','form'], function(){
         $.get(requestUrl+'/getActiveTemplate.do',{'templateType':'学生评教'},function (result_data) {
             //系统可以设定评教时间段，非时间段内，学生进入不了评教模块
             if(result_data.code != 200){ //是否评教时间
-                layer.msg('评教功能暂未开放', {time : 3000, offset: '100px'});
+                layer.msg('评教功能暂未开放！', {time : 3000, offset: '100px'});
                 return;
             } else {
 
@@ -154,7 +154,7 @@ layui.use(['layer','table','form'], function(){
                                                         return false;//跳出循环
                                                     }
                                                 });
-                                                return '您第'+num+'个问题没有回答';
+                                                return '您第'+num+'个问题没有回答！';
                                             }
                                         }
                                     });
