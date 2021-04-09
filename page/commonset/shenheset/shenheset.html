@@ -10,9 +10,11 @@
 
         <form class="layui-form" action="">
             <div class="layui-form-item">
+                <div class="layui-form-label">一级模块：</div>
                 <div class="layui-input-inline">
                     <select name="parentMenuList" lay-filter="parentMenuList"></select>
                 </div>
+                <div class="layui-form-label">二级模块：</div>
                 <div class="layui-input-inline">
                     <select name="childMenuList" lay-search="" lay-filter="childMenuList"></select>
                 </div>
@@ -23,12 +25,14 @@
             <script type="text/html" id="dataTable_toolbar">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>添加</button>
-                    <button class="layui-btn layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delete"><i class="layui-icon">&#xe640;</i>删除</button>
+                    <!--<button class="layui-btn layui-btn-radius layui-btn-danger layui-btn-sm" lay-event="delete"><i class="layui-icon">&#xe640;</i>删除</button>-->
                 </div>
             </script>
             <script type="text/html" id="dataTable_bar"></script>
         </table>
     </div>
+
+    <div class="layui-container" style="width: 90%; display: none;" id="view_container"></div>
 
     <!-- 新增&编辑审核流程 -->
     <div class="layui-container" style="display: none" id="editContainer">

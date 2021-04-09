@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../../js/layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
+
     <div class="layui-fluid">
         <!-- 条件查询-->
         <div class="layui-form search-container">
@@ -19,7 +20,7 @@
             </div>
             &nbsp;&nbsp;姓名：
             <div class="layui-input-inline">
-                <input class="layui-input" name="userName" autocomplete="off">
+                <input class="layui-input" name="userName" autocomplete="off" placeholder="支持关键字查询">
             </div>
             &nbsp;&nbsp;用户组：
             <div class="layui-input-inline">
@@ -30,16 +31,17 @@
                 <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
             </div>
         </div>
-
         <!-- 数据表格 -->
         <table class="layui-table" id="dataTable" lay-filter="dataTable">
             <!-- 数据表格右侧工具栏 -->
             <script type="text/html" id="dataTable_bar">
-                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="grant">授权</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="grant"><i class="layui-icon layui-icon-set-sm"></i>授权</a>
             </script>
         </table>
     </div>
+
+    <div class="layui-container" style="width: 90%; display: none;" id="view_container"></div>
 
     <script src="../../../js/jquery-3.3.1.js"></script>
     <script src="../../../js/jquery.cookie.js"></script>

@@ -8,7 +8,7 @@ layui.use(['layer','table','form','tree','util'], function(){
     let dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 540
+        ,height : 468
         ,url: requestUrl+'/getRolePageList.do'
         ,request: {
             pageName: 'pageIndex'
@@ -26,13 +26,31 @@ layui.use(['layer','table','form','tree','util'], function(){
             };
         }
         ,defaultToolbar: []
-        ,toolbar: '#dataTable_toolbar'
+        // ,toolbar: '#dataTable_toolbar'
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'roleId', title: '编号', width:200, sort: true}
+            ,{field: 'roleId', title: '编号', width:200, sort: true, templet: function(data) {
+                    /*let html = ' <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>\n' +
+                        '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>'
+                        ,roleIds = ["1","2","3","4","5","6","7","8","9"];
+                    if(roleIds.includes(data.roleId)){ //JS判断数组中是否包含某个值
+                        html += '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>';
+                    } else {
+                        html += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>';
+                    }
+                    $('#dataTable_bar').html(html);*/
+                    return data.roleId;
+                }
+            }
             ,{field: 'roleName', title: '名称', width:200, sort: true}
-            ,{field: 'remark', title: '备注'}
-            ,{fixed: 'right', width:220, align:'center', toolbar: '#dataTable_bar'}
+            ,{field: 'remark', title: '备注', templet: function(data) {
+                let roleIds = ["1","2","3","4","5","6","7","8","9"];
+                    if(roleIds.includes(data.roleId)){
+                        return '系统自用';
+                    }
+                }
+             }
+            ,{fixed: 'right', width:120, align:'center', toolbar: '#dataTable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -131,10 +149,10 @@ layui.use(['layer','table','form','tree','util'], function(){
                     layer.msg('查看', {time : 3000, offset: '100px'});
                 } else if (obj.event === 'update') {
                     let layIndex = layer.open({
-                        title : '系统管理-用户组-编辑'
+                        title : '系统管理-用户组-权限设置'
                         ,type : 1
-                        ,area : [ '700px', '480px' ]
-                        ,offset : '20px'
+                        ,area : [ '900px', '480px' ]
+                        ,offset : '50px'
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#insertOrUpdateContainer')
                         ,success: function(layero, index){

@@ -31,11 +31,44 @@ layui.use(['layer','table','form','util'], function(){
         ]]
         ,done : function(res, curr, count) {
 
+            /**
+             * 加载下拉选项
+             * @param defaultOptionVal
+             * @param inputName
+             * @param data
+             */
+            var initSelect = function(defaultOptionVal, inputName, data){
+                //
+                $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
+                //
+                let html = '<option value="">'+defaultOptionVal+'</option>';
+                for (let i = 0; i < data.length; i++) {
+                    html += '<option value="' + data[i].NAME + '" >' + data[i].VALUE + '</option>';
+                }
+                $("select[name='"+inputName+"']").append(html);
+                form.render('select');
+            };
+
+            //设置选择状态
+            var setChecked = function (data) {
+                for (let i = 0; i < res.data.length; i++) {
+                    let index = res.data[i]['LAY_TABLE_INDEX'];
+                    $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', false);
+                    $('tr[data-index=' + index + '] input[type="checkbox"]').next().removeClass('layui-form-checked');
+                    for (let j = 0; j < data.data.length; j++) {
+                        if(data.data[j]['CODE'] == res.data[i]['CODE']){ //设置复选框选中
+                            $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                            $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                        }
+                    }
+                }
+            };
+
             // 初始化一级菜单项
             $.get(requestUrl+'/optionset/getOptionSetMenuList.do',function(result_data){
                 if(result_data.code == 200){
                     if(result_data.data.length >0){
-                        initSelect('请选择一级菜单','parentMenu',result_data.data);
+                        initSelect('请选择一级模块','parentMenu',result_data.data);
                     }
                 }
             },'json');
@@ -46,7 +79,7 @@ layui.use(['layer','table','form','util'], function(){
                 },function(result_data){
                     if(result_data.code == 200){
                         if(result_data.data.length > 0){
-                            initSelect('请选择二级菜单','menu',result_data.data); //初始化二级菜单
+                            initSelect('请选择二级模块','menu',result_data.data); //初始化二级菜单
                         }
                     }
                 },'json');
@@ -58,7 +91,7 @@ layui.use(['layer','table','form','util'], function(){
                 },function(result_data){
                     if(result_data.code == 200){
                         if(result_data.data.length > 0){
-                            initSelect('请选择属性','attr',result_data.data); //初始化属性菜单
+                            initSelect('请选择模块属性','attr',result_data.data); //初始化属性菜单
                             // 监听属性菜单选择项
                             form.on('select(attr)', function(selected_data2) {
                                 $.get(requestUrl+'/optionset/getOptionSetList.do',{
@@ -74,7 +107,7 @@ layui.use(['layer','table','form','util'], function(){
                                         table.on('checkbox(datatable)', function(obj){
                                             if(obj.type === 'all'){ //如果触发的是全选，则为：all，如果触发的是单选，则为：one
                                                 setChecked(result_data); //设置选择状态
-                                                layer.msg('非法操作，请按需勾选', {offset: '100px'});
+                                                layer.msg('非法操作，请按需勾选！', {offset: '100px'});
                                                 return;
                                             }
                                             if(obj.checked){ //当前是否选中状态
@@ -99,39 +132,6 @@ layui.use(['layer','table','form','util'], function(){
                 },'json');
             });
 
-            //设置选择状态
-            var setChecked = function (data) {
-                for (let i = 0; i < res.data.length; i++) {
-                    let index = res.data[i]['LAY_TABLE_INDEX'];
-                    $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', false);
-                    $('tr[data-index=' + index + '] input[type="checkbox"]').next().removeClass('layui-form-checked');
-                    for (let j = 0; j < data.data.length; j++) {
-                        if(data.data[j]['CODE'] == res.data[i]['CODE']){ //设置复选框选中
-                            $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
-                            $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
-                        }
-                    }
-                }
-            };
-
-            /**
-             * 加载下拉选项
-             * @param defaultOptionVal
-             * @param inputName
-             * @param data
-             */
-            var initSelect = function(defaultOptionVal, inputName, data){
-                //
-                $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
-                //
-                let html = '<option value="">'+defaultOptionVal+'</option>';
-                for (let i = 0; i < data.length; i++) {
-                    html += '<option value="' + data[i].NAME + '" >' + data[i].VALUE + '</option>';
-                }
-                $("select[name='"+inputName+"']").append(html);
-                form.render('select');
-            };
-
             //监听头工具栏事件
             table.on('toolbar(datatable)', function(obj){
                 var layEvt = obj.event
@@ -153,11 +153,10 @@ layui.use(['layer','table','form','util'], function(){
                                     $.post(requestUrl+'/optionset/insertOption.do',{
                                         "name":formData.field.name
                                     },function (resultData) {
-                                        layer.msg(resultData.msg, {offset: '100px'},function () {
-                                            if(resultData.code==200){
-                                                datatable.reload(); //重新加载表格数据
-                                            }
-                                        });
+                                        layer.msg(resultData.msg);
+                                        if(resultData.code==200){
+                                            datatable.reload(); //重新加载表格数据
+                                        }
                                     },'json');
                                 });
                             }

@@ -9,74 +9,6 @@ layui.config({
 layui.use(['layer','table','form','util',"treeSelect"], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,util = layui.util,treeSelect = layui.treeSelect;
 
-    // 初始化一级菜单项
-    var parentMenuData;
-    $.get(requestUrl+'/getParentMenuList.do',{},function(data){
-        if(data.code == 200){
-            parentMenuData =  data.data;
-            if(parentMenuData.length > 0){
-                reloadSelect('parentMenuList','请选择一级菜单',parentMenuData);
-            }
-        }
-    },'json');
-
-    // 初始化二级菜单项
-    var childMenuData;
-    $.get(requestUrl+'/getChildMenuList.do',{},function(data){
-        if(data.code == 200){
-            childMenuData =  data.data;
-            if(childMenuData.length > 0){
-                reloadSelect('childMenuList','请选择二级菜单',childMenuData);
-            }
-        }
-    },'json');
-
-    // 监听一级菜单
-    form.on('select(parentMenuList)', function(data) {
-        let parentMenuId = data.value;
-        if(parentMenuId == ''){
-            dataTable.reload({
-                done: function(res, curr, count){
-                    reloadSelect('childMenuList','请选择二级菜单',childMenuData);
-                }
-            });
-        }else{
-            $.get(requestUrl+'/getParentMenuList.do',{"menuId":parentMenuId},function(data){
-                if(data.code == 200){
-                    dataTable.reload({
-                        where: {
-                            "parentMenuId":parentMenuId
-                        },
-                        done: function(res, curr, count){
-                            reloadSelect('childMenuList','请选择二级菜单',data.data);
-                        }
-                    });
-                }
-            },'json');
-        }
-    });
-
-    // 监听二级菜单
-    form.on('select(childMenuList)', function(data) {
-        let menuId = data.value;
-        if(menuId == ''){
-            dataTable.reload({
-                done: function(res, curr, count){
-                    reloadSelect('childMenuList','请选择二级菜单',childMenuData);
-                }
-            });
-        } else {
-            dataTable.reload({
-                where: {
-                    "menuId":menuId
-                }
-                ,page: {
-                    curr: 1 //重新从第 1 页开始
-                }
-            });
-        }
-    });
-
     // 加载菜单选项
     var reloadSelect = function(inputName,defaultOptionVal,data,defaultSelectedMenuId){
         $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
@@ -93,11 +25,79 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
         form.render('select');
     };
 
+    // 初始化一级菜单项
+    var parentMenuData;
+    $.get(requestUrl+'/getParentMenuList.do',{},function(data){
+        if(data.code == 200){
+            parentMenuData =  data.data;
+            if(parentMenuData.length > 0){
+                reloadSelect('parentMenuList','请选择一级模块',parentMenuData);
+            }
+        }
+    },'json');
+
+    // 初始化二级菜单项
+    var childMenuData;
+    $.get(requestUrl+'/getChildMenuList.do',{},function(data){
+        if(data.code == 200){
+            childMenuData =  data.data;
+            if(childMenuData.length > 0){
+                reloadSelect('childMenuList','请选择二级模块',childMenuData);
+            }
+        }
+    },'json');
+
+    // 监听一级菜单
+    form.on('select(parentMenuList)', function(data) {
+        let parentMenuId = data.value;
+        if(parentMenuId == ''){
+            dataTable.reload({
+                done: function(res, curr, count){
+                    reloadSelect('childMenuList','请选择二级模块',childMenuData);
+                }
+            });
+        }else{
+            $.get(requestUrl+'/getParentMenuList.do',{"menuId":parentMenuId},function(data){
+                if(data.code == 200){
+                    dataTable.reload({
+                        where: {
+                            "parentMenuId":parentMenuId
+                        },
+                        done: function(res, curr, count){
+                            reloadSelect('childMenuList','请选择二级模块',data.data);
+                        }
+                    });
+                }
+            },'json');
+        }
+    });
+
+    // 监听二级菜单
+    form.on('select(childMenuList)', function(data) {
+        let menuId = data.value;
+        if(menuId == ''){
+            dataTable.reload({
+                done: function(res, curr, count){
+                    reloadSelect('childMenuList','请选择二级模块',childMenuData);
+                }
+            });
+        } else {
+            dataTable.reload({
+                where: {
+                    "menuId":menuId
+                }
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        }
+    });
+
     // 加载数据表格
     var dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 550
+        ,height : 580
         ,url: requestUrl+'/getShenHeSetPageList.do'
         ,request: {
             pageName: 'pageIndex'
@@ -260,7 +260,36 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
             table.on('tool(dataTable)', function(obj){
                 var rowData = obj.data;
                 if (obj.event === 'detail') {
-                    layer.msg('查看', {time : 3000, offset: '100px'});
+                    layer.open({
+                        title : '系统管理-通用设置-审核流程设置'
+                        ,type : 1
+                        ,area : [ '900px', '450px' ]
+                        ,offset : '50px' //只定义top坐标，水平保持居中
+                        ,shadeClose : true //点击遮罩关闭
+                        ,btn : ['关闭']
+                        ,content : $('#view_container')
+                        ,success: function(layero, index){
+                            //
+                            let html = '<table class="layui-table">\n' +
+                                '        <tbody>\n' +
+                                '              <tr>' +
+                                '                   <td style="width: 80px; text-align: right">流程名称：</td><td style="width: 120px;">'+rowData.shenheName+'</td>' +
+                                '                   <td style="width: 80px; text-align: right">业务模块：</td><td style="width: 120px;">'+rowData.menuName+'</td>' +
+                                '              </tr>\n' +
+                                '              <tr>' +
+                                '                   <td style="width: 80px; text-align: right">流程描述：</td><td style="width: 120px;" colspan="3">'+rowData.shenheDesc+'</td>' +
+                                '              </tr>\n' +
+                                '              <tr>' +
+                                '                   <td style="width: 80px; text-align: right">流程名称：</td><td style="width: 120px;" colspan="3">'+rowData.shenheProcess+'</td>' +
+                                '              </tr>\n' +
+                                '       </tbody>\n' +
+                                '    </table>';
+                            $("#view_container").html(html);
+                        }
+                        ,end:function () {
+                            $("#view_container").empty();
+                        }
+                    });
                 } else if (obj.event === 'update') {
                     //
                     layer.open({
