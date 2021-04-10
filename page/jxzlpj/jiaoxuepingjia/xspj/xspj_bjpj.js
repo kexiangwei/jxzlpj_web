@@ -10,7 +10,7 @@ layui.use(['layer','table','form','transfer'], function(){
         $.get(requestUrl+'/getActiveTemplate.do',{'templateType':'学生评教'},function (result_data) {
             //系统可以设定评教时间段，非时间段内，学生进入不了评教模块
             if(result_data.code != 200){ //是否评教时间
-                layer.msg('评教功能暂未开放', {time : 3000, offset: '100px'});
+                layer.msg('评教功能暂未开放！', {time : 3000, offset: '100px'});
                 return;
             } /*else {
                 //显示评教要求
@@ -71,16 +71,16 @@ layui.use(['layer','table','form','transfer'], function(){
                                 if(data.isPj === 1){
                                     html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">已评</a>';
                                 } else {
-                                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">评教</a>';
+                                    html = '<a class="layui-btn layui-btn-xs" lay-event="pj">未评</a>';
                                 }
                             } else {
-                                html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">评教</a>';
+                                html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">评教时间已过</a>';
                             }
                             $('#datatable_bar').html(html);
                             return data.endDate;
                         }
                     }
-                    ,{fixed: 'right', width:80, align:'center', toolbar: '#datatable_bar'}
+                    ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
                 ]]
                 ,even: true //隔行背景
                 ,limit: 10
@@ -465,7 +465,7 @@ layui.use(['layer','table','form','transfer'], function(){
             }
             ,cols : [[ //表头
                 {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                ,{field:'courseName', title:'课程名称', width:180, sort:true, templet: function (data) {
+                ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
                         let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">已评</a>';
                         if(data.isPj === 2){
                             html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">未评</a>';
@@ -474,11 +474,13 @@ layui.use(['layer','table','form','transfer'], function(){
                         return data.courseName;
                     }}
                 ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                ,{field:'xf', title:'学分', width:150, sort:true}
                 ,{field:'xs', title:'学时', width:150, sort:true}
-                ,{field:'majorName', title:'适用专业', width:180, sort:true}
-                ,{field:'collegeName', title:'开课学院', width:180, sort:true}
-                ,{fixed: 'right', width:80, align:'center', toolbar: '#datatable_bar'}
+                ,{field:'xf', title:'学分', width:150, sort:true}
+                ,{field:'xn', title:'学年', width:150, sort:true}
+                ,{field:'xq', title:'学期', width:150, sort:true}
+                ,{field:'xyName', title:'学院', width:150, sort:true}
+                ,{field:'zyName', title:'专业', width:150, sort:true}
+                ,{fixed: 'right', width:100, align:'center', toolbar: '#datatable_bar'}
             ]]
             ,even: true //隔行背景
             ,limit: 10

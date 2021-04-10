@@ -89,12 +89,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         $('#datatable_bar').html(html);
                         return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                     } else {
-                        html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                        html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
                             '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
                         if(data.isSubmit == 1){
                             html += '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-ok"></i>提交</a>';
                         } else {
-                            html += '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                            html += '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
                         }
                         $('#datatable_bar').html(html);
                         return data.courseName;
@@ -102,8 +102,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
             ,{field:'teacher', title:'教师姓名', width:150, sort:true}
-            ,{field:'teacherAge', title:'教师年龄', width:120, sort:true}
-            ,{field:'teacherTitle', title:'教师职称', width:120, sort:true}
+            ,{field:'teacherTitle', title:'教师职称', width:150, sort:true}
             ,{field:'teachDate', title:'上课时间', width:150, sort:true}
             ,{field:'teachAddr', title:'上课地点', width:150, sort:true}
             ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}

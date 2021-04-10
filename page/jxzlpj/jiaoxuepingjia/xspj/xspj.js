@@ -65,20 +65,24 @@ layui.use(['layer','table','form'], function(){
                 }
                 ,cols : [[ //表头
                     {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                    ,{field:'courseName', title:'课程名称', width:180, sort:true, templet: function (data) {
+                    // ,{field:'courseCode', title:'课程编号', width:150, sort:true}
+                    ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
                             let html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">已评</a>';
                             if(data.isPj === 2){
-                                html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="pj">未评</a>';
+                                html = '<a class="layui-btn layui-btn-xs" lay-event="pj">未评</a>';
                             }
                             $('#datatable_bar').html(html);
                             return data.courseName;
                         }}
                     ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                    ,{field:'xf', title:'学分', width:150, sort:true}
-                    ,{field:'xs', title:'学时', width:150, sort:true}
-                    ,{field:'majorName', title:'适用专业', width:180, sort:true}
-                    ,{field:'collegeName', title:'开课学院', width:180, sort:true}
-                    ,{fixed: 'right', width:80, align:'center', toolbar: '#datatable_bar'}
+                    // ,{field:'teacherCode', title:'授课教师编号', width:150, sort:true}
+                    ,{field:'teacherName', title:'授课教师姓名', width:150, sort:true}
+                    ,{field:'teacherTitle', title:'授课教师职称', width:150, sort:true}
+                    ,{field:'skSj', title:'授课时间', width:150, sort:true}
+                    ,{field:'skDd', title:'授课地点', width:150, sort:true}
+                    ,{field:'teacherXy', title:'教师所在学院', width:150, sort:true}
+                    ,{field:'teacherZy', title:'教师所在专业', width:150, sort:true}
+                    ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
                 ]]
                 ,even: true //隔行背景
                 ,limit: 10
@@ -163,9 +167,10 @@ layui.use(['layer','table','form'], function(){
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         $.post(requestUrl+'/xspj/insert.do' ,{
                                             "courseCode" : obj.data.courseCode
-                                            ,"templateCode" : result_data.data[0].templateCode
+                                            ,"teacherCode" : obj.data.teacherCode
                                             ,'userId':$.cookie('userId')
                                             ,'userName':$.cookie('userName')
+                                            ,"templateCode" : result_data.data[0].templateCode
                                             ,'jsonString':JSON.stringify(data.field)
                                         } ,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
@@ -221,7 +226,7 @@ layui.use(['layer','table','form'], function(){
             }
             ,cols : [[ //表头
                 {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                ,{field:'courseName', title:'课程名称', width:180, sort:true, templet: function (data) {
+                ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
                         let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">已评</a>';
                         if(data.isPj === 2){
                             html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">未评</a>';
@@ -230,11 +235,13 @@ layui.use(['layer','table','form'], function(){
                         return data.courseName;
                     }}
                 ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                ,{field:'xf', title:'学分', width:150, sort:true}
                 ,{field:'xs', title:'学时', width:150, sort:true}
-                ,{field:'majorName', title:'适用专业', width:180, sort:true}
-                ,{field:'collegeName', title:'开课学院', width:180, sort:true}
-                ,{fixed: 'right', width:80, align:'center', toolbar: '#datatable_bar'}
+                ,{field:'xf', title:'学分', width:150, sort:true}
+                ,{field:'xn', title:'学年', width:150, sort:true}
+                ,{field:'xq', title:'学期', width:150, sort:true}
+                ,{field:'xyName', title:'学院', width:150, sort:true}
+                ,{field:'zyName', title:'专业', width:150, sort:true}
+                ,{fixed: 'right', width:100, align:'center', toolbar: '#datatable_bar'}
             ]]
             ,even: true //隔行背景
             ,limit: 10
@@ -251,6 +258,7 @@ layui.use(['layer','table','form'], function(){
                     if (obj.event === 'pj') {
                         $.get(requestUrl+'/xspj/getPjInfo.do',{
                             'courseCode':obj.data.courseCode
+                            ,'userId':$.cookie('userId')
                         },function (result_data) {
                             layer.open({
                                 title : '教学评价-学生评教-评教详情'

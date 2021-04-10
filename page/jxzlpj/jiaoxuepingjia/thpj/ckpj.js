@@ -33,8 +33,9 @@ layui.use(['layer','element','table'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field:'courseName', title:'课程名称', width:180, sort:true, templet: function (data) {
-                    let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看评教</a>';
+            // ,{field:'courseCode', title:'课程编号', width:150, sort:true}
+            ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
+                    let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看评教</a>';
                     if(data.isPj == 2){
                         html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看评教</a>';
                     }
@@ -42,10 +43,12 @@ layui.use(['layer','element','table'], function(){
                     return data.courseName;
              }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-            ,{field:'xf', title:'学分', width:150, sort:true}
             ,{field:'xs', title:'学时', width:150, sort:true}
-            ,{field:'majorName', title:'适用专业', width:180, sort:true}
-            ,{field:'collegeName', title:'开课学院', width:180, sort:true}
+            ,{field:'xf', title:'学分', width:150, sort:true}
+            ,{field:'xn', title:'学年', width:150, sort:true}
+            ,{field:'xq', title:'学期', width:150, sort:true}
+            ,{field:'xyName', title:'学院', width:150, sort:true}
+            ,{field:'zyName', title:'专业', width:150, sort:true}
             ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
@@ -92,7 +95,7 @@ layui.use(['layer','element','table'], function(){
                         ,title : ''
                         ,type : 1
                         ,area : [ '1100px', '500px' ]
-                        ,offset : '30px' //只定义top坐标，水平保持居中
+                        ,offset : '50px' //只定义top坐标，水平保持居中
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#view_container')
                         ,success: function(layero, index){
