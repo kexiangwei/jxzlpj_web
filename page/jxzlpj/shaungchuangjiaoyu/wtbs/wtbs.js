@@ -184,8 +184,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.open({
                                         title : '双创教育-文、体类比赛-新增'
                                         ,type : 1
-                                        ,area : [ '900px', '500px' ]
-                                        ,offset : '30px'
+                                        ,area : [ '900px', '550px' ]
+                                        ,offset : '50px'
                                         ,content : $('#editForm_container')
                                         ,success: function(layero, index){
 
@@ -260,8 +260,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 layer.open({
                                     title : '双创教育-文、体类比赛-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '500px' ]
-                                    ,offset : '30px'
+                                    ,area : [ '900px', '550px' ]
+                                    ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')
                                     ,success: function(layero, index){
@@ -701,6 +701,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 laydate.render({
                     elem: "#zsGrantDate" //指定元素
                     ,trigger: 'click' //解决layDate 时间控件一闪而过问题
+                    ,ready: function(date){
+                        $('#layui-laydate3').css('top','42px');
+                    }
                 });
 
                 //自定义验证规则

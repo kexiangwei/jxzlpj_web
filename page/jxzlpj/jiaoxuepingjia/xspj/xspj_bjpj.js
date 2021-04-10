@@ -480,7 +480,7 @@ layui.use(['layer','table','form','transfer'], function(){
                 ,{field:'xq', title:'学期', width:150, sort:true}
                 ,{field:'xyName', title:'学院', width:150, sort:true}
                 ,{field:'zyName', title:'专业', width:150, sort:true}
-                ,{fixed: 'right', width:100, align:'center', toolbar: '#datatable_bar'}
+                ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
             ]]
             ,even: true //隔行背景
             ,limit: 10

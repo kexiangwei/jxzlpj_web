@@ -164,7 +164,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         title : '教学奖惩-教育教学成果奖-新增'
                                         ,type : 1
                                         // ,shadeClose : true //禁用点击遮罩关闭弹窗
-                                        ,area : [ '900px', '450px' ]
+                                        ,area : [ '900px', '550px' ]
                                         ,offset : '50px'
                                         ,content : $('#editForm_container')
                                         ,success: function(layero, index){
@@ -242,7 +242,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 layer.open({
                                     title : '教学奖惩-教育教学成果奖-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '450px' ]
+                                    ,area : [ '900px', '550px' ]
                                     ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')
@@ -446,6 +446,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,type: 'year'
                     // ,min: ''
                     ,max: new Date().getFullYear()+"-01-01" //直接设置年份还不行，格式“年-月-日”，参考链接：//https://www.layui.com/doc/modules/laydate.html#minmax
+                    ,done: function(value, date){
+
+                    }
+                    ,ready: function(date){
+                        $('#layui-laydate1').css('top','115px');
+                    }
                 });
 
                 //自定义验证规则

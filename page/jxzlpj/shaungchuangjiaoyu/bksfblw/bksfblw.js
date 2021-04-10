@@ -151,7 +151,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.open({
                                         title : '双创教育-本科生发表论文-新增'
                                         ,type : 1
-                                        ,area : [ '900px', '500px' ]
+                                        ,area : [ '900px', '550px' ]
                                         ,offset : '50px'
                                         ,content : $('#editForm_container')
                                         ,success: function(layero, index){
@@ -226,7 +226,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 layer.open({
                                     title : '双创教育-本科生发表论文-编辑'
                                     ,type : 1
-                                    ,area : [ '900px', '500px' ]
+                                    ,area : [ '900px', '550px' ]
                                     ,offset : '50px'
                                     ,shadeClose : true //点击遮罩关闭
                                     ,content : $('#editForm_container')

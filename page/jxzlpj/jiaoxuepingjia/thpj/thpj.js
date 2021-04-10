@@ -98,7 +98,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
             ,{field:'teachAddr', title:'上课地点', width:150, sort:true}
             ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
             ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
-            ,{fixed: 'right', width:100, align:'center', toolbar: '#datatable_bar'}
+            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
