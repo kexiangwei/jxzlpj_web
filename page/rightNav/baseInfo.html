@@ -2,38 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>用户中心</title>
     <link rel="stylesheet" href="../../js/layui/css/layui.css">
 
 </head>
 <body>
-    <div class="layui-container" style="margin-top:100px; width: 50%;">
-        <table class="layui-table" style="margin-top: 20px;" id="baseInfo"></table>
+
+    <div class="layui-container" style="width: 50%; margin-top: 100px;">
+        <div class="layui-row">
+            <img id="headImg" src="" class="layui-nav-img" alt="用户头像" style="width: 120px;height: 120px;"><span style="font-weight: bold;font-size: 30px;"></span>
+        </div>
+        <hr class="layui-border-green">
+        <div class="layui-row">
+            <table class="layui-table" style="margin-top: 20px;" id="baseInfo"></table>
+        </div>
     </div>
+
+    <script src="../../js/layui/layui.js"></script>
     <script src="../../js/jquery-3.3.1.js"></script>
     <script src="../../js/jquery.cookie.js"></script>
+    <script src="../../js/global.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            let html = '<tr><td>工号/学号：'+$.cookie('userId')+'</td></tr>\n' +
-                '<tr><td>姓名：'+$.cookie('userName')+'</td></tr>';
-
-                let accountType = $.cookie('accountType');
-                if(accountType != "null"){ //万恶的cookie，cookie返回值类型为string,不能使用（!accountType）或者（typeof(accountType) !=null）进行判断
-                    html += '<tr><td>性别：'+$.cookie('sex')+'</td></tr>\n' +
-                        '<tr><td>年龄：'+$.cookie('age')+'</td></tr>';
-                    html += '<tr><td>学院：'+$.cookie('xyName')+'</td></tr>' +
-                        '<tr><td>专业：'+$.cookie('zyName')+'</td></tr>';
-                    if(accountType === 'teacher'){
-                        html += '<tr><td>单位：'+$.cookie('userUnit')+'</td></tr>' +
-                            '<tr><td>职称：'+$.cookie('title')+'</td></tr>';
-                    }
-                    if(accountType === 'student'){
-                        html += '<tr><td>年级：'+$.cookie('nj')+'</td></tr>' +
-                            '<tr><td>班级：'+$.cookie('bj')+'</td></tr>';
-                    }
-
-                }
-                html += '<tr><td>所属用户组：'+$.cookie('userGroup')+'</td></tr>';
+            //用户头像
+            $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/files/userHeadImg/tly.jpg')).next('span').html($.cookie('userName'));
+            //基本信息
+            let html = '<table class="layui-table">\n' +
+                '        <tbody>\n' +
+                '              <tr>' +
+                '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+($.cookie('userName') == "null"? "":$.cookie('userName'))+'</td>' +
+                '                <td style="width: 80px; text-align: right">工号/学号：</td><td style="width: 120px;">'+($.cookie('userId') == "null"? "":$.cookie('userId'))+'</td>' +
+                '              </tr>\n' +
+                '              <tr>' +
+                '                <td style="width: 80px; text-align: right">性别：</td><td style="width: 120px;">'+($.cookie('sex') == "null"? "":$.cookie('sex'))+'</td>' +
+                '                <td style="width: 80px; text-align: right">年龄：</td><td style="width: 120px;">'+($.cookie('age') == "null"? "":$.cookie('age'))+'</td>' +
+                '              </tr>\n' +
+                '              <tr>' +
+                '                <td style="width: 80px; text-align: right">学院：</td><td style="width: 120px;">'+($.cookie('xyName') == "null"? "":$.cookie('xyName'))+'</td>' +
+                '                <td style="width: 80px; text-align: right">专业：</td><td style="width: 120px;">'+($.cookie('zyName') == "null"? "":$.cookie('zyName'))+'</td>' +
+                '              </tr>';
+            if($.cookie('accountType') == 'teacher'){
+                html += '<tr>' +
+                    '       <td style="width: 80px; text-align: right">单位：</td><td style="width: 120px;">'+($.cookie('userUnit') == "null"? "":$.cookie('userUnit'))+'</td>' +
+                    '       <td style="width: 80px; text-align: right">职称：</td><td style="width: 120px;">'+($.cookie('title') == "null"? "":$.cookie('title'))+'</td>' +
+                    '   </tr>';
+            } else if($.cookie('accountType') == 'student'){
+                html += '<tr>' +
+                    '       <td style="width: 80px; text-align: right">年级：</td><td style="width: 120px;">'+($.cookie('nj') == "null"? "":$.cookie('nj'))+'</td>' +
+                    '       <td style="width: 80px; text-align: right">班级：</td><td style="width: 120px;">'+($.cookie('bj') == "null"? "":$.cookie('bj'))+'</td>' +
+                    '   </tr>';
+            }
+            html +=  '  </tbody>\n' +
+                '    </table>';
             $('#baseInfo').html(html);
         });
     </script>

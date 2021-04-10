@@ -150,7 +150,7 @@ layui.use(['layer','element','table','form'], function(){
                             layer.open({
                                 title : '教学研究-教改项目-新增'
                                 ,type : 1
-                                ,area : [ '1200px', '550px' ]
+                                ,area : [ '1200px', '580px' ]
                                 ,offset : '50px'
                                 // ,shadeClose : true //禁用点击遮罩关闭弹窗
                                 ,content : $('#editForm')
@@ -973,7 +973,7 @@ layui.use(['layer','element','table','form'], function(){
                 layer.open({
                     title : '教学研究-教改项目-审核'
                     ,type : 1
-                    ,area : [ '700px', '350px' ]
+                    ,area : [ '700px', '450px' ]
                     ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
                     // ,btn : ['关闭']

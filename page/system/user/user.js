@@ -132,8 +132,8 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                     '   </tr>';
                             } else if(row_data.accountType == 'student'){
                                 html += '<tr>' +
-                                    '       <td style="width: 80px; text-align: right">年级：</td><td style="width: 120px;">'+(row_data.age == null?"":row_data.nj)+'</td>' +
-                                    '       <td style="width: 80px; text-align: right">班级：</td><td style="width: 120px;">'+(row_data.age == null?"":row_data.bj)+'</td>' +
+                                    '       <td style="width: 80px; text-align: right">年级：</td><td style="width: 120px;">'+(row_data.nj == null?"":row_data.nj)+'</td>' +
+                                    '       <td style="width: 80px; text-align: right">班级：</td><td style="width: 120px;">'+(row_data.bj == null?"":row_data.bj)+'</td>' +
                                     '   </tr>';
                             }
                             html +=  '  </tbody>\n' +

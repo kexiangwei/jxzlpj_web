@@ -728,7 +728,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 layer.open({
                     title : '教学研究-教学团队-校级团队-审核'
                     ,type : 1
-                    ,area : [ '700px', '350px' ]
+                    ,area : [ '700px', '450px' ]
                     ,offset : '100px'
                     ,shadeClose : true //点击遮罩关闭
                     // ,btn : ['关闭']

@@ -667,7 +667,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 layer.open({
                     title : '教学研究-教改项目-审核'
                     ,type : 1
-                    ,area : [ '700px', '350px' ]
+                    ,area : [ '700px', '450px' ]
                     // ,area : '500px'//只想定义宽度时，你可以area: '500px'，高度仍然是自适应的
                     ,offset : '100px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭

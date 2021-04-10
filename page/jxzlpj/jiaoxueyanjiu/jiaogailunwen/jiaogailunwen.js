@@ -144,7 +144,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             layer.open({
                                 title : '教学研究-教改论文-新增'
                                 ,type : 1
-                                ,area : [ '900px', '500px' ]
+                                ,area : [ '900px', '550px' ]
                                 ,offset : '50px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){

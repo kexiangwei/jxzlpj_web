@@ -51,6 +51,7 @@
     </style>
 </head>
 <body class="layui-layout-body">
+
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header" style="position:relative;z-index: 1000">
             <div class="layui-logo" style="width: 320px;font-size: 26px;color: white; ">
@@ -63,7 +64,7 @@
                     </a>
                     <dl class="layui-nav-child">
                         <dd><a class="site-demo-active" href="javascript:;" data-id="rightNav_baseInfo" data-title="基本信息" data-url="page/rightNav/baseInfo.html" data-type="tabAdd">基本信息</a></dd>
-                        <dd><a class="site-demo-active" href="javascript:;" data-id="rightNav_securitySet" data-title="安全设置" data-url="page/rightNav/securitySet.html" data-type="tabAdd">安全设置</a></dd>
+                        <dd><a href="javascript:;" onclick="setPassword();return false">安全设置</a></dd>
                         <dd><a href="login.html" onclick="function f() {
                            $.post(requestUrl+'/logout.do', {},function(data){
                                 layer.msg('已退出！', {time : 3000, offset: '100px'});
@@ -101,7 +102,31 @@
             © 2020 edu.jxzlpj.cn MIT license
         </div>-->
     </div>
+
+    <!-- 重置密码 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
+        <form class="layui-form" lay-filter="editForm">
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">新密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="pass" lay-verify="required|pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="margin-top: 20px">
+                <label class="layui-form-label">确认密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="repass" lay-verify="required|repass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-btn-container" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
     <script>
+        //
         let isCollapse = false;
         function handleClick() {
             let collapseMain = document.getElementById('collapseMain')
@@ -120,6 +145,51 @@
                 shrinkBtn.style.display = 'block'
             }
             isCollapse = !isCollapse;
+        }
+        //
+        function setPassword() {
+            layui.use(['layer','form'], function(){
+                var $ = layui.$,layer = layui.layer,form = layui.form;
+                //
+                layer.open({
+                    title : '系统管理-安全设置'
+                    ,type : 1
+                    ,area : [ '900px', '300px' ]
+                    ,offset : '200px' //只定义top坐标，水平保持居中
+                    ,shadeClose : true //点击遮罩关闭
+                    ,btn : ['关闭']
+                    ,content : $('#editForm_container')
+                    ,success: function(layero, index){
+
+                        //自定义验证规则
+                        form.verify({
+                            pass: [ //[正则匹配项、匹配不符时的提示文字]
+                                /^[\S]{6,12}$/
+                                ,'密码必须6到12位，且不能出现空格！'
+                            ]
+                            ,repass: function(value, item){ //value：表单的值、item：表单的DOM对象;
+                                if(value != $("input[name='pass']").val()){
+                                    return '两次输入的密码不一致！';
+                                }
+                            }
+                        });
+
+                        //监听表单提交
+                        form.on('submit(toSubmitEidtForm)', function(data){
+                            $.post(requestUrl+'/updateUser.do', {
+                                'userId': $.cookie('userId'),
+                                'password': data.field.pass
+                            } ,function(result_data){
+                                layer.msg(result_data.msg, { offset: '100px'});
+                            },'json');
+                        });
+                    }
+                    ,end:function () {
+                        $("input[name='pass']").val('');
+                        $("input[name='repass']").val('');
+                    }
+                });
+            });
         }
     </script>
     <script src="js/layui/layui.js"></script>

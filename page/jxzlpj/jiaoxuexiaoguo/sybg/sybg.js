@@ -59,12 +59,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-                        ,{field: 'college', title: '开课学院', width:150, sort:true}
-                        ,{field: 'major', title: '适用专业', width:150, sort:true}
-                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
-                        ,{field: 'courseName', title: '课程名称', width:150, sort:true}
+                        ,{field: 'college', title: '开课学院', width:200, sort:true}
+                        ,{field: 'major', title: '适用专业', width:200, sort:true}
+                        ,{field: 'courseCode', title: '课程编号', width:200, sort:true}
+                        ,{field: 'courseName', title: '课程名称', width:200, sort:true}
                         ,{field: 'score', title: '实验课成绩', width:150, sort:true}
-                        ,{field: 'isSubmit', title: '提交状态', width:120, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'isSubmit', title: '提交状态', width:150, sort:true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.isSubmit;
                                 var html = '        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo">查看信息</a>';
                                 if(val=='已提交'){
@@ -86,7 +86,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 }
                             }
                         }
-                        ,{field: 'status', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'status', title: '审核状态', width:150, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.status;
                                 if(val=='审核中' || val=='通过'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -305,12 +305,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
                         ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '合计：'}
-                        ,{field: 'college', title: '开课学院', width:150, sort:true}
-                        ,{field: 'major', title: '适用专业', width:150, sort:true}
-                        ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
-                        ,{field: 'courseName', title: '课程名称', width:150, sort:true}
+                        ,{field: 'college', title: '开课学院', width:200, sort:true}
+                        ,{field: 'major', title: '适用专业', width:200, sort:true}
+                        ,{field: 'courseCode', title: '课程编号', width:200, sort:true}
+                        ,{field: 'courseName', title: '课程名称', width:200, sort:true}
                         ,{field: 'score', title: '实验课成绩', width:150, sort:true}
-                        ,{field: 'shenheStatus', title: '审核状态', width:120, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
+                        ,{field: 'shenheStatus', title: '审核状态', width:150, sort:true,templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                                 var val = data.shenheStatus;
                                 if(val=='已审核'){
                                     return '<span style="color: blue;font-weight: bold;">'+val+'</span>';
@@ -318,7 +318,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 return '<span style="color: red;font-weight: bold;">'+val+'</span>';
                             }
                         }
-                        ,{fixed: 'right', width:180, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
+                        ,{fixed: 'right', width:170, align:'center', toolbar: '#other_bar'} //这里的toolbar值是模板元素的选择器
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
