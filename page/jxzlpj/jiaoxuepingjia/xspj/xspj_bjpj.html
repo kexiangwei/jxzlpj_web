@@ -14,6 +14,19 @@
 </head>
 <body class="layui-layout-body">
     <div class="layui-fluid">
+
+        <!-- 查询参数 -->
+        <div class="layui-form search">
+            课程名称：
+            <div class="layui-inline">
+                <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn" data-type="search">搜索</button>
+                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+            </div>
+        </div>
+        <!-- 数据表格 -->
         <table class="layui-table" lay-filter="datatable" id="datatable">
             <script type="text/html" id="datatable_bar"></script>
         </table>

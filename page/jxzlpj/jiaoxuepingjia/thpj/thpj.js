@@ -87,7 +87,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         $('#datatable_bar').html(html);
                         return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                     }
-                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                    html = '<a class="layui-btn layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     $('#datatable_bar').html(html);
                     return data.courseName;
              }}
@@ -186,7 +186,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,area : [ '1100px', '500px' ]
                                 ,offset : '30px' //只定义top坐标，水平保持居中
                                 ,shadeClose : true //点击遮罩关闭
-                                ,btn : ['教学设计','教学效果','关闭']
+                                ,btn : ['关闭']
+                                /*,btn : ['教学设计','教学效果','关闭']
                                 ,yes: function(index, layero){
                                     initRelationDatatable('教学设计',rowData);
                                     return false;
@@ -195,7 +196,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     initRelationDatatable('教学效果',rowData);
                                     return false;
                                 }
-                                ,skin: 'demo-class'
+                                ,skin: 'demo-class'*/
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
                                     //
@@ -257,7 +258,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 ,area : [ '1100px', '500px' ]
                                 ,offset : '50px' //只定义top坐标，水平保持居中
                                 ,shadeClose : true //点击遮罩关闭
-                                ,btn : ['教学设计','教学效果','关闭']
+                                ,btn : ['关闭']
+                                /*,btn : ['教学设计','教学效果','关闭']
                                 ,yes: function(index, layero){
                                     initRelationDatatable('教学设计',rowData);
                                     return false;
@@ -266,7 +268,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                     initRelationDatatable('教学效果',rowData);
                                     return false;
                                 }
-                                ,skin: 'demo-class'
+                                ,skin: 'demo-class'*/
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
                                     /**

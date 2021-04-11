@@ -92,6 +92,27 @@ layui.use(['layer','table','form','transfer'], function(){
                 }
                 ,done : function(res, curr, count) {
 
+                    //监听搜索框事件
+                    $('.search .layui-btn').on('click', function(){
+                        let type = $(this).data('type');
+                        active[type] ? active[type].call(this) : '';
+                    });
+                    let active = {
+                        search: function(){
+                            datatable.reload({
+                                where: {
+                                    'courseName': $(".search input[ name='courseName']").val()
+                                }
+                                ,page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
+                        }
+                        ,reset: function () {
+                            $(".search input").val('');
+                        }
+                    };
+
                     //监听右侧工具条
                     table.on('tool(datatable)', function(obj){
                         if (obj.event === 'pj') {

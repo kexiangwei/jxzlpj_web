@@ -328,7 +328,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         // 监听学院下拉选项
         form.on('select(teacherCollege)', function(data) {
             $.get(requestUrl+'/common/getZyList.do',{
-                'collegeCode': data.value
+                'xyCode': data.value
             },function(result_data){
                 if(result_data.code == 200){
                     // 加载下拉选项
