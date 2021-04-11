@@ -549,7 +549,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,"awardDate" : data.awardDate
                     ,"userId":data.userId
                     ,"userName":data.userName
-                    ,"userUnit":data.userUnit
+                    ,"userUnit": data.userUnit != "null" ? data.userUnit : ""
                 });
             };
 

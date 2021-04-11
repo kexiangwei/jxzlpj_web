@@ -569,7 +569,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,"memberNum" : data.memberNum
                     ,"userId":data.userId
                     ,"userName":data.userName
-                    ,"userUnit":data.userUnit
+                    ,"userUnit": data.userUnit != "null" ? data.userUnit : ""
                 });
             };
 

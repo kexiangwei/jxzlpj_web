@@ -478,7 +478,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,"certAuthority" : data.certAuthority
                     ,"userId":data.userId
                     ,"userName":data.userName
-                    ,"userUnit":data.userUnit
+                    ,"userUnit": data.userUnit != "null" ? data.userUnit : ""
                 });
             };
 

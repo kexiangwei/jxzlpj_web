@@ -588,9 +588,9 @@ layui.use(['layer','element','table','form'], function(){
                     ,"xmType" : data.xmType
                     ,"leader" : data.leader
                     ,"leaderId" : data.leaderId
-                    ,"title" : data.title
-                    ,"collegeOrDept" : data.collegeOrDept
-                    ,"major" : data.major
+                    ,"title" : data.title != "null" ? data.title : ""
+                    ,"collegeOrDept" : data.collegeOrDept != "null" ? data.collegeOrDept : ""
+                    ,"major" : data.major != "null" ? data.major : ""
                     ,"mainTeachWork" : data.mainTeachWork
                     ,"mainTeachAchievement" : data.mainTeachAchievement
                     ,"currentAndBackground" : data.currentAndBackground

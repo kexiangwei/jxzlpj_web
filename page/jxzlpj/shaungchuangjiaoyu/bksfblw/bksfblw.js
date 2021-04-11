@@ -583,7 +583,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     // 监听学院下拉选项
                                     form.on('select(college)', function(data) {
                                         $.get(requestUrl+'/common/getZyList.do',{
-                                            'collegeCode': data.value
+                                            'xyCode': data.value
                                         },function(result_data){
                                             if(result_data.code == 200){
                                                 // 加载下拉选项
@@ -662,7 +662,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ,"publishYear" : data.publishYear
                     ,"userId":data.userId
                     ,"userName":data.userName
-                    ,"userUnit":data.userUnit
+                    ,"userUnit": data.userUnit != "null" ? data.userUnit : ""
                 });
             };
 
