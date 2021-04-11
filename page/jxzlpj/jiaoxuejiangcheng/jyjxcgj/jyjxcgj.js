@@ -450,7 +450,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                     }
                     ,ready: function(date){
-                        $('#layui-laydate1').css('top','115px');
+                        $('.layui-laydate').css('top','115px');
                     }
                 });
 

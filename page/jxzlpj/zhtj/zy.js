@@ -1,5 +1,5 @@
 /**
- * 系统管理-用户组
+ * 综合统计-统计分析
  */
 layui.use(['layer','table'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table;
@@ -8,12 +8,10 @@ layui.use(['layer','table'], function(){
     let datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 468
+        ,height : 568
         ,url: requestUrl+'/getTjfxPageList.do'
         ,where:{
-            "maxAuthLevel":function () {
-                return $.cookie('maxAuthLevel');
-            }
+            "tjType": "zy"
         }
         ,request: {
             pageName: 'pageIndex'
@@ -34,10 +32,10 @@ layui.use(['layer','table'], function(){
         ,cols : [
             [ //表头
                 { type:'numbers', title:'序号', width:80, fixed: 'left',rowspan: 3 }
-                ,{ field: 'NAME', title: '学院',align: 'center', width:200, sort: true, event: 'name', templet: function (data) {
-                        return '<span style="font-weight: bold; cursor: pointer;">'+data.NAME+'</span>';
-                    }, rowspan: 3
-                }
+                ,{ field: 'NAME', title: '专业',align: 'center', width:200, sort: true, event: 'name', templet: function (data) {
+                    return '<span style="font-weight: bold; cursor: pointer;">'+data.NAME+'</span>';
+                }, rowspan: 3
+            }
                 ,{ title: '教学研究',align: 'center', colspan: 10 }
                 ,{ title: '教材入选情况',align: 'center', colspan: 14 }
                 ,{ title: '教学奖励',align: 'center', colspan: 21 }
@@ -159,7 +157,7 @@ layui.use(['layer','table'], function(){
             table.on('tool(datatable)', function(obj){
                 let row_data = obj.data;
                 if (obj.event === 'name') {
-                    alert(row_data.NAME);
+                    layer.msg(row_data.NAME);
                 }
             });
         }

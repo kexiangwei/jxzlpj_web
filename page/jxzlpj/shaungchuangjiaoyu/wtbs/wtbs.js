@@ -702,7 +702,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     elem: "#zsGrantDate" //指定元素
                     ,trigger: 'click' //解决layDate 时间控件一闪而过问题
                     ,ready: function(date){
-                        $('#layui-laydate3').css('top','42px');
+                        $('.layui-laydate').css('top','42px');
                     }
                 });
 
