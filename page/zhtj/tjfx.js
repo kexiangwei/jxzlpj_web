@@ -41,6 +41,10 @@ layui.use(['layer','table'], function(){
                 ,{ title: '教学研究',align: 'center', colspan: 10 }
                 ,{ title: '教材入选情况',align: 'center', colspan: 14 }
                 ,{ title: '教学奖励',align: 'center', colspan: 21 }
+                ,{ title: '教学事故',align: 'center', rowspan: 2, colspan: 5 }
+                ,{ title: '同行评教',align: 'center', colspan: 8 }
+                ,{ title: '学生评教',align: 'center', colspan: 8 }
+                ,{ field: 'ZP', title: '教学评价总评', align: 'center', width:200, sort: true, rowspan: 3 }
             ],
             [
                 { title: '继续教育', align: 'center', colspan: 3 }
@@ -56,6 +60,12 @@ layui.use(['layer','table'], function(){
                 ,{ title: '其他本科教学奖励', align: 'center', colspan: 3 }
                 ,{ title: '教师指导文体竞赛获奖', align: 'center', colspan: 3 }
                 ,{ title: '教师指导学科竞赛获奖', align: 'center', colspan: 3 }
+                ,{ title: '评价人信息', align: 'center', colspan: 3 }
+                ,{ title: '被评价人信息', align: 'center', colspan: 3 }
+                ,{ title: '课程信息', align: 'center', colspan: 2 }
+                ,{ title: '评价人信息', align: 'center', colspan: 3 }
+                ,{ title: '被评价人信息', align: 'center', colspan: 3 }
+                ,{ title: '课程信息', align: 'center', colspan: 2 }
             ],
             [
                 //教学研究
@@ -111,6 +121,30 @@ layui.use(['layer','table'], function(){
                 ,{field: 'XKZYBS_COUNTRY', title: '国家级', align: 'center', width:120, sort: true}
                 ,{field: 'XKZYBS_PROVINCE', title: '省部级', align: 'center', width:120, sort: true}
                 ,{field: 'XKZYBS_SCHOOL', title: '校级', align: 'center', width:120, sort: true}
+                //教学事故
+                ,{field: 'JXSG_ZDSG', title: '重大教学事故次数', align: 'center', width:200, sort: true}
+                ,{field: 'JXSG_YBSG', title: '一般教学事故次数', align: 'center', width:200, sort: true}
+                ,{field: 'JXSG_GS', title: '教学过失次数', align: 'center', width:200, sort: true}
+                ,{field: 'JXSG_FMQD', title: '负面清单次数', align: 'center', width:200, sort: true}
+                ,{field: 'JXSG_TOTAL_NUM', title: '教学事故总次数', align: 'center', width:200, sort: true}
+                //同行评教
+                ,{field: 'THPJ_PJ_RS', title: '人数', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ_PJ_RC', title: '人次数', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ_AVG_SCORE', title: '打出的平均分', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ2_PJ_RS', title: '人数', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ2_PJ_RC', title: '人次数', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ2_AVG_SCORE', title: '得到的平均分', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ3_1', title: '门数', align: 'center', width:200, sort: true}
+                ,{field: 'THPJ3_2', title: '门次数', align: 'center', width:200, sort: true}
+                //学生评教
+                ,{field: 'XSPJ1_PJ_RS', title: '人数', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ1_PJ_RC', title: '人次数', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ1_AVG_SCORE', title: '打出的平均分', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ2_PJ_RS', title: '人数', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ2_PJ_RC', title: '人次数', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ2_AVG_SCORE', title: '得到的平均分', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ3_1', title: '门数', align: 'center', width:200, sort: true}
+                ,{field: 'XSPJ3_2', title: '门次数', align: 'center', width:200, sort: true}
             ]
         ]
         ,even: true //隔行背景
