@@ -6,192 +6,269 @@
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <style type="text/css">
         .layui-form-label {
-            width: 100px;
+            width: 120px;
+        }
+        .layui-input {
+            width: 95%;
+        }
+        #editForm .layui-table th {
+           text-align: center;
         }
     </style>
 </head>
 <body class="layui-layout-body">
 
-<div class="layui-fluid">
-    <!-- 查询参数 -->
-    <div class="layui-form myself_search">
-        <div class="layui-form-item">
-            课程名称：
-            <div class="layui-inline">
-                <input type="text" name="courseName" placeholder="支持关键字查询" class="layui-input">
-            </div>
-            <div class="layui-inline">
-                <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
-                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+    <div class="layui-fluid">
+        <!-- 查询参数 -->
+        <div class="layui-form search">
+            <div class="layui-form-item">
+                课程名称：
+                <div class="layui-inline">
+                    <input type="text" name="courseName" placeholder="支持关键字查询" class="layui-input">
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-normal" data-type="search">搜索</button>
+                    <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                </div>
             </div>
         </div>
+        <!-- 数据表格 -->
+        <table class="layui-table" lay-filter="datatable" id="datatable" >
+            <script type="text/html" id="datatable_tools">
+
+            </script>
+        </table>
     </div>
 
-    <!-- 数据表格 -->
-    <table class="layui-table" lay-filter="myself_table" id="myself_table" >
-        <script type="text/html" id="myself_toolbar">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
-                <!--<button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>提交</button>-->
-            </div>
-        </script>
-        <script type="text/html" id="myself_bar">
-            <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail_dataInfo"><i class="layui-icon layui-icon-read"></i>查看信息</a>
-        </script>
-    </table>
-</div>
+    <!-- 信息详情 -->
+    <div class="layui-container" style="width: 90%; display: none;" id="dataInfoContainer">
 
-<!-- 信息详情 -->
-<div class="layui-container" style="width: 90%; display: none;" id="dataInfoContainer"></div>
+    </div>
 
-<!-- 响应新增，编辑按钮 -->
-<div class="layui-container" style="width: 95%; display: none" id="editFormContainer">
-    <form class="layui-form" action="" lay-filter="editForm" id="editForm">
+    <!-- 响应新增，编辑按钮 -->
+    <div class="layui-container" style="width: 90%; display: none" id="editFormContainer">
 
-        <input type="hidden" name="code"/>
-        <input type="hidden" name="xn"/>
-        <input type="hidden" name="xq"/>
-        <input type="hidden" name="userId"/>
-        <input type="hidden" name="userName"/>
-        <input type="hidden" name="userUnit"/>
+        <h2 id="title" style="margin-top: 20px; font-weight: bold" align="center">北京农学院</h2>
+        <h2 id="subTitle" style=" font-weight: bold" align="center"></h2>
 
-        <!-- 业务数据 -->
-        <fieldset class="layui-elem-field" style="margin-top: 20px;">
+        <form class="layui-form" style="margin-top: 20px;" lay-filter="editForm"  id="editForm">
 
-            <div class="layui-form-item" style="margin-top: 20px;">
-                <div class="layui-inline">
-                    <label class="layui-form-label">课程名称：</label>
-                    <div class="layui-input-inline">
-                        <select id="courseName" name="courseName" lay-filter="courseName"></select>
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">课程编号：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="courseCode" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">课程性质：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="courseAttr" class="layui-input">
-                    </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">开课学院（部）：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="xyName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">授课班级：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="teachClass" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">学生人数：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="studentNum" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">上课地点：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="classLocation" class="layui-input">
-                    </div>
+                <label class="layui-form-label">系（教研室）：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="zyName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">课程负责人：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="courseLeader" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="width: 140px;">开课学院（部）名称：</label>
-                    <div class="layui-input-inline" style="width: 495px;">
-                        <input type="text" name="openCollege" class="layui-input">
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset class="layui-elem-field" style="margin-top: 20px;">
-            <div class="layui-form-item" style="margin-top: 20px;">
-                <div class="layui-inline">
-                    <label class="layui-form-label">课次：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="courseNum" required class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">周次：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="weekNum" required class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">日期：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="commonDate" name="commonDate" required class="layui-input">
-                    </div>
+                <label class="layui-form-label">学年：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="xn" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">星期：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="week" required class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">节次：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="lessonNum" required class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">学时：</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="lessonHour" required class="layui-input">
-                    </div>
+                <label class="layui-form-label">学期：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="xq" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">授课教师：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="teacher" required class="layui-input" style="width: 92%;">
+                    <input type="text" name="skjs" required  lay-verify="required" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">授课目标：</label>
+                <label class="layui-form-label">授课班级：</label>
                 <div class="layui-input-block">
-                    <textarea class="layui-textarea" name="teachTarget" required placeholder="填写本次授课的目标。" autocomplete="off" style="width: 92%;"></textarea>
+                    <input type="text" name="skbj" required  lay-verify="required" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">教学组织：</label>
-                <div class="layui-input-block">
-                    <textarea class="layui-textarea" name="teachDesign" required placeholder="围绕教学目标，教师采用什么方式？讲授什么内容？培养学生什么知识、能力和素养？" autocomplete="off" style="width: 92%;"></textarea>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">课程思政点：</label>
-                <div class="layui-input-block">
-                    <textarea class="layui-textarea" name="politicElement" required placeholder="若本次课有课程思政点，填写；若没有，则不填写。" autocomplete="off" style="width: 92%;"></textarea>
-                </div>
-            </div>
-        </fieldset>
 
-        <div class="layui-btn-container" align="center">
-            <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-        </div>
-    </form>
-</div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>一、课程目标与课程考核及其对毕业要求的支撑</legend>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>（一）课程目标及其对毕业要求的支撑</legend>
+                <div class="layui-field-box">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">序号</th>
+                                <th>专业毕业要求</th>
+                                <th>专业毕业要求指标点</th>
+                                <th>课程目标</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>（二）课程考核及其对课程目标的支撑</legend>
+                <div class="layui-field-box">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;" rowspan="2">序号</th>
+                                <th rowspan="2">考核方式</th>
+                                <th rowspan="2">考核内容</th>
+                                <th rowspan="2">考核占比</th>
+                                <th colspan="5">考核评价标准</th>
+                                <th rowspan="2">支撑的课程目标</th>
+                            </tr>
+                            <tr>
+                                <th>优秀</th>
+                                <th>良好</th>
+                                <th>中等</th>
+                                <th>合格</th>
+                                <th>不合格</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
 
-<script src="../../../../js/layui/layui.js"></script>
-<script src="../../../../js/jquery-3.3.1.js"></script>
-<script src="../../../../js/jquery.cookie.js"></script>
-<script src="../../../../js/global.js"></script>
-<script src="kczlfxbg.js"></script>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>二、学生学习达成度分析</legend>
+            </fieldset>
+            <fieldset class="layui-elem-field">
+                <legend>（一）考核情况分析</legend>
+                <div class="layui-field-box">
+                    1．期末考试结果分析（若有期末考试，填写此表；若无，忽略此表）
+                    <table class="layui-table">
+                        <tr>
+                            <td>命题分析</td>
+                            <td colspan="7">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 150px;">1．试题与教学大纲：</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="like1" lay-skin="primary" title="符合80%以上">
+                                        <input type="checkbox" name="like1" lay-skin="primary" title="符合60%-80%">
+                                        <input type="checkbox" name="like1" lay-skin="primary" title="符合60%以下">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 150px;">2．试题总量：</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="偏少">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="适中">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="偏多">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 150px;">3．难易程度：</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="偏易">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="适中">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="偏难">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 150px;">4．考核层次比例：</label>
+                                    <div>
+                                        记忆与理解占（
+                                            <input type="text" name="like2" style="width: 50px; height: 38px; border-width:0px 0px 0px 0px;">
+                                        ）%
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        分析与应用占（
+                                        <input type="text" name="like2" style="width: 50px; height: 38px; border-width:0px 0px 0px 0px;">
+                                        ）%
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label" style="width: 150px;">5．命题错误：</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="3处以上">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="1-3处">
+                                        <input type="checkbox" name="like2" lay-skin="primary" title="无">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>成绩等级</td>
+                            <td>90~－100（优秀）</td>
+                            <td>80~89（良好）</td>
+                            <td>70~79（中等）</td>
+                            <td>60~69（及格）</td>
+                            <td>＜60（不及格）</td>
+                            <td>应考人数</td>
+                            <td>缺考人数</td>
+                        </tr>
+                        <tr>
+                            <td>人数</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>所占比例</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>平均分</td>
+                            <td colspan="3"></td>
+                            <td>标准差</td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>考核结果分析</td>
+                            <td colspan="7">
+                                1.根据学生成绩分布情况，评价该考核结果与支撑的课程目标达成度情况。
+                                <br/> 2.根据学生对各种题型的答题情况，从基本知识、拓展知识、应用能力三个方面用定性的语言分析试卷各部分学生得分情况，评价该考核结果与支撑的课程目标达成度情况。
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
+
+            <div class="layui-btn-container" align="center">
+                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../../../js/layui/layui.js"></script>
+    <script src="../../../../js/jquery-3.3.1.js"></script>
+    <script src="../../../../js/jquery.cookie.js"></script>
+    <script src="../../../../js/global.js"></script>
+    <script src="kczlfxbg.js"></script>
 </body>
 </html>
