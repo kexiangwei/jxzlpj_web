@@ -97,7 +97,7 @@ layui.use(['layer','table','form'], function(){
                         ,content : $('#editFormContainer')
                         ,success: function(layero, index){
                             //
-                            $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）质量分析报告');
+                            $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）课程质量分析报告');
 
                             //初始化表单数据
                             form.val("editForm",{
