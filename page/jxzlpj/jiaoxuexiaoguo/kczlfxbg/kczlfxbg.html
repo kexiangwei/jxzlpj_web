@@ -81,15 +81,21 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">课程性质：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="courseAttr" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">授课教师：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="skjs" required  lay-verify="required" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
+                    <input type="text" name="skJs" required  lay-verify="required" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">授课班级：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="skbj" required  lay-verify="required" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
+                    <input type="text" name="skBj" required  lay-verify="required" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
@@ -570,7 +576,7 @@
             </fieldset>
 
             <div class="layui-btn-container" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
             </div>
         </form>
     </div>

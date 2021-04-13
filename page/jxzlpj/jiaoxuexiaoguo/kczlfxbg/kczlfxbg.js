@@ -48,7 +48,8 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'zyName', title: '系（教研室）', width:150, sort:true}
             ,{field: 'xn', title:'学年', width:150, sort:true}
             ,{field: 'xq', title:'学期', width:150, sort:true}
-            ,{field: 'skjs', title:'授课教师', width:150, sort:true}
+            ,{field: 'skJs', title:'授课教师', width:150, sort:true}
+            ,{field: 'skBj', title:'授课班级', width:150, sort:true}
             ,{fixed: 'right', width:110, align:'center', toolbar: '#datatable_tools'}
         ]]
         ,page: {
@@ -97,11 +98,11 @@ layui.use(['layer','table','form'], function(){
                         ,content : $('#editFormContainer')
                         ,success: function(layero, index){
                             //
-                            $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）课程质量分析报告');
-
+                            var objCode = new Date();
                             //初始化表单数据
+                            $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）课程质量分析报告');
                             form.val("editForm",{
-                                "code": new Date()
+                                "code": objCode
                                 ,"courseCode": row_data.courseCode
                                 ,"courseName" : row_data.courseName
                                 ,"courseAttr" : row_data.courseAttr
@@ -109,13 +110,15 @@ layui.use(['layer','table','form'], function(){
                                 ,"zyName" : row_data.zyName
                                 ,"xn" : row_data.xn
                                 ,"xq" : row_data.xq
-                                ,"skjs" : row_data.skjs
-                                ,"skbj" : row_data.skbj
+                                ,"skJs" : row_data.skJs
+                                ,"skBj" : row_data.skBj
                                 ,"userId": $.cookie('userId')
                                 ,"userName": $.cookie('userName')
                             });
                             //监听表单提交
                             form.on('submit(toSubmitEidtForm)', function(_form_data){
+                                _form_data.field.courseCode = row_data.courseCode;
+                                _form_data.field.courseName = row_data.courseName;
                                 $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
                                     layer.msg(_result_data.msg, {offset: '100px'},function () {
                                         if(_result_data.code === 200){
