@@ -174,9 +174,6 @@ layui.use(['layer','element','table','form'], function(){
                                         // alert(JSON.stringify(formData));
                                         $.post(requestUrl+'/jxyj_jgxm_school/insert.do',formData,function(result_data){
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                if(result_data.code == 200){
-                                                    myself_table.reload();//重新加载表格数据
-                                                }
                                                 layer.close(index);
                                             });
                                         },'json');
@@ -188,8 +185,8 @@ layui.use(['layer','element','table','form'], function(){
                                     });
                                     return false;
                                 }
-                                ,end: function () {
-                                    window.location.reload();
+                                ,end:function () {
+                                    window.location.reload(); //刷新页面
                                 }
                             });
                             break;
@@ -254,16 +251,13 @@ layui.use(['layer','element','table','form'], function(){
                                     // alert(JSON.stringify(formData));
                                     $.post(requestUrl+'/jxyj_jgxm_school/update.do', formData, function(resultData){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                            if(result_data.code == 200){
-                                                myself_table.reload();//重新加载表格数据
-                                            }
                                             layer.close(index);
                                         });
                                     },'json');
                                 });
                             }
-                            ,end: function () {
-                                window.location.reload();
+                            ,end:function () {
+                                window.location.reload(); //刷新页面
                             }
                         });
                     } else if (obj.event === 'delete') {
@@ -552,12 +546,12 @@ layui.use(['layer','element','table','form'], function(){
                     }
                 });
 
-                //监听Tab切换
+                /*//监听Tab切换
                 element.on('tab(layTab)', function(data){
                     if(data.index == 1){ //
                         other_table.reload(); //重新加载表格数据
                     }
-                });
+                });*/
             } else{
                 $('#other').remove();
                 $('#other_item').remove();

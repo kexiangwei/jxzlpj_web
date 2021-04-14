@@ -5,6 +5,8 @@ layui.use(['layer','upload'], function(){
     var $ = layui.$,layer = layui.layer,upload = layui.upload;
     //
     $('#upfile').click(function(){
+        var isInit = "111";
+        // layer.alert(isInit);
         layer.open({
             title : '教学研究-教改论文-证明材料'
             ,type : 1
@@ -52,7 +54,8 @@ layui.use(['layer','upload'], function(){
                     }
                 }, "json");
                 //上传附件
-                let upfileIns = upload.render({
+                var upfileIns,
+                    options = {
                     elem: '#upfileIns'
                     ,url: requestUrl+'/uploadFileInfo.do' // 	服务端上传接口
                     ,data:{ //请求上传接口的额外参数。如：data: {id: 'xxx'}
@@ -127,8 +130,11 @@ layui.use(['layer','upload'], function(){
                             ,tds = tr.children();
                         tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
                     }
-                });
-            },end:function () {
+                };
+                upfileIns = upload.render(options);
+                isInit = "222";
+            }
+            ,end:function () {
                 $("#upfileList").empty();
             }
         });
