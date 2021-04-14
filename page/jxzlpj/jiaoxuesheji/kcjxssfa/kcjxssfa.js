@@ -146,9 +146,9 @@ layui.use(['layer','table','form','laydate'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     $.post(requestUrl+'/jxsj_kcjxssfa/insert.do', data.field, function (result_data) {
                                         layer.msg(result_data.msg, {offset: '100px'},function () {
-                                            if(result_data.code === 200){
+                                            /*if(result_data.code === 200){
                                                 myself_table.reload();//重新加载表格数据
-                                            }
+                                            }*/
                                             layer.close(index);
                                         });
                                     },'json');
@@ -161,7 +161,7 @@ layui.use(['layer','table','form','laydate'], function(){
                                 return false;
                             }
                             ,end:function () {
-
+                                window.location.reload();
                             }
                         });
                         break;
@@ -224,15 +224,15 @@ layui.use(['layer','table','form','laydate'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(formData){
                                     $.post(requestUrl+'/skjh/update.do', formData.field, function (resultData) {
                                         layer.msg(resultData.msg, {offset: '100px'},function () {
-                                            if(resultData.code === 200){
+                                            /*if(resultData.code === 200){
                                                 myself_table.reload();//重新加载表格数据
-                                            }
+                                            }*/
                                             layer.close(index);
                                         });
                                     },'json');
                                 });
                             },end:function () {
-                                // window.location.reload();
+                                window.location.reload();
                             }
                         });
                     } else if (obj.event === 'delete') {
@@ -281,9 +281,9 @@ layui.use(['layer','table','form','laydate'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(_form_data){
                                     $.post(requestUrl+'/jxsj_kcjxssfa/insert.do', _form_data.field, function (_result_data) {
                                         layer.msg(_result_data.msg, {offset: '100px'},function () {
-                                            if(_result_data.code === 200){
+                                            /*if(_result_data.code === 200){
                                                 myself_table.reload();//重新加载表格数据
-                                            }
+                                            }*/
                                             layer.close(index);
                                         });
                                     },'json');
@@ -296,7 +296,7 @@ layui.use(['layer','table','form','laydate'], function(){
                                 return false;
                             }
                             ,end:function () {
-
+                                window.location.reload();
                             }
                         });
                     }

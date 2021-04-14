@@ -176,9 +176,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             form.on('submit(toSubmitEidtForm)', function(data){
                                                 $.post(requestUrl+'/scjy_zdxscy/insert.do' ,data.field ,function(result_data){
                                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                            if(result_data.code == 200){
+                                                            /*if(result_data.code == 200){
                                                                 myself_table.reload();//重新加载表格数据
-                                                            }
+                                                            }*/
                                                             layer.close(index);
                                                         });
                                                     },'json');
@@ -190,6 +190,9 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 layer.closeAll();
                                             });
                                             return false;
+                                        }
+                                        ,end: function () {
+                                            window.location.reload();
                                         }
                                     });
                                     break;
@@ -254,15 +257,16 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                         form.on('submit(toSubmitEidtForm)', function(data){
                                             $.post(requestUrl+'/scjy_zdxscy/update.do' ,data.field ,function(result_data){
                                                 layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                    if(result_data.code == 200){
+                                                    /*if(result_data.code == 200){
                                                         myself_table.reload();//重新加载表格数据
-                                                    }
+                                                    }*/
                                                     layer.close(index);
                                                 });
                                             },'json');
                                         });
-                                    },end:function () {
-                                        location.reload();
+                                    }
+                                    ,end: function () {
+                                        window.location.reload();
                                     }
                                 });
                             } else if (obj.event === 'delete') {
@@ -433,12 +437,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     }
                 });
 
-                //监听Tab切换
+                /*//监听Tab切换
                 element.on('tab(layTab)', function(data){
                     if(data.index == 1){ //
                         other_table.reload(); //重新加载表格数据
                     }
-                });
+                });*/
             } else{
                 $('#other').remove();
                 $('#other_item').remove();
@@ -500,10 +504,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             "teacherName":form_data.field.teacherName,
                                             "teacherUnit":form_data.field.teacherUnit
                                         },function (result_data) {
-                                            if(result_data.code == 200){
-                                                teacher_datatable.reload();//重新加载数据
-                                            }
+
                                             layer.msg(result_data.msg, { offset: '100px'},function () {
+                                                if(result_data.code == 200){
+                                                    teacher_datatable.reload();//重新加载数据
+                                                }
                                                 layer.close(index);
                                             });
                                         },'json');
@@ -522,10 +527,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     "relationCode": obj.data.relationCode
                                     ,"teacherCode": obj.data.teacherCode
                                 },function(result_data){
-                                    if(result_data.code === 200){
-                                        teacher_datatable.reload();//重新加载表格数据
-                                    }
-                                    layer.msg(result_data.msg, { offset: '100px'});
+
+                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                        if(result_data.code === 200){
+                                            teacher_datatable.reload();//重新加载表格数据
+                                        }
+                                    });
                                 }, "json");
                             }
                         });
@@ -619,10 +626,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             "college":form_data.field.college,
                                             "major":form_data.field.major
                                         },function (result_data) {
-                                            if(result_data.code == 200){
-                                                student_datatable.reload();//重新加载数据
-                                            }
+
                                             layer.msg(result_data.msg, { offset: '100px'},function () {
+                                                if(result_data.code == 200){
+                                                    student_datatable.reload();//重新加载数据
+                                                }
                                                 layer.close(index);
                                             });
                                         },'json');
@@ -645,10 +653,12 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     "relationCode": obj.data.relationCode
                                     ,"studentCode": obj.data.studentCode
                                 },function(result_data){
-                                    if(result_data.code === 200){
-                                        student_datatable.reload();//重新加载表格数据
-                                    }
-                                    layer.msg(result_data.msg, { offset: '100px'});
+
+                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                        if(result_data.code === 200){
+                                            student_datatable.reload();//重新加载表格数据
+                                        }
+                                    });
                                 }, "json");
                             }
                         });
@@ -939,7 +949,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     if(result_data.code === 200){
                                         other_table.reload();//重新加载表格数据
                                     }
-                                    layer.close(index);
+                                    layer.closeAll();
                                 });
                             },'json');
                         });

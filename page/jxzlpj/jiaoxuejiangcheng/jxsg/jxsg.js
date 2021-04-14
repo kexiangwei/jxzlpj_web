@@ -151,9 +151,6 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                                     //监听表单提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         $.post(requestUrl+'/jxsg/insert.do',data.field,function(result_data){
-                                            if(result_data.code == 200){
-                                                datatable.reload();//重新加载表格数据
-                                            }
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 layer.close(index);
                                             });
@@ -167,7 +164,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                                     return false;
                                 }
                                 ,end:function () {
-
+                                    window.location.reload();//刷新页面
                                 }
                             });
                             break;
@@ -198,17 +195,18 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
 
                                 //初始化表单
                                 initEditForm(rowData);
+
                                 //监听表单提交
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     $.post(requestUrl+'/jxsg/update.do',data.field,function(result_data){
-                                        if(result_data.code == 200){
-                                            datatable.reload();//重新加载表格数据
-                                        }
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             layer.close(index);
                                         });
                                     },'json');
                                 });
+                            }
+                            ,end:function () {
+                                window.location.reload();//刷新页面
                             }
                         });
                     } else if (layEvent === 'delete') {
