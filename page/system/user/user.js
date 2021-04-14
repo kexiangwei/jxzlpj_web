@@ -154,8 +154,8 @@ layui.use(['layer','table','form','transfer','util'], function(){
                         ,content : '<div class="layui-container" style="width: 90%;">\n' +
                             '           <div class="demo-transfer" style="margin-top: 10px; margin-left: 20px;" id="grant"></div>\n' +
                             '           <div class="layui-btn-container" style="margin-top: 10px; margin-left: 20px;">\n' +
-                            '               <button type="button" class="layui-btn" lay-event="submit">确认</button>\n' +
-                            '                <button type="button" class="layui-btn" lay-event="reload">重置</button>\n' +
+                            '               <button type="button" class="layui-btn layui-btn-normal" lay-event="submit">确认</button>\n' +
+                            '                <button type="button" class="layui-btn layui-btn-primary" lay-event="reload">重置</button>\n' +
                             '           </div>\n' +
                             '       </div>'
                         ,success: function(layero, index){
@@ -198,12 +198,11 @@ layui.use(['layer','table','form','transfer','util'], function(){
                                                     return roleIds;
                                                 }
                                             },function (result_data) {
-                                                if(result_data.code == 200){
-                                                    layer.msg('授权成功！', {time : 3000, offset: '100px'});
-                                                    dataTable.reload();
-                                                }else{
-                                                    layer.msg('授权失败！', {time : 3000, offset: '100px'});
-                                                }
+                                                layer.msg(result_data.msg, {offset: '100px'}, function () {
+                                                    if(result_data.code == 200){
+                                                        dataTable.reload();
+                                                    }
+                                                });
                                                 layer.close(layIndex);
                                             },'json');
                                         }

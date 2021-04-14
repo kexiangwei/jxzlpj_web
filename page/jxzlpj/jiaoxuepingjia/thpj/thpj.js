@@ -1,8 +1,8 @@
 /*
 教学评价-同行评教
  */
-layui.use(['layer','element','table','form','laydate'], function(){
-    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate;
+layui.use(['layer','element','table','form','laydate','util'], function(){
+    var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,util = layui.util;
 
     // 加载菜单选项
     var reloadSelect = function(inputName,data){
@@ -111,12 +111,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
         ,done: function(res, curr, count){ //数据渲染完的回调
 
             //监听搜索框事件
-            $('.search .layui-btn').on('click', function(){
-                let type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
-            });
-            let active = {
-                search: function(){
+            util.event('lay-event', {
+                search: function(othis){
                     datatable.reload({
                         where: {
                             'teacherCollege': $("#teacherCollege option:selected").val(),
@@ -144,7 +140,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     $("#courseAttr").val("");
                     form.render("select");
                 }
-            };
+            });
 
             //监听工具条
             table.on('tool(datatable)', function(obj){

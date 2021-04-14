@@ -91,8 +91,10 @@
                 </div>
                 &nbsp;&nbsp;
                 <div class="layui-inline">
-                    <button class="layui-btn" data-type="search">搜索</button>
-                    <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                    <!--<button type="button" class="layui-btn" lay-event="search">搜索</button>
+                    <button type="button" class="layui-btn layui-btn-primary" lay-event="reset">重置</button>-->
+                    <a class="layui-btn" lay-event="search">搜索</a>
+                    <a class="layui-btn layui-btn-primary" lay-event="reset">重置</a>
                 </div>
             </div>
         </div>
@@ -193,7 +195,7 @@
             </fieldset>
 
             <div class="layui-btn-container" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
             </div>
         </form>
     </div>

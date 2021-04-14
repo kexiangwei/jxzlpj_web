@@ -249,7 +249,7 @@ layui.use(['layer','element','table','form'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     let formData = data.field;
                                     // alert(JSON.stringify(formData));
-                                    $.post(requestUrl+'/jxyj_jgxm_school/update.do', formData, function(resultData){
+                                    $.post(requestUrl+'/jxyj_jgxm_school/update.do', formData, function(result_data){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             layer.close(index);
                                         });

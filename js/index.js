@@ -94,10 +94,6 @@ layui.use(['layer','element'], function(){
                     $.cookie('currentMenuId', elem.attr('data-id'), { path: '/' });
                 }
             });
-            //监听Tab切换，问题描述：获取不到当前选项卡的菜单编号
-            /*element.on('tab(demo)', function(elem){
-                layer.alert($.cookie('currentMenuId'));
-            });*/
         },
         error:function () {
             layer.msg("页面加载错误！", {time : 3000, offset: '100px'});

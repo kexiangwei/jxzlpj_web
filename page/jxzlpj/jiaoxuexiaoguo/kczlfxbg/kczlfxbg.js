@@ -33,7 +33,7 @@ layui.use(['layer','table','form'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
+            // ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
             ,{field: 'courseName', title: '课程名称', width:150, sort:true, event: 'courseName', templet: function (data) {
                     let html = '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看信息</a>';
                     if(1==1){

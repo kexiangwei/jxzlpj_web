@@ -119,8 +119,8 @@
                 </div>
             </div>
             <div class="layui-btn-container" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-primary" lay-event="cancel">取消</button>
             </div>
         </form>
     </div>
@@ -148,16 +148,16 @@
         }
         //
         function setPassword() {
-            layui.use(['layer','form'], function(){
-                var $ = layui.$,layer = layui.layer,form = layui.form;
-                //
-                layer.open({
+            layui.use(['layer','form','util'], function(){
+                var $ = layui.$,layer = layui.layer,form = layui.form,util = layui.util;
+                //返回一个当前层索引
+                var index = layer.open({
                     title : '系统管理-安全设置'
                     ,type : 1
                     ,area : [ '900px', '300px' ]
                     ,offset : '200px' //只定义top坐标，水平保持居中
                     ,shadeClose : true //点击遮罩关闭
-                    ,btn : ['关闭']
+                    // ,btn : ['关闭']
                     ,content : $('#editForm_container')
                     ,success: function(layero, index){
 
@@ -176,17 +176,32 @@
 
                         //监听表单提交
                         form.on('submit(toSubmitEidtForm)', function(data){
+
+                            //禁用保存按钮
+                            $(data.elem).removeClass("layui-btn-normal").addClass("layui-btn-disabled").attr("disabled",true);
+                            //
                             $.post(requestUrl+'/updateUser.do', {
                                 'userId': $.cookie('userId'),
                                 'password': data.field.pass
                             } ,function(result_data){
-                                layer.msg(result_data.msg, { offset: '100px'});
+                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                    //恢复保存按钮
+                                    $(data.elem).removeClass("layui-btn-disabled").addClass("layui-btn-normal").attr("disabled",false);
+                                    layer.close(index); //layer.close(index) - 关闭特定层
+                                });
                             },'json');
+                            return false;
                         });
                     }
                     ,end:function () {
                         $("input[name='pass']").val('');
                         $("input[name='repass']").val('');
+                    }
+                });
+                //响应取消按钮
+                util.event('lay-event', {
+                    cancel: function(othis){
+                        layer.close(index);
                     }
                 });
             });

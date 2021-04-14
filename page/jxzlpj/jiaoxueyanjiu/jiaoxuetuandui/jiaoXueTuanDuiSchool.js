@@ -22,21 +22,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
         ,success:function(data) {
             var data = data.data;
 
-            // 初始化获得奖项下拉选项
-            $.get(requestUrl+'/optionset/getOptionSetList.do',{
-                'menuId':function () {
-                    return currentMenuId;
-                },
-                'attr': 'batch'
-            },function(result_data){
-                if(result_data.code == 200){
-                    if(result_data.data.length >0){
-                        initSelect('请选择','batch',result_data.data);
-                        form.render('select');
-                    }
-                }
-            },'json');
-
             if(data.isAuthSubmit > 0){ //拥有提交权限
 
                 //数据表格
@@ -255,7 +240,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     let formData = data.field;
                                     // alert(JSON.stringify(formData));
-                                    $.post(requestUrl+'/jxyj_jxtd_school/update.do', formData, function(resultData){
+                                    $.post(requestUrl+'/jxyj_jxtd_school/update.do', formData, function(result_data){
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             layer.close(index);
                                         });
@@ -562,19 +547,33 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 laydate.render({
                     elem: '#commonDate' //指定元素
                 });
-                //
-                form.val("editForm",{
-                    "code":data.code
-                    ,"teamName": data.teamName
-                    ,"teamLeader" : data.teamLeader
-                    ,"leaderUnit" : data.leaderUnit
-                    ,"cycle" : data.cycle
-                    ,"batch" : data.batch
-                    ,"commonDate" : data.commonDate
-                    ,"userId":data.userId
-                    ,"userName":data.userName
-                    ,"userUnit":data.userUnit
-                });
+                // 初始化获得奖项下拉选项
+                $.get(requestUrl+'/optionset/getOptionSetList.do',{
+                    'menuId':function () {
+                        return currentMenuId;
+                    },
+                    'attr': 'batch'
+                },function(result_data){
+                    if(result_data.code == 200){
+                        if(result_data.data.length >0){
+                            initSelect('请选择','batch',result_data.data);
+                            form.render('select');
+                        }
+                    }
+                    //
+                    form.val("editForm",{
+                        "code":data.code
+                        ,"teamName": data.teamName
+                        ,"teamLeader" : data.teamLeader
+                        ,"leaderUnit" : data.leaderUnit
+                        ,"cycle" : data.cycle
+                        ,"batch" : data.batch
+                        ,"commonDate" : data.commonDate
+                        ,"userId":data.userId
+                        ,"userName":data.userName
+                        ,"userUnit":data.userUnit
+                    });
+                },'json');
             };
 
             let detail_dataInfo = function (data,isSubmit,isShenHe) {
