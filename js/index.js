@@ -2,9 +2,10 @@
 layui.use(['layer','element'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element;
     //
-    layer.msg("欢迎你，"+ $.cookie('userName'));
+    // layer.msg("欢迎你，"+ $.cookie('userName'));
     //
     $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/files/userHeadImg/tly.jpg'));
+    $("#currentUser").html($.cookie('userName'));
     //
     $.ajax({
         type: "get",

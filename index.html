@@ -60,11 +60,12 @@
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
                     <a href="javascript:;">
-                        <img id="headImg" src="" class="layui-nav-img" style="margin-left: 50px;"></a>
+                        <img id="headImg" src="" class="layui-nav-img"><span id="currentUser">admin</span>
                     </a>
+
                     <dl class="layui-nav-child">
                         <dd><a class="site-demo-active" href="javascript:;" data-id="rightNav_baseInfo" data-title="基本信息" data-url="page/rightNav/baseInfo.html" data-type="tabAdd">基本信息</a></dd>
-                        <dd><a href="javascript:;" onclick="setPassword();return false">安全设置</a></dd>
+                        <dd><a href="javascript:;" onclick="setPassword();return false">修改密码</a></dd>
                         <dd><a href="login.html" onclick="function f() {
                            $.post(requestUrl+'/logout.do', {},function(data){
                                 layer.msg('已退出！', {time : 3000, offset: '100px'});

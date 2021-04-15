@@ -162,11 +162,11 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                             form.on('submit(toSubmitEidtForm)', function(data){
                                                 let formData = data.field;
                                                 let array = new Array();
-                                                if(formData.peixunStyle_xxxx == "on"){
-                                                    array.push('线下学习');
-                                                }
-                                                if(formData.peixunStyle_xsxx == "on"){
+                                                if(formData.hasOwnProperty('peixunStyle_online')){
                                                     array.push('线上学习');
+                                                }
+                                                if(formData.hasOwnProperty('peixunStyle_offline')){
+                                                    array.push('线下学习');
                                                 }
                                                 formData.peixunStyle = array.join(',');
                                                 $.post(requestUrl+'/jxyj_jxjy/insert.do', formData, function (result_data) {
@@ -174,6 +174,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                         layer.close(index);
                                                     });
                                                 },'json');
+                                                return false;
                                             });
                                         }
                                         ,cancel: function(index, layero){
@@ -242,31 +243,30 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                                         //
                                         let arr = data.peixunStyle.split(',');
-                                        let peixunStyle_xxxx=false
-                                            ,peixunStyle_xsxx=false;
+                                        let peixunStyle_offline=false
+                                            ,peixunStyle_online=false;
                                         for (let i = 0; i < arr.length; i++) {
                                             if(arr[i] == '线上学习'){
-                                                peixunStyle_xsxx = true;
+                                                peixunStyle_online = true;
                                             }else if(arr[i] == '线下学习'){
-                                                peixunStyle_xxxx = true;
+                                                peixunStyle_offline = true;
                                             }
                                         }
-                                        data.peixunStyle_xsxx = peixunStyle_xsxx;
-                                        data.peixunStyle_xxxx = peixunStyle_xxxx;
+                                        data.peixunStyle_online = peixunStyle_online;
+                                        data.peixunStyle_offline = peixunStyle_offline;
 
                                         //初始化表单
                                         initEditForm(data);
-
 
                                         //监听编辑页submit按钮提交
                                         form.on('submit(toSubmitEidtForm)', function(data){
                                             let formData = data.field;
                                             let array = new Array();
-                                            if(formData.peixunStyle_xxxx == "on"){
-                                                array.push('线下学习');
-                                            }
-                                            if(formData.peixunStyle_xsxx == "on"){
+                                            if(formData.hasOwnProperty('peixunStyle_online')){
                                                 array.push('线上学习');
+                                            }
+                                            if(formData.hasOwnProperty('peixunStyle_offline')){
+                                                array.push('线下学习');
                                             }
                                             formData.peixunStyle = array.join(',');
                                             $.post(requestUrl+'/jxyj_jxjy/update.do', formData, function (result_data) {
@@ -472,8 +472,8 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 form.val("editForm",{
                     "code":data.code,
                     "peixunName":data.peixunName,
-                    "peixunStyle_xsxx":data.peixunStyle_xsxx,
-                    "peixunStyle_xxxx":data.peixunStyle_xxxx,
+                    "peixunStyle_online":data.peixunStyle_online,
+                    "peixunStyle_offline":data.peixunStyle_offline,
                     "peixunStartTime":data.peixunStartTime,
                     "peixunEndTime":data.peixunEndTime,
                     "peixunClassHour":data.peixunClassHour,
