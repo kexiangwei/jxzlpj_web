@@ -78,8 +78,8 @@ layui.use(['layer','table'], function(){
             [
                 //教学研究
                 {field: 'JXJY_ZRS', title: '总人数', align: 'center', width:120, sort: true, totalRow:true}
-                ,{field: 'JXJY_ZRC', title: '总人次数', align: 'center', width:120, sort: true, totalRow:true}
-                ,{field: 'JXJY_ZXS', title: '总学时数', align: 'center', width:120, sort: true, totalRow:true}
+                ,{field: 'JXJY_ZRC', title: '总人次数', align: 'center', width:150, sort: true, totalRow:true}
+                ,{field: 'JXJY_ZXS', title: '总学时数', align: 'center', width:150, sort: true, totalRow:true}
                 ,{field: 'JGXM_COUNTRY_NUM', title: '国家级', align: 'center', width:120, sort: true, totalRow:true}
                 ,{field: 'JGXM_PROVINCE_NUM', title: '省部级', align: 'center', width:120, sort: true, totalRow:true}
                 ,{field: 'JGXM_SCHOOL_NUM', title: '校级', align: 'center', width:120, sort: true, totalRow:true}

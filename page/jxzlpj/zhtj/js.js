@@ -90,8 +90,8 @@ layui.use(['layer','table'], function(){
             [
                 //教学研究
                 {field: 'JXJY_ZRS', title: '总人数', align: 'center', width:120, sort: true, totalRow:true}
-                ,{field: 'JXJY_ZRC', title: '总人次数', align: 'center', width:120, sort: true, totalRow:true}
-                ,{field: 'JXJY_ZXS', title: '总学时数', align: 'center', width:120, sort: true, totalRow:true}
+                ,{field: 'JXJY_ZRC', title: '总人次数', align: 'center', width:150, sort: true, totalRow:true}
+                ,{field: 'JXJY_ZXS', title: '总学时数', align: 'center', width:150, sort: true, totalRow:true}
                 ,{field: 'JGXM_COUNTRY_NUM', title: '国家级', align: 'center', width:120, sort: true, totalRow:true}
                 ,{field: 'JGXM_PROVINCE_NUM', title: '省部级', align: 'center', width:120, sort: true, totalRow:true}
                 ,{field: 'JGXM_SCHOOL_NUM', title: '校级', align: 'center', width:120, sort: true, totalRow:true}
@@ -169,7 +169,17 @@ layui.use(['layer','table'], function(){
         }
         ,done : function(res, curr, count) {
 
-            //头工具栏事件
+            /*//监听表头事件
+            $("[data-field='NAME']").click(function (obj) {
+                layer.alert(111);
+            });*/
+
+            /*//触发行双击事件
+            table.on('rowDouble(datatable)', function(obj){
+                alert(111);
+            });*/
+
+            /*//头工具栏事件
             table.on('toolbar(datatable)', function(obj){
                 switch(obj.event){
                     //自定义头工具栏右侧图标 - 提示
@@ -177,7 +187,7 @@ layui.use(['layer','table'], function(){
                         layer.msg('这是工具栏右侧自定义的一个图标按钮');
                         break;
                 };
-            });
+            });*/
 
             //监听行工具事件
             table.on('tool(datatable)', function(obj){

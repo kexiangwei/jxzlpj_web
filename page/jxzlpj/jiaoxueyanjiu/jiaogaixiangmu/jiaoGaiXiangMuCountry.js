@@ -65,8 +65,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,{field: 'projectName', title: '项目名称', width:150, sort:true}
                         ,{field: 'projectLevel', title: '项目级别', width:150, sort:true}
                         ,{field: 'projectNum', title: '立项编号', width:150, sort:true}
-                        ,{field: 'projectStartTime', title: '立项时间', width:150, sort:true, hide:true}
-                        ,{field: 'projectEndTime', title: '结题时间', width:150, sort:true, hide:true}
+                        ,{field: 'projectStartTime', title: '立项时间', width:150, sort:true}
+                        ,{field: 'projectEndTime', title: '结题时间', width:150, sort:true}
                         ,{field: 'userName', title: '主持人', width:150, sort:true}
                         ,{field: 'memberNum', title: '参数教师数', width:150, sort:true}
                         ,{field: 'fund', title: '经费', width:150, sort:true}
@@ -320,8 +320,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         ,{field: 'projectName', title: '项目名称', width:150, sort:true}
                         ,{field: 'projectLevel', title: '项目级别', width:150, sort:true}
                         ,{field: 'projectNum', title: '立项编号', width:150, sort:true}
-                        ,{field: 'projectStartTime', title: '立项时间', width:150, sort:true, hide:true}
-                        ,{field: 'projectEndTime', title: '结题时间', width:150, sort:true, hide:true}
+                        ,{field: 'projectStartTime', title: '立项时间', width:150, sort:true}
+                        ,{field: 'projectEndTime', title: '结题时间', width:150, sort:true}
                         ,{field: 'userName', title: '主持人', width:150, sort:true}
                         ,{field: 'memberNum', title: '参数教师数', width:150, sort:true}
                         ,{field: 'fund', title: '经费', width:150, sort:true}
