@@ -109,166 +109,167 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ]]
                     ,done: function(res, curr, count){ //数据渲染完的回调
 
-                        //监听搜索框事件
-                        $('.myself_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
+                    }
+                });
+
+                //监听搜索框事件
+                let active = {
+                    search: function(){
+                        myself_table.reload({
+                            where: {
+                                'majorName': $(".myself_search input[name='majorName']").val()
+                                ,'status': $("#status option:selected").val() //获取选中的值
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
                         });
-                        let active = {
-                            search: function(){
-                                myself_table.reload({
-                                    where: {
-                                        'majorName': $(".myself_search input[name='majorName']").val()
-                                        ,'status': $("#status option:selected").val() //获取选中的值
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
-                            }
-                            ,reset: function () {
-                                $(".myself_search input").val('');
-                                //清除选中状态
-                                $("#status").val("");
-                                form.render("select");
-                            }
-                        };
+                    }
+                    ,reset: function () {
+                        $(".myself_search input").val('');
+                        //清除选中状态
+                        $("#status").val("");
+                        form.render("select");
+                    }
+                };
+                $('.myself_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
 
-                        //监听头工具栏事件
-                        table.on('toolbar(myself_table)', function(obj){
-                            var checkStatus = table.checkStatus(obj.config.id)
-                                ,data = checkStatus.data; //获取选中的数据
-                            switch(obj.event){
-                                case 'insert':
-                                    let objCode = new Date().getTime(); //业务数据编号
-                                    layer.open({
-                                        title : '教学奖惩-专业建设成果奖-新增'
-                                        ,type : 1
-                                        ,area : [ '900px', '450px' ]
-                                        ,offset : '50px'
-                                        ,content : $("#editForm_container")
-                                        ,success: function(layero, index){
+                //监听头工具栏事件
+                table.on('toolbar(myself_table)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                    switch(obj.event){
+                        case 'insert':
+                            let objCode = new Date().getTime(); //业务数据编号
+                            layer.open({
+                                title : '教学奖惩-专业建设成果奖-新增'
+                                ,type : 1
+                                ,area : [ '900px', '450px' ]
+                                ,offset : '50px'
+                                ,content : $("#editForm_container")
+                                ,success: function(layero, index){
 
-                                            //初始化表单
-                                            initEditForm({
-                                                'code': objCode
-                                                ,'userId':$.cookie('userId')
-                                                ,'userName':$.cookie('userName')
-                                                ,'userUnit':$.cookie('userUnit')
-                                            });
-
-                                            //监听表单提交
-                                            form.on('submit(toSubmitEidtForm)', function(data){
-                                                $.post(requestUrl+'/jxjc_zyjscgj/insert.do', data.field, function(result_data){
-                                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                        /*if(result_data.code == 200){
-                                                            myself_table.reload();//重新加载表格数据
-                                                        }*/
-                                                        layer.close(index);
-                                                    });
-                                                },'json');
-                                            });
-                                        }
-                                        ,cancel: function(index, layero){
-                                            layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function() {
-                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
-                                                layer.closeAll();
-                                            });
-                                            return false;
-                                        }
-                                        ,end:function () {
-                                            window.location.reload(); //刷新页面
-                                        }
+                                    //初始化表单
+                                    initEditForm({
+                                        'code': objCode
+                                        ,'userId':$.cookie('userId')
+                                        ,'userName':$.cookie('userName')
+                                        ,'userUnit':$.cookie('userUnit')
                                     });
-                                    break;
-                                case 'submit':
-                                    if(data.length === 0){
-                                        layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
-                                    } else {
-                                        let isSubmit = false;
-                                        $.each(data,function(index,item){
-                                            if(item.isSubmit== '已提交'){
-                                                isSubmit = true;
-                                                return false;//跳出循环
-                                            }
-                                        });
-                                        if(isSubmit){
-                                            layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
-                                            return;
-                                        }else{
-                                            toSubmit(data);
-                                        }
+
+                                    //监听表单提交
+                                    form.on('submit(toSubmitEidtForm)', function(data){
+                                        $.post(requestUrl+'/jxjc_zyjscgj/insert.do', data.field, function(result_data){
+                                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                /*if(result_data.code == 200){
+                                                    myself_table.reload();//重新加载表格数据
+                                                }*/
+                                                layer.close(index);
+                                            });
+                                        },'json');
+                                    });
+                                }
+                                ,cancel: function(index, layero){
+                                    layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function() {
+                                        $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
+                                        layer.closeAll();
+                                    });
+                                    return false;
+                                }
+                                ,end:function () {
+                                    window.location.reload(); //刷新页面
+                                }
+                            });
+                            break;
+                        case 'submit':
+                            if(data.length === 0){
+                                layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
+                            } else {
+                                let isSubmit = false;
+                                $.each(data,function(index,item){
+                                    if(item.isSubmit== '已提交'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
                                     }
-                                    break;
+                                });
+                                if(isSubmit){
+                                    layer.msg('您选择了已提交的信息', {time : 3000, offset: '100px'});
+                                    return;
+                                }else{
+                                    toSubmit(data);
+                                }
+                            }
+                            break;
+                    }
+                });
+
+                //监听工具条
+                table.on('tool(myself_table)', function(obj){
+                    var data = obj.data;
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(data,true);
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        if(data.isSubmit=='未提交' && data.status !='退回'){
+                            return;
+                        }
+                        detail_shenheProcess('教学奖惩-专业建设成果奖-查看审核流程',data);
+                    } else if (obj.event === 'update') {
+                        if(data.isSubmit== '已提交'){
+                            // layer.msg('信息已提交，不可编辑', {icon:7, time : 3000, offset: '100px'});
+                            return;
+                        }
+                        //执行编辑
+                        layer.open({
+                            title : '教学奖惩-专业建设成果奖-编辑'
+                            ,type : 1
+                            ,area : [ '900px', '450px' ]
+                            ,offset : '50px'
+                            ,shadeClose : true //点击遮罩关闭
+                            ,content : $('#editForm_container')
+                            ,success: function(layero, index){
+                                //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
+                                let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
+                                $("#editForm .layui-btn-container").append(cancelBtn);
+                                cancelBtn.click(function (event) {
+                                    layer.close(index);
+                                });
+
+                                //初始化表单
+                                initEditForm(data);
+
+                                //监听表单提交
+                                form.on('submit(toSubmitEidtForm)', function(data){
+                                    $.post(requestUrl+'/jxjc_zyjscgj/update.do', data.field, function(result_data){
+                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            /*if(result_data.code == 200){
+                                                myself_table.reload();//重新加载表格数据
+                                            }*/
+                                            layer.close(index);
+                                        });
+                                    },'json');
+                                });
+                            }
+                            ,end:function () {
+                                window.location.reload(); //刷新页面
                             }
                         });
-
-                        //监听工具条
-                        table.on('tool(myself_table)', function(obj){
-                            var data = obj.data;
-                            if (obj.event === 'detail_dataInfo') {
-                                detail_dataInfo(data,true);
-                            } else if (obj.event === 'detail_shenheProcess') {
-                                if(data.isSubmit=='未提交' && data.status !='退回'){
-                                    return;
-                                }
-                                detail_shenheProcess('教学奖惩-专业建设成果奖-查看审核流程',data);
-                            } else if (obj.event === 'update') {
-                                if(data.isSubmit== '已提交'){
-                                    // layer.msg('信息已提交，不可编辑', {icon:7, time : 3000, offset: '100px'});
-                                    return;
-                                }
-                                //执行编辑
-                                layer.open({
-                                    title : '教学奖惩-专业建设成果奖-编辑'
-                                    ,type : 1
-                                    ,area : [ '900px', '450px' ]
-                                    ,offset : '50px'
-                                    ,shadeClose : true //点击遮罩关闭
-                                    ,content : $('#editForm_container')
-                                    ,success: function(layero, index){
-                                        //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
-                                        let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
-                                        $("#editForm .layui-btn-container").append(cancelBtn);
-                                        cancelBtn.click(function (event) {
-                                            layer.close(index);
-                                        });
-
-                                        //初始化表单
-                                        initEditForm(data);
-
-                                        //监听表单提交
-                                        form.on('submit(toSubmitEidtForm)', function(data){
-                                            $.post(requestUrl+'/jxjc_zyjscgj/update.do', data.field, function(result_data){
-                                                layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                    /*if(result_data.code == 200){
-                                                        myself_table.reload();//重新加载表格数据
-                                                    }*/
-                                                    layer.close(index);
-                                                });
-                                            },'json');
-                                        });
+                    } else if (obj.event === 'delete') {
+                        if(data.isSubmit== '已提交'){
+                            // layer.msg('信息已提交，不可删除', {icon:7, time : 3000, offset: '100px'});
+                            return;
+                        }
+                        layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                            $.post(requestUrl+'/jxjc_zyjscgj/delete.do', { "code": data.code},function(result_data){
+                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                    if(result_data.code == 200){
+                                        myself_table.reload();//重新加载表格数据
                                     }
-                                    ,end:function () {
-                                        window.location.reload(); //刷新页面
-                                    }
+                                    layer.close(index);
                                 });
-                            } else if (obj.event === 'delete') {
-                                if(data.isSubmit== '已提交'){
-                                    // layer.msg('信息已提交，不可删除', {icon:7, time : 3000, offset: '100px'});
-                                    return;
-                                }
-                                layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    $.post(requestUrl+'/jxjc_zyjscgj/delete.do', { "code": data.code},function(result_data){
-                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                            if(result_data.code == 200){
-                                                myself_table.reload();//重新加载表格数据
-                                            }
-                                            layer.close(index);
-                                        });
-                                    }, "json");
-                                });
-                            }
+                            }, "json");
                         });
                     }
                 });
@@ -341,69 +342,69 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
+                    }
+                });
 
-                        //监听搜索框事件
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
+                //监听搜索框事件
+                let active = {
+                    search: function(){
+                        other_table.reload({
+                            where: {
+                                'majorName': $(".other_search input[name='majorName']").val()
+                                ,'shenheStatus': $("#shenheStatus").val()
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
                         });
-                        let active = {
-                            search: function(){
-                                other_table.reload({
-                                    where: {
-                                        'majorName': $(".other_search input[name='majorName']").val()
-                                        ,'shenheStatus': $("#shenheStatus").val()
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,reset: function () {
+                        $(".other_search input").val("");
+                        //清除选中状态
+                        $("#shenheStatus").val("");
+                        form.render("select");
+                    }
+                };
+                $('.other_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+                //监听头工具栏事件
+                table.on('toolbar(other_table)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                    switch(obj.event){
+                        case 'submit':
+                            if(data.length === 0){
+                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                return;
+                            } else {
+                                let isSubmit = false;
+                                $.each(data,function(index,item){
+                                    if(item.shenheStatus== '已审核'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
                                     }
                                 });
+                                if(isSubmit){
+                                    layer.msg('您选择了已审核的信息', {time : 3000, offset: '100px'});
+                                    return;
+                                } else { //添加审核意见
+                                    toShenHe(data);
+                                }
                             }
-                            ,reset: function () {
-                                $(".other_search input").val("");
-                                //清除选中状态
-                                $("#shenheStatus").val("");
-                                form.render("select");
-                            }
-                        };
+                            break;
+                    }
+                });
 
-                        //监听头工具栏事件
-                        table.on('toolbar(other_table)', function(obj){
-                            var checkStatus = table.checkStatus(obj.config.id)
-                                ,data = checkStatus.data; //获取选中的数据
-                            switch(obj.event){
-                                case 'submit':
-                                    if(data.length === 0){
-                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                        return;
-                                    } else {
-                                        let isSubmit = false;
-                                        $.each(data,function(index,item){
-                                            if(item.shenheStatus== '已审核'){
-                                                isSubmit = true;
-                                                return false;//跳出循环
-                                            }
-                                        });
-                                        if(isSubmit){
-                                            layer.msg('您选择了已审核的信息', {time : 3000, offset: '100px'});
-                                            return;
-                                        } else { //添加审核意见
-                                            toShenHe(data);
-                                        }
-                                    }
-                                    break;
-                            }
-                        });
-
-                        //监听工具条
-                        table.on('tool(other_table)', function(obj){
-                            let row_data = obj.data;
-                            if (obj.event === 'detail_dataInfo') {
-                                detail_dataInfo(row_data,false,true); //标识是从审核列表进入详情页面
-                            } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学奖惩-专业建设成果奖-查看审核流程',row_data);
-                            }
-                        });
+                //监听工具条
+                table.on('tool(other_table)', function(obj){
+                    let row_data = obj.data;
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(row_data,false,true); //标识是从审核列表进入详情页面
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        detail_shenheProcess('教学奖惩-专业建设成果奖-查看审核流程',row_data);
                     }
                 });
 

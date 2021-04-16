@@ -60,78 +60,79 @@ layui.use(['layer','element','table'], function(){
             ,last: '尾页' //不显示尾页
         }
         ,done: function(res, curr, count){ //数据渲染完的回调
+        }
+    });
 
-            //监听搜索框事件
-            $('.search .layui-btn').on('click', function(){
-                let type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
+    //监听搜索框事件
+    let active = {
+        search: function(){
+            datatable.reload({
+                where: {
+                    'courseName': $(".search input[ name='courseName']").val()
+                }
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
             });
-            let active = {
-                search: function(){
-                    datatable.reload({
-                        where: {
-                            'courseName': $(".search input[ name='courseName']").val()
-                        }
-                        ,page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
-                    });
-                }
-                ,reset: function () {
-                    $(".search input").val('');
-                }
-            };
+        }
+        ,reset: function () {
+            $(".search input").val('');
+        }
+    };
+    $('.search .layui-btn').on('click', function(){
+        let type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
 
-            //监听工具条
-            table.on('tool(datatable)', function(obj){
-                let row_data = obj.data;
-                if (obj.event === 'detail') {
-                    if(row_data.isPj == 2){ //1是2否（即未评价，查看按钮不可点击）
-                        return;
-                    }
-                    //
-                    layer.open({
-                        id: guid() //设定一个id，防止重复弹出
-                        ,title : ''
-                        ,type : 1
-                        ,area : [ '1100px', '500px' ]
-                        ,offset : '50px' //只定义top坐标，水平保持居中
-                        ,shadeClose : true //点击遮罩关闭
-                        ,content : $('#view_container')
-                        ,success: function(layero, index){
-                            $.get(requestUrl+'/jxpj_thpj/getCkpjDetail.do'
-                                ,{
-                                    'userId': $.cookie('userId')
-                                    ,'courseCode': row_data.courseCode
-                                    ,'templateCode': row_data.templateCode
+    //监听工具条
+    table.on('tool(datatable)', function(obj){
+        let row_data = obj.data;
+        if (obj.event === 'detail') {
+            if(row_data.isPj == 2){ //1是2否（即未评价，查看按钮不可点击）
+                return;
+            }
+            //
+            layer.open({
+                id: guid() //设定一个id，防止重复弹出
+                ,title : ''
+                ,type : 1
+                ,area : [ '1100px', '500px' ]
+                ,offset : '50px' //只定义top坐标，水平保持居中
+                ,shadeClose : true //点击遮罩关闭
+                ,content : $('#view_container')
+                ,success: function(layero, index){
+                    $.get(requestUrl+'/jxpj_thpj/getCkpjDetail.do'
+                        ,{
+                            'userId': $.cookie('userId')
+                            ,'courseCode': row_data.courseCode
+                            ,'templateCode': row_data.templateCode
 
-                                }
-                                ,function (result_data) {
-                                    if(result_data.code === 200){
-                                        let data = result_data.data;
-                                        let html = ''
-                                            ,totalScore=0;
-                                        for (let i = 0; i < data.length; i++) {
-                                            html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
-                                            for (let j = 0; j < data[i].num; j++) {
-                                                let obj = data[i].targetList[j];
-                                                html += '<td>' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
-                                                    '<td>'+obj.targetScore+'</td>\n' +
-                                                    '<td>'+obj.avgScore+'</td>' +
-                                                    '</tr>';
-                                                //累加总平均分
-                                                totalScore+=obj.avgScore;
-                                            }
-                                        }
-                                        html += '<tr><td colspan="3" style="text-align: right">合计</td>' +
-                                            '<td style="text-align: center">'+totalScore+'</td></tr>';
-                                        $('#target').html(html);
+                        }
+                        ,function (result_data) {
+                            if(result_data.code === 200){
+                                let data = result_data.data;
+                                let html = ''
+                                    ,totalScore=0;
+                                for (let i = 0; i < data.length; i++) {
+                                    html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
+                                    for (let j = 0; j < data[i].num; j++) {
+                                        let obj = data[i].targetList[j];
+                                        html += '<td>' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                                            '<td>'+obj.targetScore+'</td>\n' +
+                                            '<td>'+obj.avgScore+'</td>' +
+                                            '</tr>';
+                                        //累加总平均分
+                                        totalScore+=obj.avgScore;
                                     }
-                                },'json');
-                        }
-                    });
+                                }
+                                html += '<tr><td colspan="3" style="text-align: right">合计</td>' +
+                                    '<td style="text-align: center">'+totalScore+'</td></tr>';
+                                $('#target').html(html);
+                            }
+                        },'json');
                 }
             });
         }
     });
+
 });

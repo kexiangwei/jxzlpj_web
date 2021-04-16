@@ -62,85 +62,87 @@ layui.use(['layer','table','form'], function(){
         ,even: true //隔行背景
         ,done: function(res, curr, count){ //数据渲染完的回调
 
-            //监听搜索框事件
-            $('.search .layui-btn').on('click', function(){
-                let type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
+        }
+    });
+
+    //监听搜索框事件
+    let active = {
+        search: function(){
+            datatable.reload({
+                where: {
+                    'courseName': $(".search input[name='courseName']").val()
+                }
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
             });
-            let active = {
-                search: function(){
-                    datatable.reload({
-                        where: {
-                            'courseName': $(".search input[name='courseName']").val()
-                        }
-                        ,page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
+        }
+        ,reset: function () {
+            $(".search input").val('');
+        }
+    };
+    $('.search .layui-btn').on('click', function(){
+        let type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
+
+    //监听工具条
+    table.on('tool(datatable)', function(obj){
+        let row_data = obj.data;
+        if (obj.event === 'dataInfo') {
+            layer.msg('查看');
+        }  else if (obj.event === 'courseName') {
+            layer.open({
+                id : guid()
+                ,title : '课程质量分析报告'
+                ,type : 1
+                ,area : [ '1300px', '600px' ]
+                ,offset : '50px'
+                ,content : $('#editFormContainer')
+                ,success: function(layero, index){
+                    //
+                    var objCode = new Date();
+                    //初始化表单数据
+                    $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）课程质量分析报告');
+                    form.val("editForm",{
+                        "code": objCode
+                        ,"courseCode": row_data.courseCode
+                        ,"courseName" : row_data.courseName
+                        ,"courseAttr" : row_data.courseAttr
+                        ,"xyName" : row_data.xyName
+                        ,"zyName" : row_data.zyName
+                        ,"xn" : row_data.xn
+                        ,"xq" : row_data.xq
+                        ,"skJs" : row_data.skJs
+                        ,"skBj" : row_data.skBj
+                        ,"userId": $.cookie('userId')
+                        ,"userName": $.cookie('userName')
+                    });
+                    //监听表单提交
+                    form.on('submit(toSubmitEidtForm)', function(_form_data){
+                        _form_data.field.courseCode = row_data.courseCode;
+                        _form_data.field.courseName = row_data.courseName;
+                        $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
+                            layer.msg(_result_data.msg, {offset: '100px'},function () {
+                                if(_result_data.code === 200){
+                                    datatable.reload();//重新加载表格数据
+                                }
+                                layer.close(index);
+                            });
+                        },'json');
                     });
                 }
-                ,reset: function () {
-                    $(".search input").val('');
-                }
-            };
-
-            //监听工具条
-            table.on('tool(datatable)', function(obj){
-                let row_data = obj.data;
-                if (obj.event === 'dataInfo') {
-                    layer.msg('查看');
-                }  else if (obj.event === 'courseName') {
-                    layer.open({
-                        id : guid()
-                        ,title : '课程质量分析报告'
-                        ,type : 1
-                        ,area : [ '1300px', '600px' ]
-                        ,offset : '50px'
-                        ,content : $('#editFormContainer')
-                        ,success: function(layero, index){
-                            //
-                            var objCode = new Date();
-                            //初始化表单数据
-                            $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）课程质量分析报告');
-                            form.val("editForm",{
-                                "code": objCode
-                                ,"courseCode": row_data.courseCode
-                                ,"courseName" : row_data.courseName
-                                ,"courseAttr" : row_data.courseAttr
-                                ,"xyName" : row_data.xyName
-                                ,"zyName" : row_data.zyName
-                                ,"xn" : row_data.xn
-                                ,"xq" : row_data.xq
-                                ,"skJs" : row_data.skJs
-                                ,"skBj" : row_data.skBj
-                                ,"userId": $.cookie('userId')
-                                ,"userName": $.cookie('userName')
-                            });
-                            //监听表单提交
-                            form.on('submit(toSubmitEidtForm)', function(_form_data){
-                                _form_data.field.courseCode = row_data.courseCode;
-                                _form_data.field.courseName = row_data.courseName;
-                                $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
-                                    layer.msg(_result_data.msg, {offset: '100px'},function () {
-                                        if(_result_data.code === 200){
-                                            datatable.reload();//重新加载表格数据
-                                        }
-                                        layer.close(index);
-                                    });
-                                },'json');
-                            });
-                        }
-                        ,cancel: function(index, layero){
-                            layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                layer.closeAll();
-                            });
-                            return false;
-                        }
-                        ,end:function () {
-
-                        }
+                ,cancel: function(index, layero){
+                    layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                        layer.closeAll();
                     });
+                    return false;
+                }
+                ,end:function () {
+
                 }
             });
         }
     });
+
 });

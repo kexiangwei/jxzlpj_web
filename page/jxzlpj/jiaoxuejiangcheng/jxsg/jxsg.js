@@ -87,6 +87,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                 , last: '尾页'
             }
             ,done : function(res, curr, count) {
+
                 //双击查看详情
                 var data = res.data;
                 $('.layui-table-body tr').each(function() {
@@ -102,128 +103,129 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                         idx++;
                     }
                 });
+            }
+        });
 
-                //监听搜索框
-                $('.search-container .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
-                let active = {
-                    search: function(){
-                        datatable.reload({
-                            where: { //设定异步数据接口的额外参数，任意设
-                                'event': $(".search-container input[ name='event' ] ").val()
-                                ,'eventLevel': $(".search-container select[ name='eventLevel' ] ").val()
-                                ,'datetimeStart': $(".search-container input[name='datetimeStart']").val()
-                                ,'datetimeEnd': $(".search-container input[name='datetimeEnd']").val()
-                            }
-                            ,page: {
-                                curr: 1 //重新从第 1 页开始
-                            }
-                        });
+        //监听搜索框
+        let active = {
+            search: function(){
+                datatable.reload({
+                    where: { //设定异步数据接口的额外参数，任意设
+                        'event': $(".search-container input[ name='event' ] ").val()
+                        ,'eventLevel': $(".search-container select[ name='eventLevel' ] ").val()
+                        ,'datetimeStart': $(".search-container input[name='datetimeStart']").val()
+                        ,'datetimeEnd': $(".search-container input[name='datetimeEnd']").val()
                     }
-                    ,reset: function () {
-                        $("input").val('');
-                        //清除选中状态
-                        $(".search-container select[name='eventLevel']").val("");
-                        form.render("select");
-                    }
-                };
-
-                //监听头部工具栏
-                table.on('toolbar(datatable)', function(obj){
-                    switch(obj.event){
-                        case 'insert':
-                            let layerIndex = layer.open({
-                                title : '教学奖惩-教学事故-新增'
-                                ,type : 1
-                                ,area : [ '900px', '450px' ]
-                                ,offset : '50px'
-                                ,content : $("#editForm_container")
-                                ,success: function(layero, index){
-                                    //初始化表单
-                                    initEditForm({
-                                        'code': new Date().getTime()
-                                        ,'userId':$.cookie('userId')
-                                        ,'userName':$.cookie('userName')
-                                    });
-
-                                    //监听表单提交
-                                    form.on('submit(toSubmitEidtForm)', function(data){
-                                        $.post(requestUrl+'/jxsg/insert.do',data.field,function(result_data){
-                                            layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                layer.close(index);
-                                            });
-                                        },'json');
-                                    });
-                                }
-                                ,cancel: function(index, layero){
-                                    layer.confirm('表单未提交，填写的信息将会清空', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                        layer.closeAll();
-                                    });
-                                    return false;
-                                }
-                                ,end:function () {
-                                    window.location.reload();//刷新页面
-                                }
-                            });
-                            break;
-                    }
-                });
-
-                //监听右侧工具条
-                table.on('tool(datatable)', function(obj){
-                    let layEvent = obj.event
-                        , rowData = obj.data;
-                    if (layEvent === 'detail') {
-                        detail_dataInfo(rowData);
-                    } else if (layEvent === 'update') {
-                        let layIndex = layer.open({
-                            title : '教学奖惩-教学事故-编辑'
-                            ,type : 1
-                            ,area : [ '900px', '450px' ]
-                            ,offset : '50px'
-                            ,shadeClose : true //点击遮罩关闭
-                            ,content : $('#editForm_container')
-                            ,success: function(layero, index){
-                                //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
-                                let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
-                                $("#editForm .layui-btn-container").append(cancelBtn);
-                                cancelBtn.click(function (event) {
-                                    layer.close(layIndex);
-                                });
-
-                                //初始化表单
-                                initEditForm(rowData);
-
-                                //监听表单提交
-                                form.on('submit(toSubmitEidtForm)', function(data){
-                                    $.post(requestUrl+'/jxsg/update.do',data.field,function(result_data){
-                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                            layer.close(index);
-                                        });
-                                    },'json');
-                                });
-                            }
-                            ,end:function () {
-                                window.location.reload();//刷新页面
-                            }
-                        });
-                    } else if (layEvent === 'delete') {
-                        layer.confirm('删除后不可恢复，确定要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            $.post(requestUrl+'/jxsg/delete.do', { "objCode": rowData.code},function(result_data){
-                                if(result_data.code == 200){
-                                    datatable.reload();//重新加载表格数据
-                                }
-                                layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                    layer.close(index);
-                                });
-                            }, "json");
-                        });
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
                     }
                 });
             }
+            ,reset: function () {
+                $("input").val('');
+                //清除选中状态
+                $(".search-container select[name='eventLevel']").val("");
+                form.render("select");
+            }
+        };
+        $('.search-container .layui-btn').on('click', function(){
+            let type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
         });
+
+        //监听头部工具栏
+        table.on('toolbar(datatable)', function(obj){
+            switch(obj.event){
+                case 'insert':
+                    let layerIndex = layer.open({
+                        title : '教学奖惩-教学事故-新增'
+                        ,type : 1
+                        ,area : [ '900px', '450px' ]
+                        ,offset : '50px'
+                        ,content : $("#editForm_container")
+                        ,success: function(layero, index){
+                            //初始化表单
+                            initEditForm({
+                                'code': new Date().getTime()
+                                ,'userId':$.cookie('userId')
+                                ,'userName':$.cookie('userName')
+                            });
+
+                            //监听表单提交
+                            form.on('submit(toSubmitEidtForm)', function(data){
+                                $.post(requestUrl+'/jxsg/insert.do',data.field,function(result_data){
+                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                        layer.close(index);
+                                    });
+                                },'json');
+                            });
+                        }
+                        ,cancel: function(index, layero){
+                            layer.confirm('表单未提交，填写的信息将会清空', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                layer.closeAll();
+                            });
+                            return false;
+                        }
+                        ,end:function () {
+                            window.location.reload();//刷新页面
+                        }
+                    });
+                    break;
+            }
+        });
+
+        //监听右侧工具条
+        table.on('tool(datatable)', function(obj){
+            let layEvent = obj.event
+                , rowData = obj.data;
+            if (layEvent === 'detail') {
+                detail_dataInfo(rowData);
+            } else if (layEvent === 'update') {
+                let layIndex = layer.open({
+                    title : '教学奖惩-教学事故-编辑'
+                    ,type : 1
+                    ,area : [ '900px', '450px' ]
+                    ,offset : '50px'
+                    ,shadeClose : true //点击遮罩关闭
+                    ,content : $('#editForm_container')
+                    ,success: function(layero, index){
+                        //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
+                        let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
+                        $("#editForm .layui-btn-container").append(cancelBtn);
+                        cancelBtn.click(function (event) {
+                            layer.close(layIndex);
+                        });
+
+                        //初始化表单
+                        initEditForm(rowData);
+
+                        //监听表单提交
+                        form.on('submit(toSubmitEidtForm)', function(data){
+                            $.post(requestUrl+'/jxsg/update.do',data.field,function(result_data){
+                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                    layer.close(index);
+                                });
+                            },'json');
+                        });
+                    }
+                    ,end:function () {
+                        window.location.reload();//刷新页面
+                    }
+                });
+            } else if (layEvent === 'delete') {
+                layer.confirm('删除后不可恢复，确定要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                    $.post(requestUrl+'/jxsg/delete.do', { "objCode": rowData.code},function(result_data){
+                        if(result_data.code == 200){
+                            datatable.reload();//重新加载表格数据
+                        }
+                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                            layer.close(index);
+                        });
+                    }, "json");
+                });
+            }
+        });
+
     };
 
     var detail_dataInfo = function (data) {
