@@ -109,11 +109,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ]]
                 });//table end.
 
-                //监听搜索框事件
-                $('.myself_search .layui-btn').on('click', function(){
-                    let type = $(this).data('type');
-                    active[type] ? active[type].call(this) : '';
-                });
                 let active = {
                     search: function(){
                         myself_table.reload({
@@ -133,6 +128,11 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         form.render("select");
                     }
                 };
+                //监听搜索框事件
+                $('.myself_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
 
                 //监听头工具栏事件
                 table.on('toolbar(myself_table)', function(obj){
@@ -262,6 +262,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         });
                     }
                 });
+
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
@@ -331,72 +332,71 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
-
-                        //监听搜索框事件
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
-                        let active = {
-                            search: function(){
-                                other_table.reload({
-                                    where: {
-                                        'name': $(".other_search input[name='name']").val()
-                                        ,'shenheStatus': $("#shenheStatus").val()
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
-                            }
-                            ,reset: function () {
-                                $(".other_search input").val("");
-                                //清除选中状态
-                                $("#shenheStatus").val("");
-                                form.render("select");
-                            }
-                        };
-
-                        //监听头工具栏事件
-                        table.on('toolbar(other_table)', function(obj){
-                            var checkStatus = table.checkStatus(obj.config.id)
-                                ,data = checkStatus.data; //获取选中的数据
-                            switch(obj.event){
-                                case 'submit':
-                                    if(data.length === 0){
-                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                        return;
-                                    } else {
-                                        let isSubmit = false;
-                                        $.each(data,function(index,item){
-                                            if(item.shenheStatus== '已审核'){
-                                                isSubmit = true;
-                                                return false;//跳出循环
-                                            }
-                                        });
-                                        if(isSubmit){
-                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                            return;
-                                        } else {
-                                            toShenHe(data); //添加审核意见
-                                        }
-                                    }
-                                    break;
-                            }
-                        });
-
-                        //监听工具条
-                        table.on('tool(other_table)', function(obj){
-                            var data = obj.data;
-                            if (obj.event === 'detail_dataInfo') {
-                                detail_dataInfo(data,false,true);
-                            } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
-                            }
-                        });
-
                     }
                 });//table end.
+
+                //监听搜索框事件
+                let active = {
+                    search: function(){
+                        other_table.reload({
+                            where: {
+                                'name': $(".other_search input[name='name']").val()
+                                ,'shenheStatus': $("#shenheStatus").val()
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }
+                    ,reset: function () {
+                        $(".other_search input").val("");
+                        //清除选中状态
+                        $("#shenheStatus").val("");
+                        form.render("select");
+                    }
+                };
+                $('.other_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+                //监听头工具栏事件
+                table.on('toolbar(other_table)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                    switch(obj.event){
+                        case 'submit':
+                            if(data.length === 0){
+                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                return;
+                            } else {
+                                let isSubmit = false;
+                                $.each(data,function(index,item){
+                                    if(item.shenheStatus== '已审核'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
+                                    }
+                                });
+                                if(isSubmit){
+                                    layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                    return;
+                                } else {
+                                    toShenHe(data); //添加审核意见
+                                }
+                            }
+                            break;
+                    }
+                });
+
+                //监听工具条
+                table.on('tool(other_table)', function(obj){
+                    var data = obj.data;
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(data,false,true);
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        detail_shenheProcess('教学研究-教材建设-查看审核流程',data);
+                    }
+                });
 
                 /*//监听Tab切换
                 element.on('tab(layTab)', function(data){

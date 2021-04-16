@@ -133,7 +133,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     active[type] ? active[type].call(this) : '';
                 });
 
-
                 //监听头工具栏事件
                 table.on('toolbar(myself_table)', function(obj){
                     var checkStatus = table.checkStatus(obj.config.id)
@@ -267,6 +266,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         });
                     }
                 });
+
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
@@ -427,105 +427,105 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             form.render("select");
 
                         }
+                    }
+                });
 
-                        //监听搜索框事件
-                        let active = {
-                            search: function(){
-                                other_table.reload({
-                                    where: {
-                                        'teamName': $(".other_search input[name='teamName']").val()
-                                        ,'shenheStatus': $("#shenheStatus").val()
-                                        ,'shenheStatusFirst': $("#shenheStatusFirst").val()
-                                        ,'shenheStatusFinal': $("#shenheStatusFinal").val()
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
+                //监听搜索框事件
+                let active = {
+                    search: function(){
+                        other_table.reload({
+                            where: {
+                                'teamName': $(".other_search input[name='teamName']").val()
+                                ,'shenheStatus': $("#shenheStatus").val()
+                                ,'shenheStatusFirst': $("#shenheStatusFirst").val()
+                                ,'shenheStatusFinal': $("#shenheStatusFinal").val()
                             }
-                            ,reset: function () {
-                                $(".other_search input").val("");
-                                //清除选中状态
-                                $("#shenheStatus").val("");
-                                $("#shenheStatusFirst").val("");
-                                $("#shenheStatusFinal").val("");
-                                form.render("select");
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
                             }
-                        };
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
                         });
+                    }
+                    ,reset: function () {
+                        $(".other_search input").val("");
+                        //清除选中状态
+                        $("#shenheStatus").val("");
+                        $("#shenheStatusFirst").val("");
+                        $("#shenheStatusFinal").val("");
+                        form.render("select");
+                    }
+                };
+                $('.other_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
 
-                        //监听头工具栏事件
-                        table.on('toolbar(other_table)', function(obj){
-                            var checkStatus = table.checkStatus(obj.config.id)
-                                ,data = checkStatus.data; //获取选中的数据
-                            switch(obj.event){
-                                case 'submit':
-                                    if(data.length === 0){
-                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                        return;
-                                    } else {
-                                        let flag = false
-                                            ,msg=''
-                                            ,shenheStatusFirst = null;
-                                        $.each(data,function(index,item){
-                                            if(isJwcGly==1){ //当前登录用户为教务处管理员
-                                                if(item.status != '审核中'){
-                                                    flag = true;
-                                                    msg = '您选择了已审核的信息';
-                                                    return false;//跳出循环
-                                                } /*else if(item.shenheStatusFirst== '通过' && isEmpty(item.zjshItemList)){
+                //监听头工具栏事件
+                table.on('toolbar(other_table)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                    switch(obj.event){
+                        case 'submit':
+                            if(data.length === 0){
+                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                return;
+                            } else {
+                                let flag = false
+                                    ,msg=''
+                                    ,shenheStatusFirst = null;
+                                $.each(data,function(index,item){
+                                    if(isJwcGly==1){ //当前登录用户为教务处管理员
+                                        if(item.status != '审核中'){
+                                            flag = true;
+                                            msg = '您选择了已审核的信息';
+                                            return false;//跳出循环
+                                        } /*else if(item.shenheStatusFirst== '通过' && isEmpty(item.zjshItemList)){
                                                     flag = true;
                                                     msg = '您选择了校外专家未审核的信息';
                                                     return false;//跳出循环
                                                 } */else if(item.shenheStatusFirst== '通过' && item.isZjshAll !=1){
+                                            flag = true;
+                                            msg = '您选择了校外专家未审核的信息';
+                                            return false;//跳出循环
+                                        } else{
+                                            if(index===0){
+                                                shenheStatusFirst = item.shenheStatusFirst;
+                                            }else{
+                                                if(shenheStatusFirst != item.shenheStatusFirst){
                                                     flag = true;
-                                                    msg = '您选择了校外专家未审核的信息';
-                                                    return false;//跳出循环
-                                                } else{
-                                                    if(index===0){
-                                                        shenheStatusFirst = item.shenheStatusFirst;
-                                                    }else{
-                                                        if(shenheStatusFirst != item.shenheStatusFirst){
-                                                            flag = true;
-                                                            msg = '您选择了不同审核类别的信息';
-                                                            return false;//跳出循环
-                                                        }
-                                                    }
-                                                }
-                                            } else{
-                                                if(item.shenheStatus== '已审核'){
-                                                    flag = true;
-                                                    msg = '您选择了已审核的信息';
+                                                    msg = '您选择了不同审核类别的信息';
                                                     return false;//跳出循环
                                                 }
                                             }
-                                        });
-                                        if(flag){
-                                            layer.msg(msg, {time : 3000, offset: '100px'});
-                                            return;
-                                        } else {
-                                            toShenHe(data); //添加审核意见
                                         }
-
+                                    } else{
+                                        if(item.shenheStatus== '已审核'){
+                                            flag = true;
+                                            msg = '您选择了已审核的信息';
+                                            return false;//跳出循环
+                                        }
                                     }
-                                    break;
-                            }
-                        });
+                                });
+                                if(flag){
+                                    layer.msg(msg, {time : 3000, offset: '100px'});
+                                    return;
+                                } else {
+                                    toShenHe(data); //添加审核意见
+                                }
 
-                        //监听工具条
-                        table.on('tool(other_table)', function(obj){
-                            var data = obj.data;
-                            if (obj.event === 'detail_dataInfo') {
-                                detail_dataInfo(data,false,true);
-                            } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学研究-教学团队-省部级团队-查看审核流程',data);
-                            } else if (obj.event === 'detail-zjsh') {
-                                detail_zjsh(data);
                             }
-                        });
+                            break;
+                    }
+                });
+
+                //监听工具条
+                table.on('tool(other_table)', function(obj){
+                    var data = obj.data;
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(data,false,true);
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        detail_shenheProcess('教学研究-教学团队-省部级团队-查看审核流程',data);
+                    } else if (obj.event === 'detail-zjsh') {
+                        detail_zjsh(data);
                     }
                 });
 

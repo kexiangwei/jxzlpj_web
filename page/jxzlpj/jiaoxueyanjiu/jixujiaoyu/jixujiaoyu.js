@@ -109,196 +109,198 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ]]
                     ,done: function(res, curr, count){
 
-                        //监听搜索框事件
-                        $('.myself_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
-                        });
-                        let active = {
-                            search: function(){
-                                myself_table.reload({
-                                    where: {
-                                        'peixunName': $(".myself_search input[name='peixunName']").val()
-                                        ,'status': $("#status option:selected").val() //获取选中的值
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
-                                    }
-                                });
-                            }
-                            ,reset: function () {
-                                $("input").val('');
-                                //清除选中状态
-                                $("#status").val("");
-                                form.render("select");
-                            }
-                        };
-
-                        //监听头工具栏事件
-                        table.on('toolbar(myself_table)', function(obj){
-                            var checkStatus = table.checkStatus(obj.config.id)
-                                ,data = checkStatus.data; //获取选中的数据
-                            switch(obj.event){
-                                case 'insert':
-                                    let objCode = new Date().getTime(); //初始化业务数据编号
-                                    //
-                                    layer.open({
-                                        title : '教学研究-继续教育-新增'
-                                        ,type : 1
-                                        ,area : [ '900px', '580px' ]
-                                        ,offset : '50px'
-                                        ,content : $('#editForm_container')
-                                        ,success: function(layero, index){
-
-                                            //初始化表单
-                                            initEditForm({
-                                                'code': objCode
-                                                ,'userId':$.cookie('userId')
-                                                ,'userName':$.cookie('userName')
-                                                ,'userUnit':$.cookie('userUnit')
-                                            });
-
-                                            //监听编辑页submit按钮提交
-                                            form.on('submit(toSubmitEidtForm)', function(data){
-                                                let formData = data.field;
-                                                let array = new Array();
-                                                if(formData.hasOwnProperty('peixunStyle_online')){
-                                                    array.push('线上学习');
-                                                }
-                                                if(formData.hasOwnProperty('peixunStyle_offline')){
-                                                    array.push('线下学习');
-                                                }
-                                                formData.peixunStyle = array.join(',');
-                                                $.post(requestUrl+'/jxyj_jxjy/insert.do', formData, function (result_data) {
-                                                    layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                        layer.close(index);
-                                                    });
-                                                },'json');
-                                                return false;
-                                            });
-                                        }
-                                        ,cancel: function(index, layero){
-                                            layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                                $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
-                                                layer.closeAll();
-                                            });
-                                            return false;
-                                        }
-                                        ,end:function () {
-                                            window.location.reload(); //刷新页面
-                                        }
-                                    });
-                                    break;
-                                case 'submit':
-                                    if(data.length === 0){
-                                        layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
-                                    } else {
-                                        let isSubmit = false;
-                                        $.each(data,function(idx,obj){
-                                            if(obj.isSubmit== '已提交'){
-                                                isSubmit = true;
-                                                return false;//跳出循环
-                                            }
-                                        });
-                                        if(isSubmit){
-                                            layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
-                                            return;
-                                        }else{
-                                            toSubmit(data);
-                                        }
-                                    }
-                                    break;
-                            }
-                        });
-
-                        //监听工具条
-                        table.on('tool(myself_table)', function(obj){
-                            var data = obj.data;
-                            if (obj.event === 'detail_dataInfo') {
-                                detail_dataInfo(data,true);
-                            } else if (obj.event === 'detail_shenheProcess') {
-                                if(data.isSubmit=='未提交' && data.status !='退回'){
-                                    return;
-                                }
-                                detail_shenheProcess('教学研究-继续教育-查看审核流程',data);
-                            } else if (obj.event === 'update') {
-                                if(data.isSubmit== '已提交'){
-                                    return;
-                                }
-                                //执行编辑
-                                let editForm_idx= layer.open({
-                                    title :  '教学研究-继续教育-编辑'
-                                    ,type : 1
-                                    ,area : [ '900px', '580px' ]
-                                    ,offset : '50px'
-                                    ,shadeClose : true //点击遮罩关闭
-                                    ,content : $('#editForm_container')
-                                    ,success: function(layero, index){
-                                        //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
-                                        let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
-                                        $("#editForm .layui-btn-container").append(cancelBtn);
-                                        cancelBtn.click(function (event) {
-                                            layer.close(index);
-                                        });
-
-                                        //
-                                        let arr = data.peixunStyle.split(',');
-                                        let peixunStyle_offline=false
-                                            ,peixunStyle_online=false;
-                                        for (let i = 0; i < arr.length; i++) {
-                                            if(arr[i] == '线上学习'){
-                                                peixunStyle_online = true;
-                                            }else if(arr[i] == '线下学习'){
-                                                peixunStyle_offline = true;
-                                            }
-                                        }
-                                        data.peixunStyle_online = peixunStyle_online;
-                                        data.peixunStyle_offline = peixunStyle_offline;
-
-                                        //初始化表单
-                                        initEditForm(data);
-
-                                        //监听编辑页submit按钮提交
-                                        form.on('submit(toSubmitEidtForm)', function(data){
-                                            let formData = data.field;
-                                            let array = new Array();
-                                            if(formData.hasOwnProperty('peixunStyle_online')){
-                                                array.push('线上学习');
-                                            }
-                                            if(formData.hasOwnProperty('peixunStyle_offline')){
-                                                array.push('线下学习');
-                                            }
-                                            formData.peixunStyle = array.join(',');
-                                            $.post(requestUrl+'/jxyj_jxjy/update.do', formData, function (result_data) {
-                                                layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                                    layer.close(index);
-                                                });
-                                            },'json');
-                                        });
-                                    }
-                                    ,end:function () {
-                                        window.location.reload(); //刷新页面
-                                    }
-                                });
-                            } else if (obj.event === 'delete') {
-                                if(data.isSubmit== '已提交'){
-                                    return;
-                                }
-                                layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                                    $.post(requestUrl+'/jxyj_jxjy/delete.do', { 'code': data.code},function(result_data){
-                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
-                                            if(result_data.code == 200){
-                                                myself_table.reload();//重新加载表格数据
-                                            }
-                                            layer.close(index);
-                                        });
-                                    }, "json");
-                                });
-                            }
-                        });
-
                     }
                 });
+
+                //监听搜索框事件
+                let active = {
+                    search: function(){
+                        //执行重载
+                        myself_table.reload({
+                            where: {
+                                'peixunName': $(".myself_search input[name='peixunName']").val()
+                                ,'status': $("#status option:selected").val() //获取选中的值
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }
+                    ,reset: function () {
+                        $("input").val('');
+                        //清除选中状态
+                        $("#status").val("");
+                        form.render("select");
+                    }
+                };
+                $('.myself_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+                //监听头工具栏事件
+                table.on('toolbar(myself_table)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                    switch(obj.event){
+                        case 'insert':
+                            let objCode = new Date().getTime(); //初始化业务数据编号
+                            //
+                            layer.open({
+                                title : '教学研究-继续教育-新增'
+                                ,type : 1
+                                ,area : [ '900px', '580px' ]
+                                ,offset : '50px'
+                                ,content : $('#editForm_container')
+                                ,success: function(layero, index){
+
+                                    //初始化表单
+                                    initEditForm({
+                                        'code': objCode
+                                        ,'userId':$.cookie('userId')
+                                        ,'userName':$.cookie('userName')
+                                        ,'userUnit':$.cookie('userUnit')
+                                    });
+
+                                    //监听编辑页submit按钮提交
+                                    form.on('submit(toSubmitEidtForm)', function(data){
+                                        let formData = data.field;
+                                        let array = new Array();
+                                        if(formData.hasOwnProperty('peixunStyle_online')){
+                                            array.push('线上学习');
+                                        }
+                                        if(formData.hasOwnProperty('peixunStyle_offline')){
+                                            array.push('线下学习');
+                                        }
+                                        formData.peixunStyle = array.join(',');
+                                        $.post(requestUrl+'/jxyj_jxjy/insert.do', formData, function (result_data) {
+                                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                                layer.close(index);
+                                            });
+                                        },'json');
+                                        return false;
+                                    });
+                                }
+                                ,cancel: function(index, layero){
+                                    layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                                        $.post(requestUrl+'/deleteFileInfo.do', { "relationCode": objCode});
+                                        layer.closeAll();
+                                    });
+                                    return false;
+                                }
+                                ,end:function () {
+                                    window.location.reload(); //刷新页面
+                                }
+                            });
+                            break;
+                        case 'submit':
+                            if(data.length === 0){
+                                layer.msg('请选择需要提交的信息', {time : 3000, offset: '100px'});
+                            } else {
+                                let isSubmit = false;
+                                $.each(data,function(idx,obj){
+                                    if(obj.isSubmit== '已提交'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
+                                    }
+                                });
+                                if(isSubmit){
+                                    layer.msg('您选择了已提交的信息！', {time : 3000, offset: '100px'});
+                                    return;
+                                }else{
+                                    toSubmit(data);
+                                }
+                            }
+                            break;
+                    }
+                });
+
+                //监听工具条
+                table.on('tool(myself_table)', function(obj){
+                    var data = obj.data;
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(data,true);
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        if(data.isSubmit=='未提交' && data.status !='退回'){
+                            return;
+                        }
+                        detail_shenheProcess('教学研究-继续教育-查看审核流程',data);
+                    } else if (obj.event === 'update') {
+                        if(data.isSubmit== '已提交'){
+                            return;
+                        }
+                        //执行编辑
+                        let editForm_idx= layer.open({
+                            title :  '教学研究-继续教育-编辑'
+                            ,type : 1
+                            ,area : [ '900px', '580px' ]
+                            ,offset : '50px'
+                            ,shadeClose : true //点击遮罩关闭
+                            ,content : $('#editForm_container')
+                            ,success: function(layero, index){
+                                //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
+                                let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
+                                $("#editForm .layui-btn-container").append(cancelBtn);
+                                cancelBtn.click(function (event) {
+                                    layer.close(index);
+                                });
+
+                                //
+                                let arr = data.peixunStyle.split(',');
+                                let peixunStyle_offline=false
+                                    ,peixunStyle_online=false;
+                                for (let i = 0; i < arr.length; i++) {
+                                    if(arr[i] == '线上学习'){
+                                        peixunStyle_online = true;
+                                    }else if(arr[i] == '线下学习'){
+                                        peixunStyle_offline = true;
+                                    }
+                                }
+                                data.peixunStyle_online = peixunStyle_online;
+                                data.peixunStyle_offline = peixunStyle_offline;
+
+                                //初始化表单
+                                initEditForm(data);
+
+                                //监听编辑页submit按钮提交
+                                form.on('submit(toSubmitEidtForm)', function(data){
+                                    let formData = data.field;
+                                    let array = new Array();
+                                    if(formData.hasOwnProperty('peixunStyle_online')){
+                                        array.push('线上学习');
+                                    }
+                                    if(formData.hasOwnProperty('peixunStyle_offline')){
+                                        array.push('线下学习');
+                                    }
+                                    formData.peixunStyle = array.join(',');
+                                    $.post(requestUrl+'/jxyj_jxjy/update.do', formData, function (result_data) {
+                                        layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                            layer.close(index);
+                                        });
+                                    },'json');
+                                });
+                            }
+                            ,end:function () {
+                                window.location.reload(); //刷新页面
+                            }
+                        });
+                    } else if (obj.event === 'delete') {
+                        if(data.isSubmit== '已提交'){
+                            return;
+                        }
+                        layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                            $.post(requestUrl+'/jxyj_jxjy/delete.do', { 'code': data.code},function(result_data){
+                                layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                    if(result_data.code == 200){
+                                        myself_table.reload();//重新加载表格数据
+                                    }
+                                    layer.close(index);
+                                });
+                            }, "json");
+                        });
+                    }
+                });
+
             } else{
                 $('#myself').remove();
                 $('#myself_item').remove();
@@ -379,70 +381,69 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                     ]]
                     ,done: function(res, curr, count){
                         $('#other').find('span').html(res.unShenHeNum);
+                    }
+                });
 
-                        //监听搜索框事件
-                        $('.other_search .layui-btn').on('click', function(){
-                            let type = $(this).data('type');
-                            active[type] ? active[type].call(this) : '';
+                //监听搜索框事件
+                let active = {
+                    search: function(){
+                        other_table.reload({
+                            where: {
+                                'peixunName': $(".other_table input[ name='peixunName' ] ").val()
+                                ,'shenheStatus': $("#shenheStatus").val()
+                            }
+                            ,page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
                         });
-                        let active = {
-                            search: function(){
-                                other_table.reload({
-                                    where: {
-                                        'peixunName': $(".other_table input[ name='peixunName' ] ").val()
-                                        ,'shenheStatus': $("#shenheStatus").val()
-                                    }
-                                    ,page: {
-                                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,reset: function () {
+                        $(".other_search input").val("");
+                        //清除选中状态
+                        $("#shenheStatus").val("");
+                        form.render("select");
+                    }
+                };
+                $('.other_search .layui-btn').on('click', function(){
+                    let type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+
+                //监听头工具栏事件
+                table.on('toolbar(other_table)', function(obj){
+                    var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                    switch(obj.event){
+                        case 'submit':
+                            if(data.length === 0){
+                                layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
+                                return;
+                            } else {
+                                let isSubmit = false;
+                                $.each(data,function(index,item){
+                                    if(item.shenheStatus== '已审核'){
+                                        isSubmit = true;
+                                        return false;//跳出循环
                                     }
                                 });
+                                if(isSubmit){
+                                    layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
+                                    return;
+                                } else {
+                                    toShenHe(data); //添加审核意见
+                                }
                             }
-                            ,reset: function () {
-                                $(".other_search input").val("");
-                                //清除选中状态
-                                $("#shenheStatus").val("");
-                                form.render("select");
-                            }
-                        };
+                            break;
+                    }
+                });
 
-                        //监听头工具栏事件
-                        table.on('toolbar(other_table)', function(obj){
-                            var checkStatus = table.checkStatus(obj.config.id)
-                                ,data = checkStatus.data; //获取选中的数据
-                            switch(obj.event){
-                                case 'submit':
-                                    if(data.length === 0){
-                                        layer.msg('请选择需要审核的数据', {time : 3000, offset: '100px'});
-                                        return;
-                                    } else {
-                                        let isSubmit = false;
-                                        $.each(data,function(index,item){
-                                            if(item.shenheStatus== '已审核'){
-                                                isSubmit = true;
-                                                return false;//跳出循环
-                                            }
-                                        });
-                                        if(isSubmit){
-                                            layer.msg('您选择了已审核的信息！', {time : 3000, offset: '100px'});
-                                            return;
-                                        } else {
-                                            toShenHe(data); //添加审核意见
-                                        }
-                                    }
-                                    break;
-                            }
-                        });
-
-                        //监听工具条
-                        table.on('tool(other_table)', function(obj){
-                            var data = obj.data;
-                            if (obj.event === 'detail_dataInfo') {
-                                detail_dataInfo(data,false,true);
-                            } else if (obj.event === 'detail_shenheProcess') {
-                                detail_shenheProcess('教学研究-继续教育-查看审核流程',data);
-                            }
-                        });
-
+                //监听工具条
+                table.on('tool(other_table)', function(obj){
+                    var data = obj.data;
+                    if (obj.event === 'detail_dataInfo') {
+                        detail_dataInfo(data,false,true);
+                    } else if (obj.event === 'detail_shenheProcess') {
+                        detail_shenheProcess('教学研究-继续教育-查看审核流程',data);
                     }
                 });
 
