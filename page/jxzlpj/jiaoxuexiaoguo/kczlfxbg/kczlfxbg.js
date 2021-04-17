@@ -35,12 +35,13 @@ layui.use(['layer','table','form'], function(){
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
             ,{field: 'courseName', title: '课程名称', width:150, sort:true, event: 'courseName', templet: function (data) {
-                    let html = '<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看信息</a>';
-                    if(1==1){
-                        html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="dataInfo"><i class="layui-icon layui-icon-read"></i>查看信息</a>';
+                    if(data.isBg==1){ //如果填写报告打开查看按钮
+                        $('#datatable_tools').html('<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="dataInfo"><i class="layui-icon layui-icon-read"></i>查看信息</a>');
+                        return data.courseName;
+                    } else {
+                        $('#datatable_tools').html('<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看信息</a>');
+                        return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                     }
-                    $('#datatable_tools').html(html);
-                    return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
                 }
             }
             ,{field: 'courseAttr', title: '课程性质', width:150, sort:true}
@@ -90,8 +91,40 @@ layui.use(['layer','table','form'], function(){
     table.on('tool(datatable)', function(obj){
         let row_data = obj.data;
         if (obj.event === 'dataInfo') {
-            layer.msg('查看');
+            //根据编号加载报告信息
+            $.get(requestUrl+'/jxxg_kczlfxbg/getKczlfxbg.do',{"code":row_data.bgCode},function (result_data) {
+                if(result_data.code == 200){
+                    layer.open({
+                        id : guid()
+                        ,title : '课程质量分析报告'
+                        ,type : 1
+                        ,area : [ '1300px', '600px' ]
+                        ,offset : '50px'
+                        ,content : $('#editFormContainer')
+                        ,success: function(layero, index){
+
+                            //初始化表单数据
+                            var data = result_data.data;
+                            $('#subTitle').html(data.courseName+'（'+data.courseCode+'）课程质量分析报告');
+                            form.val("editForm",data);
+                            $('#editFormContainer .layui-btn-container > button').css("display","none"); //把保存按钮隐藏掉
+
+                        }
+                        ,end:function () {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    layer.msg("数据加载失败！", { offset: '100px'});
+                }
+            },'json');
+            
         }  else if (obj.event === 'courseName') {
+            //
+            if(row_data.isBg==1){
+                return false;
+            }
+            //
             layer.open({
                 id : guid()
                 ,title : '课程质量分析报告'
@@ -154,16 +187,16 @@ layui.use(['layer','table','form'], function(){
                         _form_data.field.userId = $.cookie('userId');
                         _form_data.field.userName = $.cookie('userName');
                         //
-                        /*$.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
+                        $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
                             layer.msg(_result_data.msg, {offset: '100px'},function () {
-                                if(_result_data.code === 200){
+                                if(_result_data.code == 200){
                                     datatable.reload();//重新加载表格数据
                                 }
                                 layer.close(index);
                             });
-                        },'json');*/
-                        layer.alert(JSON.stringify(_form_data.field));
-                        return false;
+                        },'json');
+                        /*layer.alert(JSON.stringify(_form_data.field));
+                        return false;*/
                     });
                 }
                 ,cancel: function(index, layero){
@@ -173,7 +206,7 @@ layui.use(['layer','table','form'], function(){
                     return false;
                 }
                 ,end:function () {
-
+                    window.location.reload();
                 }
             });
         }
