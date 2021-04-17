@@ -153,8 +153,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             initEditForm(index);
                             initDatatable(data.templateType);
 
-                        },end:function () {
-
+                        }
+                        ,cancel: function(index, layero){
+                            $("#template_editForm .layui-btn-container .layui-btn:last").remove();
+                        }
+                        ,end:function () {
+                            // window.location.reload();
                         }
                     });
                 } else if (obj.event === 'delete') {

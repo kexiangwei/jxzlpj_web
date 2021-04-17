@@ -165,14 +165,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     //监听编辑页submit按钮提交
                                     form.on('submit(toSubmitEidtForm)', function(data){
                                         let formData = data.field;
-                                        let array = new Array();
-                                        if(formData.hasOwnProperty('peixunStyle_online')){
-                                            array.push('线上学习');
-                                        }
-                                        if(formData.hasOwnProperty('peixunStyle_offline')){
-                                            array.push('线下学习');
-                                        }
-                                        formData.peixunStyle = array.join(',');
+                                        //提取培训形式的值
+                                        var peixunStyle = [];
+                                        $("input[name='peixunStyle']:checked").each(function(i){
+                                            peixunStyle.push($(this).val());
+                                        });
+                                        formData.peixunStyle = peixunStyle.join(',');
+                                        //
                                         $.post(requestUrl+'/jxyj_jxjy/insert.do', formData, function (result_data) {
                                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                                 layer.close(index);
@@ -245,19 +244,15 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     layer.close(index);
                                 });
 
-                                //
-                                let arr = data.peixunStyle.split(',');
-                                let peixunStyle_offline=false
-                                    ,peixunStyle_online=false;
-                                for (let i = 0; i < arr.length; i++) {
-                                    if(arr[i] == '线上学习'){
-                                        peixunStyle_online = true;
-                                    }else if(arr[i] == '线下学习'){
-                                        peixunStyle_offline = true;
+                                //设置复选框选中状态
+                                var checkboxes = $("input[name='peixunStyle']");
+                                $.each(checkboxes,function(i){
+                                    var value = $(this).val(); //获取复选框的value属性值
+                                    var arr = data.peixunStyle.split(',');
+                                    if($.inArray(value,arr) != -1){ //确定第一个参数在数组中的位置，从0开始计数(如果没有找到则返回 -1 )。
+                                        $(this).attr("checked","");
                                     }
-                                }
-                                data.peixunStyle_online = peixunStyle_online;
-                                data.peixunStyle_offline = peixunStyle_offline;
+                                });
 
                                 //初始化表单
                                 initEditForm(data);
@@ -265,14 +260,13 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 //监听编辑页submit按钮提交
                                 form.on('submit(toSubmitEidtForm)', function(data){
                                     let formData = data.field;
-                                    let array = new Array();
-                                    if(formData.hasOwnProperty('peixunStyle_online')){
-                                        array.push('线上学习');
-                                    }
-                                    if(formData.hasOwnProperty('peixunStyle_offline')){
-                                        array.push('线下学习');
-                                    }
-                                    formData.peixunStyle = array.join(',');
+                                    //获取复选框选中的值
+                                    var peixunStyle = [];
+                                    $("input[name='peixunStyle']:checked").each(function(i){
+                                        peixunStyle.push($(this).val());
+                                    });
+                                    formData.peixunStyle = peixunStyle.join(',');
+                                    //
                                     $.post(requestUrl+'/jxyj_jxjy/update.do', formData, function (result_data) {
                                         layer.msg(result_data.msg, { offset: '100px'}, function () {
                                             layer.close(index);
@@ -473,8 +467,6 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 form.val("editForm",{
                     "code":data.code,
                     "peixunName":data.peixunName,
-                    "peixunStyle_online":data.peixunStyle_online,
-                    "peixunStyle_offline":data.peixunStyle_offline,
                     "peixunStartTime":data.peixunStartTime,
                     "peixunEndTime":data.peixunEndTime,
                     "peixunClassHour":data.peixunClassHour,

@@ -100,13 +100,11 @@ layui.use(['layer','table','form'], function(){
                 ,offset : '50px'
                 ,content : $('#editFormContainer')
                 ,success: function(layero, index){
-                    //
-                    var objCode = new Date();
+
                     //初始化表单数据
                     $('#subTitle').html(row_data.courseName+'（'+row_data.courseCode+'）课程质量分析报告');
                     form.val("editForm",{
-                        "code": objCode
-                        ,"courseCode": row_data.courseCode
+                        "courseCode": row_data.courseCode
                         ,"courseName" : row_data.courseName
                         ,"courseAttr" : row_data.courseAttr
                         ,"xyName" : row_data.xyName
@@ -115,21 +113,57 @@ layui.use(['layer','table','form'], function(){
                         ,"xq" : row_data.xq
                         ,"skJs" : row_data.skJs
                         ,"skBj" : row_data.skBj
-                        ,"userId": $.cookie('userId')
-                        ,"userName": $.cookie('userName')
                     });
+
+                    /**
+                     * 验证表单数据
+                     */
+                    form.verify({
+                        score: function(value,item){ //value：表单的值、item：表单的DOM对象
+                            let defaultScore = $(item).parent().prev().text();
+                            if(parseInt(defaultScore) < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                return '超出预设分值范围！';
+                            }
+                        },
+                        totalScore: function(value,item){ //value：表单的值、item：表单的DOM对象
+                            if(100 < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                return '超出预设分值范围！';
+                            }
+                        }
+                    });
+
+                    //评分合计
+                    let $inputs = $('.score');
+                    $inputs.keyup(function() {
+                        let totalScore = 0;
+                        $inputs.each(function(){
+                            let value = parseInt($(this).val());
+                            if(value.toString() != "NaN"){
+                                totalScore += value;
+                            }
+                        });
+                        $("input[name='c1']").val(totalScore);
+                    });
+
                     //监听表单提交
                     form.on('submit(toSubmitEidtForm)', function(_form_data){
+                        //
+                        _form_data.field.code = new Date().getTime();
                         _form_data.field.courseCode = row_data.courseCode;
                         _form_data.field.courseName = row_data.courseName;
-                        $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
+                        _form_data.field.userId = $.cookie('userId');
+                        _form_data.field.userName = $.cookie('userName');
+                        //
+                        /*$.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
                             layer.msg(_result_data.msg, {offset: '100px'},function () {
                                 if(_result_data.code === 200){
                                     datatable.reload();//重新加载表格数据
                                 }
                                 layer.close(index);
                             });
-                        },'json');
+                        },'json');*/
+                        layer.alert(JSON.stringify(_form_data.field));
+                        return false;
                     });
                 }
                 ,cancel: function(index, layero){
@@ -144,5 +178,4 @@ layui.use(['layer','table','form'], function(){
             });
         }
     });
-
 });

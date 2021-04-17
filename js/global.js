@@ -44,3 +44,32 @@ var initSelect = function(defaultOptionVal, inputName, data){
     }
     $("select[name='"+inputName+"']").append(html);
 };
+
+/**
+ * 获取复选框选中的值
+ * @param checkboxName checkbox 的name 属性值
+ * @returns {string}
+ */
+var getChecked = function fun(checkboxName) {
+    var values = [];
+    $("input[name='"+checkboxName+"']:checked").each(function(i){
+        values.push($(this).val());
+    });
+    return values.join(",");
+};
+
+/**
+ * 设置复选框选中状态
+ * @param checkboxName checkbox 的name 属性值
+ * @param stringData 接口返回的数据
+ */
+var setChecked = function (checkboxName,stringData) {
+    var checkboxes = $("input[name='"+checkboxName+"']");
+    $.each(checkboxes,function(i){
+        var value = $(this).val(); //获取复选框的value属性值
+        var arr = stringData.split(',');
+        if($.inArray(value,arr) != -1){ //确定第一个参数在数组中的位置，从0开始计数(如果没有找到则返回 -1 )。
+            $(this).attr("checked","");
+        }
+    });
+};
