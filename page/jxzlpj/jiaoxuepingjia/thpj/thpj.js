@@ -85,9 +85,9 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                     if(data.isPj == 2){
                         html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                         $('#datatable_bar').html(html);
-                        return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
+                        return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                     }
-                    html = '<a class="layui-btn layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     $('#datatable_bar').html(html);
                     return data.courseName;
              }}

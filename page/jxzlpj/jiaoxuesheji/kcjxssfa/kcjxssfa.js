@@ -44,9 +44,9 @@ layui.use(['layer','table','form','laydate'], function(){
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             ,{field: 'courseName', title: '课程名称', width:150, sort:true, event: 'insert', templet: function (data) {
                     if(data.isSubmit=='已提交'){
-                        return '<span style="font-weight: bold;">'+data.courseName+'</span>';
+                        return '<span style="font-weight: bold; color: #1E9FFF;">'+data.courseName+'</span>';
                     }
-                    return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
+                    return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                 }
             }
             ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
@@ -56,7 +56,7 @@ layui.use(['layer','table','form','laydate'], function(){
             ,{field: 'studentNum', title:'学生人数', width:150, sort:true}
             ,{field: 'classLocation', title:'上课地点', width:150, sort:true}
             ,{field: 'openCollege', title:'开课学院（部）', width:150, sort:true}
-            ,{field: 'isSubmit', title: '提交状态', width:150, sort:true}
+            // ,{field: 'isSubmit', title: '提交状态', width:150, sort:true}
             ,{fixed: 'right', width:110, align:'center', toolbar: '#myself_bar'}
         ]]
         ,done: function(res, curr, count){ //数据渲染完的回调

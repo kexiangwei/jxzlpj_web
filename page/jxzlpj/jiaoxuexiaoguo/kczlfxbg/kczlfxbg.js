@@ -40,7 +40,7 @@ layui.use(['layer','table','form'], function(){
                         return data.courseName;
                     } else {
                         $('#datatable_tools').html('<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看信息</a>');
-                        return '<span style="font-weight: bold; cursor: pointer;">'+data.courseName+'</span>';
+                        return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                     }
                 }
             }
@@ -100,6 +100,7 @@ layui.use(['layer','table','form'], function(){
                         ,type : 1
                         ,area : [ '1300px', '600px' ]
                         ,offset : '50px'
+                        ,btn: ['关闭']
                         ,content : $('#editFormContainer')
                         ,success: function(layero, index){
 
