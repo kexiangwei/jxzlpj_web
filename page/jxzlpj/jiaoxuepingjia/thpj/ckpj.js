@@ -94,11 +94,12 @@ layui.use(['layer','element','table'], function(){
             //
             layer.open({
                 id: guid() //设定一个id，防止重复弹出
-                ,title : ''
+                ,title : '查看评教'
                 ,type : 1
                 ,area : [ '1100px', '500px' ]
                 ,offset : '50px' //只定义top坐标，水平保持居中
                 ,shadeClose : true //点击遮罩关闭
+                ,btn: ['关闭']
                 ,content : $('#view_container')
                 ,success: function(layero, index){
                     $.get(requestUrl+'/jxpj_thpj/getCkpjDetail.do'

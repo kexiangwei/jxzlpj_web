@@ -52,7 +52,7 @@ layui.use(['layer','element','table','form'], function(){
                     case 'insert':
                         //
                         layer.open({
-                            title : '教学评价-评教设置-指标'
+                            title : '教学评价-评教设置-新增指标'
                             ,type : 1
                             ,area : [ '700px', '450px' ]
                             ,offset : '100px'
@@ -72,8 +72,6 @@ layui.use(['layer','element','table','form'], function(){
                                     },'json');
                                 });
 
-                            },end:function () {
-
                             }
                         });
                         break;
@@ -86,7 +84,7 @@ layui.use(['layer','element','table','form'], function(){
                 if (obj.event === 'detail') {
                     //
                     let layIndex = layer.open({
-                        title : '教学评价-评教设置-指标'
+                        title : '教学评价-评教设置-查看指标'
                         ,type : 1
                         ,area : [ '700px', '300px' ]
                         ,offset : '100px'
@@ -125,7 +123,7 @@ layui.use(['layer','element','table','form'], function(){
                     }
                     //执行编辑
                     layer.open({
-                        title : '教学评价-评教设置-指标'
+                        title : '教学评价-评教设置-修改指标'
                         ,type : 1
                         ,area : [ '700px', '450px' ]
                         ,offset : '100px'
@@ -159,8 +157,9 @@ layui.use(['layer','element','table','form'], function(){
                                     });
                                 },'json');
                             });
-                        },end:function () {
-
+                        }
+                        ,end:function () {
+                            $("#target_editForm .layui-btn-container .layui-btn:last").remove();
                         }
                     });
                 } else if (obj.event === 'delete') {

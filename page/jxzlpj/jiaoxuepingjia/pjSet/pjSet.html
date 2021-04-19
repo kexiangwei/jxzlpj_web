@@ -40,9 +40,7 @@
     </div>
 
     <!-- 模板 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="template_dataInfo_container">
-
-    </div>
+    <div class="layui-container" style="width: 90%; display: none;" id="template_dataInfo_container"></div>
     <div class="layui-container" style="width: 90%; display: none;" id="template_editForm_container">
         <form class="layui-form" action="" lay-filter="template_editForm"  id="template_editForm">
 
@@ -80,20 +78,18 @@
             </div>
 
             <div class="layui-form-item">
-                <table class="layui-table" lay-filter="datatable" id="datatable" ></table>
+                <table class="layui-table" lay-filter="datatable" id="datatable"></table>
             </div>
 
             <div class="layui-btn-container" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
             </div>
         </form>
     </div>
 
     <!-- 指标 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="target_dataInfo_container">
-
-    </div>
+    <div class="layui-container" style="width: 90%; display: none;" id="target_dataInfo_container"></div>
     <div class="layui-container" style="width: 90%; display: none" id="target_editForm_container">
         <form class="layui-form" action="" lay-filter="target_editForm"  id="target_editForm">
 
@@ -129,8 +125,8 @@
             </div>
 
             <div class="layui-btn-container" align="center">
-                <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
             </div>
         </form>
     </div>

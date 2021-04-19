@@ -68,7 +68,7 @@ layui.use(['layer','table','form'], function(){
                     ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
                             let html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">已评</a>';
                             if(data.isPj === 2){
-                                html = '<a class="layui-btn layui-btn-xs" lay-event="pj">未评</a>';
+                                html = '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="pj">未评</a>';
                             }
                             $('#datatable_bar').html(html);
                             return data.courseName;
@@ -144,7 +144,7 @@ layui.use(['layer','table','form'], function(){
                             });
                             html += '<textarea name="suggest" placeholder="您对本课程的建议" class="layui-textarea"></textarea>';
                             html += '<div class="layui-btn-container" style="margin-top: 20px" align="center">\n' +
-                                '       <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
+                                '       <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
                                 '    </div>';
                             $("#editForm").html(html);
                             form.render('radio'); //刷新radio单选框框渲染
@@ -226,6 +226,8 @@ layui.use(['layer','table','form'], function(){
             }
             ,cols : [[ //表头
                 {type:'numbers', title:'序号', width:80, fixed: 'left'}
+                ,{field:'skjsCode', title:'授课教师编号', width:150, sort:true}
+                ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
                 ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
                         let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">已评</a>';
                         if(data.isPj === 2){
@@ -241,6 +243,7 @@ layui.use(['layer','table','form'], function(){
                 ,{field:'xq', title:'学期', width:150, sort:true}
                 ,{field:'xyName', title:'学院', width:150, sort:true}
                 ,{field:'zyName', title:'专业', width:150, sort:true}
+
                 ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
             ]]
             ,even: true //隔行背景
@@ -282,7 +285,7 @@ layui.use(['layer','table','form'], function(){
             if (obj.event === 'pj') {
                 $.get(requestUrl+'/xspj/getPjInfo.do',{
                     'courseCode':obj.data.courseCode
-                    ,'userId':$.cookie('userId')
+                    ,'userId': obj.data.skjsCode
                 },function (result_data) {
                     layer.open({
                         title : '教学评价-学生评教-评教详情'

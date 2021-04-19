@@ -35,7 +35,13 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'wjCode', title: '编号', width:200, sort: true}
             ,{field: 'wjName', title: '名称', width:200, sort: true}
             ,{field: 'wjDesc', title: '备注', templet: function(data){
-                    $('#toolbar').html('<a class="layui-btn layui-btn-xs" lay-event="wj">'+(data.isTrue == 1?"已填写":"未填写")+'</a>');
+                var html = '';
+                if(data.isTrue == 1){
+                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="wj">已填写</a>';
+                } else {
+                    html = '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="wj">未填写</a>';
+                }
+                    $('#toolbar').html(html);
                     return data.wjDesc;
                 }
              }
