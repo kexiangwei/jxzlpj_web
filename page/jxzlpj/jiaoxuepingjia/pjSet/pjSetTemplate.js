@@ -47,7 +47,6 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     return data.endDate;
                 }
             }
-            // ,{field: 'createDate', title: '创建日期', width:150}
             ,{fixed: 'right', width:220, align:'center', toolbar: '#template_bar'}
         ]]
         ,even: true //隔行背景
@@ -72,6 +71,9 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             ,content : $('#template_editForm_container')
                             ,success: function(layero, index){
                                 initEditForm(index);
+                            }
+                            ,end: function () {
+                                window.location.reload();
                             }
                         });
                      break;
@@ -120,7 +122,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         }
                     });
                 } else if (obj.event === 'update') {
-                    /*if(data.isActive == 1){
+                    /*if(data.isUse == 1){
                         return;
                     }*/
                     //执行编辑
@@ -154,12 +156,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             initDatatable(data.templateType,data.templateCode);
                             //
                         }
-                        ,end:function () {
-                            $("#template_editForm .layui-btn-container .layui-btn:last").remove();
+                        ,end: function () {
+                            window.location.reload();
                         }
                     });
                 } else if (obj.event === 'delete') {
-                    if(data.isActive == 1){
+                    if(data.isUse == 1){
                         return;
                     }
                     layer.confirm('删除后不可恢复，真的要删除么？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
@@ -194,24 +196,28 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                 //监听提交
                 form.on('submit(toSubmitEidtForm)', function(data){
-                    /*layui.getSelectedTargetCodes(); //测试用例
-                    return false;*/
-                    $.post(requestUrl+'/insertOrUpdateTemplate.do' ,{
-                        'templateCode': data.field.templateCode,
-                        'templateType': data.field.templateType,
-                        'templateName': data.field.templateName,
-                        'startDate': data.field.startDate,
-                        'endDate': data.field.endDate,
-                        'targetCodes': layui.getSelectedTargetCodes()
-                    } ,function(result_data){
-                        layer.msg(result_data.msg, { offset: '100px'}, function () {
-                            if(result_data.code == 200){
-                                template_dataTable.reload();//重新加载表格数据
-                            }
-                            layer.close(layIndex);
-                        });
-                    },'json');
-
+                    //一些逻辑校验
+                    if(totalScore > 100){
+                        layer.msg('当前总分值为'+totalScore+'，超出预设分值100！', { offset: '100px'});
+                    } else if(totalScore < 100){
+                        layer.msg('当前总分值为'+totalScore+'，未达到预设分值100！', { offset: '100px'});
+                    } else {
+                        $.post(requestUrl+'/insertOrUpdateTemplate.do' ,{
+                            'templateCode': data.field.templateCode,
+                            'templateType': data.field.templateType,
+                            'templateName': data.field.templateName,
+                            'startDate': data.field.startDate,
+                            'endDate': data.field.endDate,
+                            'targetCodes': Array.from(new Set(targetCodes))
+                        } ,function(result_data){
+                            layer.msg(result_data.msg, { offset: '100px'}, function () {
+                                if(result_data.code == 200){
+                                    template_dataTable.reload();//重新加载表格数据
+                                }
+                                layer.close(layIndex);
+                            });
+                        },'json');
+                    }
                 });
             };
 
@@ -219,6 +225,8 @@ layui.use(['layer','element','table','form','laydate'], function(){
              * 根据模板类型初始化表格数据
              * @param data 模板类型，可选值[同行评教，学生评教]
              */
+            var targetCodes = [] //勾选的复选框
+                ,totalScore = 0; //勾选的总分值
             var initDatatable = function (data,templateCode) {
 
                 //指标设置
@@ -239,16 +247,17 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             "data": res.data //解析数据列表
                         };
                     }
+                    // ,totalRow: true //开启合计行
                     ,cols : [[ //表头
                         {type:'checkbox', fixed: 'left'}
-                        ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
+                        ,{type:'numbers', title:'序号', width:80, fixed: 'left', totalRowText: '已选合计：'}
                         ,{field: 'targetName', title: '名称',width:150}
                         ,{field: 'targetContent', title: '内容'}
-                        ,{field: 'targetScore', title: '分值', width:80}
+                        ,{field: 'targetScore', title: '分值', width:80, totalRow:true}
                     ]]
                     ,done : function(res, curr, count) {
-
-                        var targetCodes = [];
+                        let table_data = res.data;
+                        // this.elem.next().find('.layui-table-total td[data-field="targetScore"] .layui-table-cell').text(totalScore); //自定义合计行的数值
 
                         //设置已选指标
                         if(templateCode != null){
@@ -264,6 +273,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                             if(result_data.data[j] == res.data[i]['targetCode']){ //设置复选框选中
                                                 $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
                                                 $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                                                totalScore += res.data[i]['targetScore'];
                                             }
                                         }
                                     }
@@ -271,45 +281,36 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             },'json');
                         }
 
-                        var table_data = res.data;
                         //监听复选框选择事件
                         table.on('checkbox(datatable)', function(obj){
-                            if(obj.checked==true){ //勾选
-                                if(obj.type=='one'){
-                                    targetCodes.push(obj.data.targetCode);
-                                }else{
+                            if(obj.checked == true){ //勾选
+                                if(obj.type == 'one'){ //单选
+                                    if(!targetCodes.includes(obj.data.targetCode)){ //不存在则添加
+                                        targetCodes.push(obj.data.targetCode);
+                                        totalScore += obj.data.targetScore;
+                                    }
+                                }else{ //全选
+                                    targetCodes = [];
+                                    totalScore = 0;
                                     for(var i=0;i<table_data.length;i++){
                                         targetCodes.push(table_data[i].targetCode);
+                                        totalScore += table_data[i].targetScore;
                                     }
                                 }
                             }else{ //取消勾选
-                                if(obj.type=='one'){
+                                if(obj.type == 'one'){
                                     for(var i=0;i<targetCodes.length;i++){
                                         if(targetCodes[i] == obj.data.targetCode){
                                             targetCodes.splice(i,1);
+                                            totalScore -= obj.data.targetScore;
                                         }
                                     }
-                                } else{
-                                    for(var i=0;i<targetCodes.length;i++){
-                                        for(var j=0;j<table_data.length;j++){
-                                            if(targetCodes[i]==table_data[j].targetCode){
-                                                targetCodes.splice(i,1);
-                                            }
-                                        }
-                                    }
+                                } else{ //全不选
+                                    targetCodes = [];
+                                    totalScore = 0;
                                 }
                             }
                         });
-
-                        //返回已选择的指标项编号
-                        layui.getSelectedTargetCodes = function () {
-                            /*var checkStatus = table.checkStatus('datatable'); //idTest 即为基础参数 id 对应的值
-                            console.log(checkStatus.data) //获取选中行的数据
-                            console.log(checkStatus.data.length) //获取选中行数量，可作为是否有选中行的条件
-                            console.log(checkStatus.isAll ) //表格是否全选*/
-                            //通过table.checkStatus('datatable')方法无法获取初始加载的数据
-                            return Array.from(new Set(targetCodes)); //js数组去重
-                        }
                     }
                 });
             }
