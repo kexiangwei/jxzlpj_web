@@ -26,8 +26,8 @@
 /*主体区域-轮播图*/
 .login-center #carousel {
     position: absolute;
-    top: 55px;
-    left: 200px;
+    top: 15px;
+    left: 100px;
 }
 .login-center #carousel img {
     width: 100%;
@@ -60,7 +60,7 @@
 .login-center .login-form input[type='button'] {
     height: 35px;
     background-color: #197442;
-    font: 700 18px '华文楷体';
+    font: 700 18px '微软雅黑';
     color: white;
     border: 0px;
 }
