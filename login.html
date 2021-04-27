@@ -2,50 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>教学质量评价</title>
-    <link rel="stylesheet" href="js/layui/css/layui.css">
+    <title>教师教学投入和教学质量评价系统</title>
+    <link rel="stylesheet" href="js/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="css/login.css">
 </head>
-<body class="layui-layout-body">
-    <div class="m-login-bg">
-        <div class="m-login">
-            <h3>教学质量评价系统</h3>
-            <div class="m-login-warp">
-                <form class="layui-form">
-                    <div class="layui-form-item">
-                        <input type="text" name="userId" required lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-item">
-                        <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <input type="text" name="imageCode" placeholder="请输入验证码" autocomplete="off" class="layui-input" style="width: 168px;">
-                        </div>
-                        <div class="layui-inline">
-                            <img id="imgCode" alt="图形验证码"/>
-                        </div>
-                    </div>
-                    <div class="layui-form-item m-login-btn">
-                        <div class="layui-inline">
-                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="loginForm">登录</button>
-<!--
-                            <button class="layui-btn" style="background-color: #e0755f;" lay-submit lay-filter="loginForm">登录</button>
--->
-                        </div>
-                        <div class="layui-inline">
-                            <button type="reset" class="layui-btn layui-btn-primary">取消</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<body>
+<div class="login-top">
+    <img src="images/login/logo.jpg" alt=""> |  &nbsp;&nbsp;教师教学投入和教学质量评价系统
+</div>
+<div class="login-center">
+    <div class="layui-carousel" id="carousel">
+        <div carousel-item>
+            <div><img src="images/login/layui-carousel-1.jpg"></div>
+            <div><img src="images/login/layui-carousel-2.jpg"></div>
+            <div><img src="images/login/layui-carousel-3.jpg"></div>
+            <div><img src="images/login/layui-carousel-4.jpg"></div>
+            <div><img src="images/login/layui-carousel-5.jpg"></div>
         </div>
     </div>
-    <script src="js/layui/layui.js"></script>
-    <script src="js/jquery-3.3.1.js"></script>
-    <script src="js/jquery.cookie.js"></script>
-    <script src="js/global.js"></script>
-    <script src="js/login.js"></script>
+    <div class="login-form">
+        <div class="motto"></div>
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <input type="text" name="userId" required lay-verify="required" placeholder="请输入账号" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <input type="text" name="imageCode" placeholder="请输入验证码" autocomplete="off" class="layui-input" style="width: 135px;">
+                </div>
+                <div class="layui-inline">
+                    <img id="imgCode" alt="图形验证码" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <input type="button" value="登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录" class="layui-btn layui-btn-normal" lay-submit lay-filter="loginForm">
+            </div>
+        </form>
+    </div>
+</div>
+<div class="login-bottom">
+
+</div>
+<script src="js/layui/layui.js" charset="utf-8"></script>
+<script src="js/jquery-3.3.1.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/global.js"></script>
+<script src="js/login.js"></script>
+<script>
+    layui.use(['carousel'], function () {
+        var carousel = layui.carousel;
+
+        //图片轮播
+        carousel.render({
+            elem: '#carousel'
+            ,width: 560
+            ,height: 373
+            ,arrow: 'always'
+            ,interval: 3000
+        });
+    });
+</script>
 </body>
 </html>
