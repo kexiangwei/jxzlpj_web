@@ -2,6 +2,7 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 /*头部区域*/
@@ -54,22 +55,28 @@
 
 .login-center .login-form .motto{
     height: 108px;
-    border-bottom: 1px solid #197442;
-    font: 700 32px '华文隶书';
+    border-bottom: 1px solid lightgrey;
+    font: 700 34px '隶书';
     text-align: center;
     line-height: 108px;
+}
+
+.layui-form-item {
+    margin-bottom: 0px;
+    clear: both;
+    *zoom: 1;
 }
 
 .login-center .login-form input {
     width: 80%;
     margin-left: 35px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .login-center .login-form input[type='button'] {
     height: 35px;
     background-color: #197442;
-    font: 700 18px '微软雅黑';
+    font: 700 28px '隶书';
     color: white;
     border: 0px;
 }
