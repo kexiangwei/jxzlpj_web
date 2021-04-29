@@ -45,16 +45,25 @@
     box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
-.login-center .login-form .motto{
+/*.login-center .login-form .motto{
     height: 138px;
     background: url("../images/login/motto.jpg") no-repeat center top;
     background-size: 100%;
     border-radius: 10px;
+}*/
+
+.login-center .login-form .motto{
+    height: 108px;
+    border-bottom: 1px solid #197442;
+    font: 700 32px '华文隶书';
+    text-align: center;
+    line-height: 108px;
 }
 
 .login-center .login-form input {
     width: 80%;
     margin-left: 35px;
+    margin-top: 10px;
 }
 
 .login-center .login-form input[type='button'] {
