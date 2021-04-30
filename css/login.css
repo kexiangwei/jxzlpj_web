@@ -61,6 +61,10 @@
     line-height: 108px;
 }
 
+.login-center .login-form .motto:hover {
+    font-size: 36px;
+}
+
 .layui-form-item {
     margin-bottom: 0px;
     clear: both;
@@ -83,6 +87,7 @@
 
 .login-center .login-form input[type='button']:hover {
     background-color: lightgreen;
+    transform: scaleY(1.2);
 }
 
 .login-bottom {
