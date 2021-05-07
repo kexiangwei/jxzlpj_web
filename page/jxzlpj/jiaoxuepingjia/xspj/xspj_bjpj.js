@@ -171,7 +171,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                         transfer.render({
                                             id: 'demo_'+ currentIndex //定义索引
                                             , elem: '#test_'+ currentIndex
-                                            ,title: ['初始排序', '已选排序']  //自定义标题
+                                            ,title: ['课程列表', '我的排序']  //自定义标题
                                             ,data: transferDataArr[currentIndex]
                                             ,value: transferSelectedData[currentIndex]
                                             ,width: 320 //定义宽度
@@ -211,7 +211,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                         transfer.render({
                                             id: 'demo_'+ currentIndex //定义索引
                                             , elem: '#test_'+ currentIndex
-                                            ,title: ['初始排序', '已选排序']  //自定义标题
+                                            ,title: ['课程列表', '我的排序']  //自定义标题
                                             ,data: transferDataArr[currentIndex]
                                             ,value: transferSelectedData[currentIndex]
                                             ,width: 320 //定义宽度
@@ -260,7 +260,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                     transfer.render({
                                         id: 'demo_'+ currentIndex //定义索引
                                         , elem: '#test_'+ currentIndex
-                                        ,title: ['初始排序', '已选排序']  //自定义标题
+                                        ,title: ['课程列表', '我的排序']  //自定义标题
                                         ,data: transferDataArr[currentIndex] != null ? transferDataArr[currentIndex] : transferData
                                         ,value: transferSelectedData[currentIndex]
                                         ,width: 320 //定义宽度
@@ -427,7 +427,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                 transfer.render({
                                     id: 'demo_0' //定义索引
                                     , elem: '#test_0'
-                                    ,title: ['初始排序', '已选排序']  //自定义标题
+                                    ,title: ['课程列表', '我的排序']  //自定义标题
                                     ,data: transferData
                                     // ,value: ["1111110101", "1111110102"] 默认摆放顺序以data 属性值的顺序为依据
                                     ,width: 320 //定义宽度

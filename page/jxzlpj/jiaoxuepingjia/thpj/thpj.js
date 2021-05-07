@@ -231,7 +231,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                         for (let j = 0; j < data[i].num; j++) {
                             let obj = data[i].targetList[j];
                             templateCode = obj.templateCode;
-                            html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                            html += '<td>\n'/* +parseInt(j+1)+'．'*/+obj.targetContent+'</td>\n' +
                                 '<td>'+obj.targetScore+'</td>\n' +
                                 '<td><input type="text" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
                         }
