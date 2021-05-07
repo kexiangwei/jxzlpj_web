@@ -6,13 +6,13 @@
 }
 
 /*头部区域*/
-.login-top {
+.login-header {
     height: 120px;
     font: 700 32px '华文楷体';
     color: #197442;
 }
 
-.login-top img {
+.login-header img {
     width: 20%;
     vertical-align: middle;
 }
@@ -59,6 +59,7 @@
     font: 700 34px '隶书';
     text-align: center;
     line-height: 108px;
+    transition: all 0.5s;
 }
 
 .login-center .login-form .motto:hover {
@@ -78,7 +79,7 @@
 }
 
 .login-center .login-form input[type='button'] {
-    height: 35px;
+    height: 38px;
     background-color: #197442;
     font: 700 28px '隶书';
     color: white;
@@ -87,10 +88,10 @@
 
 .login-center .login-form input[type='button']:hover {
     background-color: lightgreen;
-    transform: scaleY(1.2);
+    /*transform: scaleY(1.1);*/
 }
 
-.login-bottom {
+.login-footer {
     height: 120px;
 }
 
