@@ -4,7 +4,7 @@ layui.use(['layer','element'], function(){
     //
     // layer.msg("欢迎你，"+ $.cookie('userName'));
     //
-    $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/files/userHeadImg/default_handsome.jpg'));
+    $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/files/userHeadImg/default_handsome.png'));
     $("#currentUser").html($.cookie('userName'));
     //
     $.ajax({
