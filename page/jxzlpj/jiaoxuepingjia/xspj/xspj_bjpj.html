@@ -10,80 +10,82 @@
             background-color: #c5c1c1;
             color: #fff;
         }
+
+        .layui-btn-table {
+            width: 100px;
+            height: 26px;
+            line-height: 26px;
+            padding: 0 5px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 13px;
+        }
+
+        #editForm_container h2 {
+            margin: 20px;
+            font-weight: 700;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
-    <div class="layui-fluid">
+<div class="layui-fluid">
+    <!-- 数据表格 -->
+    <table class="layui-table" lay-filter="datatable" id="datatable">
+        <script type="text/html" id="datatable_toolbar"></script>
+    </table>
+</div>
 
-        <!-- 查询参数 -->
-        <div class="layui-form search">
-            课程名称：
-            <div class="layui-inline">
-                <input class="layui-input" name="courseName" placeholder="支持关键字查询">
-            </div>
-            <div class="layui-inline">
-                <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+<!--学生评教-->
+<div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
+    <h2>北京农学院课程教学质量评价表（学生用）</h2>
+    <form class="layui-form" lay-filter="editForm" id="editForm"></form>
+</div>
+
+<!-- 填写评教意见 -->
+<div class="layui-container" style="width: 90%; display: none;" id="suggest_container">
+    <form class="layui-form" action="" lay-filter="suggestForm" id="suggestForm">
+        <div class="layui-form-item layui-form-text" style="margin-top: 20px;">
+            <div class="layui-input-block" style="margin-left: 50px;">
+                <textarea id="suggest" name="suggest" class="layui-textarea" style="width: 500px; height: 150px;"></textarea>
             </div>
         </div>
-        <!-- 数据表格 -->
-        <table class="layui-table" lay-filter="datatable" id="datatable">
-            <script type="text/html" id="datatable_bar"></script>
-        </table>
-    </div>
-
-    <!--学生评教-->
-    <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
-        <h2 style="margin-top: 20px; font-weight: bold" align="center">北京农学院课程教学质量评价表（学生用）</h2>
-        <form class="layui-form" lay-filter="editForm" id="editForm">
-
-        </form>
-    </div>
-
-    <!-- 填写评教意见 -->
-    <div class="layui-container" style="width: 90%; display: none;" id="suggest_container">
-        <form class="layui-form" action="" lay-filter="suggestForm" id="suggestForm">
-            <div class="layui-form-item layui-form-text" style="margin-top: 20px;">
-                <div class="layui-input-block" style="margin-left: 50px;">
-                    <textarea id="suggest" name="suggest" class="layui-textarea" style="width: 500px; height: 150px;"></textarea>
-                </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" align="center">
+                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitSuggestForm">保存</button>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block" align="center">
-                    <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitSuggestForm">保存</button>
-                </div>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
-    <!--教师查看学生评教-->
-    <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
+<!--教师查看学生评教-->
+<div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
 
-        <table class="layui-table" style="margin-top: 20px;">
-            <colgroup>
-                <col width="80">
-                <col>
-                <col width="80">
-                <col width="80">
-            </colgroup>
-            <thead>
-            <tr>
-                <th>序号</th>
-                <th>指标项</th>
-                <th>分值</th>
-                <th>平均分</th>
-            </tr>
-            </thead>
-            <tbody id="pjInfo">
-            </tbody>
-        </table>
-    </div>
+    <table class="layui-table" style="margin-top: 20px;">
+        <colgroup>
+            <col width="80">
+            <col>
+            <col width="80">
+            <col width="80">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>指标项</th>
+            <th>分值</th>
+            <th>平均分</th>
+        </tr>
+        </thead>
+        <tbody id="pjInfo">
+        </tbody>
+    </table>
+</div>
 
-    <script src="../../../../js/layui/layui.js"></script>
-    <script src="../../../../js/jquery-3.3.1.js"></script>
-    <script src="../../../../js/jquery.cookie.js"></script>
-    <script src="../../../../js/global.js"></script>
-    <script src="xspj_bjpj.js"></script>
+<script src="../../../../js/layui/layui.js"></script>
+<script src="../../../../js/jquery-3.3.1.js"></script>
+<script src="../../../../js/jquery.cookie.js"></script>
+<script src="../../../../js/global.js"></script>
+<script src="xspj_bjpj.js"></script>
 
 </body>
 </html>

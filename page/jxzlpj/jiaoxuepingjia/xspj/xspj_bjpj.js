@@ -2,16 +2,17 @@
  *教学评价-学生评教
  */
 layui.use(['layer','table','form','transfer'], function(){
-    let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,transfer = layui.transfer;
+    var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,transfer = layui.transfer;
 
-    const accountType = $.cookie('accountType');
-    if(accountType == 'student'){
+    var accountType = $.cookie('accountType');
+
+    if(accountType == 'student'){ //学生视角
 
         //数据表格
-        let datatable = table.render({
+        var datatable = table.render({
             id: guid() //设定一个id，防止重复弹出
             ,elem : '#datatable'
-            ,height : 600
+            ,height : 580
             ,url: requestUrl+'/getPjSetTemplateList.do'
             ,where:{
                 "templateType": '学生评教',
@@ -36,24 +37,24 @@ layui.use(['layer','table','form','transfer'], function(){
             }
             ,cols : [[ //表头
                 {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                ,{field: 'templateName', title: '名称'}
+                ,{field: 'templateName', title: '模板名称'}
                 ,{field: 'startDate', title: '开始时间', width:200}
                 ,{field: 'endDate', title: '结束时间', width:200, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                         let html = '';
-                        if(data.isActive === 1){
-                            if(data.isPj === 1){
-                                html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">已评</a>';
+                        if(data.isActive == 1){
+                            if(data.isPj == 1){
+                                html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="isPj1">查看评教</a>';
                             } else {
-                                html = '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="pj">未评</a>';
+                                html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="isPj2">未评</a>';
                             }
                         } else {
-                            html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">评教时间已过</a>';
+                            html = '<a class="layui-btn  layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled">评教时间已过</a>';
                         }
-                        $('#datatable_bar').html(html);
+                        $('#datatable_toolbar').html(html);
                         return data.endDate;
                     }
                 }
-                ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+                ,{fixed: 'right', width:132, align:'center', toolbar: '#datatable_toolbar'}
             ]]
             ,even: true //隔行背景
             ,limit: 10
@@ -67,35 +68,15 @@ layui.use(['layer','table','form','transfer'], function(){
 
             }
         });
-        //监听搜索框事件
-        let active = {
-            search: function(){
-                datatable.reload({
-                    where: {
-                        'courseName': $(".search input[ name='courseName']").val()
-                    }
-                    ,page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                });
-            }
-            ,reset: function () {
-                $(".search input").val('');
-            }
-        };
-        $('.search .layui-btn').on('click', function(){
-            let type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+
         //监听右侧工具条
         table.on('tool(datatable)', function(obj){
-            if (obj.event === 'pj') {
+            if (obj.event === 'isPj1') {
+                layer.msg("查看评教", {offset: '100px'});
+            } else if (obj.event === 'isPj2') {
+                //
                 var datas = null;
-                $.get(requestUrl+'/getActiveTemplate.do'
-                    , {
-                    'templateType': '学生评教',
-                    'templateCode': obj.data.templateCode
-                    }, function(result_data){
+                $.get(requestUrl+'/getActiveTemplate.do', {'templateType': '学生评教', 'templateCode': obj.data.templateCode}, function(result_data){
                         if(result_data.code == 200){
                             datas = result_data.data;
                         } else {
@@ -103,31 +84,29 @@ layui.use(['layer','table','form','transfer'], function(){
                             return;
                         }
                 },'json');
-
-
                 //根据userId 获取本学期课程及授课教师信息
-                $.get(requestUrl+'/xspj/getPjInfoTransferData.do', { 'userId': $.cookie('userId') }, function(result_data2){
-                    if(result_data2.code == 200){
+                $.get(requestUrl+'/xspj/getBjpjTransferData.do', { 'userId': $.cookie('userId') }, function(result_data){
+                    if(result_data.code == 200){
                         //提取穿梭框初始数据
                         var transferData = new Array();
-                        $.each(result_data2.data,function (idx,obj) {
+                        $.each(result_data.data,function (idx,obj) {
                             transferData.push({
                                 "value": obj.courseCode //数据值
-                                ,"title": obj.courseName + ' - '+ obj.teacherName //数据标题
+                                ,"title": obj.courseName + ' - '+ obj.teacherNames //数据标题
                             })
                         });
                         //
-
                         var currentIndex = 0;
                         var transferDataArr = [] //待选列表集合
                             ,transferSelectedData = [] //已选列表集合
                             ,transferSelectedDataArr = []; //发送到后台的
                         var code = new Date().getTime(); //初始化业务数据编号
+                        //
                         layer.open({
                             id: guid()
-                            ,title : '教学评价-学生评教'
+                            ,title : '学生评教'
                             ,type : 1
-                            ,area : [ '900px', '500px' ]
+                            ,area : [ '900px', '520px' ]
                             ,offset : '50px'
                             ,btn: ['上一步', '下一步']
                             ,yes: function(){
@@ -163,7 +142,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                         }
 
                                         let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                            '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                            '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                             '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
                                         $("#editForm").html(html);
 
@@ -203,7 +182,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             transferSelectedDataArr[currentIndex] = tempObj;
                                         }
                                         let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                            '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                            '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                             '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
                                         $("#editForm").html(html);
 
@@ -253,7 +232,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                     currentIndex += 1;
 
                                     let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                        '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/'+parseInt(currentIndex+1)+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                        '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                         '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
                                     $("#editForm").html(html);
                                     //
@@ -293,7 +272,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                     //课程信息列表
                                     let html = '<table class="layui-table" id="course_datatable" lay-filter="course_datatable">\n' +
                                         '           <script type="text/html" id="course_datatable_bar">\n' +
-                                        '               <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="suggest">填写评教意见或建议</a>\n' +
+                                        '               <a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal"  style="width: 150px" lay-event="suggest">填写评教意见或建议</a>\n' +
                                         '           </script>\n' +
                                         '       </table>';
                                     $("#editForm").html(html);
@@ -301,13 +280,13 @@ layui.use(['layer','table','form','transfer'], function(){
                                     let course_datatable = table.render({
                                         id: "course_datatable_id"
                                         ,elem : '#course_datatable'
-                                        ,data: result_data2.data
+                                        ,data: result_data.data
                                         ,defaultToolbar:[]
                                         ,cols : [[ //表头
                                             {type:'numbers', title:'序号', width:80, fixed: 'left'}
                                             ,{field: 'courseCode', title: '课程编号', width:150, align:'center'}
                                             ,{field: 'courseName', title: '课程名称', width:200, align:'center'}
-                                            ,{field: 'teacherName', title: '授课教师', width:150, align:'center'}
+                                            ,{field: 'teacherNames', title: '授课教师', width:150, align:'center'}
                                             ,{fixed: 'right', title: '操作', align:'center', toolbar: '#course_datatable_bar'}
                                         ]]
                                         ,even: true //隔行背景
@@ -378,8 +357,8 @@ layui.use(['layer','table','form','transfer'], function(){
 
                                     // 初始化下拉选项
                                     let html2 = '<option value="">请选择</option>';
-                                    $.each(result_data2.data,function (idx,obj) {
-                                        html2 += '<option value="' + obj.teacherCode + '" >' + obj.teacherName + '</option>';
+                                    $.each(result_data.data,function (idx,obj) {
+                                        html2 += '<option value="' + obj.teacherNames + '" >' + obj.teacherNames + '</option>';
                                     });
                                     $("select[name='preferTeacher']").empty().append(html2);
                                     form.render('select');
@@ -420,7 +399,7 @@ layui.use(['layer','table','form','transfer'], function(){
                             ,success: function(layero, index){
 
                                 let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                    '<h3 style="margin-top: 20px; font-weight: bold">'+datas.length+'/1，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                    '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
                                     '<div id="test_0" class="demo-transfer"></div></div>';
                                 $("#editForm").html(html);
                                 //
@@ -442,16 +421,16 @@ layui.use(['layer','table','form','transfer'], function(){
                             }
                         });
                     } else {
-                        layer.msg("数据加载失败");
+                        layer.msg("数据加载失败！");
                     }
                 },'json');
             }
         });
 
-    } else{
+    } else{ //教师视角
 
         //数据表格
-        let datatable = table.render({
+        var datatable = table.render({
             id: guid() //设定一个id，防止重复弹出
             ,elem : '#datatable'
             ,height : 580
@@ -484,7 +463,7 @@ layui.use(['layer','table','form','transfer'], function(){
                         if(data.isPj === 2){
                             html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">未评</a>';
                         }
-                        $('#datatable_bar').html(html);
+                        $('#datatable_toolbar').html(html);
                         return data.courseName;
                     }}
                 ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
@@ -494,7 +473,7 @@ layui.use(['layer','table','form','transfer'], function(){
                 ,{field:'xq', title:'学期', width:150, sort:true}
                 ,{field:'xyName', title:'学院', width:150, sort:true}
                 ,{field:'zyName', title:'专业', width:150, sort:true}
-                ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+                ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
             ]]
             ,even: true //隔行背景
             ,limit: 10
@@ -508,26 +487,7 @@ layui.use(['layer','table','form','transfer'], function(){
 
             }
         });
-        //监听搜索框事件
-        let active = {
-            search: function(){
-                datatable.reload({
-                    where: {
-                        'courseName': $(".search input[ name='courseName']").val()
-                    }
-                    ,page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                });
-            }
-            ,reset: function () {
-                $(".search input").val('');
-            }
-        };
-        $('.search .layui-btn').on('click', function(){
-            let type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
+
         //监听右侧工具条
         table.on('tool(datatable)', function(obj){
             if (obj.event === 'pj') {
