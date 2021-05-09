@@ -168,11 +168,14 @@ layui.use(['layer','table','form'], function(){
 
                             //监听表单提交
                             form.on('submit(toSubmitEidtForm)', function(data){
+                                var pjSuggest = data.field.suggest;
+                                delete data.field.suggest;
                                 $.post(requestUrl+'/xspj/insert.do' ,{
                                     'xn' : obj.data.xn,
                                     'xq' : obj.data.xq,
                                     "courseCode" : obj.data.courseCode
-                                    ,"teacherCode" : obj.data.skjsCode
+                                    ,"skjsCode" : obj.data.skjsCode
+                                    ,'pjSuggest': pjSuggest
                                     ,'userId':$.cookie('userId')
                                     ,'userName':$.cookie('userName')
                                     ,"templateCode" : result_data.data[0].templateCode

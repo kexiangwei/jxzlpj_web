@@ -92,14 +92,14 @@ layui.use(['layer','table','form','transfer'], function(){
                         $.each(result_data.data,function (idx,obj) {
                             transferData.push({
                                 "value": obj.courseCode //数据值
-                                ,"title": obj.courseName + ' - '+ obj.teacherNames //数据标题
+                                ,"title": obj.skjsCode + ' - '+ obj.skjsName //数据标题
                             })
                         });
                         //
                         var currentIndex = 0;
                         var transferDataArr = [] //待选列表集合
                             ,transferSelectedData = [] //已选列表集合
-                            ,transferSelectedDataArr = []; //发送到后台的
+                            ,transferSelectedDatas = []; //发送到后台的
                         var code = new Date().getTime(); //初始化业务数据编号
                         //
                         layer.open({
@@ -134,7 +134,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 'targetScore': datas[currentIndex].targetScore,
                                                 'arr': tempArr
                                             };
-                                            transferSelectedDataArr[currentIndex] = tempObj;
+                                            transferSelectedDatas[currentIndex] = tempObj;
                                         }
 
                                         if(currentIndex > 0 ){
@@ -179,7 +179,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                                 'targetScore': datas[currentIndex].targetScore,
                                                 'arr': tempArr
                                             };
-                                            transferSelectedDataArr[currentIndex] = tempObj;
+                                            transferSelectedDatas[currentIndex] = tempObj;
                                         }
                                         let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
                                             '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
@@ -227,7 +227,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             'targetScore': datas[currentIndex].targetScore,
                                             'arr': tempArr
                                         };
-                                        transferSelectedDataArr[currentIndex] = tempObj;
+                                        transferSelectedDatas[currentIndex] = tempObj;
                                     }
                                     currentIndex += 1;
 
@@ -266,7 +266,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             'targetScore': datas[currentIndex].targetScore,
                                             'arr': tempArr
                                         };
-                                        transferSelectedDataArr[currentIndex] = tempObj;
+                                        transferSelectedDatas[currentIndex] = tempObj;
                                     }
                                     currentIndex += 1;
                                     //课程信息列表
@@ -286,7 +286,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             {type:'numbers', title:'序号', width:80, fixed: 'left'}
                                             ,{field: 'courseCode', title: '课程编号', width:150, align:'center'}
                                             ,{field: 'courseName', title: '课程名称', width:200, align:'center'}
-                                            ,{field: 'teacherNames', title: '授课教师', width:150, align:'center'}
+                                            ,{field: 'skjsName', title: '授课教师', width:150, align:'center'}
                                             ,{fixed: 'right', title: '操作', align:'center', toolbar: '#course_datatable_bar'}
                                         ]]
                                         ,even: true //隔行背景
@@ -318,6 +318,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                                             form.on('submit(toSubmitSuggestForm)', function(form_data){
                                                                 $.post(requestUrl+'/xspj/insertBjpjSuggest.do',{
                                                                     "relationCode": code,
+                                                                    "xn": obj.data.xn,
+                                                                    "xq": obj.data.xq,
                                                                     "courseCode": obj.data.courseCode,
                                                                     "suggest": form_data.field.suggest
                                                                 },function (result_data) {
@@ -345,7 +347,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                         '          <div class="layui-inline">\n' +
                                         '             <label class="layui-form-label" style="width: 100px;">最喜欢的教师：</label>\n' +
                                         '             <div class="layui-input-inline">\n' +
-                                        '                <select id="preferTeacher" name="preferTeacher" lay-filter="preferTeacher"></select>\n' +
+                                        '                <select id="bestTeacher" name="bestTeacher" lay-filter="bestTeacher"></select>\n' +
                                         '             </div>\n' +
                                         '           </div>\n' +
                                         '       </div>';
@@ -358,9 +360,9 @@ layui.use(['layer','table','form','transfer'], function(){
                                     // 初始化下拉选项
                                     let html2 = '<option value="">请选择</option>';
                                     $.each(result_data.data,function (idx,obj) {
-                                        html2 += '<option value="' + obj.teacherNames + '" >' + obj.teacherNames + '</option>';
+                                        html2 += '<option value="' + obj.skjsCode + '" >' + obj.skjsName + '</option>';
                                     });
-                                    $("select[name='preferTeacher']").empty().append(html2);
+                                    $("select[name='bestTeacher']").empty().append(html2);
                                     form.render('select');
 
                                     //监听提交
@@ -373,8 +375,8 @@ layui.use(['layer','table','form','transfer'], function(){
                                             data: {
                                                 'code': code,
                                                 'templateCode': obj.data.templateCode,
-                                                'transferSelectedDataArr': JSON.stringify(transferSelectedDataArr),
-                                                'preferTeacher': $("#preferTeacher").val(),
+                                                'transferSelectedDatas': JSON.stringify(transferSelectedDatas),
+                                                'bestTeacher': $("#bestTeacher").val(),
                                                 'userId': $.cookie('userId'),
                                                 'userName': $.cookie('userName')
                                             },
