@@ -4,8 +4,7 @@
 layui.use(['layer','table','form'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form;
 
-    const accountType = $.cookie('accountType');
-
+    var accountType = $.cookie('accountType');
     var datatable;
     if(accountType == 'student'){
         //
@@ -73,16 +72,16 @@ layui.use(['layer','table','form'], function(){
                                 html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="isPj2">未评</a>';
                             }
                             $('#datatable_bar').html(html);
-                            return data.xq == 1?'上学期':'下学期';
+                            return data.xq == '3'?'上学期':'下学期';
                         }
                     }
-                    // ,{field:'courseCode', title:'课程编号', width:150, sort:true}
-                    ,{field:'courseName', title:'课程名称', width:200, sort:true}
-                    ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                    ,{field:'skjsCode', title:'授课教师编号', width:150, sort:true}
-                    ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
-                    ,{field:'skSj', title:'授课时间', width:150, sort:true}
-                    ,{field:'skDd', title:'授课地点', width:150, sort:true}
+                    ,{field:'courseCode', title:'课程编号', width:150, sort:true}
+                    ,{field:'courseName', title:'课程名称', sort:true}
+                    // ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
+                    // ,{field:'skjsCode', title:'授课教师编号', width:150, sort:true}
+                    // ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
+                    // ,{field:'skSj', title:'授课时间', width:150, sort:true}
+                    // ,{field:'skDd', title:'授课地点', width:150, sort:true}
                     ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
                 ]]
                 ,even: true //隔行背景
@@ -111,12 +110,13 @@ layui.use(['layer','table','form'], function(){
                         ,content : '<table class="layui-table">\n' +
                             '            <tr><td style="width: 120px; text-align: right">学年：</td><td>'+obj.data.xn+'</td></tr>\n' +
                             '            <tr><td style="width: 120px; text-align: right">学期：</td><td>'+obj.data.xq+'</td></tr>\n' +
+                            '            <tr><td style="width: 120px; text-align: right">课程编号：</td><td>'+obj.data.courseCode+'</td></tr>\n' +
                             '            <tr><td style="width: 120px; text-align: right">课程名称：</td><td>'+obj.data.courseName+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">课程性质：</td><td>'+obj.data.courseAttr+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">授课教师编号：</td><td>'+obj.data.skjsCode+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">授课教师名称：</td><td>'+obj.data.skjsName+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">授课时间：</td><td>'+obj.data.skSj+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">授课地点：</td><td>'+obj.data.skDd+'</td></tr>\n' +
+                            // '            <tr><td style="width: 120px; text-align: right">课程性质：</td><td>'+obj.data.courseAttr+'</td></tr>\n' +
+                            // '            <tr><td style="width: 120px; text-align: right">授课教师编号：</td><td>'+obj.data.skjsCode+'</td></tr>\n' +
+                            // '            <tr><td style="width: 120px; text-align: right">授课教师名称：</td><td>'+obj.data.skjsName+'</td></tr>\n' +
+                            // '            <tr><td style="width: 120px; text-align: right">授课时间：</td><td>'+obj.data.skSj+'</td></tr>\n' +
+                            // '            <tr><td style="width: 120px; text-align: right">授课地点：</td><td>'+obj.data.skDd+'</td></tr>\n' +
                             '            <tr><td style="width: 120px; text-align: right">评教建议：</td><td>'+obj.data.pjSuggest+'</td></tr>\n' +
                             '    </table>'
                     });
@@ -175,11 +175,11 @@ layui.use(['layer','table','form'], function(){
                                     'xq' : obj.data.xq,
                                     "courseCode" : obj.data.courseCode
                                     ,"skjsCode" : obj.data.skjsCode
+                                    ,"templateCode" : result_data.data[0].templateCode
+                                    ,'jsonString':JSON.stringify(data.field)
                                     ,'pjSuggest': pjSuggest
                                     ,'userId':$.cookie('userId')
                                     ,'userName':$.cookie('userName')
-                                    ,"templateCode" : result_data.data[0].templateCode
-                                    ,'jsonString':JSON.stringify(data.field)
                                 } ,function(result_data){
                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
                                         if(result_data.code == 200){
@@ -208,7 +208,7 @@ layui.use(['layer','table','form'], function(){
         datatable = table.render({
             id: guid() //设定一个id，防止重复弹出
             ,elem : '#datatable'
-            ,height : 580
+            ,height : 466
             ,url: requestUrl+'/xspj/getPageList.do'
             ,where:{
                 "accountType":accountType,
@@ -240,16 +240,16 @@ layui.use(['layer','table','form'], function(){
                             html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled">未评</a>';
                         }
                         $('#datatable_bar').html(html);
-                        return data.xq == 1?'上学期':'下学期';
+                        return data.xq == '3'?'上学期':'下学期';
                     }
                 }
-                // ,{field:'courseCode', title:'课程编号', width:150, sort:true}
-                ,{field:'courseName', title:'课程名称', width:200, sort:true}
-                ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
+                ,{field:'courseCode', title:'课程编号', width:150, sort:true}
+                ,{field:'courseName', title:'课程名称', sort:true}
+                /*,{field:'courseAttr', title:'课程性质', width:150, sort:true}
                 ,{field:'skjsCode', title:'授课教师编号', width:150, sort:true}
                 ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
                 ,{field:'skSj', title:'授课时间', width:150, sort:true}
-                ,{field:'skDd', title:'授课地点', width:150, sort:true}
+                ,{field:'skDd', title:'授课地点', width:150, sort:true}*/
                 ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
             ]]
             ,even: true //隔行背景

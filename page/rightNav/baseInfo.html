@@ -31,7 +31,7 @@
                 '        <tbody>\n' +
                 '              <tr>' +
                 '                <td style="width: 80px; text-align: right">姓名：</td><td style="width: 120px;">'+($.cookie('userName') == "null"? "":$.cookie('userName'))+'</td>' +
-                '                <td style="width: 80px; text-align: right">工号/学号：</td><td style="width: 120px;">'+($.cookie('userId') == "null"? "":$.cookie('userId'))+'</td>' +
+                '                <td style="width: 80px; text-align: right">'+($.cookie("accountType") == "student"?"学号":"工号")+'：</td><td style="width: 120px;">'+($.cookie('userId') == "null"? "":$.cookie('userId'))+'</td>' +
                 '              </tr>\n' +
                 '              <tr>' +
                 '                <td style="width: 80px; text-align: right">性别：</td><td style="width: 120px;">'+($.cookie('sex') == "null"? "":$.cookie('sex'))+'</td>' +
