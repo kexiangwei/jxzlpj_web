@@ -35,6 +35,17 @@
         #editForm_container h3 {
             color: gray;
         }
+
+        .layui-panel {
+            padding: 30px;
+            margin-top: 10px;
+            border: 1px solid;
+            border-radius: 2px;
+            box-shadow: 1px 1px 5px rgb(0 0 0);
+            background-color: #fff;
+            font-size: 16px;
+            color: #666;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
@@ -95,6 +106,12 @@
 
     <table class="layui-table" style="margin-top: 20px;" id="pjInfo"></table>
 
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>评教建议</legend>
+    </fieldset>
+    <div class="layui-bg-gray" style="padding: 20px;" id="pjSuggest"></div>
+
+    <!--评教说明-->
     <!--<h3 style="margin-top: 20px;">说明：学生评教详情页面展示每一道题（指标项）的平均分和总平均分以及对课程的建议。对每一项指标的评分算法，参考如下：</h3>
     <table class="layui-table">
         <colgroup>

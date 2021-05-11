@@ -1,8 +1,8 @@
 /**
  *教学评价-学生评教
  */
-layui.use(['layer','table','form'], function(){
-    let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form;
+layui.use(['layer','table','form','element'], function(){
+    let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,element = layui.element;
 
     var accountType = $.cookie('accountType');
     var datatable;
@@ -40,7 +40,7 @@ layui.use(['layer','table','form'], function(){
             datatable = table.render({
                 id: guid() //设定一个id，防止重复弹出
                 ,elem : '#datatable'
-                ,height : 580
+                ,height : 466
                 ,url: requestUrl+'/xspj/getPageList.do'
                 ,where:{
                     "accountType":accountType,
@@ -284,17 +284,14 @@ layui.use(['layer','table','form'], function(){
                         ,btn: ['关闭']
                         ,content : $('#dataInfo_container')
                         ,success: function(layero, index){
-                            let data = result_data.data
-                                ,html = '<tr><td style="width:120px; font-weight:700;">总平均分：</td><td>'+data.totalAvgScore+'</td></tr>' +
-                                '<tr><td style="width:120px; font-weight:700;">评教人次：</td><td>'+data.pjNum+'</td></tr>';
-                            html += '<tr><td colspan="2" style="font-weight:700;">评教建议：</td></tr>';
+                            let data = result_data.data;
+                            $('#pjInfo').html('<tr><td style="width:120px; font-size:18px;">总平均分：</td><td>'+data.totalAvgScore+'</td></tr>' +
+                                '<tr><td style="width:120px; font-size:18px;">评教人次：</td><td>'+data.pjNum+'</td></tr>');
+                            let html = '';
                             $.each(data.suggestList,function (idx,obj) {
-                                html += '<tr>\n' +
-                                    '<td>'+parseInt(idx+1)+'</td>\n' +
-                                    '<td colspan="3">'+obj+'</td>\n' +
-                                    '</tr>';
+                                html += '<div class="layui-panel">'+obj+'</div>';
                             });
-                            $('#pjInfo').html(html);
+                            $('#pjSuggest').html(html);
                         }
                     });
                 },'json');
