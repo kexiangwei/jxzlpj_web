@@ -6,12 +6,20 @@
     <title>教学质量评价</title>
     <link rel="stylesheet" href="js/layui/css/layui.css">
     <style type="text/css">
+
         .layui-layout-admin .layui-side {
-            width: 220px;
+            width: 235px;
+        }
+
+        .layui-side-scroll {
+            position: relative;
+            width: 252px;
+            height: 100%;
+            overflow-x: hidden;
         }
 
         .layui-nav-tree {
-            width: 220px;
+            width: 235px;
             padding: 0;
         }
 
@@ -54,7 +62,7 @@
         }
 
         .layui-tab {
-            margin-left: 220px;
+            margin-left: 235px;
         }
     </style>
 </head>
@@ -149,7 +157,7 @@
             , shrinkBtn = document.getElementById('shrinkBtn');
         if (isCollapse) {
             collapseMain.style.display = 'block';
-            layTab.style.marginLeft = '220px';
+            layTab.style.marginLeft = '235px';
             spreadBtn.style.display = 'block';
             shrinkBtn.style.display = 'none'
         } else {

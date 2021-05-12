@@ -18,7 +18,7 @@ layui.use(['layer','table','form','element'], function(){
                 //显示评教要求
                 layer.open({
                     id: guid() //设定一个id，防止重复弹出
-                    ,title: ['评教说明', 'font-size:26px; font-weight: bold; color:lightslategray;']
+                    ,title: ['评教说明', 'font-size:22px; font-weight: bold; color:lightslategray;']
                     ,type: 1
                     ,area : [ '900px']
                     ,offset : '50px' //只定义top坐标，水平保持居中
@@ -27,7 +27,7 @@ layui.use(['layer','table','form','element'], function(){
                     ,btnAlign: 'c' //按钮居中显示
                     ,skin: 'layer-btn-skin'
                     ,closeBtn: false
-                    ,content: '<div style="padding: 50px; background-color: lightslategray; font: normal 400 22px/50px \'Microsoft YaHei\';  color: #fff; ">' +
+                    ,content: '<div style="padding: 50px; background-color: lightslategray; font: normal 400 18px/2.5 \'Microsoft YaHei\';  color: #fff; ">' +
                         '1.您的评价对于提高老师的教学能力非常有帮助。<br/>' +
                         '2.您的评价结果占教师教学质量评价结果的40%。<br/>' +
                         '3.您的评价为匿名评价，请选择您认为最贴近实际情况的选项。<br/>' +
@@ -104,7 +104,10 @@ layui.use(['layer','table','form','element'], function(){
                         ,offset : '50px'
                         ,shadeClose : true
                         ,btn : ['关闭']
-                        ,content : '<div class="layui-panel">'+obj.data.pjSuggest+'</div>'
+                        ,content : '<fieldset class="layui-elem-field" style="margin: 30px 50px;">\n' +
+                            '\t<legend>'+obj.data.courseName+'</legend>\n' +
+                            '\t<div class="layui-panel">'+obj.data.pjSuggest+'</div>\n' +
+                            '</fieldset>'
                     });
                 } else if (obj.event === 'isPj2') {
                     //
@@ -131,7 +134,7 @@ layui.use(['layer','table','form','element'], function(){
                             });
                             html += '<textarea name="suggest" placeholder="您对本课程的建议" class="layui-textarea"></textarea>';
                             html += '<div class="layui-btn-container" style="margin-top: 20px" align="center">\n' +
-                                '       <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
+                                '       <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 100px;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
                                 '    </div>';
                             $("#editForm").html(html);
                             form.render('radio'); //刷新radio单选框框渲染

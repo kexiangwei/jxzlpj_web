@@ -68,7 +68,32 @@ layui.use(['layer','table','form','transfer'], function(){
         //监听右侧工具条
         table.on('tool(datatable)', function(obj){
             if (obj.event === 'isPj1') {
-                layer.msg("查看评教", {offset: '100px'});
+                $.get(requestUrl+'/xspj/getBjpjPjSuggestList.do', {'userId': $.cookie('userId'), 'templateCode': obj.data.templateCode}, function(result_data){
+                    if(result_data.code == 200){
+                        layer.open({
+                            title : '查看评教'
+                            ,type : 1
+                            ,area : [ '900px','500px']
+                            ,offset : '50px'
+                            ,shadeClose : true
+                            ,btn : ['关闭']
+                            ,content : $('#pjSuggest_container')
+                            ,success: function(layero, index){
+                                var html = '';
+                                $.each(result_data.data,function (idx,obj) {
+                                    html += '<fieldset class="layui-elem-field" style="margin-top: 15px;">\n' +
+                                        '\t<legend>'+obj.COURSE_NAME+'</legend>\n' +
+                                        '\t<div class="layui-panel">'+obj.PJ_SUGGEST+'</div>\n' +
+                                        '</fieldset>';
+                                });
+                                $('#pjSuggest_container').html(html);
+                            }
+                        });
+                    } else {
+                        layer.msg("数据加载失败！", {offset: '100px'});
+                        return;
+                    }
+                },'json');
             } else if (obj.event === 'isPj2') {
                 //
                 var targets = null;
@@ -222,7 +247,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                     //保存
                                     html += '<h3 style="color: gray;">您的评价对于提高老师的教学能力非常有帮助，请仔细核对评价信息。</h3>' +
                                         '        <div class="layui-btn-container" style="margin-top: 20px;" align="center">\n' +
-                                        '            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 80px;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
+                                        '            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 100px;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
                                         '        </div>';
                                     $("#editForm").html(html);
 
