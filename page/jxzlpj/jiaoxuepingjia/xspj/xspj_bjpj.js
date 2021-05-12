@@ -136,7 +136,7 @@ layui.use(['layer','table','form','transfer'], function(){
                                             };
                                         }
                                     } else {
-                                        $('.layui-layer-btn1').css('background-color','#1E9FFF').css('border','1px solid #1E9FFF').css('color','#fff');
+                                        $('.layui-layer-btn1').css('background-color','#1E9FFF').css('border','1px solid #1E9FFF').css('color','#fff').css('cursor','pointer');
                                     }
                                     /*初始化上一个页面*/
                                     currentIndex--;
@@ -209,81 +209,19 @@ layui.use(['layer','table','form','transfer'], function(){
                                 } else if(currentIndex < targets.length){
                                     currentIndex++;
                                     //课程信息列表
-                                    let html = '<table class="layui-table" id="course_datatable" lay-filter="course_datatable">\n' +
-                                        '           <script type="text/html" id="course_datatable_bar">\n' +
-                                        '               <a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm"  style="width: 150px" lay-event="suggest">填写评教意见或建议</a>\n' +
-                                        '           </script>\n' +
-                                        '       </table>';
-
+                                    var html = '';
+                                    $.each(result_data.data,function (idx,obj) {
+                                        html += '<fieldset class="layui-elem-field">\n' +
+                                            '\t<legend>'+obj.courseName+'</legend>\n' +
+                                            '\t<textarea name="'+obj.courseCode+'" placeholder="请填写评教建议或意见" class="layui-textarea" style="border: 0px; resize: none;"></textarea>\n' +
+                                            '</fieldset>';
+                                    });
                                     html += '<h3 style="color: gray;">您的评价对于提高老师的教学能力非常有帮助，请仔细核对评价信息。</h3>' +
                                         '        <div class="layui-btn-container" style="margin-top: 20px;" align="center">\n' +
                                         '            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 80px;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
                                         '        </div>';
                                     $("#editForm").html(html);
-                                    //数据表格
-                                    var course_datatable = table.render({
-                                        id: "course_datatable_id"
-                                        ,elem : '#course_datatable'
-                                        ,data: result_data.data
-                                        ,defaultToolbar:[]
-                                        ,cols : [[ //表头
-                                            {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                                            ,{field: 'courseCode', title: '课程编号', width:150, align:'center'}
-                                            ,{field: 'courseName', title: '课程名称', align:'center'}
-                                            // ,{field: 'teacherNames', title: '授课教师', width:150, align:'center'}
-                                            ,{fixed: 'right', title: '操作', width:180, align:'center', toolbar: '#course_datatable_bar'}
-                                        ]]
-                                        ,even: true //隔行背景
-                                        ,done : function(res, curr, count) {
-                                            //监听右侧工具条
-                                            table.on('tool(course_datatable)', function(obj){
-                                                if (obj.event === 'suggest') {
-                                                    layer.open({
-                                                        title : '填写评教意见或建议'
-                                                        ,type : 1
-                                                        ,area : [ '700px', '300px' ]
-                                                        ,offset : '100px'
-                                                        ,content : $('#suggest_container')
-                                                        ,success: function(layero, index){
 
-                                                            //表单赋值
-                                                            $.get(requestUrl+'/xspj/selectBjpjSuggest.do',{
-                                                                "relationCode": code,
-                                                                "courseCode": obj.data.courseCode
-                                                            },function (result_data) {
-                                                                if(result_data.code == 200){
-                                                                    form.val("suggestForm",{
-                                                                        "suggest":result_data.data
-                                                                    });
-                                                                }
-                                                            },'json');
-
-                                                            //监听表单提交
-                                                            form.on('submit(toSubmitSuggestForm)', function(form_data){
-                                                                $.post(requestUrl+'/xspj/insertBjpjSuggest.do',{
-                                                                    "relationCode": code,
-                                                                    "xn": obj.data.xn,
-                                                                    "xq": obj.data.xq,
-                                                                    "courseCode": obj.data.courseCode,
-                                                                    "suggest": form_data.field.suggest
-                                                                },function (result_data) {
-                                                                    layer.msg(result_data.msg, { offset: '100px' },function () {
-                                                                        layer.close(index);
-                                                                    });
-                                                                    // layer.close(index); //过程性新增不需要提示
-                                                                },'json');
-                                                                return false;
-                                                            });
-
-                                                        }
-                                                        ,end:function () {
-                                                            $("#suggest").val("");
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
                                     //
                                     $('.layui-layer-btn1').css('background-color','#fff').css('border','1px solid #c9c9c9').css('color','#c9c9c9').css('cursor','not-allowed');
                                 }
