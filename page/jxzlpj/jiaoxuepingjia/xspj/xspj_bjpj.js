@@ -5,7 +5,6 @@ layui.use(['layer','table','form','transfer'], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,transfer = layui.transfer;
 
     var accountType = $.cookie('accountType');
-
     if(accountType == 'student'){ //学生视角
 
         //数据表格
@@ -75,10 +74,10 @@ layui.use(['layer','table','form','transfer'], function(){
                 layer.msg("查看评教", {offset: '100px'});
             } else if (obj.event === 'isPj2') {
                 //
-                var datas = null;
+                var targets = null;
                 $.get(requestUrl+'/getActiveTemplate.do', {'templateType': '学生评教', 'templateCode': obj.data.templateCode}, function(result_data){
                         if(result_data.code == 200){
-                            datas = result_data.data;
+                            targets = result_data.data;
                         } else {
                             layer.msg("数据加载失败！", {offset: '100px'});
                             return;
@@ -88,151 +87,61 @@ layui.use(['layer','table','form','transfer'], function(){
                 $.get(requestUrl+'/xspj/getBjpjTransferData.do', { 'userId': $.cookie('userId') }, function(result_data){
                     if(result_data.code == 200){
                         //提取穿梭框初始数据
-                        var transferData = new Array();
+                        var transferData = [];
                         $.each(result_data.data,function (idx,obj) {
                             transferData.push({
                                 "value": obj.courseCode //数据值
-                                ,"title": obj.skjsCode + ' - '+ obj.skjsName //数据标题
+                                ,"title": obj.courseName + ' - '+ obj.teacherNames //数据标题
                             })
                         });
                         //
                         var currentIndex = 0;
-                        var transferDataArr = [] //待选列表集合
-                            ,transferSelectedData = [] //已选列表集合
-                            ,transferSelectedDatas = []; //发送到后台的
-                        var code = new Date().getTime(); //初始化业务数据编号
+                        var transferLeftDatas = [] //待选列表数据集
+                            ,transferRightDatas = [] //已选列表数据集
+                            ,transferSelectedDatas = []; //发送到后台的数据集
                         //
                         layer.open({
                             id: guid()
-                            ,title : '学生评教'
+                            ,title : ['学生评教', 'font-size:16px; font-weight: bold;']
                             ,type : 1
-                            ,area : [ '900px', '520px' ]
+                            ,area : [ '900px', '505px' ]
                             ,offset : '50px'
                             ,btn: ['上一步', '下一步']
                             ,yes: function(){
-                                if(currentIndex >= 0 ){
-                                    //
-                                    if(currentIndex < datas.length){
-
+                                if(currentIndex > 0 ){
+                                    if (currentIndex < targets.length ){
+                                        /*收集当前页面数据*/
                                         let getData = transfer.getData('demo_'+currentIndex);
                                         getData = getData.filter(function(item, index, arr) {
                                             return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
                                         });
+                                        //
                                         if (getData.length != transferData.length ){
                                             layer.msg("本题您还没有完成！");
                                             return false;
                                         } else {
-                                            transferDataArr[currentIndex] = getData;
                                             //
-                                            let tempArr = [];
-                                            getData.forEach(obj => {
-                                                tempArr.push(obj.value);
-                                            });
-                                            transferSelectedData[currentIndex] = tempArr;
-                                            let tempObj = {
-                                                'targetCode': datas[currentIndex].targetCode,
-                                                'targetScore': datas[currentIndex].targetScore,
-                                                'arr': tempArr
-                                            };
-                                            transferSelectedDatas[currentIndex] = tempObj;
-                                        }
-
-                                        if(currentIndex > 0 ){
-                                            currentIndex -= 1;
-                                        }
-
-                                        let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                            '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
-                                            '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
-                                        $("#editForm").html(html);
-
-                                        //
-                                        transfer.render({
-                                            id: 'demo_'+ currentIndex //定义索引
-                                            , elem: '#test_'+ currentIndex
-                                            ,title: ['课程列表', '我的排序']  //自定义标题
-                                            ,data: transferDataArr[currentIndex]
-                                            ,value: transferSelectedData[currentIndex]
-                                            ,width: 320 //定义宽度
-                                            ,height: 280 //定义高度
-                                        });
-
-                                    } else if(currentIndex == datas.length){
-                                        currentIndex -= 1;
-                                        let getData = transfer.getData('demo_'+currentIndex);
-                                        getData = getData.filter(function(item, index, arr) {
-                                            return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
-                                        });
-                                        if (getData.length != transferData.length ){
-                                            layer.msg("本题您还没有完成！");
-                                            return false;
-                                        } else {
-                                            transferDataArr[currentIndex] = getData;
+                                            transferLeftDatas[currentIndex] = getData;
                                             //
-                                            let tempArr = [];
+                                            let courseCodes = [];
                                             getData.forEach(obj => {
-                                                tempArr.push(obj.value);
+                                                courseCodes.push(obj.value);
                                             });
-                                            transferSelectedData[currentIndex] = tempArr;
-                                            let tempObj = {
-                                                'targetCode': datas[currentIndex].targetCode,
-                                                'targetScore': datas[currentIndex].targetScore,
-                                                'arr': tempArr
+                                            transferRightDatas[currentIndex] = courseCodes;
+                                            //
+                                            transferSelectedDatas[currentIndex] = {
+                                                'targetCode': targets[currentIndex].targetCode,
+                                                'targetScore': targets[currentIndex].targetScore,
+                                                'arr': courseCodes
                                             };
-                                            transferSelectedDatas[currentIndex] = tempObj;
                                         }
-                                        let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                            '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
-                                            '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
-                                        $("#editForm").html(html);
-
-                                        //
-                                        transfer.render({
-                                            id: 'demo_'+ currentIndex //定义索引
-                                            , elem: '#test_'+ currentIndex
-                                            ,title: ['课程列表', '我的排序']  //自定义标题
-                                            ,data: transferDataArr[currentIndex]
-                                            ,value: transferSelectedData[currentIndex]
-                                            ,width: 320 //定义宽度
-                                            ,height: 280 //定义高度
-                                        });
-
                                     } else {
-                                        currentIndex = datas.length;
-                                        $("#editForm").html('上一步'+currentIndex);
+                                        $('.layui-layer-btn1').css('background-color','#1E9FFF').css('border','1px solid #1E9FFF').css('color','#fff');
                                     }
-                                }
-                            }
-                            ,btn2: function(){
-
-                                //
-                                if(currentIndex < datas.length - 1){
-                                    let getData = transfer.getData('demo_'+currentIndex);
-                                    getData = getData.filter(function(item, index, arr) {
-                                        return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
-                                    });
-                                    if (getData.length != transferData.length ){
-                                        layer.msg("本题您还没有完成！");
-                                        return false;
-                                    } else {
-                                        transferDataArr[currentIndex] = getData;
-                                        //
-                                        let tempArr = [];
-                                        getData.forEach(obj => {
-                                            tempArr.push(obj.value);
-                                        });
-                                        transferSelectedData[currentIndex] = tempArr;
-                                        let tempObj = {
-                                            'targetCode': datas[currentIndex].targetCode,
-                                            'targetScore': datas[currentIndex].targetScore,
-                                            'arr': tempArr
-                                        };
-                                        transferSelectedDatas[currentIndex] = tempObj;
-                                    }
-                                    currentIndex += 1;
-
+                                    /*初始化上一个页面*/
+                                    currentIndex--;
                                     let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                        '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                        '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+targets.length+'，'+targets[currentIndex].targetContent+'</h3><br/>' +
                                         '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
                                     $("#editForm").html(html);
                                     //
@@ -240,44 +149,79 @@ layui.use(['layer','table','form','transfer'], function(){
                                         id: 'demo_'+ currentIndex //定义索引
                                         , elem: '#test_'+ currentIndex
                                         ,title: ['课程列表', '我的排序']  //自定义标题
-                                        ,data: transferDataArr[currentIndex] != null ? transferDataArr[currentIndex] : transferData
-                                        ,value: transferSelectedData[currentIndex]
+                                        ,data: transferLeftDatas[currentIndex]
+                                        ,value: transferRightDatas[currentIndex]
                                         ,width: 320 //定义宽度
                                         ,height: 280 //定义高度
-                                    })
-                                } else if(currentIndex < datas.length){
-                                    let getData = transfer.getData('demo_'+currentIndex);
-                                    getData = getData.filter(function(item, index, arr) {
-                                        return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
                                     });
-                                    if (getData.length != transferData.length ){
-                                        layer.msg("本题您还没有完成！");
-                                        return false;
-                                    } else {
-                                        transferDataArr[currentIndex] = getData;
-                                        //
-                                        let tempArr = [];
-                                        getData.forEach(obj => {
-                                            tempArr.push(obj.value);
-                                        });
-                                        transferSelectedData[currentIndex] = tempArr;
-                                        let tempObj = {
-                                            'targetCode': datas[currentIndex].targetCode,
-                                            'targetScore': datas[currentIndex].targetScore,
-                                            'arr': tempArr
-                                        };
-                                        transferSelectedDatas[currentIndex] = tempObj;
+                                    //
+                                    if(currentIndex == 0){
+                                        $('.layui-layer-btn0').css('background-color','#fff').css('border','1px solid #c9c9c9').css('color','#c9c9c9').css('cursor','not-allowed');
                                     }
-                                    currentIndex += 1;
+                                }
+                            }
+                            ,btn2: function(){
+
+                                /*收集当前页面数据*/
+                                let getData = transfer.getData('demo_'+currentIndex);
+                                getData = getData.filter(function(item, index, arr) {
+                                    return arr.indexOf(item, 0) === index; //当前元素，在原始数组中的第一个索引===当前索引值，否则返回当前元素
+                                });
+                                //
+                                if (getData.length != transferData.length ){
+                                    layer.msg("本题您还没有完成！");
+                                    return false;
+                                } else {
+                                    //
+                                    transferLeftDatas[currentIndex] = getData;
+                                    //
+                                    let courseCodes = [];
+                                    getData.forEach(obj => {
+                                        courseCodes.push(obj.value);
+                                    });
+                                    transferRightDatas[currentIndex] = courseCodes;
+                                    //
+                                    transferSelectedDatas[currentIndex] = {
+                                        'targetCode': targets[currentIndex].targetCode,
+                                        'targetScore': targets[currentIndex].targetScore,
+                                        'arr': courseCodes
+                                    };
+                                }
+
+                                /*初始化下一个页面*/
+                                if(currentIndex < targets.length - 1){
+                                    currentIndex++;
+                                    let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
+                                        '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+targets.length+'，'+targets[currentIndex].targetContent+'</h3><br/>' +
+                                        '<div id="test_'+currentIndex+'" class="demo-transfer"></div></div>';
+                                    $("#editForm").html(html);
+                                    //
+                                    transfer.render({
+                                        id: 'demo_'+ currentIndex //定义索引
+                                        , elem: '#test_'+ currentIndex
+                                        ,title: ['课程列表', '我的排序']  //自定义标题
+                                        ,data: transferLeftDatas[currentIndex] != null && transferLeftDatas[currentIndex].length > 0 ? transferLeftDatas[currentIndex] : transferData
+                                        ,value: transferRightDatas[currentIndex]
+                                        ,width: 320 //定义宽度
+                                        ,height: 280 //定义高度
+                                    });
+                                    //
+                                } else if(currentIndex < targets.length){
+                                    currentIndex++;
                                     //课程信息列表
                                     let html = '<table class="layui-table" id="course_datatable" lay-filter="course_datatable">\n' +
                                         '           <script type="text/html" id="course_datatable_bar">\n' +
-                                        '               <a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal"  style="width: 150px" lay-event="suggest">填写评教意见或建议</a>\n' +
+                                        '               <a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm"  style="width: 150px" lay-event="suggest">填写评教意见或建议</a>\n' +
                                         '           </script>\n' +
                                         '       </table>';
+
+                                    html += '<h3 style="color: gray;">您的评价对于提高老师的教学能力非常有帮助，请仔细核对评价信息。</h3>' +
+                                        '        <div class="layui-btn-container" style="margin-top: 20px;" align="center">\n' +
+                                        '            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 80px;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
+                                        '        </div>';
                                     $("#editForm").html(html);
                                     //数据表格
-                                    let course_datatable = table.render({
+                                    var course_datatable = table.render({
                                         id: "course_datatable_id"
                                         ,elem : '#course_datatable'
                                         ,data: result_data.data
@@ -285,9 +229,9 @@ layui.use(['layer','table','form','transfer'], function(){
                                         ,cols : [[ //表头
                                             {type:'numbers', title:'序号', width:80, fixed: 'left'}
                                             ,{field: 'courseCode', title: '课程编号', width:150, align:'center'}
-                                            ,{field: 'courseName', title: '课程名称', width:200, align:'center'}
-                                            ,{field: 'skjsName', title: '授课教师', width:150, align:'center'}
-                                            ,{fixed: 'right', title: '操作', align:'center', toolbar: '#course_datatable_bar'}
+                                            ,{field: 'courseName', title: '课程名称', align:'center'}
+                                            // ,{field: 'teacherNames', title: '授课教师', width:150, align:'center'}
+                                            ,{fixed: 'right', title: '操作', width:180, align:'center', toolbar: '#course_datatable_bar'}
                                         ]]
                                         ,even: true //隔行背景
                                         ,done : function(res, curr, count) {
@@ -340,68 +284,17 @@ layui.use(['layer','table','form','transfer'], function(){
                                             });
                                         }
                                     });
-                                } else {
-                                    currentIndex += 1;
-                                    //最喜欢的教师
-                                    let html = '<div class="layui-form-item" style="margin-top: 20px;">\n' +
-                                        '          <div class="layui-inline">\n' +
-                                        '             <label class="layui-form-label" style="width: 100px;">最喜欢的教师：</label>\n' +
-                                        '             <div class="layui-input-inline">\n' +
-                                        '                <select id="bestTeacher" name="bestTeacher" lay-filter="bestTeacher"></select>\n' +
-                                        '             </div>\n' +
-                                        '           </div>\n' +
-                                        '       </div>';
                                     //
-                                    html += '<div class="layui-btn-container" style="margin-top: 20px" align="center">\n' +
-                                        '       <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
-                                        '    </div>';
-                                    $("#editForm").html(html);
-
-                                    // 初始化下拉选项
-                                    let html2 = '<option value="">请选择</option>';
-                                    $.each(result_data.data,function (idx,obj) {
-                                        html2 += '<option value="' + obj.skjsCode + '" >' + obj.skjsName + '</option>';
-                                    });
-                                    $("select[name='bestTeacher']").empty().append(html2);
-                                    form.render('select');
-
-                                    //监听提交
-                                    form.on('submit(toSubmitEidtForm)', function(formData){
-
-                                        $.ajax({
-                                            url: requestUrl+'/xspj/insertBjpj.do',
-                                            type: 'POST',
-                                            dataType: "json",
-                                            data: {
-                                                'code': code,
-                                                'templateCode': obj.data.templateCode,
-                                                'transferSelectedDatas': JSON.stringify(transferSelectedDatas),
-                                                'bestTeacher': $("#bestTeacher").val(),
-                                                'userId': $.cookie('userId'),
-                                                'userName': $.cookie('userName')
-                                            },
-                                            success: function (result_data) {
-                                                layer.msg(result_data.msg, {offset: '100px'}, function () {
-                                                    if(result_data.code === 200){
-                                                        datatable.reload();//重新加载表格数据
-                                                    }
-                                                    layer.closeAll();
-                                                });
-                                            },
-                                            error: function (result_data) {
-                                                layer.msg(result_data.msg, {offset: '100px'});
-                                            }
-                                        });
-
-                                    });
+                                    $('.layui-layer-btn1').css('background-color','#fff').css('border','1px solid #c9c9c9').css('color','#c9c9c9').css('cursor','not-allowed');
                                 }
+                                $('.layui-layer-btn0').css('background-color','#1E9FFF').css('border','1px solid #1E9FFF').css('color','#fff').css('cursor','pointer');
                                 return false;
                             }
                             ,content : $('#editForm_container')
                             ,success: function(layero, index){
-
+                                //
                                 let html = ' <div class="layui-form-item" style="margin-top: 20px" lay-verify="target">\n' +
-                                    '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+datas.length+'，'+datas[currentIndex].targetContent+'</h3><br/>' +
+                                    '<h3 style="margin-top: 20px; font-weight: bold">'+parseInt(currentIndex+1)+'/'+targets.length+'，'+targets[currentIndex].targetContent+'</h3><br/>' +
                                     '<div id="test_0" class="demo-transfer"></div></div>';
                                 $("#editForm").html(html);
                                 //
@@ -413,7 +306,10 @@ layui.use(['layer','table','form','transfer'], function(){
                                     // ,value: ["1111110101", "1111110102"] 默认摆放顺序以data 属性值的顺序为依据
                                     ,width: 320 //定义宽度
                                     ,height: 280 //定义高度
-                                })
+                                });
+                                //
+                                $('.layui-layer-btn0').css('background-color','#fff').css('border','1px solid #c9c9c9').css('color','#c9c9c9').css('cursor','not-allowed');
+                                $('.layui-layer-btn1').css('background-color','#1E9FFF').css('border','1px solid #1E9FFF').css('color','#fff');
                             }
                             ,cancel: function(index, layero){
                                 layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {

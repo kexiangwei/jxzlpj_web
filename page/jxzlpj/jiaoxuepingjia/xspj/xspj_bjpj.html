@@ -26,9 +26,14 @@
             font-weight: 700;
             text-align: center;
         }
+
+        .layui-transfer-box {
+            overflow: auto;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
+
 <div class="layui-fluid">
     <!-- 数据表格 -->
     <table class="layui-table" lay-filter="datatable" id="datatable">
@@ -39,7 +44,9 @@
 <!--学生评教-->
 <div class="layui-container" style="width: 90%; display: none;" id="editForm_container">
     <h2>北京农学院课程教学质量评价表（学生用）</h2>
-    <form class="layui-form" lay-filter="editForm" id="editForm"></form>
+    <form class="layui-form" lay-filter="editForm" id="editForm">
+
+    </form>
 </div>
 
 <!-- 填写评教意见 -->
