@@ -5,14 +5,9 @@
     <title>教学评价-学生评教</title>
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <style type="text/css">
-        .layer-btn-skin .layui-layer-btn .layui-layer-btn0 {
-            border-color: white;
-            background-color: #c5c1c1;
-            color: #fff;
-        }
 
         .layui-btn-table {
-            width: 100px;
+            width: 80px;
             height: 26px;
             line-height: 26px;
             padding: 0 5px;
@@ -30,11 +25,60 @@
         .layui-transfer-box {
             overflow: auto;
         }
+
+        .layui-panel {
+            padding: 30px;
+            border-radius: 2px;
+            box-shadow: 1px 1px 5px rgb(0 0 0);
+            background-color: #fff;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .layui-panel:nth-child(n+2){
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 <body class="layui-layout-body">
 
 <div class="layui-fluid">
+    <!-- 查询参数 -->
+    <div class="layui-form search" style="display: none">
+        学年：
+        <div class="layui-inline">
+            <select id="xn" name="xn">
+                <option value="">请选择</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+        &nbsp;&nbsp;学期：
+        <div class="layui-inline">
+            <select id="xq" name="xq">
+                <option value="">请选择</option>
+                <option value="3">上学期</option>
+                <option value="12">下学期</option>
+            </select>
+        </div>
+        &nbsp;&nbsp;课程名称：
+        <div class="layui-inline">
+            <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+        </div>
+        &nbsp;&nbsp;评教状态：
+        <div class="layui-inline">
+            <select id="isPj" name="isPj">
+                <option value="">请选择</option>
+                <option value="1">已评</option>
+                <option value="2">未评</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
+            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+        </div>
+    </div>
     <!-- 数据表格 -->
     <table class="layui-table" lay-filter="datatable" id="datatable">
         <script type="text/html" id="datatable_toolbar"></script>
@@ -49,43 +93,15 @@
     </form>
 </div>
 
-<!-- 填写评教意见 -->
-<div class="layui-container" style="width: 90%; display: none;" id="suggest_container">
-    <form class="layui-form" action="" lay-filter="suggestForm" id="suggestForm">
-        <div class="layui-form-item layui-form-text" style="margin-top: 20px;">
-            <div class="layui-input-block" style="margin-left: 50px;">
-                <textarea id="suggest" name="suggest" class="layui-textarea" style="width: 500px; height: 150px;"></textarea>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block" align="center">
-                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitSuggestForm">保存</button>
-            </div>
-        </div>
-    </form>
-</div>
-
 <!--教师查看学生评教-->
 <div class="layui-container" style="width: 90%; display: none;" id="dataInfo_container">
 
-    <table class="layui-table" style="margin-top: 20px;">
-        <colgroup>
-            <col width="80">
-            <col>
-            <col width="80">
-            <col width="80">
-        </colgroup>
-        <thead>
-        <tr>
-            <th>序号</th>
-            <th>指标项</th>
-            <th>分值</th>
-            <th>平均分</th>
-        </tr>
-        </thead>
-        <tbody id="pjInfo">
-        </tbody>
-    </table>
+    <table class="layui-table" style="margin-top: 20px;" id="pjInfo"></table>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>评教建议</legend>
+    </fieldset>
+    <div class="layui-bg-gray" style="padding: 20px;" id="pjSuggest"></div>
 </div>
 
 <script src="../../../../js/layui/layui.js"></script>

@@ -71,7 +71,7 @@ layui.use(['layer','table','form','element'], function(){
                             if(data.isPj === 2){
                                 html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="isPj2">未评</a>';
                             }
-                            $('#datatable_bar').html(html);
+                            $('#datatable_toolbar').html(html);
                             return data.xq == '3'?'上学期':'下学期';
                         }
                     }
@@ -82,7 +82,7 @@ layui.use(['layer','table','form','element'], function(){
                     // ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
                     // ,{field:'skSj', title:'授课时间', width:150, sort:true}
                     // ,{field:'skDd', title:'授课地点', width:150, sort:true}
-                    ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+                    ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
                 ]]
                 ,even: true //隔行背景
                 ,limit: 10
@@ -91,9 +91,6 @@ layui.use(['layer','table','form','element'], function(){
                     ,limits: [10,20,50,100]
                     ,first: '首页'
                     ,last: '尾页'
-                }
-                ,done: function(res, curr, count){
-
                 }
             });
 
@@ -107,18 +104,7 @@ layui.use(['layer','table','form','element'], function(){
                         ,offset : '50px'
                         ,shadeClose : true
                         ,btn : ['关闭']
-                        ,content : '<table class="layui-table">\n' +
-                            '            <tr><td style="width: 120px; text-align: right">学年：</td><td>'+obj.data.xn+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">学期：</td><td>'+obj.data.xq+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">课程编号：</td><td>'+obj.data.courseCode+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">课程名称：</td><td>'+obj.data.courseName+'</td></tr>\n' +
-                            // '            <tr><td style="width: 120px; text-align: right">课程性质：</td><td>'+obj.data.courseAttr+'</td></tr>\n' +
-                            // '            <tr><td style="width: 120px; text-align: right">授课教师编号：</td><td>'+obj.data.skjsCode+'</td></tr>\n' +
-                            // '            <tr><td style="width: 120px; text-align: right">授课教师名称：</td><td>'+obj.data.skjsName+'</td></tr>\n' +
-                            // '            <tr><td style="width: 120px; text-align: right">授课时间：</td><td>'+obj.data.skSj+'</td></tr>\n' +
-                            // '            <tr><td style="width: 120px; text-align: right">授课地点：</td><td>'+obj.data.skDd+'</td></tr>\n' +
-                            '            <tr><td style="width: 120px; text-align: right">评教建议：</td><td>'+obj.data.pjSuggest+'</td></tr>\n' +
-                            '    </table>'
+                        ,content : '<div class="layui-panel">'+obj.data.pjSuggest+'</div>'
                     });
                 } else if (obj.event === 'isPj2') {
                     //
@@ -239,7 +225,7 @@ layui.use(['layer','table','form','element'], function(){
                         if(data.isPj === 2){
                             html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled">未评</a>';
                         }
-                        $('#datatable_bar').html(html);
+                        $('#datatable_toolbar').html(html);
                         return data.xq == '3'?'上学期':'下学期';
                     }
                 }
@@ -250,7 +236,7 @@ layui.use(['layer','table','form','element'], function(){
                 ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
                 ,{field:'skSj', title:'授课时间', width:150, sort:true}
                 ,{field:'skDd', title:'授课地点', width:150, sort:true}*/
-                ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+                ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
             ]]
             ,even: true //隔行背景
             ,limit: 10
@@ -259,9 +245,6 @@ layui.use(['layer','table','form','element'], function(){
                 ,limits: [10,20,50,100]
                 ,first: '首页'
                 ,last: '尾页'
-            }
-            ,done : function(res, curr, count) {
-
             }
         });
 
@@ -297,7 +280,6 @@ layui.use(['layer','table','form','element'], function(){
                 },'json');
             }
         });
-
     }
 
     //监听搜索框事件

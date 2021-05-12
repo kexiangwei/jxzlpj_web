@@ -8,7 +8,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
     let template_dataTable = table.render({
         id: "template_dataTable"
         ,elem : '#template_dataTable'
-        ,height : 550
+        ,height : 466
         ,url: requestUrl+'/getPjSetTemplateList.do'
         ,where:{
         }

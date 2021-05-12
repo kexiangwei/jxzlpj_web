@@ -11,7 +11,7 @@ layui.use(['layer','table','form','transfer'], function(){
         var datatable = table.render({
             id: guid() //设定一个id，防止重复弹出
             ,elem : '#datatable'
-            ,height : 580
+            ,height : 466
             ,url: requestUrl+'/getPjSetTemplateList.do'
             ,where:{
                 "templateType": '学生评教',
@@ -63,9 +63,6 @@ layui.use(['layer','table','form','transfer'], function(){
                 ,first: '首页'
                 ,last: '尾页'
             }
-            ,done : function(res, curr, count) {
-
-            }
         });
 
         //监听右侧工具条
@@ -99,6 +96,7 @@ layui.use(['layer','table','form','transfer'], function(){
                         var transferLeftDatas = [] //待选列表数据集
                             ,transferRightDatas = [] //已选列表数据集
                             ,transferSelectedDatas = []; //发送到后台的数据集
+                        var tempPjsuggest = {}; //临时存储评教信息
                         //
                         layer.open({
                             id: guid()
@@ -136,6 +134,11 @@ layui.use(['layer','table','form','transfer'], function(){
                                             };
                                         }
                                     } else {
+                                        var data = $('#editForm').serializeArray(); //jquery获取form表单中的数据
+                                        $.each(data, function() {
+                                            tempPjsuggest[this.name] = this.value;
+                                        });
+                                        // layer.alert(JSON.stringify(tempPjsuggest));
                                         $('.layui-layer-btn1').css('background-color','#1E9FFF').css('border','1px solid #1E9FFF').css('color','#fff').css('cursor','pointer');
                                     }
                                     /*初始化上一个页面*/
@@ -208,20 +211,51 @@ layui.use(['layer','table','form','transfer'], function(){
                                     //
                                 } else if(currentIndex < targets.length){
                                     currentIndex++;
-                                    //课程信息列表
+                                    //填写评教意见
                                     var html = '';
                                     $.each(result_data.data,function (idx,obj) {
                                         html += '<fieldset class="layui-elem-field">\n' +
                                             '\t<legend>'+obj.courseName+'</legend>\n' +
-                                            '\t<textarea name="'+obj.courseCode+'" placeholder="请填写评教建议或意见" class="layui-textarea" style="border: 0px; resize: none;"></textarea>\n' +
+                                            '\t<textarea name="'+obj.courseCode+'" placeholder="请填写评教建议或意见" class="layui-textarea" style="border: 0; resize: none;"></textarea>\n' +
                                             '</fieldset>';
                                     });
+                                    //保存
                                     html += '<h3 style="color: gray;">您的评价对于提高老师的教学能力非常有帮助，请仔细核对评价信息。</h3>' +
                                         '        <div class="layui-btn-container" style="margin-top: 20px;" align="center">\n' +
                                         '            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 80px;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>\n' +
                                         '        </div>';
                                     $("#editForm").html(html);
 
+                                    //表单赋值
+                                    if(!$.isEmptyObject(tempPjsuggest)){
+                                        form.val("editForm", tempPjsuggest);
+                                    }
+                                    //监听提交
+                                    form.on('submit(toSubmitEidtForm)', function(data){
+
+                                        /*layer.alert(JSON.stringify(data.field), {
+                                            title: '最终的提交信息'
+                                        });
+                                        return false;*/
+
+                                        $.post(requestUrl+'/xspj/insertBjpj.do',{
+                                                'xn':result_data.data[0].XN,
+                                                'xq':result_data.data[0].XQ,
+                                                'templateCode': obj.data.templateCode,
+                                                'transferDatas': JSON.stringify(transferSelectedDatas),
+                                                'pjSuggestJsonString': JSON.stringify(data.field),
+                                                'userId': $.cookie('userId'),
+                                                'userName': $.cookie('userName')
+                                            },function(result_data){
+                                            layer.msg(result_data.msg, {offset: '100px'}, function () {
+                                                if(result_data.code == 200){
+                                                    datatable.reload();//重新加载表格数据
+                                                }
+                                                layer.closeAll();
+                                            });
+                                        },'json');
+
+                                    });
                                     //
                                     $('.layui-layer-btn1').css('background-color','#fff').css('border','1px solid #c9c9c9').css('color','#c9c9c9').css('cursor','not-allowed');
                                 }
@@ -269,7 +303,7 @@ layui.use(['layer','table','form','transfer'], function(){
         var datatable = table.render({
             id: guid() //设定一个id，防止重复弹出
             ,elem : '#datatable'
-            ,height : 580
+            ,height : 466
             ,url: requestUrl+'/xspj/getBjpjPageList.do'
             ,where:{
                 "accountType":accountType,
@@ -294,21 +328,23 @@ layui.use(['layer','table','form','transfer'], function(){
             }
             ,cols : [[ //表头
                 {type:'numbers', title:'序号', width:80, fixed: 'left'}
-                ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
-                        let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="pj">已评</a>';
+                ,{field:'xn', title:'学年', width:150, sort:true}
+                ,{field:'xq', title:'学期', width:150, sort:true, templet: function (data) {
+                        let html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="isPj1">查看评教</a>';
                         if(data.isPj === 2){
-                            html = '<a class="layui-btn layui-btn-disabled layui-btn-xs">未评</a>';
+                            html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled">未评</a>';
                         }
                         $('#datatable_toolbar').html(html);
-                        return data.courseName;
-                    }}
-                ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-                ,{field:'xs', title:'学时', width:150, sort:true}
-                ,{field:'xf', title:'学分', width:150, sort:true}
-                ,{field:'xn', title:'学年', width:150, sort:true}
-                ,{field:'xq', title:'学期', width:150, sort:true}
-                ,{field:'xyName', title:'学院', width:150, sort:true}
-                ,{field:'zyName', title:'专业', width:150, sort:true}
+                        return data.xq == '3'?'上学期':'下学期';
+                    }
+                }
+                ,{field:'courseCode', title:'课程编号', width:150, sort:true}
+                ,{field:'courseName', title:'课程名称', sort:true}
+                /*,{field:'courseAttr', title:'课程性质', width:150, sort:true}
+                ,{field:'skjsCode', title:'授课教师编号', width:150, sort:true}
+                ,{field:'skjsName', title:'授课教师姓名', width:150, sort:true}
+                ,{field:'skSj', title:'授课时间', width:150, sort:true}
+                ,{field:'skDd', title:'授课地点', width:150, sort:true}*/
                 ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
             ]]
             ,even: true //隔行背景
@@ -319,50 +355,70 @@ layui.use(['layer','table','form','transfer'], function(){
                 ,first: '首页'
                 ,last: '尾页'
             }
-            ,done : function(res, curr, count) {
-
+            ,done: function(res, curr, count){
+                $('.search').css('display','block');
             }
+        });
+
+        //监听搜索框事件
+        var active = {
+            search: function(){
+                datatable.reload({
+                    where: {
+                        'xn': $("#xn option:selected").val(), //获取选中的值,
+                        'xq': $("#xq option:selected").val(),
+                        'courseName': $(".search input[ name='courseName']").val(),
+                        'isPj': $("#isPj option:selected").val()
+                    }
+                    ,page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+            ,reset: function () {
+                $("#xn").val(""); //清除选中状态
+                $("#xq").val("");
+                $(".search input").val('');
+                $("#isPj").val("");
+                form.render("select");
+            }
+        };
+        $('.search .layui-btn').on('click', function(){
+            let type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
         });
 
         //监听右侧工具条
         table.on('tool(datatable)', function(obj){
-            if (obj.event === 'pj') {
+            if (obj.event === 'isPj1') {
                 $.get(requestUrl+'/xspj/getBjpjPjInfo.do',{
+                    'xn':obj.data.xn,
+                    'xq':obj.data.xq,
                     'courseCode':obj.data.courseCode
+                    ,'teacherCode': obj.data.skjsCode
                 },function (result_data) {
+                    //
                     layer.open({
-                        title : '教学评价-学生评教-评教详情'
+                        title : '查看评价'
                         ,type : 1
-                        ,area : [ '900px', '450px' ]
+                        ,area : [ '900px', '500px' ]
                         ,offset : '50px'
                         ,shadeClose : true //点击遮罩关闭
                         ,btn: ['关闭']
                         ,content : $('#dataInfo_container')
                         ,success: function(layero, index){
                             let data = result_data.data;
+                            $('#pjInfo').html('<tr><td style="width:120px; font-size:18px;">总平均分：</td><td>'+data.totalAvgScore+'</td></tr>' +
+                                '<tr><td style="width:120px; font-size:18px;">评教人次：</td><td>'+data.pjNum+'</td></tr>');
                             let html = '';
-                            $.each(data.targetList,function (idx,obj) {
-                                html += '<tr>\n' +
-                                    '<td>'+parseInt(idx+1)+'</td>\n' +
-                                    '<td>'+obj.TARGET_CONTENT+'</td>\n' +
-                                    '<td>'+obj.TARGET_SCORE+'</td>\n' +
-                                    '<td>'+obj.AVG_SCORE+'</td>\n' +
-                                    '</tr>';
+                            $.each(data.suggestList,function (idx,obj) {
+                                html += '<div class="layui-panel">'+obj+'</div>';
                             });
-                            html += '<tr><td colspan="3" style="text-align: right">总平均分</td><td>'+data.totalAvg+'</td></tr>';
-                            html += '<tr><td colspan="4" style="text-align: left">学生对本课程的建议：</td></tr>';
-                            $.each(data.suggestList,function (idx,item) {
-                                html += '<tr>\n' +
-                                    '<td>'+parseInt(idx+1)+'</td>\n' +
-                                    '<td colspan="3">'+item+'</td>\n' +
-                                    '</tr>';
-                            });
-                            $('#pjInfo').html(html);
+                            $('#pjSuggest').html(html);
                         }
                     });
                 },'json');
             }
         });
     }
-
 });
