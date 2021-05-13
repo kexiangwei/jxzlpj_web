@@ -18,33 +18,33 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
     //初始化学院下拉选项
     $.get(requestUrl+'/common/getXyList.do',{},function(data){
         if(data.code == 200){
-            let teacherCollegeList =  data.data;
-            if(teacherCollegeList.length > 0){
-                reloadSelect('teacherCollege',teacherCollegeList);
+            var xyList =  data.data;
+            if(xyList.length > 0){
+                reloadSelect('courseXy',xyList);
             }
         }
     },'json');
 
     //初始化专业下拉选项
-    var teacherMajorList;
+    var zyList;
     $.get(requestUrl+'/common/getZyList.do',{},function(data){
         if(data.code == 200){
-            teacherMajorList =  data.data;
-            if(teacherMajorList.length > 0){
-                reloadSelect('teacherMajor',teacherMajorList);
+            zyList =  data.data;
+            if(zyList.length > 0){
+                reloadSelect('courseZy',zyList);
             }
         }
     },'json');
 
     // 监听学院选项
-    form.on('select(teacherCollege)', function(data) {
+    form.on('select(courseXy)', function(data) {
         let xyCode = data.value;
         if(xyCode == ''){
-            reloadSelect('teacherMajor',teacherMajorList);
+            reloadSelect('courseZy',zyList);
         }else{
             $.get(requestUrl+'/common/getZyList.do',{"xyCode":xyCode},function(data){
                 if(data.code == 200){
-                    reloadSelect('teacherMajor',data.data);
+                    reloadSelect('courseZy',data.data);
                 }
             },'json');
         }
@@ -54,8 +54,8 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
     var datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 500
-        ,url: requestUrl+'/jxpj_thpj/getPageList.do'
+        ,height : 450
+        ,url: requestUrl+'/thpj/getPageList.do'
         ,where:{
             "userId":function () {
                 return $.cookie('userId');
@@ -79,26 +79,34 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-
-            ,{field:'courseName', title:'课程名称', width:200, sort:true, event: 'courseName', templet: function (data) {
+            ,{field:'courseName', title:'课程名称', width:180, sort:true, event: 'courseName', templet: function (data) {
                     let html = '';
                     if(data.isPj == 2){
-                        html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
-                        $('#datatable_bar').html(html);
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                            '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-edit"></i>编辑</a>' +
+                            '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        $('#datatable_toolbar').html(html);
                         return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
+                    } else {
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                            '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+                        if(data.isSubmit == 1){
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        } else {
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-primary" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        }
+                        $('#datatable_toolbar').html(html);
+                        return data.courseName;
                     }
-                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
-                    $('#datatable_bar').html(html);
-                    return data.courseName;
              }}
             ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-            ,{field:'teacher', title:'教师姓名', width:150, sort:true}
-            ,{field:'teacherTitle', title:'教师职称', width:150, sort:true}
-            ,{field:'teachDate', title:'上课时间', width:150, sort:true}
-            ,{field:'teachAddr', title:'上课地点', width:150, sort:true}
-            ,{field:'teacherCollege', title:'教师所在学院', width:150, sort:true}
-            ,{field:'teacherMajor', title:'教师所在专业', width:150, sort:true}
-            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+            ,{field:'skjsName', title:'任课教师', width:150, sort:true}
+            ,{field:'skjsXy', title:'教师所在单位', width:180, sort:true}
+            ,{field:'skjsZy', title:'教师所在专业', width:180, sort:true}
+            ,{field:'skSj', title:'上课时间', width:200, sort:true}
+            ,{field:'skDd', title:'上课地点', width:200, sort:true}
+            ,{field:'skBj', title:'学生班级', width:150, sort:true}
+            ,{fixed: 'right', width:290, align:'center', toolbar: '#datatable_toolbar'}
         ]]
         ,even: true //隔行背景
         ,limit: 10
@@ -107,9 +115,6 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
             ,limits: [10,20,50,100]
             ,first: '首页' //不显示首页
             ,last: '尾页' //不显示尾页
-        }
-        ,done: function(res, curr, count){ //数据渲染完的回调
-
         }
     });
 
@@ -122,15 +127,17 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         search: function(){
             datatable.reload({
                 where: {
-                    'teacherCollege': $("#teacherCollege option:selected").val(),
-                    'teacherMajor': $("#teacherMajor option:selected").val(),
-                    'teacher': $(".search input[ name='teacher']").val(),
-                    'teacherAge': $("#teacherAge option:selected").val(),
-                    'teacherTitle': $("#teacherTitle option:selected").val(),
+                    'courseXy': $("#courseXy option:selected").val(),
+                    'courseZy': $("#courseZy option:selected").val(),
                     'courseName': $(".search input[ name='courseName']").val(),
                     'courseAttr': $("#courseAttr option:selected").val(),
-                    'teachDate': $(".search input[ name='teachDate']").val(),
-                    'teachAddr': $(".search input[ name='teachAddr']").val()
+                    'skjsXy': $("#skjsXy option:selected").val(),
+                    'skjsZy': $("#skjsZy option:selected").val(),
+                    'skjsName': $(".search input[ name='skjsName']").val(),
+                    'age': $("#age option:selected").val(),
+                    'title': $("#title option:selected").val(),
+                    'skSj': $(".search input[ name='skSj']").val(),
+                    'skDd': $(".search input[ name='skDd']").val()
                 }
                 ,page: {
                     curr: 1 //重新从第 1 页开始
@@ -140,11 +147,13 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         ,reset: function () {
             $(".search input").val('');
             //清除选中状态
-            $("#teacherCollege").val("");
-            $("#teacherMajor").val("");
-            $("#teacherAge").val("");
-            $("#teacherTitle").val("");
+            $("#courseXy").val("");
+            $("#courseZy").val("");
             $("#courseAttr").val("");
+            $("#skjsXy").val("");
+            $("#skjsZy").val("");
+            $("#age").val("");
+            $("#title").val("");
             form.render("select");
         }
     };
@@ -156,12 +165,12 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
             if(rowData.isPj == 2){ //1是2否（即未评价，查看按钮不可点击）
                 return;
             }
-            $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
+            $.get(requestUrl+'/thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     var thpjItemList = data.thpjItemList;
                     ////////////////////////////////////////////////////////////////////////////////////////////
-                    $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
+                    $.get(requestUrl+'/thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
                         let data = result_data.data;
                         let html = '';
                         for (let i = 0; i < data.length; i++) {
@@ -221,7 +230,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                 return false;
             }
             //
-            $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',function (result_data) {
+            $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     let templateCode = '';
@@ -309,7 +318,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                                 var formData = data.field;
                                 formData.templateCode = templateCode;
                                 formData.jsonString = JSON.stringify(formData);
-                                $.post(requestUrl+'/jxpj_thpj/insert.do' ,formData ,function(result_data){
+                                $.post(requestUrl+'/thpj/insert.do' ,formData ,function(result_data){
                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
                                         if(result_data.code == 200){
                                             datatable.reload();//重新加载表格数据
@@ -336,10 +345,6 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
             },'json');
         }
     });
-
-    function renderTime(date) {
-        return
-    }
 
     var initRelationDatatable = function (menuName,rowData) {
         $.get(requestUrl+'/common/getTableCols.do',{

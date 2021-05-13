@@ -9,7 +9,7 @@ layui.use(['layer','element','table'], function(){
         id: guid()
         ,elem : '#datatable'
         ,height : 580
-        ,url: requestUrl+'/jxpj_thpj/getCkpjPageList.do'
+        ,url: requestUrl+'/thpj/getCkpjPageList.do'
         ,where:{
             "userId":function () {
                 return  $.cookie('userId');
@@ -102,7 +102,7 @@ layui.use(['layer','element','table'], function(){
                 ,btn: ['关闭']
                 ,content : $('#view_container')
                 ,success: function(layero, index){
-                    $.get(requestUrl+'/jxpj_thpj/getCkpjDetail.do'
+                    $.get(requestUrl+'/thpj/getCkpjDetail.do'
                         ,{
                             'userId': $.cookie('userId')
                             ,'courseCode': row_data.courseCode

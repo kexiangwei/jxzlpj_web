@@ -55,7 +55,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
         id: guid()
         ,elem : '#datatable'
         ,height : 500
-        ,url: requestUrl+'/jxpj_thpj/getPageList.do'
+        ,url: requestUrl+'/thpj/getPageList.do'
         ,where:{
             "userId":function () {
                 return $.cookie('userId');
@@ -162,12 +162,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
     table.on('tool(datatable)', function(obj){
         let rowData = obj.data;
         if (obj.event === 'detail') {
-            $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
+            $.get(requestUrl+'/thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     var thpjItemList = data.thpjItemList;
                     ////////////////////////////////////////////////////////////////////////////////////////////
-                    $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
+                    $.get(requestUrl+'/thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
                         let data = result_data.data;
                         let html = '';
                         for (let i = 0; i < data.length; i++) {
@@ -224,12 +224,12 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
         } else if (obj.event === 'update') {
 
-            $.get(requestUrl+'/jxpj_thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
+            $.get(requestUrl+'/thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     var thpjItemList = data.thpjItemList;
                     ////////////////////////////////////////////////////////////////////////////////////////////
-                    $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
+                    $.get(requestUrl+'/thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
                         let data = result_data.data;
                         let html = '';
                         for (let i = 0; i < data.length; i++) {
@@ -306,7 +306,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 //执行提交操作
                                 var formData = data.field;
                                 formData.jsonString = JSON.stringify(formData);
-                                $.post(requestUrl+'/jxpj_thpj/update.do' ,formData ,function(result_data){
+                                $.post(requestUrl+'/thpj/update.do' ,formData ,function(result_data){
                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
                                         if(result_data.code == 200){
                                             datatable.reload();//重新加载表格数据
@@ -328,13 +328,13 @@ layui.use(['layer','element','table','form','laydate'], function(){
         } else if (obj.event === 'submit') {
             //只有本次评分在90分及以上才进行优秀率校验
             if(rowData.isTop == 1){
-                $.get(requestUrl+'/jxpj_thpj/isTopFull.do' , {'userId': $.cookie('userId')}, function(result_data){
+                $.get(requestUrl+'/thpj/isTopFull.do' , {'userId': $.cookie('userId')}, function(result_data){
                     if(result_data.code == 200 && result_data.data == 1){ //优秀名额已满
                         layer.msg('优秀率超过30%，需对本学期被评课程进行调整', {offset: '100px'});
                         return false;
                     } else {
                         //执行提交操作
-                        $.get(requestUrl+'/jxpj_thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
+                        $.get(requestUrl+'/thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
                             layer.msg(result_data.msg, { offset: '100px'}, function () {
                                 if(result_data.code == 200){
                                     datatable.reload();//重新加载表格数据
@@ -345,7 +345,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 });
             } else {
                 //执行提交操作
-                $.get(requestUrl+'/jxpj_thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
+                $.get(requestUrl+'/thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
                     layer.msg(result_data.msg, { offset: '100px'}, function () {
                         if(result_data.code == 200){
                             datatable.reload();//重新加载表格数据
@@ -359,7 +359,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 return false;
             }
             //
-            $.get(requestUrl+'/jxpj_thpj/getThpjTargetList.do',function (result_data) {
+            $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     let templateCode = '';
@@ -448,7 +448,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                                 var formData = data.field;
                                 formData.templateCode = templateCode;
                                 formData.jsonString = JSON.stringify(formData);
-                                $.post(requestUrl+'/jxpj_thpj/insert.do' ,formData ,function(result_data){
+                                $.post(requestUrl+'/thpj/insert.do' ,formData ,function(result_data){
                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
                                         if(result_data.code == 200){
                                             datatable.reload();//重新加载表格数据

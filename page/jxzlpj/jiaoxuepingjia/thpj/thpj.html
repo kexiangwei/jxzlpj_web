@@ -5,9 +5,40 @@
     <title>教学评价-同行评教</title>
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <style type="text/css">
-        .search .layui-inline{
+
+        .search .layui-form-item {
+            margin-bottom: 5px;
+            clear: both;
+            *zoom: 1;
+        }
+
+        .search .layui-form-item .layui-inline {
+            width: 300px;
+            margin: 0;
+        }
+
+        .search .layui-form-item .layui-inline .layui-input-inline {
             width: 180px;
         }
+
+        .search .layui-input, .layui-select, .layui-textarea {
+            height: 35px;
+        }
+
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+
+        .layui-btn-table {
+            width: 80px;
+            height: 26px;
+            line-height: 26px;
+            padding: 0 5px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 13px;
+        }
+
         .layui-form-input {
             width: 50px;
             height: 30px;
@@ -15,12 +46,14 @@
             border-color: #878787;
             text-align: center;
         }
+
         .layui-form-input2 {
             width: 100%;
             height: 100%;
             border-width:0px 0px 0px 0px;
             text-align: center;
         }
+
         body .demo-class .layui-layer-btn a:not(:last-child){
             background:#1E9FFF;
             color: #fff;
@@ -32,73 +65,107 @@
         <!-- 查询参数 -->
         <div class="layui-form search">
             <div class="layui-form-item">
-                所属学院：
                 <div class="layui-inline">
-                    <select id="teacherCollege" name="teacherCollege" lay-filter="teacherCollege"></select>
+                    <label class="layui-form-label">开课学院：</label>
+                    <div class="layui-input-inline">
+                        <select id="courseXy" name="courseXy" lay-filter="courseXy"></select>
+                    </div>
                 </div>
-                &nbsp;&nbsp;所属专业：
                 <div class="layui-inline">
-                    <select id="teacherMajor" name="teacherMajor" lay-filter="teacherMajor"></select>
+                    <label class="layui-form-label">适用专业：</label>
+                    <div class="layui-input-inline">
+                        <select id="courseZy" name="courseZy"></select>
+                    </div>
                 </div>
-                &nbsp;&nbsp;教师姓名：
                 <div class="layui-inline">
-                    <input class="layui-input" name="teacher" placeholder="支持关键字查询">
+                    <label class="layui-form-label">课程名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+                    </div>
                 </div>
-                &nbsp;&nbsp;教师年龄：
                 <div class="layui-inline">
-                    <select name="teacherAge" id="teacherAge">
-                        <option value="">请选择</option>
-                        <option value="55岁及以上">55岁及以上</option>
-                        <option value="45-54岁">45-54岁</option>
-                        <option value="35-44岁">35-44岁</option>
-                        <option value="34岁及以下">34岁及以下</option>
-                    </select>
+                    <label class="layui-form-label">课程性质：</label>
+                    <div class="layui-input-inline">
+                        <select id="courseAttr" name="courseAttr"></select>
+                        <!--<select id="courseAttr" name="courseAttr">
+                            <option value="">请选择</option>
+                            <option value="公共必修课">公共必修课</option>
+                            <option value="公共选修课">公共选修课</option>
+                            <option value="专业基础课">专业基础课</option>
+                            <option value="专业核心课">专业核心课</option>
+                            <option value="专业选修课">专业选修课</option>
+                        </select>-->
+                    </div>
                 </div>
-                &nbsp;&nbsp;教师职称：
-                <div class="layui-inline">
-                    <select name="teacherTitle" id="teacherTitle">
-                        <option value="">请选择</option>
-                        <option value="教授">教授</option>
-                        <option value="副教授">副教授</option>
-                        <option value="讲师">讲师</option>
-                        <option value="助教">助教</option>
-                    </select>
-                </div><br/>
             </div>
             <div class="layui-form-item">
-                课程名称：
                 <div class="layui-inline">
-                    <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+                    <label class="layui-form-label">单位：</label>
+                    <div class="layui-input-inline">
+                        <select id="skjsXy" name="skjsXy" lay-filter="skjsXy"></select>
+                    </div>
                 </div>
-                &nbsp;&nbsp;课程性质：
                 <div class="layui-inline">
-                    <select id="courseAttr" name="courseAttr">
-                        <option value="">请选择</option>
-                        <option value="公共必修课">公共必修课</option>
-                        <option value="专业基础课">专业基础课</option>
-                        <option value="专业核心课">专业核心课</option>
-                        <option value="专业选修课">专业选修课</option>
-                        <option value="公共选修课">公共选修课</option>
-                    </select>
+                    <label class="layui-form-label">专业：</label>
+                    <div class="layui-input-inline">
+                        <select id="skjsZy" name="skjsZy"></select>
+                    </div>
                 </div>
-                &nbsp;&nbsp;上课时间：
                 <div class="layui-inline">
-                    <input class="layui-input" name="teachDate">
+                    <label class="layui-form-label">任课教师：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="skjsName" placeholder="支持关键字查询">
+                    </div>
                 </div>
-                &nbsp;&nbsp;上课地点：
                 <div class="layui-inline">
-                    <input class="layui-input" name="teachAddr">
+                    <label class="layui-form-label">年龄：</label>
+                    <div class="layui-input-inline">
+                        <select id="age" name="age">
+                            <option value="">请选择</option>
+                            <option value="55岁及以上">55岁及以上</option>
+                            <option value="45-54岁">45-54岁</option>
+                            <option value="35-44岁">35-44岁</option>
+                            <option value="34岁及以下">34岁及以下</option>
+                        </select>
+                    </div>
                 </div>
-                &nbsp;&nbsp;
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">职称：</label>
+                    <div class="layui-input-inline">
+                        <select id="title" name="title"></select>
+                        <!--<select name="title" id="title">
+                            <option value="">请选择</option>
+                            <option value="教授">教授</option>
+                            <option value="副教授">副教授</option>
+                            <option value="讲师">讲师</option>
+                            <option value="助教">助教</option>
+                            <option value="无职称">无职称</option>
+                        </select>-->
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">上课时间：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="skSj">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">上课地点：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="skDd">
+                    </div>
+                </div>
                 <div class="layui-inline">
                     <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                    <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                    <button class="layui-btn layui-btn-primary" data-type="reset" style="margin-left: 0;">重置</button>
                 </div>
             </div>
         </div>
         <!-- 数据表格 -->
         <table class="layui-table" id="datatable" lay-filter="datatable">
-            <script type="text/html" id="datatable_bar"></script>
+            <script type="text/html" id="datatable_toolbar"></script>
         </table>
     </div>
 
