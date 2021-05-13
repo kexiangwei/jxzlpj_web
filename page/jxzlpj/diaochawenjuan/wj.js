@@ -37,9 +37,9 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'wjDesc', title: '备注', templet: function(data){
                 var html = '';
                 if(data.isTrue == 1){
-                    html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="wj">已填写</a>';
+                    html = '<a class="layui-btn layui-btn-xs layui-btn-table layui-btn-normal " lay-event="wj">已填写</a>';
                 } else {
-                    html = '<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="wj">未填写</a>';
+                    html = '<a class="layui-btn layui-btn-xs layui-btn-table layui-btn-warm" lay-event="wj">未填写</a>';
                 }
                     $('#toolbar').html(html);
                     return data.wjDesc;
