@@ -8,7 +8,7 @@ layui.use(['layer', 'table', 'form', 'tree', 'util'], function () {
     let datatable = table.render({
         id: guid()
         , elem: '#datatable'
-        , height: 550
+        , height: 520
         , url: requestUrl + '/getRolePageList.do'
         , request: {
             pageName: 'pageIndex'

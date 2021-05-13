@@ -97,7 +97,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
     var dataTable = table.render({
         id: guid()
         ,elem : '#dataTable'
-        ,height : 580
+        ,height : 520
         ,url: requestUrl+'/getShenHeSetPageList.do'
         ,request: {
             pageName: 'pageIndex'

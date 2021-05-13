@@ -8,7 +8,7 @@ layui.use(['layer','table','form','util'], function(){
     var datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 550
+        ,height : 480
         ,url: requestUrl+'/optionset/getOptionPageList.do'
         ,response: {
             statusCode: 200 //规定成功的状态码，默认：0

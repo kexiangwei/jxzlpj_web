@@ -8,7 +8,7 @@ layui.use(['layer','table'], function(){
     let datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 600
+        ,height : 580
         ,url: requestUrl+'/getTjfxPageList.do'
         ,where:{
             "tjType": "xy"
