@@ -569,14 +569,14 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                 ,success: function(layero, index){
 
                                     //
-                                    $.get(requestUrl+'/common/getXyList.do',function(result_data){
+                                    $.get(requestUrl+'/getXyList.do',function(result_data){
                                         if(result_data.code == 200){
                                             // alert(JSON.stringify(result_data.data));
                                             // 加载下拉选项
                                             $("select[name='college']").empty(); //移除下拉选项
                                             let html = '<option value="">请选择</option>';
                                             for (let i = 0; i < result_data.data.length; i++) {
-                                                html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                                                html += '<option value="' + result_data.data[i].code + '" >' + result_data.data[i].name + '</option>';
                                             }
                                             $("select[name='college']").append(html);
                                             form.render('select');
@@ -584,7 +584,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                     },'json');
                                     // 监听学院下拉选项
                                     form.on('select(college)', function(data) {
-                                        $.get(requestUrl+'/common/getZyList.do',{
+                                        $.get(requestUrl+'/getZyList.do',{
                                             'xyCode': data.value
                                         },function(result_data){
                                             if(result_data.code == 200){
@@ -592,7 +592,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                                                 $("select[name='major']").empty(); //移除下拉选项
                                                 let html = '<option value="">请选择</option>';
                                                 for (let i = 0; i < result_data.data.length; i++) {
-                                                    html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                                                    html += '<option value="' + result_data.data[i].code + '" >' + result_data.data[i].name + '</option>';
                                                 }
                                                 $("select[name='major']").append(html);
                                                 form.render('select');

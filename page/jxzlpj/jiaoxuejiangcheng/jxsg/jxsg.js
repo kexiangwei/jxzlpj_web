@@ -308,7 +308,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         });
 
         //
-        $.get(requestUrl+'/common/getXyList.do',function(result_data){
+        $.get(requestUrl+'/getXyList.do',function(result_data){
             if(result_data.code == 200){
                 // alert(JSON.stringify(result_data.data));
                 // 加载下拉选项
@@ -316,9 +316,9 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                 let html = '<option value="">请选择</option>';
                 for (let i = 0; i < result_data.data.length; i++) {
                     if(data.teacherCollege == result_data.data[i].CODE ){
-                        html += '<option value="' + result_data.data[i].CODE + '" selected="">' + result_data.data[i].NAME + '</option>';
+                        html += '<option value="' + result_data.data[i].code + '" selected="">' + result_data.data[i].name + '</option>';
                     }else{
-                        html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                        html += '<option value="' + result_data.data[i].code + '" >' + result_data.data[i].name + '</option>';
                     }
                 }
                 $("select[name='teacherCollege']").append(html);
@@ -327,7 +327,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         },'json');
         // 监听学院下拉选项
         form.on('select(teacherCollege)', function(data) {
-            $.get(requestUrl+'/common/getZyList.do',{
+            $.get(requestUrl+'/getZyList.do',{
                 'xyCode': data.value
             },function(result_data){
                 if(result_data.code == 200){
@@ -335,7 +335,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                     $("select[name='teacherMajor']").empty(); //移除下拉选项
                     let html = '<option value="">请选择</option>';
                     for (let i = 0; i < result_data.data.length; i++) {
-                        html += '<option value="' + result_data.data[i].CODE + '" >' + result_data.data[i].NAME + '</option>';
+                        html += '<option value="' + result_data.data[i].code + '" >' + result_data.data[i].name + '</option>';
                     }
                     $("select[name='teacherMajor']").append(html);
                     form.render('select');
@@ -343,7 +343,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
             },'json');
         });
         //
-        $.get(requestUrl+'/common/getZyList.do',{
+        $.get(requestUrl+'/getZyList.do',{
             'collegeCode': data.teacherCollege !== undefined?data.teacherCollege:null
         },function(result_data){
             if(result_data.code == 200){

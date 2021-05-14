@@ -68,7 +68,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">开课学院：</label>
                     <div class="layui-input-inline">
-                        <select id="courseXy" name="courseXy" lay-filter="courseXy"></select>
+                        <select id="courseXy" name="courseXy" lay-filter="courseXy" lay-search=""></select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -86,15 +86,15 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">课程性质：</label>
                     <div class="layui-input-inline">
-                        <select id="courseAttr" name="courseAttr"></select>
-                        <!--<select id="courseAttr" name="courseAttr">
+                        <!--<select id="courseAttr" name="courseAttr"></select>-->
+                        <select id="courseAttr" name="courseAttr">
                             <option value="">请选择</option>
                             <option value="公共必修课">公共必修课</option>
                             <option value="公共选修课">公共选修课</option>
                             <option value="专业基础课">专业基础课</option>
                             <option value="专业核心课">专业核心课</option>
                             <option value="专业选修课">专业选修课</option>
-                        </select>-->
+                        </select>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">单位：</label>
                     <div class="layui-input-inline">
-                        <select id="skjsXy" name="skjsXy" lay-filter="skjsXy"></select>
+                        <select id="skjsXy" name="skjsXy" lay-filter="skjsXy" lay-search=""></select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -134,15 +134,15 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">职称：</label>
                     <div class="layui-input-inline">
-                        <select id="title" name="title"></select>
-                        <!--<select name="title" id="title">
+                        <!--<select id="title" name="title"></select>-->
+                        <select name="title" id="title">
                             <option value="">请选择</option>
                             <option value="教授">教授</option>
                             <option value="副教授">副教授</option>
                             <option value="讲师">讲师</option>
                             <option value="助教">助教</option>
                             <option value="无职称">无职称</option>
-                        </select>-->
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -169,6 +169,7 @@
         </table>
     </div>
 
+    <!--评教-->
     <div class="layui-container" style="width: 90%; display: none" id="editForm_container">
 
         <h2 style="margin-top: 20px; font-weight: bold" align="center">理论课——课程教学质量评价表（督导同行用）</h2>
@@ -265,7 +266,7 @@
         </form>
     </div>
 
-    <!-- 响应编辑页面'教学设计','教学效果'按钮 -->
+    <!-- 响应评教页面'教学设计','教学效果'按钮 -->
     <div class="layui-container" style="width: 90%; display: none;" id="relation_container">
         <table class="layui-table" lay-filter="relation_datatable" id="relation_datatable" ></table>
     </div>

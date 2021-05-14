@@ -5,46 +5,67 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element,table = layui.table,form = layui.form,laydate = layui.laydate,util = layui.util;
 
     // 加载菜单选项
-    var reloadSelect = function(inputName,data){
+    var reloadSelect = function(inputName,data,isOpenSearch){
         $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
-        let htmlstr = '<option value="">请选择</option>';
+        let htmlstr = '<option value="">'+(isOpenSearch?'请选择或搜索':'请选择')+'</option>';
         for (var i = 0; i < data.length; i++) {
-            htmlstr += '<option value="' + data[i].CODE + '" >' + data[i].NAME + '</option>';
+            htmlstr += '<option value="' + data[i].code + '" >' + data[i].name + '</option>';
         }
         $("select[name='"+inputName+"']").append(htmlstr);
         form.render('select');
     };
 
     //初始化学院下拉选项
-    $.get(requestUrl+'/common/getXyList.do',{},function(data){
-        if(data.code == 200){
-            var xyList =  data.data;
+    $.get(requestUrl+'/getXyList.do',{
+        'dataType': 'kc'
+    },function(result_data){
+        if(result_data.code == 200){
+            var xyList =  result_data.data;
             if(xyList.length > 0){
-                reloadSelect('courseXy',xyList);
+                reloadSelect('courseXy',xyList,true);
             }
         }
     },'json');
-
-    //初始化专业下拉选项
-    var zyList;
-    $.get(requestUrl+'/common/getZyList.do',{},function(data){
-        if(data.code == 200){
-            zyList =  data.data;
-            if(zyList.length > 0){
-                reloadSelect('courseZy',zyList);
-            }
-        }
-    },'json');
-
     // 监听学院选项
-    form.on('select(courseXy)', function(data) {
-        let xyCode = data.value;
-        if(xyCode == ''){
-            reloadSelect('courseZy',zyList);
-        }else{
-            $.get(requestUrl+'/common/getZyList.do',{"xyCode":xyCode},function(data){
-                if(data.code == 200){
-                    reloadSelect('courseZy',data.data);
+    form.on('select(courseXy)', function(selected_data) {
+        var xyCode = selected_data.value;
+        if(xyCode != ''){
+            $.get(requestUrl+'/getZyList.do',{
+                'xyCode': xyCode
+            },function(result_data){
+                if(result_data.code == 200){
+                    var zyList =  result_data.data;
+                    if(zyList.length > 0){
+                        reloadSelect('courseZy',zyList);
+                    }
+                }
+            },'json');
+        }
+    });
+
+    //初始化学院下拉选项
+    $.get(requestUrl+'/getXyList.do',{
+        'dataType': 'js'
+    },function(result_data){
+        if(result_data.code == 200){
+            var xyList =  result_data.data;
+            if(xyList.length > 0){
+                reloadSelect('skjsXy',xyList,true);
+            }
+        }
+    },'json');
+    // 监听学院选项
+    form.on('select(skjsXy)', function(selected_data) {
+        var xyCode = selected_data.value;
+        if(xyCode != ''){
+            $.get(requestUrl+'/getZyList.do',{
+                'xyCode': xyCode
+            },function(result_data){
+                if(result_data.code == 200){
+                    var zyList =  result_data.data;
+                    if(zyList.length > 0){
+                        reloadSelect('skjsZy',zyList);
+                    }
                 }
             },'json');
         }

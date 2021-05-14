@@ -3,13 +3,13 @@ layui.use(['layer','table','form','transfer','util'], function(){
     let $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,transfer = layui.transfer,util = layui.util;
 
     //初始化学院下拉选项
-    $.get(requestUrl+'/common/getXyList.do',{},function(result_data){
+    $.get(requestUrl+'/getXyList.do',{},function(result_data){
         if(result_data.code == 200){
             let data = result_data.data;
             let html = '<option value="">请选择</option>';
             if(data.length > 0){
                 for (let i = 0; i < data.length; i++) {
-                    html += '<option value="' + data[i]['NAME'] + '" >' + data[i]['NAME'] + '</option>';
+                    html += '<option value="' + data[i]['name'] + '" >' + data[i]['name'] + '</option>';
                 }
             }
             $("select[name='xyName']").append(html);

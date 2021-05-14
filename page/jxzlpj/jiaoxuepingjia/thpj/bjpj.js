@@ -9,14 +9,14 @@ layui.use(['layer','element','table','form','laydate'], function(){
         $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
         let htmlstr = '<option value="">请选择</option>';
         for (var i = 0; i < data.length; i++) {
-            htmlstr += '<option value="' + data[i].CODE + '" >' + data[i].NAME + '</option>';
+            htmlstr += '<option value="' + data[i].code + '" >' + data[i].name + '</option>';
         }
         $("select[name='"+inputName+"']").append(htmlstr);
         form.render('select');
     };
 
     //初始化学院下拉选项
-    $.get(requestUrl+'/common/getXyList.do',{},function(data){
+    $.get(requestUrl+'/getXyList.do',{},function(data){
         if(data.code == 200){
             let teacherCollegeList =  data.data;
             if(teacherCollegeList.length > 0){
@@ -27,7 +27,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
     //初始化专业下拉选项
     var teacherMajorList;
-    $.get(requestUrl+'/common/getZyList.do',{},function(data){
+    $.get(requestUrl+'/getZyList.do',{},function(data){
         if(data.code == 200){
             teacherMajorList =  data.data;
             if(teacherMajorList.length > 0){
@@ -42,7 +42,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
         if(xyCode == ''){
             reloadSelect('teacherMajor',teacherMajorList);
         }else{
-            $.get(requestUrl+'/common/getZyList.do',{"xyCode":xyCode},function(data){
+            $.get(requestUrl+'/getZyList.do',{"xyCode":xyCode},function(data){
                 if(data.code == 200){
                     reloadSelect('teacherMajor',data.data);
                 }
