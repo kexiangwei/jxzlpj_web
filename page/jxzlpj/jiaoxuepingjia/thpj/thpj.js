@@ -109,12 +109,13 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                         $('#datatable_toolbar').html(html);
                         return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                     } else {
-                        html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>' +
-                            '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>';
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                         if(data.isSubmit == 1){
-                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
+                                '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
                         } else {
-                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-primary" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
+                                '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-primary" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
                         }
                         $('#datatable_toolbar').html(html);
                         return data.courseName;
@@ -157,8 +158,10 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                     'skjsName': $(".search input[ name='skjsName']").val(),
                     'age': $("#age option:selected").val(),
                     'title': $("#title option:selected").val(),
-                    'skSj': $(".search input[ name='skSj']").val(),
-                    'skDd': $(".search input[ name='skDd']").val()
+                    // 'skSj': $(".search input[ name='skSj']").val(),
+                    // 'skDd': $(".search input[ name='skDd']").val()
+                    'lessonNum': $("#lessonNum option:selected").val(),
+                    'isPj': $("#isPj option:selected").val()
                 }
                 ,page: {
                     curr: 1 //重新从第 1 页开始
@@ -175,6 +178,8 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
             $("#skjsZy").val("");
             $("#age").val("");
             $("#title").val("");
+            $("#lessonNum").val("");
+            $("#isPj").val("");
             form.render("select");
         }
     };
@@ -186,20 +191,20 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
             if(rowData.isPj == 1){
                 return false;
             }
-            //
-            $.get(requestUrl+'/thpj/getThpjTargetList.do',function (result_data) {
+            //初始化模板信息
+            var templateCode = '';
+            $.get(requestUrl+'/thpj/getThpjTemplate.do',function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
-                    let templateCode = '';
+                    templateCode = data[0].targetList[0].templateCode;
                     let html = '';
                     for (let i = 0; i < data.length; i++) {
                         html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
                         for (let j = 0; j < data[i].num; j++) {
                             let obj = data[i].targetList[j];
-                            templateCode = obj.templateCode;
-                            html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                            html += '<td>'+obj.targetContent+'</td>\n' +
                                 '<td>'+obj.targetScore+'</td>\n' +
-                                '<td><input type="text" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                '<td><input type="number" max="'+obj.targetScore+'" min="0" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
                         }
                     }
                     html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
@@ -258,16 +263,21 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
                             //表单数据填充
                             form.val("editForm",{
-                                'code': new Date().getTime(),
-                                'teacherCode': rowData.teacherCode,
-                                'teacher': rowData.teacher,
-                                'teacherCollege': rowData.teacherCollege,
+                                'xn': rowData.xn,
+                                'xq': rowData.xq,
                                 'courseCode': rowData.courseCode,
                                 'courseName': rowData.courseName,
                                 'courseAttr': rowData.courseAttr,
+                                'skjsCode': rowData.skjsCode,
+                                'skjsName': rowData.skjsName,
+                                'skjsXy': rowData.skjsXy,
+                                'skBj': rowData.skBj,
+                                'skDd': rowData.skDd,
+                                /*'teachWeek': '2021-W19',
+                                'weekNum': '星期二',
+                                'lessonNum': '1-2节',*/
                                 'userId': $.cookie('userId'),
-                                'userName':$.cookie('userName'),
-                                'userUnit':$.cookie('userUnit')
+                                'userName':$.cookie('userName')
                             });
 
                             //监听表单提交
@@ -306,38 +316,37 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
         } else if (obj.event === 'detail') {
 
-            $.get(requestUrl+'/thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
+            $.get(requestUrl+'/thpj/detail.do',{"pjCode":rowData.pjCode}, function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     var thpjItemList = data.thpjItemList;
-                    ////////////////////////////////////////////////////////////////////////////////////////////
-                    $.get(requestUrl+'/thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
+                    //初始化模板信息
+                    $.get(requestUrl+'/thpj/getThpjTemplate.do',{'pjCode':rowData.pjCode},function (result_data) {
                         let data = result_data.data;
                         let html = '';
                         for (let i = 0; i < data.length; i++) {
                             html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
                             for (let j = 0; j < data[i].num; j++) {
                                 let obj = data[i].targetList[j];
-                                html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
+                                html += '<td>\n'+obj.targetContent+'</td>\n' +
                                     '<td>'+obj.targetScore+'</td>\n' +
-                                    '<td><input type="text" id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                    '<td><input type="number" name="'+obj.targetCode+'" class="layui-form-input2"></td></tr>';
                             }
                         }
-                        html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
-                            '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
+                        html += '<tr><td colspan="3" style="text-align: right">评分合计</td><td style="text-align: center"><input type="number" name="totalScore" class="layui-form-input2"></td></tr>';
                         $('#target').html(html);
                         //
                         $.each(thpjItemList,function (idx,obj) {
-                            $('input[name="'+obj.targetCode+'"]').val(obj.answer);
+                            $('input[name="'+obj.targetCode+'"]').val(obj.score);
                         });
                     },'json');
-                    ////////////////////////////////////////////////////////////////////////////////////////////
+                    //督导同行评教打分评价
                     layer.open({
                         id: guid() //设定一个id，防止重复弹出
-                        ,title : '教学评价-课程质量评价'
+                        ,title : '督导同行评教打分评价'
                         ,type : 1
-                        ,area : [ '1100px', '500px' ]
-                        ,offset : '30px' //只定义top坐标，水平保持居中
+                        ,area : [ '1100px', '550px' ]
+                        ,offset : '25px' //只定义top坐标，水平保持居中
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['关闭']
                         /*,btn : ['教学设计','教学效果','关闭']
@@ -356,11 +365,14 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                             form.val("editForm",data);
                             //
                             $('#editForm .layui-btn-container').css('display','none');
+                            //
+                            $('#editForm').append('<div class=form_overlay></div>'); //禁用form表单中的所有表单元素
                         }
                         ,end:function () {
                             $('#editForm')[0].reset(); //清空表单数据
                             form.render();
                             $('#editForm .layui-btn-container').css('display','block');
+                            $('#editForm').find('.form_overlay').remove();
                         }
                     });
                 }
@@ -368,50 +380,57 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
         } else if (obj.event === 'update') {
 
-            $.get(requestUrl+'/thpj/detail.do',{"code":rowData.pjCode}, function (result_data) {
+            $.get(requestUrl+'/thpj/detail.do',{"pjCode":rowData.pjCode}, function (result_data) {
                 if(result_data.code == 200){
                     let data = result_data.data;
                     var thpjItemList = data.thpjItemList;
-                    ////////////////////////////////////////////////////////////////////////////////////////////
-                    $.get(requestUrl+'/thpj/getThpjTargetList.do',{'code':rowData.pjCode},function (result_data) {
-                        let data = result_data.data;
-                        let html = '';
-                        for (let i = 0; i < data.length; i++) {
-                            html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
-                            for (let j = 0; j < data[i].num; j++) {
-                                let obj = data[i].targetList[j];
-                                html += '<td>\n' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
-                                    '<td>'+obj.targetScore+'</td>\n' +
-                                    '<td><input type="text" id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
-                            }
-                        }
-                        html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
-                            '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
-                        $('#target').html(html);
-                        //
-                        $.each(thpjItemList,function (idx,obj) {
-                            $('input[name="'+obj.targetCode+'"]').val(obj.answer);
-                        });
-                        //
-                        let $inputs = $('.score');
-                        $inputs.keyup(function() {
-                            let totalScore = 0;
-                            $inputs.each(function(){
-                                let value = parseInt($(this).val());
-                                if(value.toString() != "NaN"){
-                                    totalScore += value;
+                    //初始化模板信息
+                    var templateCode;
+                    $.get(requestUrl+'/thpj/getThpjTemplate.do',{'pjCode':rowData.pjCode},function (result_data) {
+                        if(result_data.code == 200){
+                            let data = result_data.data;
+                            templateCode = data[0].targetList[0].templateCode;
+                            let html = '';
+                            for (let i = 0; i < data.length; i++) {
+                                html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
+                                for (let j = 0; j < data[i].num; j++) {
+                                    let obj = data[i].targetList[j];
+                                    html += '<td>\n'+obj.targetContent+'</td>\n' +
+                                        '<td>'+obj.targetScore+'</td>\n' +
+                                        '<td><input type="number" max="'+obj.targetScore+'" min="0"  id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
                                 }
+                            }
+                            html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
+                                '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
+                            $('#target').html(html);
+                            //
+                            $.each(thpjItemList,function (idx,obj) {
+                                $('input[name="'+obj.targetCode+'"]').val(obj.score);
                             });
-                            $("input[name='totalScore']").val(totalScore);
-                        });
+                            //
+                            let $inputs = $('.score');
+                            $inputs.keyup(function() {
+                                let totalScore = 0;
+                                $inputs.each(function(){
+                                    let value = parseInt($(this).val());
+                                    if(value.toString() != "NaN"){
+                                        totalScore += value;
+                                    }
+                                });
+                                $("input[name='totalScore']").val(totalScore);
+                            });
+                        } else {
+                            layer.msg('数据加载失败！', {time : 3000, offset: '100px'});
+                            return;
+                        }
                     },'json');
-                    ////////////////////////////////////////////////////////////////////////////////////////////
+                    //督导同行评教打分评价
                     layer.open({
                         id: guid() //设定一个id，防止重复弹出
-                        ,title : '教学评价-课程质量评价'
+                        ,title : '督导同行评教打分评价'
                         ,type : 1
-                        ,area : [ '1100px', '500px' ]
-                        ,offset : '30px' //只定义top坐标，水平保持居中
+                        ,area : [ '1100px', '550px' ]
+                        ,offset : '25px' //只定义top坐标，水平保持居中
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['关闭']
                         /*,btn : ['教学设计','教学效果','关闭']
@@ -449,6 +468,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
                                 //执行提交操作
                                 var formData = data.field;
+                                formData.templateCode = templateCode;
                                 formData.jsonString = JSON.stringify(formData);
                                 $.post(requestUrl+'/thpj/update.do' ,formData ,function(result_data){
                                     layer.msg(result_data.msg, { offset: '100px'}, function () {
@@ -460,10 +480,13 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                                 },'json');
 
                             });
+                            //该字段集内的所有字段都将被禁用 .
+                            $('fieldset').attr('disabled', 'disabled');
                         }
                         ,end:function () {
                             $('#editForm')[0].reset(); //清空表单数据
                             form.render();
+                            $('fieldset').removeAttr("disabled");
                         }
                     });
                 }
@@ -471,18 +494,22 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
         } else if (obj.event === 'submit') {
 
-            //执行提交操作
-            $.get(requestUrl+'/thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
-                layer.msg(result_data.msg, { offset: '100px'}, function () {
-                    if(result_data.code == 200){
-                        datatable.reload();//重新加载表格数据
-                    }
-                });
+            layer.confirm('请仔细核对评价信息，提交后不可修改，是否确定提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                //执行提交操作
+                $.post(requestUrl+'/thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
+                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                        if(result_data.code == 200){
+                            datatable.reload();//重新加载表格数据
+                        }
+                        layer.closeAll();
+                    });
+                },'json');
             });
 
         }
     });
 
+/*
     var initRelationDatatable = function (menuName,rowData) {
         $.get(requestUrl+'/common/getTableCols.do',{
             'tableName':'JXSJ_KCJXDG'
@@ -543,5 +570,6 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
             };
         },'json');
     };
+*/
 
 });

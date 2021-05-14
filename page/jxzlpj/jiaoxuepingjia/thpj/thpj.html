@@ -40,27 +40,46 @@
         }
 
         .layui-form-input {
-            width: 50px;
+            width: 80px;
             height: 30px;
             border-width:0px 0px 1px 0px;
             border-color: #878787;
-            text-align: center;
+            /*text-align: center;*/
         }
 
         .layui-form-input2 {
             width: 100%;
-            height: 100%;
+            height: 30px;
             border-width:0px 0px 0px 0px;
-            text-align: center;
+            /*text-align: center;*/
+            padding-left: 10px;
+        }
+
+
+        #editForm button {
+            width: 100px;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         body .demo-class .layui-layer-btn a:not(:last-child){
             background:#1E9FFF;
             color: #fff;
         }
+
+        /*禁用form表单中的所有表单元素*/
+        .form_overlay {
+            position:absolute;
+            top:0;
+            width:100%;
+            height:100%;
+            background-color:transparent;
+            z-index:1;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
+
     <div class="layui-fluid">
         <!-- 查询参数 -->
         <div class="layui-form search">
@@ -135,7 +154,7 @@
                     <label class="layui-form-label">职称：</label>
                     <div class="layui-input-inline">
                         <!--<select id="title" name="title"></select>-->
-                        <select name="title" id="title">
+                        <select id="title" name="title">
                             <option value="">请选择</option>
                             <option value="教授">教授</option>
                             <option value="副教授">副教授</option>
@@ -145,7 +164,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="layui-inline">
+                <!--<div class="layui-inline">
                     <label class="layui-form-label">上课时间：</label>
                     <div class="layui-input-inline">
                         <input class="layui-input" name="skSj">
@@ -155,6 +174,29 @@
                     <label class="layui-form-label">上课地点：</label>
                     <div class="layui-input-inline">
                         <input class="layui-input" name="skDd">
+                    </div>
+                </div>-->
+                <div class="layui-inline">
+                    <label class="layui-form-label">节次：</label>
+                    <div class="layui-input-inline">
+                        <select id="lessonNum" name="lessonNum">
+                            <option value="">请选择</option>
+                            <option value="1-2节">1-2节</option>
+                            <option value="3-4节">3-4节</option>
+                            <option value="5-6节">5-6节</option>
+                            <option value="7-8节">7-8节</option>
+                            <option value="9-10节">9-10节</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">评教状态：</label>
+                    <div class="layui-input-inline">
+                        <select  id="isPj" name="isPj">
+                            <option value="">请选择</option>
+                            <option value="1">已评</option>
+                            <option value="2">未评</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -177,50 +219,62 @@
         <form class="layui-form" style="margin-top: 20px" action="" lay-filter="editForm" id="editForm">
 
             <input type="hidden" name="code"/>
-
-            <input type="hidden" name="teacherCode"/>
-            <input type="hidden" name="teacher"/>
-            <input type="hidden" name="teacherCollege"/>
-
+            <input type="hidden" name="xn"/>
+            <input type="hidden" name="xq"/>
             <input type="hidden" name="courseCode"/>
-            <input type="hidden" name="courseName"/>
-            <input type="hidden" name="courseAttr"/>
-
+            <input type="hidden" name="skjsCode"/>
             <input type="hidden" name="userId"/>
-            <input type="hidden" name="userName"/>
-            <input type="hidden" name="userUnit"/>
 
-            <table class="layui-table" border="1">
-                <tr>
-                    <td style="width: 50%">任课教师：<input type="text" name="teacher" class="layui-form-input2" style="width: 50%" readonly></td>
-                    <td>学院/部：<input type="text" name="teacherCollege" class="layui-form-input2" style="width: 50% " readonly></td>
-                </tr>
-                <tr>
-                    <td style="width: 50%">课程名称：<input type="text" name="courseName" class="layui-form-input2" style="width: 50%" readonly></td>
-                    <td>课程类型：<input type="text" name="courseAttr" class="layui-form-input2" style="width: 50%" readonly></td>
-                </tr>
-                <tr>
-                    <td style="width: 50%">学生班级：<input type="text" name="stuClass" class="layui-form-input2" style="width: 50%"></td>
-                    <td>听课人：<input type="text" name="userName" class="layui-form-input2" style="width: 50%"></td>
-                </tr>
+            <!--表头-->
+            <fieldset style="border: 0; padding: 0;">
+                <table class="layui-table" border="1">
+                    <tr>
+                        <td style="width: 50%">任课教师：<input type="text" name="skjsName" class="layui-form-input2" style="width: 80%"></td>
+                        <td>学院/部：<input type="text" name="skjsXy" class="layui-form-input2" style="width: 80% "></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%">课程名称：<input type="text" name="courseName" class="layui-form-input2" style="width: 80%"></td>
+                        <td>课程类型：<input type="text" name="courseAttr" class="layui-form-input2" style="width: 80%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%">学生班级：<input type="text" name="skBj" class="layui-form-input2" style="width: 80%"></td>
+                        <td>听课人：<input type="text" name="userName" class="layui-form-input2" style="width: 80%"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%">时间地点<br/>
+                            <p style="display: inline-block; /*margin-left: 28px;*/">时间：</p><input type="week" name="teachWeek" style="width: 151px; height: 26px;">，
+                            星期：<select name="weekNum" style="width: 155px; height: 30px; border-color: #e6e6e6" lay-ignore="">
+                                <option value="">请选择</option>
+                                <option value="星期一">星期一</option>
+                                <option value="星期二">星期二</option>
+                                <option value="星期三">星期三</option>
+                                <option value="星期四">星期四</option>
+                                <option value="星期五">星期五</option>
+                                <option value="星期六">星期六</option>
+                                <option value="星期日">星期日</option>
+                            </select><br/>
+                            <p style="display: inline-block; /*margin-left: 28px;*/">节次：</p><select name="lessonNum" style="width: 155px; height: 30px; border-color: #e6e6e6" lay-ignore="">
+                                <option value="">请选择</option>
+                                <option value="1-2节">1-2节</option>
+                                <option value="3-4节">3-4节</option>
+                                <option value="5-6节">5-6节</option>
+                                <option value="7-8节">7-8节</option>
+                                <option value="9-10节">9-10节</option>
+                            </select>，
+                            地点：<input type="text" name="skDd" class="layui-form-input" style="width: 155px;">
+                        </td>
+                        <td>学生出勤情况<br/>
+                            <p style="display: inline-block; /*margin-left: 28px;*/">应到人数：</p><input type="number" max="" min="0" name="stuYd" class="layui-form-input">
+                            实到人数：<input type="number" max="" min="0" name="stuSd" class="layui-form-input"><br/>
+                            <p style="display: inline-block; /*margin-left: 28px;*/">迟到人数：</p><input type="number" max="" min="0" name="stuCd" class="layui-form-input">
+                            缺课人数：<input type="number" max="" min="0" name="stuQk" class="layui-form-input">
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
 
-                <tr>
-                    <td style="width: 50%">时间地点<br/><input type="text" name="teachYear" class="layui-form-input">年
-                        <input type="text" name="teachMonth" class="layui-form-input">月
-                        <input type="text" name="teachDay" class="layui-form-input">日，第
-                        <input type="text" name="teachWeekNum" class="layui-form-input">周，星期
-                        <input type="text" name="teachWeek" class="layui-form-input">，<br/>第
-                        <input type="text" name="teachLessonNum" class="layui-form-input">节课，
-                        <input type="text" name="teachHouse" class="layui-form-input" style="width: 100px">楼，
-                        <input type="text" name="teachClassroom" class="layui-form-input" style="width: 100px">教室</td>
-                    <td>学生出勤情况<br/>应到人数：<input type="text" name="stuYingdao" class="layui-form-input">
-                        实到人数：<input type="text" name="stuShidao" class="layui-form-input"><br/>
-                        迟到人数：<input type="text" name="stuChidao" class="layui-form-input">
-                        缺课人数：<input type="text" name="stuQueke" class="layui-form-input"></td>
-                </tr>
-            </table>
-
-            <table class="layui-table">
+            <!--指标-->
+            <table class="layui-table" style="margin: 10px 0;">
                 <colgroup>
                     <col width="180">
                     <col>
@@ -240,36 +294,56 @@
             </table>
 
             <fieldset class="layui-elem-field">
-                <legend>教师教学水平点评</legend>
+                <legend>教师教学水平点评（从教师的教学设计、教学过程和教学效果三个方面进行评价。）</legend>
+                <div class="layui-form-item layui-form-text" style="margin-top: 15px;">
+                    <label class="layui-form-label">肯定评价</label>
+                    <div class="layui-input-block">
+                        <textarea name="teacherDp1" lay-verify="required" placeholder="" autocomplete="off"  class="layui-textarea"></textarea>
+                    </div>
+                </div>
                 <div class="layui-form-item layui-form-text">
-                    <textarea name="dpTeacher" lay-verify="required" lay-reqtext="请填写教师教学水平点评" placeholder="从教师的教学研究、  教学设计、教学过程和教学效果四个方面指出优点和不足。" autocomplete="off"  class="layui-textarea"></textarea>
+                    <label class="layui-form-label">不足与建议</label>
+                    <div class="layui-input-block">
+                        <textarea name="teacherDp2" lay-verify="required" placeholder="" autocomplete="off"  class="layui-textarea"></textarea>
+                    </div>
                 </div>
             </fieldset>
 
             <fieldset class="layui-elem-field">
-                <legend>学生学习情况点评</legend>
+                <legend>学生学习情况点评（从学生听课、记笔记/带教材、参与互动以及学习效果等方面进行评价。）</legend>
+                <div class="layui-form-item layui-form-text" style="margin-top: 15px;">
+                    <label class="layui-form-label">肯定评价</label>
+                    <div class="layui-input-block">
+                        <textarea name="studentDp1" lay-verify="required" placeholder="" autocomplete="off"  class="layui-textarea"></textarea>
+                    </div>
+                </div>
                 <div class="layui-form-item layui-form-text">
-                    <textarea name="dpStudent" lay-verify="required" lay-reqtext="请填写学生学习情况点评" placeholder="从学生听课、带教材、记笔记、参与互动以及学习效果达成度情况进行评价。" autocomplete="off"  class="layui-textarea"></textarea>
+                    <label class="layui-form-label">不足与建议</label>
+                    <div class="layui-input-block">
+                        <textarea name="studentDp2" lay-verify="required" placeholder="" autocomplete="off"  class="layui-textarea"></textarea>
+                    </div>
                 </div>
             </fieldset>
 
             <fieldset class="layui-elem-field">
                 <legend>听课人对教室及设施的评价及改进建议</legend>
                 <div class="layui-form-item layui-form-text">
-                    <textarea name="dpClassroom" lay-verify="required" lay-reqtext="请填写听课人对教室及设施的评价及改进建议" placeholder="听课人对教室及设施的评价及改进建议（包括多媒体设备、教室卫生等状况）" autocomplete="off"  class="layui-textarea"></textarea>
+                    <textarea name="classroomDp" lay-verify="required" placeholder="若有，如实填写；若无，填写无。" autocomplete="off"  class="layui-textarea"></textarea>
                 </div>
             </fieldset>
 
             <div class="layui-btn-container" align="center">
-                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
             </div>
         </form>
     </div>
 
-    <!-- 响应评教页面'教学设计','教学效果'按钮 -->
+    <!--
+    响应评教页面'教学设计','教学效果'按钮
     <div class="layui-container" style="width: 90%; display: none;" id="relation_container">
         <table class="layui-table" lay-filter="relation_datatable" id="relation_datatable" ></table>
     </div>
+    -->
 
     <script src="../../../../js/layui/layui.js"></script>
     <script src="../../../../js/jquery-3.3.1.js"></script>
