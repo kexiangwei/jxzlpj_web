@@ -78,6 +78,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         ,height : 450
         ,url: requestUrl+'/thpj/getPageList.do'
         ,where:{
+            'pjType': '1',
             "userId":function () {
                 return $.cookie('userId');
             }
@@ -284,6 +285,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                             form.on('submit(toSubmitEidtForm)', function(data){
                                 //执行提交操作
                                 var formData = data.field;
+                                formData.pjType = 1;
                                 formData.templateCode = templateCode;
                                 formData.jsonString = JSON.stringify(formData);
                                 $.post(requestUrl+'/thpj/insert.do' ,formData ,function(result_data){
@@ -468,6 +470,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
                                 //执行提交操作
                                 var formData = data.field;
+                                formData.pjType = 1;
                                 formData.templateCode = templateCode;
                                 formData.jsonString = JSON.stringify(formData);
                                 $.post(requestUrl+'/thpj/update.do' ,formData ,function(result_data){
@@ -496,7 +499,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
             layer.confirm('请仔细核对评价信息，提交后不可修改，是否确定提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
                 //执行提交操作
-                $.post(requestUrl+'/thpj/submit.do' , {'code': rowData.pjCode}, function(result_data){
+                $.post(requestUrl+'/thpj/submit.do' , {'pjCode': rowData.pjCode}, function(result_data){
                     layer.msg(result_data.msg, { offset: '100px'}, function () {
                         if(result_data.code == 200){
                             datatable.reload();//重新加载表格数据
