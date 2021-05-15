@@ -100,8 +100,8 @@ layui.use(['layer','table','form'], function(){
                 id : guid()
                 ,title : '课程质量分析报告'
                 ,type : 1
-                ,area : [ '1100px', '550px' ]
-                ,offset : '25px'
+                ,area : [ '1100px', '500px' ]
+                ,offset : '50px'
                 ,content : $('#editFormContainer')
                 ,success: function(layero, index){
 
@@ -188,8 +188,8 @@ layui.use(['layer','table','form'], function(){
                         id : guid()
                         ,title : '课程质量分析报告'
                         ,type : 1
-                        ,area : [ '1100px', '550px' ]
-                        ,offset : '25px'
+                        ,area : [ '1100px', '500px' ]
+                        ,offset : '50px'
                         ,btn: ['关闭']
                         ,content : $('#editFormContainer')
                         ,success: function(layero, index){
