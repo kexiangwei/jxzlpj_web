@@ -5,9 +5,14 @@
     <title>教学效果-实验报告</title>
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <link rel="stylesheet" href="../../../../css/global.css">
+    <style>
+        .layui-table, .layui-table-view {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body class="layui-layout-body">
-    <div class="layui-tab" lay-filter="layTab">
+    <div class="layui-tab" style="margin: 0;" lay-filter="layTab">
         <ul class="layui-tab-title">
             <li class="layui-this" id="myself">信息列表</li>
             <li id="other">审核列表<span class="layui-badge"></span></li>
@@ -34,7 +39,7 @@
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                            <button class="layui-btn layui-btn-primary" data-type="reset" style="margin-left: 0;">重置</button>
                         </div>
                     </div>
                     <!-- 数据表格 -->
@@ -67,7 +72,7 @@
                         </div>
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                            <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                            <button class="layui-btn layui-btn-primary" data-type="reset" style="margin-left: 0;">重置</button>
                         </div>
                     </div>
                     <!-- 数据表格 -->
@@ -166,7 +171,7 @@
             </div>
 
             <div class="layui-btn-container" align="center">
-                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 100px; font-size: 18px; font-weight: 700;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
             </div>
         </form>

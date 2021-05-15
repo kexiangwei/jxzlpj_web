@@ -204,7 +204,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                             let obj = data[i].targetList[j];
                             html += '<td>'+obj.targetContent+'</td>\n' +
                                 '<td>'+obj.targetScore+'</td>\n' +
-                                '<td><input type="number" max="'+obj.targetScore+'" min="0" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                '<td><input type="text" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
                         }
                     }
                     html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
@@ -399,7 +399,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                                     let obj = data[i].targetList[j];
                                     html += '<td>\n'+obj.targetContent+'</td>\n' +
                                         '<td>'+obj.targetScore+'</td>\n' +
-                                        '<td><input type="number" max="'+obj.targetScore+'" min="0"  id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
+                                        '<td><input type="text"  id="'+obj.targetCode+'" name="'+obj.targetCode+'" score="'+obj.targetScore+'" required  lay-verify="required|score" class="layui-form-input2 score"></td></tr>';
                                 }
                             }
                             html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +

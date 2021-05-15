@@ -8,7 +8,7 @@ layui.use(['layer','table','form'], function(){
     var datatable = table.render({
         id : guid()
         ,elem : '#datatable'
-        ,height : 580
+        ,height : 500
         ,url: requestUrl+'/jxxg_kczlfxbg/getPageList.do'
         ,where:{
             "userId":function () {
@@ -34,12 +34,12 @@ layui.use(['layer','table','form'], function(){
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
-            ,{field: 'courseName', title: '课程名称', width:150, sort:true, event: 'courseName', templet: function (data) {
-                    if(data.isBg==1){ //如果填写报告打开查看按钮
-                        $('#datatable_tools').html('<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="dataInfo"><i class="layui-icon layui-icon-read"></i>查看信息</a>');
+            ,{field: 'courseName', title: '课程名称', width:180, sort:true, event: 'txbg', templet: function (data) {
+                    if(data.isTxbg == 1){ //如果填写报告打开查看按钮
+                        $('#datatable_toolbar').html('<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-table layui-btn-normal" lay-event="dataInfo"><i class="layui-icon layui-icon-read"></i>查看</a>');
                         return data.courseName;
                     } else {
-                        $('#datatable_tools').html('<a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-read"></i>查看信息</a>');
+                        $('#datatable_toolbar').html('<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-read"></i>查看</a>');
                         return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                     }
                 }
@@ -49,9 +49,9 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'zyName', title: '系（教研室）', width:150, sort:true}
             ,{field: 'xn', title:'学年', width:150, sort:true}
             ,{field: 'xq', title:'学期', width:150, sort:true}
-            ,{field: 'skJs', title:'授课教师', width:150, sort:true}
-            ,{field: 'skBj', title:'授课班级', width:150, sort:true}
-            ,{fixed: 'right', width:110, align:'center', toolbar: '#datatable_tools'}
+            ,{field: 'skjsAll', title:'授课教师', width:150, sort:true}
+            ,{field: 'skbjAll', title:'授课班级', width:150, sort:true}
+            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
         ]]
         ,page: {
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
@@ -67,6 +67,10 @@ layui.use(['layer','table','form'], function(){
     });
 
     //监听搜索框事件
+    $('.search .layui-btn').on('click', function(){
+        let type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
     let active = {
         search: function(){
             datatable.reload({
@@ -82,47 +86,13 @@ layui.use(['layer','table','form'], function(){
             $(".search input").val('');
         }
     };
-    $('.search .layui-btn').on('click', function(){
-        let type = $(this).data('type');
-        active[type] ? active[type].call(this) : '';
-    });
 
     //监听工具条
     table.on('tool(datatable)', function(obj){
         let row_data = obj.data;
-        if (obj.event === 'dataInfo') {
-            //根据编号加载报告信息
-            $.get(requestUrl+'/jxxg_kczlfxbg/getKczlfxbg.do',{"code":row_data.bgCode},function (result_data) {
-                if(result_data.code == 200){
-                    layer.open({
-                        id : guid()
-                        ,title : '课程质量分析报告'
-                        ,type : 1
-                        ,area : [ '1300px', '600px' ]
-                        ,offset : '50px'
-                        ,btn: ['关闭']
-                        ,content : $('#editFormContainer')
-                        ,success: function(layero, index){
-
-                            //初始化表单数据
-                            var data = result_data.data;
-                            $('#subTitle').html(data.courseName+'（'+data.courseCode+'）课程质量分析报告');
-                            form.val("editForm",data);
-                            $('#editFormContainer .layui-btn-container > button').css("display","none"); //把保存按钮隐藏掉
-
-                        }
-                        ,end:function () {
-                            window.location.reload();
-                        }
-                    });
-                } else {
-                    layer.msg("数据加载失败！", { offset: '100px'});
-                }
-            },'json');
-            
-        }  else if (obj.event === 'courseName') {
+        if (obj.event === 'txbg') {
             //
-            if(row_data.isBg==1){
+            if(row_data.isTxbg == 1){
                 return false;
             }
             //
@@ -130,8 +100,8 @@ layui.use(['layer','table','form'], function(){
                 id : guid()
                 ,title : '课程质量分析报告'
                 ,type : 1
-                ,area : [ '1300px', '600px' ]
-                ,offset : '50px'
+                ,area : [ '1100px', '550px' ]
+                ,offset : '25px'
                 ,content : $('#editFormContainer')
                 ,success: function(layero, index){
 
@@ -145,8 +115,10 @@ layui.use(['layer','table','form'], function(){
                         ,"zyName" : row_data.zyName
                         ,"xn" : row_data.xn
                         ,"xq" : row_data.xq
-                        ,"skJs" : row_data.skJs
-                        ,"skBj" : row_data.skBj
+                        ,"skjsAll" : row_data.skjsAll
+                        ,"skbjAll" : row_data.skbjAll
+                        ,'userId': $.cookie('userId')
+                        ,'userName': $.cookie('userName')
                     });
 
                     /**
@@ -182,12 +154,6 @@ layui.use(['layer','table','form'], function(){
                     //监听表单提交
                     form.on('submit(toSubmitEidtForm)', function(_form_data){
                         //
-                        _form_data.field.code = new Date().getTime();
-                        _form_data.field.courseCode = row_data.courseCode;
-                        _form_data.field.courseName = row_data.courseName;
-                        _form_data.field.userId = $.cookie('userId');
-                        _form_data.field.userName = $.cookie('userName');
-                        //
                         $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
                             layer.msg(_result_data.msg, {offset: '100px'},function () {
                                 if(_result_data.code == 200){
@@ -210,6 +176,42 @@ layui.use(['layer','table','form'], function(){
                     window.location.reload();
                 }
             });
+
+        } else if (obj.event === 'dataInfo') {
+
+            //根据编号加载报告信息
+            $.get(requestUrl+'/jxxg_kczlfxbg/getKczlfxbg.do',{
+                "code":row_data.bgCode
+            },function (result_data) {
+                if(result_data.code == 200){
+                    layer.open({
+                        id : guid()
+                        ,title : '课程质量分析报告'
+                        ,type : 1
+                        ,area : [ '1100px', '550px' ]
+                        ,offset : '25px'
+                        ,btn: ['关闭']
+                        ,content : $('#editFormContainer')
+                        ,success: function(layero, index){
+
+                            //初始化表单数据
+                            var data = result_data.data;
+                            $('#subTitle').html(data.courseName+'（'+data.courseCode+'）课程质量分析报告');
+                            form.val("editForm",data);
+                            $('#editFormContainer .layui-btn-container > button').css("display","none"); //把保存按钮隐藏掉
+                            //
+                            $('#editForm').append('<div class=form_overlay></div>'); //禁用form表单中的所有表单元素
+                        }
+                        ,end:function () {
+                            window.location.reload(); //隐藏的按钮和添加的遮罩层通过重载页面复原
+                        }
+                    });
+                } else {
+                    layer.msg("数据加载失败！", { offset: '100px'});
+                }
+            },'json');
+            
         }
     });
+
 });

@@ -5,6 +5,20 @@
     <title>教学效果-课程质量分析报告</title>
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <style type="text/css">
+
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+
+        .layui-btn-table {
+            width: 80px;
+            height: 26px;
+            line-height: 26px;
+            padding: 0 5px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
         .layui-form-label {
             width: 120px;
         }
@@ -19,9 +33,20 @@
         }
         .layui-form-input2 {
             width: 100%;
-            height: 20px;
+            height: 30px;
+            line-height: 30px;
             border-width:0px 0px 0px 0px;
             text-align: center;
+        }
+
+        /*禁用form表单中的所有表单元素*/
+        .form_overlay {
+            position:absolute;
+            top:0;
+            width:100%;
+            height:100%;
+            background-color:transparent;
+            z-index:1;
         }
     </style>
 </head>
@@ -37,15 +62,13 @@
                 </div>
                 <div class="layui-inline">
                     <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                    <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                    <button class="layui-btn layui-btn-primary" data-type="reset" style="margin-left: 0;">重置</button>
                 </div>
             </div>
         </div>
         <!-- 数据表格 -->
         <table class="layui-table" lay-filter="datatable" id="datatable" >
-            <script type="text/html" id="datatable_tools">
-
-            </script>
+            <script type="text/html" id="datatable_toolbar"></script>
         </table>
     </div>
 
@@ -62,6 +85,12 @@
         <h2 id="subTitle" style=" font-weight: bold" align="center"></h2>
 
         <form class="layui-form" style="margin-top: 20px;" lay-filter="editForm"  id="editForm">
+
+            <input type="hidden" name="code">
+            <input type="hidden" name="courseCode">
+            <input type="hidden" name="courseName">
+            <input type="hidden" name="userId">
+            <input type="hidden" name="userName">
 
             <div class="layui-form-item">
                 <label class="layui-form-label">开课学院（部）：</label>
@@ -96,13 +125,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">授课教师：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="skJs" required  lay-verify="required" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
+                    <input type="text" name="skjsAll" required  lay-verify="required" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">授课班级：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="skBj" required  lay-verify="required" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
+                    <input type="text" name="skbjAll" required  lay-verify="required" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
@@ -570,7 +599,7 @@
             </fieldset>
 
             <div class="layui-btn-container" align="center">
-                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 100px; font-size: 18px; font-weight: 700;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
             </div>
         </form>
     </div>

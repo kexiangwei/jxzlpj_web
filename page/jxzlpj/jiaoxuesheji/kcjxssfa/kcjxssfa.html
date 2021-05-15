@@ -5,6 +5,16 @@
     <title>教学设计-课程教学实施方案</title>
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <style type="text/css">
+        .layui-table, .layui-table-view {
+            margin: 0;
+        }
+
+        .myself_search .layui-form-item {
+            margin-bottom: 5px;
+            clear: both;
+            *zoom: 1;
+        }
+
         .layui-form-label {
             width: 100px;
         }
@@ -22,7 +32,7 @@
                 </div>
                 <div class="layui-inline">
                     <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                    <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                    <button class="layui-btn layui-btn-primary" data-type="reset" style="margin-left: 0;">重置</button>
                 </div>
             </div>
         </div>
@@ -182,7 +192,7 @@
             </fieldset>
 
             <div class="layui-btn-container" align="center">
-                <button type="button" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 100px; font-size: 18px; font-weight: 700;" lay-submit="" lay-filter="toSubmitEidtForm">保存</button>
                 <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
             </div>
         </form>

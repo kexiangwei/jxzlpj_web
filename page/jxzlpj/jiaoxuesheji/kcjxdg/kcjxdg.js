@@ -24,7 +24,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 500
+                    ,height : 460
                     ,id: "myself_table_id"
                     ,url: requestUrl+'/jxsj_kcjxdg/getPageList.do'
                     ,where:{
@@ -223,7 +223,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             ,content : $('#editForm_container')
                             ,success: function(layero, index){
                                 //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
-                                let cancelBtn = $('<button class="layui-btn layui-btn-primary">取消</button>');
+                                let cancelBtn = $('<button class="layui-btn layui-btn-radius layui-btn-primary" style="width: 100px; font-size: 18px; font-weight: 700;">取消</button>');
                                 $("#editForm .layui-btn-container").append(cancelBtn);
                                 cancelBtn.click(function (event) {
                                     layer.close(index);
@@ -276,7 +276,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
-                    ,height : 500
+                    ,height : 460
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jxsj_kcjxdg/getPageList.do'
                     ,where:{
