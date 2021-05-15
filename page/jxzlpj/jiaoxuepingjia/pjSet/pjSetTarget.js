@@ -25,8 +25,8 @@ layui.use(['layer','element','table','form'], function(){
         ,cols : [[ //表头
             {type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'targetCode', title: '编号', width:120}
-            ,{field: 'targetType', title: '类型', width:150, sort: true}
             ,{field: 'targetName', title: '名称', width:150, sort: true}
+            ,{field: 'targetType', title: '类型', width:150, sort: true}
             ,{field: 'targetContent', title: '内容', width:470, sort: true}
             ,{field: 'targetScore', title: '分值', width:150, sort: true, templet: function(data){ // 函数返回一个参数 data，包含接口返回的所有字段和数据
                     let html = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
@@ -55,7 +55,7 @@ layui.use(['layer','element','table','form'], function(){
                             title : '教学评价-评教设置-新增指标'
                             ,type : 1
                             ,area : [ '700px', '450px' ]
-                            ,offset : '100px'
+                            ,offset : '75px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#target_editForm_container')
                             ,success: function(layero, index){
@@ -126,7 +126,7 @@ layui.use(['layer','element','table','form'], function(){
                         title : '教学评价-评教设置-修改指标'
                         ,type : 1
                         ,area : [ '700px', '450px' ]
-                        ,offset : '100px'
+                        ,offset : '75px'
                         ,shadeClose : true //点击遮罩关闭
                         ,content : $('#target_editForm_container')
                         ,success: function(layero, index){

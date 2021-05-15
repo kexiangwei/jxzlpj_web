@@ -8,9 +8,12 @@ layui.use(['layer','element','table'], function(){
     var datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 580
-        ,url: requestUrl+'/thpj/getCkpjPageList.do'
+        ,height : 525
+        ,url: requestUrl+'/thpj/ckpj.do'
         ,where:{
+            "accountType":function () {
+                return  $.cookie('accountType');
+            },
             "userId":function () {
                 return  $.cookie('userId');
             }
@@ -33,29 +36,16 @@ layui.use(['layer','element','table'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            // ,{field:'courseCode', title:'课程编号', width:150, sort:true}
-            ,{field:'courseName', title:'课程名称', width:200, sort:true, templet: function (data) {
-                    let html = '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看评教</a>';
-                    if(data.isPj == 2){
-                        html = '<a class="layui-btn layui-btn-disabled layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看评教</a>';
-                    }
-                    $('#datatable_bar').html(html);
-                    return data.courseName;
-             }}
-            ,{field:'courseAttr', title:'课程性质', width:150, sort:true}
-            ,{field:'xs', title:'学时', width:150, sort:true}
-            ,{field:'xf', title:'学分', width:150, sort:true}
-            ,{field:'xn', title:'学年', width:150, sort:true}
-            ,{field:'xq', title:'学期', width:150, sort:true}
-            ,{field:'xyName', title:'学院', width:150, sort:true}
-            ,{field:'zyName', title:'专业', width:150, sort:true}
-            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_bar'}
+            ,{field:'userId', title:'工号', width:150, sort:true}
+            ,{field:'userName', title:'姓名', width:150, sort:true}
+            ,{field:'pjNum', title:'评教次数', width:150, sort:true}
+            ,{field:'bpNum', title:'被评次数', width:150, sort:true}
         ]]
         ,even: true //隔行背景
-        ,limit: 10
+        ,limit: 15
         ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']//自定义分页布局
-            ,limits: [10,20,50,100]
+            ,limits: [15,50,100]
             ,first: '首页' //不显示首页
             ,last: '尾页' //不显示尾页
         }
@@ -64,11 +54,16 @@ layui.use(['layer','element','table'], function(){
     });
 
     //监听搜索框事件
+    $('.search .layui-btn').on('click', function(){
+        let type = $(this).data('type');
+        active[type] ? active[type].call(this) : '';
+    });
     let active = {
         search: function(){
             datatable.reload({
                 where: {
-                    'courseName': $(".search input[ name='courseName']").val()
+                    'skjsCode': $(".search input[ name='skjsCode']").val(),
+                    'skjsName': $(".search input[ name='skjsName']").val()
                 }
                 ,page: {
                     curr: 1 //重新从第 1 页开始
@@ -79,61 +74,4 @@ layui.use(['layer','element','table'], function(){
             $(".search input").val('');
         }
     };
-    $('.search .layui-btn').on('click', function(){
-        let type = $(this).data('type');
-        active[type] ? active[type].call(this) : '';
-    });
-
-    //监听工具条
-    table.on('tool(datatable)', function(obj){
-        let row_data = obj.data;
-        if (obj.event === 'detail') {
-            if(row_data.isPj == 2){ //1是2否（即未评价，查看按钮不可点击）
-                return;
-            }
-            //
-            layer.open({
-                id: guid() //设定一个id，防止重复弹出
-                ,title : '查看评教'
-                ,type : 1
-                ,area : [ '1100px', '500px' ]
-                ,offset : '50px' //只定义top坐标，水平保持居中
-                ,shadeClose : true //点击遮罩关闭
-                ,btn: ['关闭']
-                ,content : $('#view_container')
-                ,success: function(layero, index){
-                    $.get(requestUrl+'/thpj/getCkpjDetail.do'
-                        ,{
-                            'userId': $.cookie('userId')
-                            ,'courseCode': row_data.courseCode
-                            ,'templateCode': row_data.templateCode
-
-                        }
-                        ,function (result_data) {
-                            if(result_data.code === 200){
-                                let data = result_data.data;
-                                let html = ''
-                                    ,totalScore=0;
-                                for (let i = 0; i < data.length; i++) {
-                                    html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
-                                    for (let j = 0; j < data[i].num; j++) {
-                                        let obj = data[i].targetList[j];
-                                        html += '<td>' +parseInt(j+1)+'．'+obj.targetContent+'</td>\n' +
-                                            '<td>'+obj.targetScore+'</td>\n' +
-                                            '<td>'+obj.avgScore+'</td>' +
-                                            '</tr>';
-                                        //累加总平均分
-                                        totalScore+=obj.avgScore;
-                                    }
-                                }
-                                html += '<tr><td colspan="3" style="text-align: right">合计</td>' +
-                                    '<td style="text-align: center">'+totalScore+'</td></tr>';
-                                $('#target').html(html);
-                            }
-                        },'json');
-                }
-            });
-        }
-    });
-
 });

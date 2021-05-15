@@ -9,41 +9,27 @@
     <div class="layui-fluid">
         <!-- 查询参数 -->
         <div class="layui-form search">
-            课程名称：
             <div class="layui-inline">
-                <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+                <label class="layui-form-label">工号：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="skjsCode" placeholder="">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="skjsName" placeholder="支持关键字查询">
+                </div>
             </div>
             <div class="layui-inline">
                 <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
-                <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
+                <button class="layui-btn layui-btn-primary" data-type="reset" style="margin-left: 0;">重置</button>
             </div>
         </div>
         <!-- 数据表格 -->
         <table class="layui-table" id="datatable" lay-filter="datatable">
-            <script type="text/html" id="datatable_bar"></script>
+            <!--<script type="text/html" id="datatable_toolbar"></script>-->
         </table>
-    </div>
-
-    <div class="layui-container" style="width: 90%; display: none" id="view_container">
-
-            <table class="layui-table">
-                <colgroup>
-                    <col width="180">
-                    <col>
-                    <col width="80">
-                    <col width="80">
-                    <col>
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>评价指标</th>
-                    <th>指标内容</th>
-                    <th>分值</th>
-                    <th>平均分</th>
-                </tr>
-                </thead>
-                <tbody id="target"></tbody>
-            </table>
     </div>
 
     <script src="../../../../js/layui/layui.js"></script>
