@@ -6,6 +6,15 @@
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
     <style type="text/css">
 
+        .search .layui-form-label {
+            width: 80px;
+            padding: 9px 5px;
+        }
+
+        .search .layui-input {
+             width: 100%;
+        }
+
         .layui-table, .layui-table-view {
             margin: 0;
         }
@@ -56,9 +65,31 @@
         <!-- 查询参数 -->
         <div class="layui-form search">
             <div class="layui-form-item">
-                课程名称：
                 <div class="layui-inline">
-                    <input type="text" name="courseName" placeholder="支持关键字查询" class="layui-input">
+                    <label class="layui-form-label">课程名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="courseName" placeholder="支持关键字查询">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">报告状态：</label>
+                    <div class="layui-input-inline">
+                        <select id="isTxbg" name="isTxbg">
+                            <option value="">请选择</option>
+                            <option value="1">已填写</option>
+                            <option value="2">未填写</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">提交状态：</label>
+                    <div class="layui-input-inline">
+                        <select id="isSubmit" name="isSubmit">
+                            <option value="">请选择</option>
+                            <option value="1">已提交</option>
+                            <option value="2">未提交</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="layui-inline">
                     <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
@@ -95,31 +126,31 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">开课学院（部）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xyName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="text" name="xyName" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">系（教研室）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="zyName" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="text" name="zyName" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">学年：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xn" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="text" name="xn" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">学期：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xq" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="text" name="xq" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">课程性质：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="courseAttr" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                    <input type="text" name="courseAttr" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">

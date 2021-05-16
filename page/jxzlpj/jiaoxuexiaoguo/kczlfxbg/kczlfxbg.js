@@ -34,13 +34,25 @@ layui.use(['layer','table','form'], function(){
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
             // ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
-            ,{field: 'courseName', title: '课程名称', width:180, sort:true, event: 'txbg', templet: function (data) {
-                    if(data.isTxbg == 1){ //如果填写报告打开查看按钮
-                        $('#datatable_toolbar').html('<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-table layui-btn-normal" lay-event="dataInfo"><i class="layui-icon layui-icon-read"></i>查看</a>');
-                        return data.courseName;
-                    } else {
-                        $('#datatable_toolbar').html('<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-read"></i>查看</a>');
+            ,{field: 'courseName', title: '课程名称', width:180, sort:true, event: 'insert', templet: function (data) {
+                    let html = '';
+                    if(data.isTxbg == 2){
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-read"></i>查看</a>' +
+                            '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-edit"></i>编辑</a>' +
+                            '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        $('#datatable_toolbar').html(html);
                         return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
+                    } else {
+                        html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                        if(data.isSubmit == 1){
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
+                                '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        } else {
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
+                                '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-primary" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        }
+                        $('#datatable_toolbar').html(html);
+                        return data.courseName;
                     }
                 }
             }
@@ -51,7 +63,7 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'xq', title:'学期', width:150, sort:true}
             ,{field: 'skjsAll', title:'授课教师', width:150, sort:true}
             ,{field: 'skbjAll', title:'授课班级', width:150, sort:true}
-            ,{fixed: 'right', width:120, align:'center', toolbar: '#datatable_toolbar'}
+            ,{fixed: 'right', width:290, align:'center', toolbar: '#datatable_toolbar'}
         ]]
         ,page: {
             layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
@@ -75,7 +87,9 @@ layui.use(['layer','table','form'], function(){
         search: function(){
             datatable.reload({
                 where: {
-                    'courseName': $(".search input[name='courseName']").val()
+                    'courseName': $(".search input[name='courseName']").val(),
+                    'isTxbg': $("#isTxbg option:selected").val(),
+                    'isSubmit': $("#isSubmit option:selected").val()
                 }
                 ,page: {
                     curr: 1 //重新从第 1 页开始
@@ -84,13 +98,16 @@ layui.use(['layer','table','form'], function(){
         }
         ,reset: function () {
             $(".search input").val('');
+            $("#isTxbg").val(""); //清除选中状态
+            $("#isSubmit").val(""); //清除选中状态
+            form.render("select");
         }
     };
 
     //监听工具条
     table.on('tool(datatable)', function(obj){
         let row_data = obj.data;
-        if (obj.event === 'txbg') {
+        if (obj.event === 'insert') {
             //
             if(row_data.isTxbg == 1){
                 return false;
@@ -157,7 +174,7 @@ layui.use(['layer','table','form'], function(){
                         $.post(requestUrl+'/jxxg_kczlfxbg/insert.do', _form_data.field, function (_result_data) {
                             layer.msg(_result_data.msg, {offset: '100px'},function () {
                                 if(_result_data.code == 200){
-                                    datatable.reload();//重新加载表格数据
+                                    // datatable.reload();//重新加载表格数据
                                 }
                                 layer.close(index);
                             });
@@ -177,7 +194,7 @@ layui.use(['layer','table','form'], function(){
                 }
             });
 
-        } else if (obj.event === 'dataInfo') {
+        } else if (obj.event === 'detail') {
 
             //根据编号加载报告信息
             $.get(requestUrl+'/jxxg_kczlfxbg/getKczlfxbg.do',{
@@ -211,6 +228,104 @@ layui.use(['layer','table','form'], function(){
                 }
             },'json');
             
+        } else if (obj.event === 'update') {
+
+            //根据编号加载报告信息
+            $.get(requestUrl+'/jxxg_kczlfxbg/getKczlfxbg.do',{
+                "code": row_data.bgCode
+            },function (result_data) {
+                if(result_data.code == 200){
+                    layer.open({
+                        id : guid()
+                        ,title : '课程质量分析报告'
+                        ,type : 1
+                        ,area : [ '1100px', '500px' ]
+                        ,offset : '50px'
+                        // ,btn: ['关闭']
+                        ,content : $('#editFormContainer')
+                        ,success: function(layero, index){
+
+                            //所有编辑页面，均增加取消按钮，不保存当前修改的内容。
+                            let cancelBtn = $('<button class="layui-btn layui-btn-radius layui-btn-primary" style="width: 100px; font-size: 18px; font-weight: 700;">取消</button>');
+                            $("#editForm .layui-btn-container").append(cancelBtn);
+                            cancelBtn.click(function (event) {
+                                layer.close(index);
+                            });
+
+                            //初始化表单数据
+                            var data = result_data.data;
+                            $('#subTitle').html(data.courseName+'（'+data.courseCode+'）课程质量分析报告');
+                            form.val("editForm",data);
+
+                            /**
+                             * 验证表单数据
+                             */
+                            form.verify({
+                                score: function(value,item){ //value：表单的值、item：表单的DOM对象
+                                    let defaultScore = $(item).parent().prev().text();
+                                    if(parseInt(defaultScore) < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                        return '超出预设分值范围！';
+                                    }
+                                },
+                                totalScore: function(value,item){ //value：表单的值、item：表单的DOM对象
+                                    if(100 < value || value < 0){ //如果输入值大于预设分值或者小于0，给出提示
+                                        return '超出预设分值范围！';
+                                    }
+                                }
+                            });
+
+                            //评分合计
+                            let $inputs = $('.score');
+                            $inputs.keyup(function() {
+                                let totalScore = 0;
+                                $inputs.each(function(){
+                                    let value = parseInt($(this).val());
+                                    if(value.toString() != "NaN"){
+                                        totalScore += value;
+                                    }
+                                });
+                                $("input[name='c1']").val(totalScore);
+                            });
+
+                            //监听表单提交
+                            form.on('submit(toSubmitEidtForm)', function(_form_data){
+                                //
+                                $.post(requestUrl+'/jxxg_kczlfxbg/update.do', _form_data.field, function (_result_data) {
+                                    layer.msg(_result_data.msg, {offset: '100px'},function () {
+                                        if(_result_data.code == 200){
+                                            // datatable.reload();//重新加载表格数据
+                                        }
+                                        layer.close(index);
+                                    });
+                                },'json');
+                                /*layer.alert(JSON.stringify(_form_data.field));
+                                return false;*/
+                            });
+
+                        }
+                        ,end:function () {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    layer.msg("数据加载失败！", { offset: '100px'});
+                }
+            },'json');
+
+        } else if (obj.event === 'submit') {
+
+            layer.confirm('提交后不可修改，是否确定提交？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
+                //执行提交操作
+                $.post(requestUrl+'/jxxg_kczlfxbg/submit.do' , {'code': row_data.bgCode}, function(result_data){
+                    layer.msg(result_data.msg, { offset: '100px'}, function () {
+                        if(result_data.code == 200){
+                            datatable.reload();//重新加载表格数据
+                        }
+                        layer.closeAll();
+                    });
+                },'json');
+            });
+
         }
     });
 

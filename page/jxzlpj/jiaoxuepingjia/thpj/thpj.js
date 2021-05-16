@@ -101,7 +101,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field:'courseName', title:'课程名称', width:180, sort:true, event: 'pj', templet: function (data) {
+            ,{field:'courseName', title:'课程名称', width:180, sort:true, event: 'insert', templet: function (data) {
                     let html = '';
                     if(data.isPj == 2){
                         html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-read"></i>查看</a>' +
@@ -188,7 +188,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
     //监听工具条
     table.on('tool(datatable)', function(obj){
         let rowData = obj.data;
-        if (obj.event === 'pj') {
+        if (obj.event === 'insert') {
             if(rowData.isPj == 1){
                 return false;
             }
