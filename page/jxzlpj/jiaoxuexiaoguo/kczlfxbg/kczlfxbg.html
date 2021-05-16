@@ -57,6 +57,19 @@
             background-color:transparent;
             z-index:1;
         }
+
+        #a1 textarea,#a2 textarea {
+            min-height: 50px;
+        }
+
+        #a1_btn:hover {
+            background-color: #1E9FFF;
+            color: #fff;
+        }
+        #a2_btn:hover {
+            background-color: #1E9FFF;
+            color: #fff;
+        }
     </style>
 </head>
 <body class="layui-layout-body">
@@ -126,43 +139,43 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">开课学院（部）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xyName" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="xyName" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">系（教研室）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="zyName" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="zyName" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">学年：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xn" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="xn" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">学期：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xq" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="xq" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">课程性质：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="courseAttr" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="courseAttr" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">授课教师：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="skjsAll" required  lay-verify="required" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
+                    <input type="text" name="skjsAll" placeholder="填写该课程的所有讲授教师" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">授课班级：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="skbjAll" required  lay-verify="required" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
+                    <input type="text" name="skbjAll" placeholder="公共选修课无需填写授课班级" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
@@ -181,12 +194,18 @@
                                 <th>课程目标</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="4">此处需求待议</td>
-                            </tr>
+                        <tbody id="a1">
+                        <!--<tr><td>1</td>
+                            <td><textarea name="a1_1_1" lay-verify="required" class="layui-textarea"></textarea></td>
+                            <td><textarea name="a1_1_2" lay-verify="required" class="layui-textarea"></textarea></td>
+                            <td><textarea name="a1_1_3" lay-verify="required" class="layui-textarea"></textarea></td></tr>
+                        <tr><td>2</td>
+                            <td><textarea name="a1_2_1" class="layui-textarea"></textarea></td>
+                            <td><textarea name="a1_2_2" class="layui-textarea"></textarea></td>
+                            <td><textarea name="a1_2_3" class="layui-textarea"></textarea></td></tr>-->
                         </tbody>
                     </table>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" style="margin: 5px 0;" id="a1_btn">继续添加</button>
                 </div>
             </fieldset>
             <fieldset class="layui-elem-field">
@@ -210,12 +229,21 @@
                                 <th>不合格</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="10">此处需求待议</td>
-                            </tr>
+                        <tbody id="a2">
+                            <!--<tr><td>1</td>
+                                <td><textarea name="a2_1_1" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_2" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_3" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_4_1" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_4_2" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_4_3" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_4_4" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_4_5" lay-verify="required" class="layui-textarea"></textarea></td>
+                                <td><textarea name="a2_1_5" lay-verify="required" class="layui-textarea"></textarea></td>
+                            </tr>-->
                         </tbody>
                     </table>
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-primary" style="margin: 5px 0;" id="a2_btn">继续添加</button>
                 </div>
             </fieldset>
 
@@ -288,29 +316,29 @@
                         </tr>
                         <tr>
                             <td>人数</td>
-                            <td><input type="text" name="b1_1_6_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_6_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_6_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_6_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_6_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_6_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_6_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_6_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>所占比例</td>
-                            <td><input type="text" name="b1_1_7_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_7_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_7_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_7_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_7_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_7_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_1_7_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_1_7_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>平均分</td>
-                            <td colspan="3"><input type="text" name="b1_1_8" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_1_8" autocomplete="off" class="layui-form-input2"></td>
                             <td>标准差</td>
-                            <td colspan="3"><input type="text" name="b1_1_9" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_1_9" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>考核结果分析</td>
@@ -335,29 +363,29 @@
                         </tr>
                         <tr>
                             <td>人数</td>
-                            <td><input type="text" name="b1_2_1_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_1_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_1_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_1_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_1_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_1_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_1_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_1_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>所占比例</td>
-                            <td><input type="text" name="b1_2_2_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_2_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_2_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_2_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_2_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_2_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_2_2_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_2_2_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>平均分</td>
-                            <td colspan="3"><input type="text" name="b1_2_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_2_3" autocomplete="off" class="layui-form-input2"></td>
                             <td>标准差</td>
-                            <td colspan="3"><input type="text" name="b1_2_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_2_4" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>考核结果分析</td>
@@ -380,29 +408,29 @@
                         </tr>
                         <tr>
                             <td>人数</td>
-                            <td><input type="text" name="b1_3_1_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_1_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_1_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_1_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_1_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_1_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_1_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_1_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>所占比例</td>
-                            <td><input type="text" name="b1_3_2_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_2_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_2_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_2_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_2_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_2_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_3_2_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_3_2_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>平均分</td>
-                            <td colspan="3"><input type="text" name="b1_3_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_3_3" autocomplete="off" class="layui-form-input2"></td>
                             <td>标准差</td>
-                            <td colspan="3"><input type="text" name="b1_3_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_3_4" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>考核结果分析</td>
@@ -429,29 +457,29 @@
                         </tr>
                         <tr>
                             <td>人数</td>
-                            <td><input type="text" name="b1_4_1_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_1_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_1_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_1_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_1_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_1_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_1_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_1_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>所占比例</td>
-                            <td><input type="text" name="b1_4_2_1" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_2_2" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_2_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_2_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_2_5" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_2_6" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
-                            <td><input type="text" name="b1_4_2_7" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_1" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_2" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_3" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_4" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_5" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_6" autocomplete="off" class="layui-form-input2"></td>
+                            <td><input type="text" name="b1_4_2_7" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>平均分</td>
-                            <td colspan="3"><input type="text" name="b1_4_3" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_4_3" autocomplete="off" class="layui-form-input2"></td>
                             <td>标准差</td>
-                            <td colspan="3"><input type="text" name="b1_4_4" required lay-verify="required" autocomplete="off" class="layui-form-input2"></td>
+                            <td colspan="3"><input type="text" name="b1_4_4" autocomplete="off" class="layui-form-input2"></td>
                         </tr>
                         <tr>
                             <td>考核结果分析</td>
@@ -545,7 +573,7 @@
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
                 <legend>三、教师教学实施计划执行与效果（自评）</legend>
             </fieldset>
-            <fieldset class="layui-elem-field">
+            <!--<fieldset class="layui-elem-field">
                 <legend>（一）自我评分</legend>
                 <table class="layui-table">
                     <thead>
@@ -611,7 +639,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </fieldset>
+            </fieldset>-->
             <fieldset class="layui-elem-field">
                 <legend>（二）创新与特色</legend>
                 <textarea name="c2" placeholder="总结在课程教学实施方案执行过程中的创新、特色。" class="layui-textarea"></textarea>
@@ -640,5 +668,43 @@
     <script src="../../../../js/jquery.cookie.js"></script>
     <script src="../../../../js/global.js"></script>
     <script src="kczlfxbg.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $("#a1_btn").click(function( event ) {
+
+                var len = $('#a1').children().length; //获取子元素的个数
+                len++;
+                var html = '<tr><td>'+len+'</td>\n' +
+                    '            <td><textarea name="'+("a1_"+len+"_1")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '            <td><textarea name="'+("a1_"+len+"_2")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '            <td><textarea name="'+("a1_"+len+"_3")+'" lay-verify="required" class="layui-textarea"></textarea></td>' +
+                    '       <td><i class="layui-icon layui-icon-delete"></i></td></tr>';
+                $('#a1').append(html);
+            });
+
+            $("#a2_btn").click(function( event ) {
+
+                var len = $('#a2').children().length; //获取子元素的个数
+                len++;
+                var html = '<tr><td>'+len+'</td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_1")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_2")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_3")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_4_1")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_4_2")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_4_3")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_4_4")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_4_5")+'" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="'+("a2_"+len+"_5")+'" lay-verify="required" class="layui-textarea"></textarea></td>' +
+                    '<td><i class="layui-icon layui-icon-delete"></i></td></tr>';
+                $('#a2').append(html);
+            });
+
+            $(".layui-icon-delete").parent().on("click", function(){
+                alert($(this).parent().html());
+            });
+        });
+    </script>
 </body>
 </html>

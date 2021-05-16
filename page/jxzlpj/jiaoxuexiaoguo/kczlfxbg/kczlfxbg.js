@@ -111,6 +111,24 @@ layui.use(['layer','table','form'], function(){
             //
             if(row_data.isTxbg == 1){
                 return false;
+            } else {
+                $('#a1').html( '<tr><td>1</td>\n' +
+                    '<td><textarea name="a1_1_1" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="a1_1_2" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><textarea name="a1_1_3" lay-verify="required" class="layui-textarea"></textarea></td>' +
+                    '<td><i class="layui-icon layui-icon-delete"></i></td></tr>');
+
+                $('#a2').html('<tr><td>1</td>\n' +
+                    '\t<td><textarea name="a2_1_1" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_2" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_3" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_4_1" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_4_2" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_4_3" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_4_4" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_4_5" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '\t<td><textarea name="a2_1_5" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
+                    '<td><i class="layui-icon layui-icon-delete"></i></td></tr>');
             }
             //
             layer.open({
@@ -119,6 +137,7 @@ layui.use(['layer','table','form'], function(){
                 ,type : 1
                 ,area : [ '1100px', '500px' ]
                 ,offset : '50px'
+                ,maxmin: true
                 ,content : $('#editFormContainer')
                 ,success: function(layero, index){
 
@@ -212,9 +231,49 @@ layui.use(['layer','table','form'], function(){
                         ,success: function(layero, index){
 
                             //初始化表单数据
-                            var data = result_data.data;
-                            $('#subTitle').html(data.courseName+'（'+data.courseCode+'）课程质量分析报告');
-                            form.val("editForm",data);
+                            var bg = result_data.data.bg;
+                            $('#subTitle').html(bg.courseName+'（'+bg.courseCode+'）课程质量分析报告');
+                            form.val("editForm",bg);
+                            //
+                            var bgA1List = result_data.data.bgA1List;
+                            if(bgA1List.length > 0){
+                                $.each(bgA1List,function (idx,obj) {
+                                    var len = parseInt(idx+1);
+                                    var html = '<tr><td>'+len+'</td>\n' +
+                                        '            <td><textarea name="'+("a1_"+len+"_1")+'" lay-verify="required" class="layui-textarea">'+obj.A1_1+'</textarea></td>\n' +
+                                        '            <td><textarea name="'+("a1_"+len+"_2")+'" lay-verify="required" class="layui-textarea">'+obj.A1_2+'</textarea></td>\n' +
+                                        '            <td><textarea name="'+("a1_"+len+"_3")+'" lay-verify="required" class="layui-textarea">'+obj.A1_3+'</textarea></td>' +
+                                        '       </tr>';
+                                    $('#a1').append(html);
+                                });
+                            } else {
+                                $('#a1').append('<tr><td colspan="4">无数据</td></tr>');
+                            }
+
+                            var bgA2List = result_data.data.bgA2List;
+                            if(bgA2List.length > 0){
+                                $.each(bgA2List,function (idx,obj) {
+                                    var len = parseInt(idx+1);
+                                    var html = '<tr><td>'+len+'</td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_1")+'" lay-verify="required" class="layui-textarea">'+obj.A2_1+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_2")+'" lay-verify="required" class="layui-textarea">'+obj.A2_2+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_3")+'" lay-verify="required" class="layui-textarea">'+obj.A2_3+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_4_1")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_1+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_4_2")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_2+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_4_3")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_3+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_4_4")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_4+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_4_5")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_5+'</textarea></td>\n' +
+                                        '<td><textarea name="'+("a2_"+len+"_5")+'" lay-verify="required" class="layui-textarea">'+obj.A2_5+'</textarea></td>' +
+                                        '</tr>';
+                                    $('#a2').append(html);
+                                });
+                            } else {
+                                $('#a2').append('<tr><td colspan="10">无数据</td></tr>');
+                            }
+
+                            //
+                            $('#a1_btn').css("display","none");
+                            $('#a2_btn').css("display","none");
                             $('#editFormContainer .layui-btn-container > button').css("display","none"); //把保存按钮隐藏掉
                             //
                             $('#editForm').append('<div class=form_overlay></div>'); //禁用form表单中的所有表单元素
@@ -253,9 +312,36 @@ layui.use(['layer','table','form'], function(){
                             });
 
                             //初始化表单数据
-                            var data = result_data.data;
-                            $('#subTitle').html(data.courseName+'（'+data.courseCode+'）课程质量分析报告');
-                            form.val("editForm",data);
+                            var bg = result_data.data.bg;
+                            $('#subTitle').html(bg.courseName+'（'+bg.courseCode+'）课程质量分析报告');
+                            form.val("editForm",bg);
+                            //
+                            var bgA1List = result_data.data.bgA1List;
+                            $.each(bgA1List,function (idx,obj) {
+                                var len = parseInt(idx+1);
+                                var html = '<tr><td>'+len+'</td>\n' +
+                                    '            <td><textarea name="'+("a1_"+len+"_1")+'" lay-verify="required" class="layui-textarea">'+obj.A1_1+'</textarea></td>\n' +
+                                    '            <td><textarea name="'+("a1_"+len+"_2")+'" lay-verify="required" class="layui-textarea">'+obj.A1_2+'</textarea></td>\n' +
+                                    '            <td><textarea name="'+("a1_"+len+"_3")+'" lay-verify="required" class="layui-textarea">'+obj.A1_3+'</textarea></td>' +
+                                    '       <td><i class="layui-icon layui-icon-delete"></i></td></tr>';
+                                $('#a1').append(html);
+                            });
+                            var bgA2List = result_data.data.bgA2List;
+                            $.each(bgA2List,function (idx,obj) {
+                                var len = parseInt(idx+1);
+                                var html = '<tr><td>'+len+'</td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_1")+'" lay-verify="required" class="layui-textarea">'+obj.A2_1+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_2")+'" lay-verify="required" class="layui-textarea">'+obj.A2_2+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_3")+'" lay-verify="required" class="layui-textarea">'+obj.A2_3+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_4_1")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_1+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_4_2")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_2+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_4_3")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_3+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_4_4")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_4+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_4_5")+'" lay-verify="required" class="layui-textarea">'+obj.A2_4_5+'</textarea></td>\n' +
+                                    '<td><textarea name="'+("a2_"+len+"_5")+'" lay-verify="required" class="layui-textarea">'+obj.A2_5+'</textarea></td>' +
+                                    '<td><i class="layui-icon layui-icon-delete"></i></td></tr>';
+                                $('#a2').append(html);
+                            });
 
                             /**
                              * 验证表单数据
