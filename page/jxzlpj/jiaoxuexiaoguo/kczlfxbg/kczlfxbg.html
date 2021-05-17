@@ -66,9 +66,19 @@
             background-color: #1E9FFF;
             color: #fff;
         }
+
         #a2_btn:hover {
             background-color: #1E9FFF;
             color: #fff;
+        }
+
+        .layui-icon-delete {
+            font-size: 22px;
+        }
+
+        .layui-icon-delete:hover {
+            color: #f00;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -139,13 +149,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">开课学院（部）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="xyName" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="xyName" placeholder="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">系（教研室）：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="zyName" placeholder="" autocomplete="off" class="layui-input" readonly style="cursor: not-allowed">
+                    <input type="text" name="zyName" placeholder="" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -573,7 +583,7 @@
             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
                 <legend>三、教师教学实施计划执行与效果（自评）</legend>
             </fieldset>
-            <!--<fieldset class="layui-elem-field">
+            <fieldset class="layui-elem-field">
                 <legend>（一）自我评分</legend>
                 <table class="layui-table">
                     <thead>
@@ -639,7 +649,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </fieldset>-->
+            </fieldset>
             <fieldset class="layui-elem-field">
                 <legend>（二）创新与特色</legend>
                 <textarea name="c2" placeholder="总结在课程教学实施方案执行过程中的创新、特色。" class="layui-textarea"></textarea>
@@ -670,9 +680,9 @@
     <script src="kczlfxbg.js"></script>
     <script>
         $(document).ready(function() {
-
+            //a1
             $("#a1_btn").click(function( event ) {
-
+                //添加行
                 var len = $('#a1').children().length; //获取子元素的个数
                 len++;
                 var html = '<tr><td>'+len+'</td>\n' +
@@ -681,10 +691,14 @@
                     '            <td><textarea name="'+("a1_"+len+"_3")+'" lay-verify="required" class="layui-textarea"></textarea></td>' +
                     '       <td><i class="layui-icon layui-icon-delete"></i></td></tr>';
                 $('#a1').append(html);
+                //删除行
+                $(".layui-icon-delete").parent().on("click", function () {
+                    $(this).parent().remove()
+                });
             });
-
+            //a2
             $("#a2_btn").click(function( event ) {
-
+                //添加行
                 var len = $('#a2').children().length; //获取子元素的个数
                 len++;
                 var html = '<tr><td>'+len+'</td>\n' +
@@ -699,10 +713,10 @@
                     '<td><textarea name="'+("a2_"+len+"_5")+'" lay-verify="required" class="layui-textarea"></textarea></td>' +
                     '<td><i class="layui-icon layui-icon-delete"></i></td></tr>';
                 $('#a2').append(html);
-            });
-
-            $(".layui-icon-delete").parent().on("click", function(){
-                alert($(this).parent().html());
+                //删除行
+                $(".layui-icon-delete").parent().on("click", function () {
+                    $(this).parent().remove()
+                });
             });
         });
     </script>

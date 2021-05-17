@@ -112,12 +112,13 @@ layui.use(['layer','table','form'], function(){
             if(row_data.isTxbg == 1){
                 return false;
             } else {
+                //
                 $('#a1').html( '<tr><td>1</td>\n' +
                     '<td><textarea name="a1_1_1" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
                     '<td><textarea name="a1_1_2" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
                     '<td><textarea name="a1_1_3" lay-verify="required" class="layui-textarea"></textarea></td>' +
                     '<td><i class="layui-icon layui-icon-delete"></i></td></tr>');
-
+                //
                 $('#a2').html('<tr><td>1</td>\n' +
                     '\t<td><textarea name="a2_1_1" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
                     '\t<td><textarea name="a2_1_2" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
@@ -129,6 +130,10 @@ layui.use(['layer','table','form'], function(){
                     '\t<td><textarea name="a2_1_4_5" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
                     '\t<td><textarea name="a2_1_5" lay-verify="required" class="layui-textarea"></textarea></td>\n' +
                     '<td><i class="layui-icon layui-icon-delete"></i></td></tr>');
+                //
+                $(".layui-icon-delete").parent().on("click", function () {
+                    $(this).parent().remove()
+                });
             }
             //
             layer.open({
@@ -325,6 +330,10 @@ layui.use(['layer','table','form'], function(){
                                     '            <td><textarea name="'+("a1_"+len+"_3")+'" lay-verify="required" class="layui-textarea">'+obj.A1_3+'</textarea></td>' +
                                     '       <td><i class="layui-icon layui-icon-delete"></i></td></tr>';
                                 $('#a1').append(html);
+                                //删除行
+                                $(".layui-icon-delete").parent().on("click", function () {
+                                    $(this).parent().remove()
+                                });
                             });
                             var bgA2List = result_data.data.bgA2List;
                             $.each(bgA2List,function (idx,obj) {
@@ -341,6 +350,10 @@ layui.use(['layer','table','form'], function(){
                                     '<td><textarea name="'+("a2_"+len+"_5")+'" lay-verify="required" class="layui-textarea">'+obj.A2_5+'</textarea></td>' +
                                     '<td><i class="layui-icon layui-icon-delete"></i></td></tr>';
                                 $('#a2').append(html);
+                                //删除行
+                                $(".layui-icon-delete").parent().on("click", function () {
+                                    $(this).parent().remove()
+                                });
                             });
 
                             /**
