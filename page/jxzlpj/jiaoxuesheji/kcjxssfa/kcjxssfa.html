@@ -42,11 +42,10 @@
             <script type="text/html" id="myself_toolbar">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-sm" lay-event="insert"><i class="layui-icon">&#xe654;</i>新增</button>
-                    <!--<button class="layui-btn layui-btn-radius layui-btn-warm layui-btn-sm" lay-event="submit"><i class="layui-icon">&#xe605;</i>提交</button>-->
                 </div>
             </script>
             <script type="text/html" id="myself_bar">
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail_dataInfo"><i class="layui-icon layui-icon-read"></i>查看信息</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看信息</a>
             </script>
         </table>
     </div>
@@ -59,11 +58,11 @@
         <form class="layui-form" action="" lay-filter="editForm" id="editForm">
 
             <input type="hidden" name="code"/>
+            <input type="hidden" name="courseName"/>
             <input type="hidden" name="xn"/>
             <input type="hidden" name="xq"/>
             <input type="hidden" name="userId"/>
             <input type="hidden" name="userName"/>
-            <input type="hidden" name="userUnit"/>
 
             <!-- 业务数据 -->
             <fieldset class="layui-elem-field" style="margin-top: 20px;">
@@ -72,7 +71,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">课程名称：</label>
                         <div class="layui-input-inline">
-                            <select id="courseName" name="courseName" lay-filter="courseName"></select>
+                            <select id="courseInfo" name="courseInfo" lay-filter="courseInfo"></select>
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -166,9 +165,17 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">授课教师：</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="teacher" required class="layui-input" style="width: 92%;">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">授课教师编号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="skjsCode" required class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">授课教师名称：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="skjsName" required class="layui-input">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
