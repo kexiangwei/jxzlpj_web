@@ -317,6 +317,7 @@ layui.use(['layer','table','form','transfer'], function(){
                         });
                     } else {
                         layer.msg("数据加载失败！");
+                        return;
                     }
                 },'json');
             }

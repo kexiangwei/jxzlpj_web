@@ -72,7 +72,7 @@ layui.use(['layer','table','form','element'], function(){
                                 html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="isPj2">未评</a>';
                             }
                             $('#datatable_toolbar').html(html);
-                            return data.xq == '3'?'上学期':'下学期';
+                            return data.xq == '3'?'第一学期':'第二学期';
                         }
                     }
                     ,{field:'courseCode', title:'课程编号', width:150, sort:true}

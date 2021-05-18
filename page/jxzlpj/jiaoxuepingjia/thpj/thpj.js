@@ -71,6 +71,38 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         }
     });
 
+    //初始化学院下拉选项
+    $.get(requestUrl+'/getCourseAttrOptions.do',function(result_data){
+        if(result_data.code == 200){
+            var options =  result_data.data;
+            if(options.length > 0){
+                $("select[name='courseAttr']").empty(); //移除下拉框所有选项option
+                let htmlstr = '<option value="">请选择</option>';
+                for (var i = 0; i < options.length; i++) {
+                    htmlstr += '<option value="' + options[i] + '" >' + options[i] + '</option>';
+                }
+                $("select[name='courseAttr']").append(htmlstr);
+                form.render('select');
+            }
+        }
+    },'json');
+
+    //初始化学院下拉选项
+    $.get(requestUrl+'/getUserTitleOptions.do',function(result_data){
+        if(result_data.code == 200){
+            var options =  result_data.data;
+            if(options.length > 0){
+                $("select[name='title']").empty(); //移除下拉框所有选项option
+                let htmlstr = '<option value="">请选择</option>';
+                for (var i = 0; i < options.length; i++) {
+                    htmlstr += '<option value="' + options[i] + '" >' + options[i] + '</option>';
+                }
+                $("select[name='title']").append(htmlstr);
+                form.render('select');
+            }
+        }
+    },'json');
+
     //初始化数据表格
     var datatable = table.render({
         id: guid()
