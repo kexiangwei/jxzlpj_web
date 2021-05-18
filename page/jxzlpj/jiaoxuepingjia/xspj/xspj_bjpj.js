@@ -113,7 +113,8 @@ layui.use(['layer','table','form','transfer'], function(){
                         $.each(result_data.data,function (idx,obj) {
                             transferData.push({
                                 "value": obj.courseCode //数据值
-                                ,"title": obj.courseName + ' - '+ obj.teacherNames //数据标题
+                                // ,"title": obj.courseName + ' - '+ obj.teacherNames //数据标题
+                                ,"title": obj.courseName + '（'+ obj.courseCode+ '）'
                             })
                         });
                         //
