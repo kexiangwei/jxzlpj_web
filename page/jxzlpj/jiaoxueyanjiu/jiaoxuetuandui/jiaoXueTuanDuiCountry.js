@@ -28,7 +28,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 var myself_table = table.render({
                     id: guid()
                     ,elem : '#myself_table'
-                    ,height : 500
+                    ,height : 490
                     ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
                     ,where:{
                         "userId":function () {
@@ -281,7 +281,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,other_table = table.render({ //数据表格
                     id: guid()
                     ,elem : '#other_table'
-                    ,height : 500
+                    ,height : 490
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jxyj_jxtd_country/getPageList.do'
                     ,where:{

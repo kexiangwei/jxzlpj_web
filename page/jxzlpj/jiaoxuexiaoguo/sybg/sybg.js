@@ -24,7 +24,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 460
+                    ,height : 490
                     ,id: "myself_table_id"
                     ,url: requestUrl+'/jxxg_sybg/getPageList.do'
                     ,where:{
@@ -274,7 +274,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 var other_table = table.render({//数据表格
                     id: guid()
                     ,elem : '#other_table'
-                    ,height : 460
+                    ,height : 490
                     ,url: requestUrl+'/jxxg_sybg/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户

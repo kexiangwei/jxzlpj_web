@@ -26,7 +26,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 500
+                    ,height : 490
                     ,id: "myself_table_id"
                     ,url: requestUrl+'/jxyj_jcjs/getPageList.do'
                     ,where:{
@@ -274,7 +274,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
 
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
-                    ,height : 500
+                    ,height : 490
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jxyj_jcjs/getPageList.do'
                     ,where:{

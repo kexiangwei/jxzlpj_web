@@ -8,7 +8,7 @@ layui.use(['layer','table','form','laydate'], function(){
     var myself_table = table.render({
         id : guid()
         ,elem : '#myself_table'
-        ,height : 520
+        ,height : 500
         ,url: requestUrl+'/jxsj_kcjxssfa/getPageList.do'
         ,where:{
             "userId":function () {

@@ -28,7 +28,7 @@ layui.use(['layer','element','table','form'], function(){
                 var myself_table = table.render({
                     id: guid()
                     ,elem : '#myself_table'
-                    ,height : 500
+                    ,height : 490
                     ,url: requestUrl+'/jxyj_jgxm_school/getPageList.do'
                     ,where:{
                         "userId":function () {
@@ -149,7 +149,7 @@ layui.use(['layer','element','table','form'], function(){
                             layer.open({
                                 title : '教学研究-教改项目-新增'
                                 ,type : 1
-                                ,area : [ '1200px', '580px' ]
+                                ,area : [ '1200px', '500px' ]
                                 ,offset : '50px'
                                 // ,shadeClose : true //禁用点击遮罩关闭弹窗
                                 ,content : $('#editForm')
@@ -229,7 +229,7 @@ layui.use(['layer','element','table','form'], function(){
                         layer.open({
                             title : '教学研究-教改项目-编辑'
                             ,type : 1
-                            ,area : [ '1200px', '550px' ]
+                            ,area : [ '1200px', '500px' ]
                             ,offset : '50px'
                             ,shadeClose : true //禁用点击遮罩关闭弹窗
                             ,content : $('#editForm')
@@ -291,7 +291,7 @@ layui.use(['layer','element','table','form'], function(){
                     ,other_table = table.render({ //数据表格
                     id: guid()
                     ,elem : '#other_table'
-                    ,height : 500
+                    ,height : 490
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jxyj_jgxm_school/getPageList.do'
                     ,where:{
@@ -793,7 +793,7 @@ layui.use(['layer','element','table','form'], function(){
                 let options = {
                     title : '教学研究-教改项目-查看详情'
                     ,type : 1
-                    ,area : [ '1200px', '550px' ]
+                    ,area : [ '1200px', '500px' ]
                     ,offset : '50px'
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']

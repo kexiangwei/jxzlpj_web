@@ -8,7 +8,7 @@ layui.use(['layer','element','table','form'], function(){
     var target_dataTable = table.render({
         id: "target_dataTable"
         ,elem : '#target_dataTable'
-        ,height : 480
+        ,height : 500
         ,url: requestUrl+'/getPjSetTargetList.do'
         ,response: {
             statusCode: 200 //规定成功的状态码，默认：0

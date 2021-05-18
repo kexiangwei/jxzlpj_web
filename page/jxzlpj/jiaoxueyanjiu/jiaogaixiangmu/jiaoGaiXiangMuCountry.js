@@ -28,7 +28,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                 var myself_table = table.render({
                     id: guid()
                     ,elem : '#myself_table'
-                    ,height : 500
+                    ,height : 490
                     ,url: requestUrl+'/jxyj_jgxm_country/getPageList.do'
                     ,where:{
                         "userId":function () {
@@ -145,7 +145,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                             let layIndex = layer.open({
                                 title : '教学研究-国家级教改项目-新增'
                                 ,type : 1
-                                ,area : [ '900px', '580px' ]
+                                ,area : [ '900px', '500px' ]
                                 ,offset : '50px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
@@ -218,7 +218,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                         let layIndex = layer.open({
                             title : '教学研究-国家级教改项目-编辑'
                             ,type : 1
-                            ,area : [ '900px', '580px' ]
+                            ,area : [ '900px', '500px' ]
                             ,offset : '50px'
                             ,shadeClose : true //禁用点击遮罩关闭弹窗
                             ,content : $('#editForm_container')
@@ -277,7 +277,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     ,other_table = table.render({ //数据表格
                     id: guid()
                     ,elem : '#other_table'
-                    ,height : 500
+                    ,height : 490
                     ,url: requestUrl+'/jxyj_jgxm_country/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
@@ -579,7 +579,7 @@ layui.use(['layer','element','table','form','laydate'], function(){
                     title : '教学研究-国家级教改项目-查看详情'
                     ,type : 1
                     ,area : [ '900px', '500px' ]
-                    ,offset : '100px'
+                    ,offset : '50px'
                     ,shadeClose : true //点击遮罩关闭
                     ,btn : ['关闭']
                     ,content :  $('#dataInfo_container')

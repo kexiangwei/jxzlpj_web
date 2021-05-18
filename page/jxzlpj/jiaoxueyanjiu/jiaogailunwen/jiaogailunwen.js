@@ -27,7 +27,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 //数据表格
                 var myself_table = table.render({
                     elem : '#myself_table'
-                    ,height : 500
+                    ,height : 490
                     ,url: requestUrl+'/jxyj_jglw/getPageList.do'
                     ,where:{
                         "userId":function () {
@@ -144,7 +144,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             layer.open({
                                 title : '教学研究-教改论文-新增'
                                 ,type : 1
-                                ,area : [ '900px', '550px' ]
+                                ,area : [ '900px', '500px' ]
                                 ,offset : '50px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
@@ -276,7 +276,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
 
                 var other_table = table.render({//数据表格
                     elem : '#other_table'
-                    ,height : 500
+                    ,height : 490
                     ,id: "other_table_id"
                     ,url: requestUrl+'/jxyj_jglw/getPageList.do'
                     ,where:{

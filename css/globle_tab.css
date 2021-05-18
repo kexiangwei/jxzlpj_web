@@ -1,0 +1,11 @@
+.layui-tab {
+    margin: 0;
+}
+
+.layui-tab .layui-form-item {
+    margin-bottom: 0px;
+}
+
+.layui-table, .layui-table-view {
+    margin: 5px;
+}
