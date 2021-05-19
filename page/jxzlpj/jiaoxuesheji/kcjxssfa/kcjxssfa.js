@@ -113,7 +113,11 @@ layui.use(['layer','table','form','laydate'], function(){
                                 if(result_data.data.length > 0){
                                     let html = '<option value="">请选择</option>';
                                     for (let i = 0; i < result_data.data.length; i++) {
-                                        html += '<option value="' + result_data.data[i]['courseCode'] + '" >' + result_data.data[i]['courseName'] + '('+result_data.data[i]['courseCode']+')</option>';
+                                        html += '<option value="' + result_data.data[i]['courseCode'] + '" >' +result_data.data[i]['courseName'] + '('+result_data.data[i]['courseCode']+')' +
+                                            // '，课程性质：'+result_data.data[i]['courseAttr'] +
+                                            '，授课班级：'+result_data.data[i]['skBj'] +
+                                            '，学生人数：'+result_data.data[i]['xsrs'] +
+                                            '，上课地点：'+result_data.data[i]['skDd']+'</option>';
                                     }
                                     $("select[name='courseInfo']").append(html);
                                     form.render('select');

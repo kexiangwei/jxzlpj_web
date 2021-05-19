@@ -9,7 +9,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
         let htmlstr = '<option value="">'+(isOpenSearch?'请选择或搜索':'请选择')+'</option>';
         for (var i = 0; i < data.length; i++) {
-            htmlstr += '<option value="' + data[i].code + '" >' + data[i].name + '</option>';
+            htmlstr += '<option value="' + data[i].code + '" >' + data[i].name + '（'+data[i].code+'）</option>';
         }
         $("select[name='"+inputName+"']").append(htmlstr);
         form.render('select');
@@ -37,9 +37,15 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                     var zyList =  result_data.data;
                     if(zyList.length > 0){
                         reloadSelect('courseZy',zyList);
+                    } else {
+                        $("select[name='courseZy']").empty(); //移除下拉框所有选项option
+                        form.render('select');
                     }
                 }
             },'json');
+        } else {
+            $("select[name='courseZy']").empty(); //移除下拉框所有选项option
+            form.render('select');
         }
     });
 
@@ -59,17 +65,56 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         var xyCode = selected_data.value;
         if(xyCode != ''){
             $.get(requestUrl+'/getZyList.do',{
+                'dataType': 'js',
                 'xyCode': xyCode
             },function(result_data){
                 if(result_data.code == 200){
                     var zyList =  result_data.data;
                     if(zyList.length > 0){
                         reloadSelect('skjsZy',zyList);
+                    } else {
+                        $("select[name='skjsZy']").empty(); //移除下拉框所有选项option
+                        form.render('select');
                     }
                 }
             },'json');
+        } else {
+            $("select[name='skjsZy']").empty(); //移除下拉框所有选项option
+            form.render('select');
         }
     });
+
+    //初始化学院下拉选项
+    $.get(requestUrl+'/getCourseAttrOptions.do',function(result_data){
+        if(result_data.code == 200){
+            var options =  result_data.data;
+            if(options.length > 0){
+                $("select[name='courseAttr']").empty(); //移除下拉框所有选项option
+                let htmlstr = '<option value="">请选择</option>';
+                for (var i = 0; i < options.length; i++) {
+                    htmlstr += '<option value="' + options[i] + '" >' + options[i] + '</option>';
+                }
+                $("select[name='courseAttr']").append(htmlstr);
+                form.render('select');
+            }
+        }
+    },'json');
+
+    //初始化学院下拉选项
+    $.get(requestUrl+'/getUserTitleOptions.do',function(result_data){
+        if(result_data.code == 200){
+            var options =  result_data.data;
+            if(options.length > 0){
+                $("select[name='title']").empty(); //移除下拉框所有选项option
+                let htmlstr = '<option value="">请选择</option>';
+                for (var i = 0; i < options.length; i++) {
+                    htmlstr += '<option value="' + options[i] + '" >' + options[i] + '</option>';
+                }
+                $("select[name='title']").append(htmlstr);
+                form.render('select');
+            }
+        }
+    },'json');
 
     //初始化数据表格
     var datatable = table.render({

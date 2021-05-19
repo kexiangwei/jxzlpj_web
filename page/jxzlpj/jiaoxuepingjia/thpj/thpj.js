@@ -9,7 +9,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         $("select[name='"+inputName+"']").empty(); //移除下拉框所有选项option
         let htmlstr = '<option value="">'+(isOpenSearch?'请选择或搜索':'请选择')+'</option>';
         for (var i = 0; i < data.length; i++) {
-            htmlstr += '<option value="' + data[i].code + '" >' + data[i].name + '</option>';
+            htmlstr += '<option value="' + data[i].code + '" >' + data[i].name + '（'+data[i].code+'）</option>';
         }
         $("select[name='"+inputName+"']").append(htmlstr);
         form.render('select');
@@ -37,9 +37,15 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                     var zyList =  result_data.data;
                     if(zyList.length > 0){
                         reloadSelect('courseZy',zyList);
+                    } else {
+                        $("select[name='courseZy']").empty(); //移除下拉框所有选项option
+                        form.render('select');
                     }
                 }
             },'json');
+        } else {
+            $("select[name='courseZy']").empty(); //移除下拉框所有选项option
+            form.render('select');
         }
     });
 
@@ -59,15 +65,22 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
         var xyCode = selected_data.value;
         if(xyCode != ''){
             $.get(requestUrl+'/getZyList.do',{
+                'dataType': 'js',
                 'xyCode': xyCode
             },function(result_data){
                 if(result_data.code == 200){
                     var zyList =  result_data.data;
                     if(zyList.length > 0){
                         reloadSelect('skjsZy',zyList);
+                    } else {
+                        $("select[name='skjsZy']").empty(); //移除下拉框所有选项option
+                        form.render('select');
                     }
                 }
             },'json');
+        } else {
+            $("select[name='skjsZy']").empty(); //移除下拉框所有选项option
+            form.render('select');
         }
     });
 
