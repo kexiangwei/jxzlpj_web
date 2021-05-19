@@ -5,12 +5,15 @@ layui.use(['layer','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,laydate = layui.laydate;
 
     //初始化数据表格
-    var myself_table = table.render({
+    var datatable = table.render({
         id : guid()
-        ,elem : '#myself_table'
+        ,elem : '#datatable'
         ,height : 500
         ,url: requestUrl+'/jxsj_kcjxssfa/getPageList.do'
         ,where:{
+            "accountType":function () {
+                return $.cookie('accountType');
+            },
             "userId":function () {
                 return $.cookie('userId');
             }
@@ -38,42 +41,42 @@ layui.use(['layer','table','form','laydate'], function(){
         }
         ,limit: 10
         ,even: true //隔行背景
-        ,toolbar: '#myself_toolbar' //指向自定义工具栏模板选择器
         ,cols : [[ //表头
             {type:'checkbox', fixed: 'left'}
             ,{type:'numbers', title:'序号', width:80, fixed: 'left'}
-            ,{field: 'courseName', title: '课程名称', width:150, sort:true, event: 'insert', templet: function (data) {
-                    if(data.isSubmit=='已提交'){
-                        return '<span style="font-weight: bold; color: #1E9FFF;">'+data.courseName+'</span>';
+            ,{field: 'courseName', title: '课程名称', width:180, sort:true, event: 'insert', templet: function (data) {
+                    var html = '<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-disabled layui-btn-table"><i class="layui-icon layui-icon-read"></i>查看</a>';
+                    if(data.isTxfa == 1){
+                        html = '<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-normal layui-btn-table" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     }
+                    $('#datatable_bar').html(html);
                     return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                 }
             }
             ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
             ,{field: 'courseAttr', title: '课程性质', width:150, sort:true}
-            ,{field: 'courseLeader', title: '课程负责人', width:150, sort:true}
-            ,{field: 'teachClass', title: '授课班级', width:150, sort:true}
-            ,{field: 'studentNum', title:'学生人数', width:150, sort:true}
-            ,{field: 'classLocation', title:'上课地点', width:150, sort:true}
-            ,{field: 'openCollege', title:'开课学院（部）', width:150, sort:true}
-            // ,{field: 'isSubmit', title: '提交状态', width:150, sort:true}
-            ,{fixed: 'right', width:110, align:'center', toolbar: '#myself_bar'}
+            // ,{field: 'xyName', title:'开课学院', width:150, sort:true}
+            // ,{field: 'zyName', title: '适用专业', width:150, sort:true}
+            ,{field: 'skjsName', title: '课程负责人', width:150, sort:true}
+            ,{field: 'skBj', title: '授课班级', width:150, sort:true}
+            ,{field: 'xsrs', title:'学生人数', width:150, sort:true}
+            // ,{field: 'skSj', title:'上课时间', width:180, sort:true}
+            ,{field: 'skDd', title:'上课地点', width:180, sort:true}
+            ,{fixed: 'right', width:110, align:'center', toolbar: '#datatable_bar'}
         ]]
-        ,done: function(res, curr, count){ //数据渲染完的回调
-
-        }
     });
 
     //监听搜索框事件
-    $('.myself_search .layui-btn').on('click', function(){
+    $('.search .layui-btn').on('click', function(){
         let type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
     let active = {
         search: function(){
-            myself_table.reload({
+            datatable.reload({
                 where: {
-                    'courseName': $(".myself_search input[name='courseName']").val()
+                    'courseName': $(".search input[name='courseName']").val(),
+                    'isTxfa': $("#isTxfa option:selected").val()
                 }
                 ,page: {
                     curr: 1 //重新从第 1 页开始
@@ -81,110 +84,21 @@ layui.use(['layer','table','form','laydate'], function(){
             });
         }
         ,reset: function () {
-            $(".myself_search input").val('');
+            $(".search input").val('');
+            $("#isTxfa").val("");
+            form.render("select");
         }
     };
 
-    //监听头工具栏事件
-    table.on('toolbar(myself_table)', function(obj){
-        let rowDatas = table.checkStatus(obj.config.id).data; //获取选中的数据
-        //
-        switch(obj.event){
-            case 'insert':
-                layer.open({
-                    id : guid()
-                    ,title : '教学设计-课程教学实施方案-新增'
-                    ,type : 1
-                    ,area : [ '1175px', '500px' ]
-                    ,offset : '50px'
-                    ,content : $('#editFormContainer')
-                    ,success: function(layero, index){
-
-                        //初始化laydate实例
-                        laydate.render({
-                            elem: '#commonDate' //指定元素
-                        });
-//
-                        $.get(requestUrl+'/getCourseListByUserId.do', { 'userId': $.cookie('userId') },function(result_data){
-                            if(result_data.code === 200){
-                                //
-                                $("select[name='courseInfo']").empty(); //移除下拉框所有选项option
-                                //初始化下拉选项
-                                if(result_data.data.length > 0){
-                                    let html = '<option value="">请选择</option>';
-                                    for (let i = 0; i < result_data.data.length; i++) {
-                                        html += '<option value="' + result_data.data[i]['courseCode'] + '" >' +result_data.data[i]['courseName'] + '('+result_data.data[i]['courseCode']+')' +
-                                            // '，课程性质：'+result_data.data[i]['courseAttr'] +
-                                            '，授课班级：'+result_data.data[i]['skBj'] +
-                                            '，学生人数：'+result_data.data[i]['xsrs'] +
-                                            '，上课地点：'+result_data.data[i]['skDd']+'</option>';
-                                    }
-                                    $("select[name='courseInfo']").append(html);
-                                    form.render('select');
-                                    //
-                                    form.on('select(courseInfo)', function(selected_data) {
-                                        let courseCode = selected_data.value;
-                                        result_data.data.some(function (item) {  //some() 方法用于检测数组中的元素是否满足指定条件
-                                            if (item.courseCode == courseCode) {
-                                                //
-                                                form.val("editForm",{
-                                                    // "code":obj.code
-                                                    "courseCode": item.courseCode
-                                                    ,"courseName" : item.courseName
-                                                    ,"courseAttr" : item.courseAttr
-                                                    ,"courseLeader" : item.skjsName
-                                                    ,"teachClass" : item.skBj
-                                                    ,"studentNum" : item.xsrs
-                                                    ,"classLocation" : item.skDd
-                                                    ,"openCollege" : item.xyName
-                                                    ,"xn" : item.xn
-                                                    ,"xq" : item.xq
-                                                    ,"userId":$.cookie('userId')
-                                                    ,"userName":$.cookie('userName')
-                                                });
-                                            }
-                                        });
-                                    });
-                                }
-                            } else {
-                                layer.msg('加载数据失败！', {time : 3000, offset: '100px'});
-                            }
-                        }, "json");
-                        //监听表单提交
-                        form.on('submit(toSubmitEidtForm)', function(data){
-                            $.post(requestUrl+'/jxsj_kcjxssfa/insert.do', data.field, function (result_data) {
-                                layer.msg(result_data.msg, {offset: '100px'},function () {
-                                    /*if(result_data.code === 200){
-                                        myself_table.reload();//重新加载表格数据
-                                    }*/
-                                    layer.close(index);
-                                });
-                            },'json');
-                        });
-                    }
-                    ,cancel: function(index, layero){
-                        layer.confirm('表单未提交，填写的信息将会清空？', {icon: 3, title:'提示', offset: '100px'}, function(index) {
-                            layer.closeAll();
-                        });
-                        return false;
-                    }
-                    ,end:function () {
-                        window.location.reload();
-                    }
-                });
-                break;
-        }
-    });
-
     //监听工具条
-    table.on('tool(myself_table)', function(obj){
+    table.on('tool(datatable)', function(obj){
         let row_data = obj.data;
         //
         if (obj.event === 'detail') {
 
             layer.open({
                 id :guid() //弹层唯一标识,一般用于页面层和iframe层模式,设置该值后，不管是什么类型的层，都只允许同时弹出一个。
-                ,title : '教学设计-课程教学实施方案-查看信息'
+                ,title : '课程教学实施方案'
                 ,type : 1
                 ,area : [ '1175px', '500px' ]
                 ,offset : '50px'
@@ -202,18 +116,18 @@ layui.use(['layer','table','form','laydate'], function(){
                         '       <td style="width:120px; text-align: right">课程性质：</td><td style="width: 150px;">'+row_data.courseAttr+'</td>' +
                         '   </tr>' +
                         '   <tr>' +
-                        '       <td style="text-align: right">授课班级：</td><td>'+row_data.teachClass+'</td>' +
-                        '       <td style="text-align: right">学生人数：</td><td>'+row_data.studentNum+'</td>' +
-                        '       <td style="text-align: right">上课地点：</td><td>'+row_data.classLocation+'</td>' +
+                        '       <td style="text-align: right">开课学院（部）：</td><td colspan="3">'+row_data.xyName+'</td>' +
+                        '       <td style="text-align: right">课程负责人：</td><td>'+row_data.skjsName+'</td>' +
                         '   </tr>' +
                         '   <tr>' +
-                        '       <td style="text-align: right">课程负责人：</td><td>'+row_data.courseLeader+'</td>' +
-                        '       <td style="text-align: right">开课学院（部）：</td><td colspan="3">'+row_data.openCollege+'</td>' +
+                        '       <td style="text-align: right">授课班级：</td><td>'+row_data.skBj+'</td>' +
+                        '       <td style="text-align: right">学生人数：</td><td>'+row_data.xsrs+'</td>' +
+                        '       <td style="text-align: right">上课地点：</td><td>'+row_data.skDd+'</td>' +
                         '   </tr>' +
                         '</table>';
 
                     //
-                    $.get(requestUrl+"/jxsj_kcjxssfa/getItemListByRelationCode.do", {
+                    $.get(requestUrl+"/jxsj_kcjxssfa/getItemList.do", {
                         "relationCode": row_data.code
                     } ,  function(itemList){
                         if(itemList.data.length > 0){
@@ -256,15 +170,12 @@ layui.use(['layer','table','form','laydate'], function(){
             });
 
         }  else {
-            if(row_data.isSubmit == '已提交'){
-                return;
-            }
-            //
+
             if (obj.event === 'insert') {
 
                 layer.open({
                     id : guid()
-                    ,title : '教学设计-课程教学实施方案-新增'
+                    ,title : '课程教学实施方案'
                     ,type : 1
                     ,area : [ '1175px', '500px' ]
                     ,offset : '50px'
@@ -275,28 +186,28 @@ layui.use(['layer','table','form','laydate'], function(){
                             elem: '#commonDate' //指定元素
                         });
                         //
-                        $("select[name='courseInfo']").append('<option value="' + row_data.courseName + '" >' + row_data.courseName + '</option>');
-                        form.render('select');
-                        //
                         form.val("editForm",{
-                            "code":row_data.code
+                            "code": row_data.code
                             ,"courseCode": row_data.courseCode
                             ,"courseName" : row_data.courseName
                             ,"courseAttr" : row_data.courseAttr
-                            ,"courseLeader" : row_data.courseLeader
-                            ,"teachClass" : row_data.teachClass
-                            ,"studentNum" : row_data.studentNum
-                            ,"classLocation" : row_data.classLocation
-                            ,"openCollege" : row_data.openCollege
-                            ,"userId":row_data.userId
-                            ,"userName":row_data.userName
+                            ,"xn" : row_data.xn
+                            ,"xq" : row_data.xq
+                            ,"xyName" : row_data.xyName
+                            ,"skjsCode" : row_data.skjsCode
+                            ,"skjsName" : row_data.skjsName
+                            ,"skBj" : row_data.skBj
+                            ,"xsrs" : row_data.xsrs
+                            ,"skDd" : row_data.skDd
+                            ,"userId": $.cookie('userId')
+                            ,"userName": $.cookie('userName')
                         });
                         //监听表单提交
                         form.on('submit(toSubmitEidtForm)', function(_form_data){
                             $.post(requestUrl+'/jxsj_kcjxssfa/insert.do', _form_data.field, function (_result_data) {
                                 layer.msg(_result_data.msg, {offset: '100px'},function () {
                                     /*if(_result_data.code === 200){
-                                        myself_table.reload();//重新加载表格数据
+                                        datatable.reload();//重新加载表格数据
                                     }*/
                                     layer.close(index);
                                 });
