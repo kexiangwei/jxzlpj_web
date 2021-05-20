@@ -4,17 +4,15 @@
     <meta charset="utf-8">
     <title>双创教育-文、体类比赛</title>
     <link rel="stylesheet" href="../../../../js/layui/css/layui.css">
-    <style type="text/css">
-        .myself_search .layui-inline {
-            width: 185px;
-        }
-        .other_search  .layui-inline {
-            width: 185px;
+    <link rel="stylesheet" href="../../../../css/globle_tab.css">
+    <style>
+        .layui-form-item:nth-child(1) .layui-inline{
+            width: 190px;
+            margin-right: 0;
         }
         .layui-form-label {
             width: 100px;
         }
-
     </style>
 </head>
 <body class="layui-layout-body">
@@ -65,17 +63,7 @@
                             </select>
                         </div>
 
-                        证书授予日期：
-                        <div class="layui-inline">
-                            <input type="text" id="myself_search_zsGrantDateStart" name="zsGrantDateStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" id="myself_search_zsGrantDateEnd" name="zsGrantDateEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
-                        </div>
-
-                    </div>
-                    <div class="layui-form-item">
-                        审核状态：
+                        &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
                             <select name="status" id="status">
                                 <option value="">请选择</option>
@@ -86,6 +74,22 @@
                                 <option value="退回">退回</option>
                             </select>
                         </div>
+
+
+                    </div>
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline" style="margin: 0 0 5px 5px;">
+                            <label class="layui-form-label">证书授予日期：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="myself_search_zsGrantDateStart" name="zsGrantDateStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">-</div>
+                            <div class="layui-input-inline">
+                                <input type="text" id="myself_search_zsGrantDateEnd" name="zsGrantDateEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
                             <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>
@@ -145,16 +149,7 @@
                             </select>
                         </div>
 
-                        证书授予日期：
-                        <div class="layui-inline">
-                            <input type="text" id="other_search_zsGrantDateStart" name="zsGrantDateStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
-                        </div>
-                        <div class="layui-inline">
-                            <input type="text" id="other_search_zsGrantDateEnd" name="zsGrantDateEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        审核状态：
+                        &nbsp;&nbsp;审核状态：
                         <div class="layui-inline">
                             <select name="shenheStatus" id="shenheStatus">
                                 <option value="">请选择</option>
@@ -162,6 +157,20 @@
                                 <option value="未审核">未审核</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline" style="margin: 0 0 5px 5px;">
+                            <label class="layui-form-label">证书授予日期：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="other_search_zsGrantDateStart" name="zsGrantDateStart" placeholder="开始日期"  autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">-</div>
+                            <div class="layui-input-inline">
+                                <input type="text" id="other_search_zsGrantDateEnd" name="zsGrantDateEnd" placeholder="结束日期"  autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
                         <div class="layui-inline">
                             <button class="layui-btn layui-btn-normal" data-type="search">查询</button>
                             <button class="layui-btn layui-btn-primary" data-type="reset">重置</button>

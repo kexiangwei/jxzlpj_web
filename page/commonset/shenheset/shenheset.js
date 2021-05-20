@@ -160,7 +160,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                             title : '通用设置-审核流程-新增'
                             ,type : 1
                             ,area : [ '1200px', '450px' ] //宽高
-                            ,offset : '100px'
+                            ,offset : '50px'
                             ,shadeClose : true //点击遮罩关闭
                             ,btn : ['关闭']
                             ,content : $('#editContainer')
@@ -296,7 +296,7 @@ layui.use(['layer','table','form','util',"treeSelect"], function(){
                         title : '通用设置-审核流程-编辑'
                         ,type : 1
                         ,area : [ '1200px', '450px' ] //宽高
-                        ,offset : '100px'
+                        ,offset : '50px'
                         ,shadeClose : true //点击遮罩关闭
                         ,btn : ['关闭']
                         ,content : $('#editContainer')

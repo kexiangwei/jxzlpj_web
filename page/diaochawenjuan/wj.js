@@ -64,7 +64,7 @@ layui.use(['layer','table','form'], function(){
                         title : '调查问卷-问卷信息'
                         ,type : 1
                         ,area : [ '1100px', '500px' ]
-                        ,offset : '30px'
+                        ,offset : '50px'
                         // ,shadeClose : true //点击遮罩关闭
                         ,btn: ['关闭']
                         ,content : $('#wjContainer')

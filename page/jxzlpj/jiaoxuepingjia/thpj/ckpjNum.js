@@ -8,7 +8,7 @@ layui.use(['layer','element','table'], function(){
     var datatable = table.render({
         id: guid()
         ,elem : '#datatable'
-        ,height : 525
+        ,height : 520
         ,url: requestUrl+'/thpj/ckpj.do'
         ,where:{
             "accountType":function () {

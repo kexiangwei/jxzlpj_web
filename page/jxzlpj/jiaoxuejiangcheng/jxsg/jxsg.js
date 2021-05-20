@@ -41,7 +41,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         let datatable = table.render({
             id: "datatable"
             ,elem : '#datatable'
-            ,height : 550
+            ,height : 520
             ,url: requestUrl+'/jxsg/getPageList.do'
             ,where: {
                 "userId":function () {
@@ -140,7 +140,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                     let layerIndex = layer.open({
                         title : '教学奖惩-教学事故-新增'
                         ,type : 1
-                        ,area : [ '900px', '450px' ]
+                        ,area : [ '900px', '500px' ]
                         ,offset : '50px'
                         ,content : $("#editForm_container")
                         ,success: function(layero, index){
@@ -184,7 +184,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
                 let layIndex = layer.open({
                     title : '教学奖惩-教学事故-编辑'
                     ,type : 1
-                    ,area : [ '900px', '450px' ]
+                    ,area : [ '900px', '500px' ]
                     ,offset : '50px'
                     ,shadeClose : true //点击遮罩关闭
                     ,content : $('#editForm_container')
@@ -232,7 +232,7 @@ layui.use(['layer','laytpl','table','form','laydate'], function(){
         layer.open({
             title : '教学奖惩-教学事故-查看详情'
             ,type : 1
-            ,area : [ '900px', '450px' ]
+            ,area : [ '900px', '500px' ]
             ,offset : '50px'
             ,shadeClose : true
             ,btn : ['关闭']

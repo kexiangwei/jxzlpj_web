@@ -63,7 +63,7 @@ layui.use(['layer', 'table', 'form', 'tree', 'util'], function () {
             title: '系统管理-用户组-新增'
             , type: 1
             , area: ['700px', '480px']
-            , offset: '20px'
+            , offset: '50px'
             , shadeClose: true //点击遮罩关闭
             , content: $('#insertOrUpdateContainer')
             , success: function (layero, index) {

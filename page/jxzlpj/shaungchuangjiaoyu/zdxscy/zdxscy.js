@@ -22,7 +22,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
         ,success:function(data) {
             var data = data.data;
 
-            if(data.isAuthSubmit > 0){ //拥有提交权限
+            if(data.isAuthSubmit > 0){
 
                 laydate.render({
                     elem: "#myself_search_registDate_start" //指定元素
@@ -35,7 +35,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var myself_table = table.render({
                     id: "myself_table"
                     ,elem : '#myself_table'
-                    ,height : 500
+                    ,height : 480
                     ,url: requestUrl+'/scjy_zdxscy/getPageList.do'
                     ,where:{
                         "userId":function () {
@@ -161,7 +161,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                             layer.open({
                                 title : '双创教育-指导学生创业-新增'
                                 ,type : 1
-                                ,area : [ '900px', '550px' ]
+                                ,area : [ '900px', '500px' ]
                                 ,offset : '50px'
                                 ,content : $('#editForm_container')
                                 ,success: function(layero, index){
@@ -240,7 +240,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                         layer.open({
                             title : '双创教育-指导学生创业-编辑'
                             ,type : 1
-                            ,area : [ '900px', '550px' ]
+                            ,area : [ '900px', '500px' ]
                             ,offset : '50px'
                             ,shadeClose : true //点击遮罩关闭
                             ,content : $('#editForm_container')
@@ -307,7 +307,7 @@ layui.use(['layer','element','table','form','laydate','upload'], function(){
                 var other_table = table.render({//数据表格
                     id: "other_table"
                     ,elem : '#other_table'
-                    ,height : 500
+                    ,height : 480
                     ,url: requestUrl+'/scjy_zdxscy/getPageList.do'
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
