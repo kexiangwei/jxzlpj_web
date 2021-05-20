@@ -11,6 +11,9 @@ layui.use(['layer','table','form'], function(){
         ,height : 500
         ,url: requestUrl+'/jxxg_kczlfxbg/getPageList.do'
         ,where:{
+            "accountType":function () {
+                return $.cookie('accountType');
+            },
             "userId":function () {
                 return $.cookie('userId');
             }

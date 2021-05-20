@@ -2,6 +2,8 @@
 layui.use(['layer','element'], function(){
     var $ = layui.$,layer = layui.layer,element = layui.element;
     //
+    // alert(layui.v); //查看layui版本号：2.5.4
+    //
     // layer.msg("欢迎你，"+ $.cookie('userName'));
     //
     $("#headImg").attr("src",requestUrl+($.cookie('headImg')!='null'?$.cookie('headImg'):'/files/userHeadImg/default_handsome.png'));
@@ -23,7 +25,15 @@ layui.use(['layer','element'], function(){
                     if(item2.menuName == '教学团队' || item2.menuName == '教改项目' || item2.menuName == '同行评教' || item2.menuName == '学生评教'|| item2.menuName == '通用设置'){
                         html += '<dl class="layui-nav-child"><dd><a href="javascript:;"><span class="l-line"></span>'+item2.menuName+'</a>';
                         $.each(item2.children,function(index,item3){
-                            html += '<dl class="layui-nav-child"><dd><a class="site-demo-active" href="javascript:;" data-id="'+item3.menuId+'" data-title="'+item3.menuName+'" data-url="'+item3.url+'" data-type="tabAdd"><span class="l-line" style="margin-left: 52px"></span>'+item3.menuName+'</a></dd></dl>';
+                            if(item3.menuName == '查看评教'){
+                                html += '<dl class="layui-nav-child"><dd style="margin-left: 22px;"><a href="javascript:;"><span class="l-line"></span>'+item3.menuName+'</a>';
+                                $.each(item3.children,function(index,item4){
+                                    html += '<dl class="layui-nav-child"><dd><a class="site-demo-active" href="javascript:;" data-id="'+item4.menuId+'" data-title="'+item4.menuName+'" data-url="'+item4.url+'" data-type="tabAdd"><span class="l-line" style="margin-left: 52px"></span>'+item4.menuName+'</a></dd></dl>';
+                                });
+                                html += '</dd></dl>';
+                            } else {
+                                html += '<dl class="layui-nav-child"><dd><a class="site-demo-active" href="javascript:;" data-id="'+item3.menuId+'" data-title="'+item3.menuName+'" data-url="'+item3.url+'" data-type="tabAdd"><span class="l-line" style="margin-left: 52px"></span>'+item3.menuName+'</a></dd></dl>';
+                            }
                         });
                         html += '</dd></dl>';
                     }else{

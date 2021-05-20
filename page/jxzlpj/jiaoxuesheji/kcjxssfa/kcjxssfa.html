@@ -138,13 +138,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">周次：</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="weekNum" required class="layui-input">
+                            <input type="week" name="weekNum" required class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">日期：</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="commonDate" name="commonDate" required class="layui-input">
+                            <input type="text" id="commonDate" name="commonDate" required  autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
@@ -152,19 +152,37 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">星期：</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="week" required class="layui-input">
+                            <!--<input type="text" name="week" required class="layui-input">-->
+                            <select id="week" name="week">
+                                <option value="">请选择</option>
+                                <option value="星期一">星期一</option>
+                                <option value="星期二">星期二</option>
+                                <option value="星期三">星期三</option>
+                                <option value="星期四">星期四</option>
+                                <option value="星期五">星期五</option>
+                                <option value="星期六">星期六</option>
+                                <option value="星期日">星期日</option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">节次：</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="lessonNum" required class="layui-input">
+                            <!--<input type="text" name="lessonNum" required class="layui-input">-->
+                            <select id="lessonNum" name="lessonNum">
+                                <option value="">请选择</option>
+                                <option value="1-2节">1-2节</option>
+                                <option value="3-4节">3-4节</option>
+                                <option value="5-6节">5-6节</option>
+                                <option value="7-8节">7-8节</option>
+                                <option value="9-10节">9-10节</option>
+                            </select>
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">学时：</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="lessonHour" required class="layui-input">
+                            <input type="number" name="lessonHour" required autocomplete="off" class="layui-input">
                         </div>
                     </div>
                 </div>
