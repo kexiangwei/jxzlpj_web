@@ -4,6 +4,16 @@
 layui.use(['layer','table','form'], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form;
 
+    var isThpjRequest = 2 //是否同行评教转发过来的请求，默认不是
+        , skjscode = "";
+    //location.href 跳转页面时传递参数并且在新页面接收参数
+    var params = location.search; //获取url中"?"后的参数
+    if(params != "") {
+        isThpjRequest = 1;
+        skjscode = params.split("=")[1];
+        $("#goBackThpj").css("display","block");
+    };
+
     //初始化数据表格
     var datatable = table.render({
         id : guid()
@@ -15,8 +25,9 @@ layui.use(['layer','table','form'], function(){
                 return $.cookie('accountType');
             },
             "userId":function () {
-                return $.cookie('userId');
-            }
+                return skjscode != "" ? skjscode : $.cookie('userId'); //如果skjscode 不为空则是从教学评价中跳转过来的
+            },
+            'isThpjRequest': isThpjRequest
         }
         ,request: {
             pageName: 'pageIndex'
@@ -47,12 +58,12 @@ layui.use(['layer','table','form'], function(){
                         return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
                     } else {
                         html = '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-normal" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
-                        if(data.isSubmit == 1){
-                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
-                                '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
-                        } else {
+                        if(data.isMineCourse == 1 && data.isSubmit == 2){
                             html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-warm" lay-event="update"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
                                 '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-primary" lay-event="submit"><i class="layui-icon layui-icon-ok"></i>提交</a>';
+                        } else {
+                            html += '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-edit"></i>编辑</a>'+
+                                '<a class="layui-btn layui-btn-xs layui-btn-radius layui-btn-table layui-btn-disabled"><i class="layui-icon layui-icon-ok"></i>提交</a>';
                         }
                         $('#datatable_toolbar').html(html);
                         return data.courseName;
@@ -63,7 +74,9 @@ layui.use(['layer','table','form'], function(){
             ,{field: 'xyName', title: '开课学院（部）', width:150, sort:true}
             ,{field: 'zyName', title: '系（教研室）', width:150, sort:true}
             ,{field: 'xn', title:'学年', width:150, sort:true}
-            ,{field: 'xq', title:'学期', width:150, sort:true}
+            ,{field: 'xq', title:'学期', width:150, sort:true, templet: function (data) {
+                    return data.xq == 3 ? "第一学期" : "第二学期";
+                }}
             ,{field: 'skjsAll', title:'授课教师', width:150, sort:true}
             ,{field: 'skbjAll', title:'授课班级', width:150, sort:true}
             ,{fixed: 'right', width:290, align:'center', toolbar: '#datatable_toolbar'}
@@ -180,6 +193,14 @@ layui.use(['layer','table','form'], function(){
                                 return '超出预设分值范围！';
                             }
                         }
+                    });
+
+                    //考核层次比例
+                    $("input[name='b1_1_4_1']").keyup(function() {
+                        $("input[name='b1_1_4_2']").val(100 - parseInt($(this).val()));
+                    });
+                    $("input[name='b1_1_4_2']").keyup(function() {
+                        $("input[name='b1_1_4_1']").val(100 - parseInt($(this).val()));
                     });
 
                     //评分合计
@@ -374,6 +395,14 @@ layui.use(['layer','table','form'], function(){
                                         return '超出预设分值范围！';
                                     }
                                 }
+                            });
+
+                            //考核层次比例
+                            $("input[name='b1_1_4_1']").keyup(function() {
+                                $("input[name='b1_1_4_2']").val(100 - parseInt($(this).val()));
+                            });
+                            $("input[name='b1_1_4_2']").keyup(function() {
+                                $("input[name='b1_1_4_1']").val(100 - parseInt($(this).val()));
                             });
 
                             //评分合计

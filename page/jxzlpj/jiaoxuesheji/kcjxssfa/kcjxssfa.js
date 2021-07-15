@@ -4,6 +4,16 @@
 layui.use(['layer','table','form','laydate'], function(){
     var $ = layui.$,layer = layui.layer,table = layui.table,form = layui.form,laydate = layui.laydate;
 
+    var isThpjRequest = 2 //是否同行评教转发过来的请求，默认不是
+        , skjscode = "";
+    //location.href 跳转页面时传递参数并且在新页面接收参数
+    var params = location.search; //获取url中"?"后的参数
+    if(params != "") {
+        isThpjRequest = 1;
+        skjscode = params.split("=")[1];
+        $("#goBackThpj").css("display","block");
+    };
+
     //初始化数据表格
     var datatable = table.render({
         id : guid()
@@ -15,8 +25,9 @@ layui.use(['layer','table','form','laydate'], function(){
                 return $.cookie('accountType');
             },
             "userId":function () {
-                return $.cookie('userId');
-            }
+                return skjscode != "" ? skjscode : $.cookie('userId'); //如果skjscode 不为空则是从教学评价中跳转过来的
+            },
+            'isThpjRequest': isThpjRequest
         }
         ,request: {
             pageName: 'pageIndex'
@@ -50,7 +61,10 @@ layui.use(['layer','table','form','laydate'], function(){
                         html = '<a class="layui-btn layui-btn-radius layui-btn-xs layui-btn-normal layui-btn-table" lay-event="detail"><i class="layui-icon layui-icon-read"></i>查看</a>';
                     }
                     $('#datatable_bar').html(html);
-                    return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
+                    if(data.isMineCourse == 1 && isThpjRequest == 2){ //是我的课程并且不是同行评教转发过来的才允许编辑
+                        return '<span style="font-weight: bold; color: #1E9FFF; cursor: pointer;">'+data.courseName+'</span>';
+                    }
+                    return data.courseName;
                 }
             }
             ,{field: 'courseCode', title: '课程编号', width:150, sort:true}
@@ -172,7 +186,9 @@ layui.use(['layer','table','form','laydate'], function(){
         }  else {
 
             if (obj.event === 'insert') {
-
+                if(data.isMineCourse != 1 && isThpjRequest != 2){
+                    return;
+                }
                 layer.open({
                     id : guid()
                     ,title : '课程教学实施方案'

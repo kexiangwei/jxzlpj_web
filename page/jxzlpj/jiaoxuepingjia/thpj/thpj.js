@@ -245,7 +245,7 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                     templateCode = data[0].targetList[0].templateCode;
                     let html = '';
                     for (let i = 0; i < data.length; i++) {
-                        html += '<tr><td rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
+                        html += '<tr><td id="target_'+i+'" rowspan="'+data[i].num+'">'+data[i].name+'（'+data[i].score+'分）</td>\n';
                         for (let j = 0; j < data[i].num; j++) {
                             let obj = data[i].targetList[j];
                             html += '<td>'+obj.targetContent+'</td>\n' +
@@ -256,7 +256,22 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
                     html += '<tr><td colspan="3" style="text-align: right">评分合计</td>' +
                         '<td style="text-align: center"><input type="text" name="totalScore" lay-verify="required|totalScore" class="layui-form-input2" style="cursor:not-allowed" readonly></td></tr>';
                     $('#target').html(html);
-                    //
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //跳转到教学设计-课程教学实施方案
+                    $('#target_0').css("cursor","pointer").on("click", function(){
+                        // alert( $(this).text() );
+                        //location.href 跳转页面时传递参数并且在新页面接收参数
+                        window.location.href="../../jiaoxuesheji/kcjxssfa/kcjxssfa.html?skjscode="+rowData.skjsCode;
+                    });
+                    //跳转到教学效果-课程质量分析报告
+                    $('#target_2').css("cursor","pointer").on("click", function(){
+                        // alert( $(this).text() );
+                        //location.href 跳转页面时传递参数并且在新页面接收参数
+                        window.location.href="../../jiaoxuexiaoguo/kczlfxbg/kczlfxbg.html?skjscode="+rowData.skjsCode;
+                    });
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                     let $inputs = $('.score');
                     $inputs.keyup(function() {
                         let totalScore = 0;

@@ -55,7 +55,8 @@
         }
 
         #a1 textarea,#a2 textarea {
-            min-height: 50px;
+            width: 210px;
+            min-height: 80px;
         }
 
         #a1_btn:hover {
@@ -79,6 +80,8 @@
     </style>
 </head>
 <body class="layui-layout-body">
+
+    <a id="goBackThpj" href="../../jiaoxuepingjia/thpj/thpj.html" style="font-weight: bold; color: #1E9FFF; display: none;">返回同行评教</a>
 
     <div class="layui-fluid">
         <!-- 查询参数 -->
@@ -292,11 +295,11 @@
                                     <label class="layui-form-label" style="width: 150px;">4．考核层次比例：</label>
                                     <div>
                                         记忆与理解占（
-                                            <input type="text" name="b1_1_4_1" style="width: 50px; height: 38px; border-width:0px 0px 0px 0px; text-align: center" autocomplete="off">
+                                            <input type="text" name="b1_1_4_1" lay-verify="required|totalScore" style="width: 50px; height: 38px; border-width:0; text-align: center" autocomplete="off">
                                         ）%
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         分析与应用占（
-                                        <input type="text" name="b1_1_4_2" style="width: 50px; height: 38px; border-width:0px 0px 0px 0px; text-align: center" autocomplete="off">
+                                        <input type="text" name="b1_1_4_2" lay-verify="required|totalScore" style="width: 50px; height: 38px; border-width:0; text-align: center" autocomplete="off">
                                         ）%
                                     </div>
                                 </div>
