@@ -259,14 +259,23 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////
                     //跳转到教学设计-课程教学实施方案
-                    $('#target_0').on("click", function(){
-                        // alert( $(this).text() );
-                        //location.href 跳转页面时传递参数并且在新页面接收参数
-                        window.location.href="../../jiaoxuesheji/kcjxssfa/kcjxssfa.html?skjscode="+rowData.skjsCode;
+                    var text = "";
+                    $('#target_0').on("mouseover",function (e) {
+                        text = $(this).text();
+                        $(this).text("查看‘课程教学实施方案’");
+                    }).on("mouseout",function (e) {
+                        $(this).text(text);
+                    }).on("click", function(){
+                        window.location.href="../../jiaoxuesheji/kcjxssfa/kcjxssfa.html?skjscode="+rowData.skjsCode; //location.href 跳转页面时传递参数并且在新页面接收参数
                     });
                     //跳转到教学效果-课程质量分析报告
-                    $('#target_2').on("click", function(){
-                        window.location.href="../../jiaoxuexiaoguo/kczlfxbg/kczlfxbg.html?skjscode="+rowData.skjsCode;
+                    $('#target_2').on("mouseover",function (e) {
+                        text = $(this).text();
+                        $(this).text("查看‘课程质量分析报告’");
+                    }).on("mouseout",function (e) {
+                        $(this).text(text);
+                    }).on("click", function(){
+                        window.location.href="../../jiaoxuexiaoguo/kczlfxbg/kczlfxbg.html?skjscode="+rowData.skjsCode; //location.href 跳转页面时传递参数并且在新页面接收参数
                     });
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
