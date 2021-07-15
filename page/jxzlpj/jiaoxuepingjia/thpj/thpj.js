@@ -259,15 +259,13 @@ layui.use(['layer','element','table','form','laydate','util'], function(){
 
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////
                     //跳转到教学设计-课程教学实施方案
-                    $('#target_0').css("cursor","pointer").on("click", function(){
+                    $('#target_0').on("click", function(){
                         // alert( $(this).text() );
                         //location.href 跳转页面时传递参数并且在新页面接收参数
                         window.location.href="../../jiaoxuesheji/kcjxssfa/kcjxssfa.html?skjscode="+rowData.skjsCode;
                     });
                     //跳转到教学效果-课程质量分析报告
-                    $('#target_2').css("cursor","pointer").on("click", function(){
-                        // alert( $(this).text() );
-                        //location.href 跳转页面时传递参数并且在新页面接收参数
+                    $('#target_2').on("click", function(){
                         window.location.href="../../jiaoxuexiaoguo/kczlfxbg/kczlfxbg.html?skjscode="+rowData.skjsCode;
                     });
                     /////////////////////////////////////////////////////////////////////////////////////////////////////////
