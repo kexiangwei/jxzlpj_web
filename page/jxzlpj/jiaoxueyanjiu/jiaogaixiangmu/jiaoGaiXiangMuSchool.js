@@ -33,6 +33,15 @@ layui.use(['layer','element','table','form'], function(){
                     ,where:{
                         "userId":function () {
                             return  $.cookie('userId');
+                        },
+                        "maxAuthLevel":function () {
+                            return  $.cookie('maxAuthLevel');
+                        },
+                        "xyCode":function () {
+                            return  $.cookie('xyCode');
+                        },
+                        "zyCode":function () {
+                            return  $.cookie('zyCode');
                         }
                     }
                     ,request: {//用于对分页请求的参数：page、limit重新设定名称
@@ -297,6 +306,15 @@ layui.use(['layer','element','table','form'], function(){
                     ,where:{
                         "shenHeUserId":function () {//用于区分是当前登录用户还是查询参数中的用户
                             return $.cookie('userId');
+                        },
+                        "maxAuthLevel":function () {
+                            return  $.cookie('maxAuthLevel');
+                        },
+                        "xyCode":function () {
+                            return  $.cookie('xyCode');
+                        },
+                        "zyCode":function () {
+                            return  $.cookie('zyCode');
                         }
                     }
                     ,request: {
